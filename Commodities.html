@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Commodities Trading</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8941F;
+            --silver: #C0C0C0;
+            --bronze: #CD7F32;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --success: #00C853;
+            --danger: #FF1744;
+            --warning: #FF9800;
+            --info: #2196F3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--darker);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .commodities-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(192, 192, 192, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(205, 127, 50, 0.05) 0%, transparent 50%);
+            animation: bgShift 15s ease-in-out infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 5% 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            right: -10%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 600px;
+            height: 600px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 50%;
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: translateY(-50%) rotate(0deg); }
+            to { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .hero-content {
+            max-width: 700px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, var(--gold) 50%, var(--silver) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            font-family: 'Courier New', monospace;
+        }
+
+        .hero-stat-label {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Commodity Categories */
+        .categories-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .category-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+            box-shadow: 0 30px 60px rgba(212, 175, 55, 0.15);
+        }
+
+        .category-header {
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+        }
+
+        .category-card:nth-child(1) .category-header::before { background: linear-gradient(135deg, var(--gold), transparent); }
+        .category-card:nth-child(2) .category-header::before { background: linear-gradient(135deg, var(--silver), transparent); }
+        .category-card:nth-child(3) .category-header::before { background: linear-gradient(135deg, #8B4513, transparent); }
+        .category-card:nth-child(4) .category-header::before { background: linear-gradient(135deg, var(--info), transparent); }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .category-desc {
+            color: #aaa;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .category-body {
+            padding: 1.5rem 2rem;
+        }
+
+        .commodity-list {
+            list-style: none;
+        }
+
+        .commodity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .commodity-item:hover {
+            background: rgba(212, 175, 55, 0.05);
+            margin: 0 -2rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .commodity-item:last-child {
+            border-bottom: none;
+        }
+
+        .commodity-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .commodity-symbol {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--gold);
+        }
+
+        .commodity-name {
+            font-weight: 600;
+        }
+
+        .commodity-full {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .commodity-price {
+            text-align: right;
+        }
+
+        .price-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            color: #fff;
+        }
+
+        .price-change {
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
+        }
+
+        /* Live Prices Ticker */
+        .ticker-section {
+            padding: 2rem 5%;
+            background: var(--dark);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            overflow: hidden;
+        }
+
+        .ticker-wrapper {
+            display: flex;
+            animation: tickerScroll 40s linear infinite;
+        }
+
+        @keyframes tickerScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            flex-shrink: 0;
+            padding: 0 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .ticker-symbol {
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .ticker-price {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+
+        .ticker-change {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Trading Platform */
+        .platform-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        @media (max-width: 968px) {
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-container {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            color: var(--gold);
+        }
+
+        .instrument-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .inst-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #aaa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .inst-btn.active, .inst-btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+            border-color: var(--gold);
+        }
+
+        .main-chart {
+            height: 350px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #commodityChart {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Order Panel */
+        .order-panel {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .order-title {
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .order-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: #aaa;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .order-type {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .type-btn {
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .type-btn.buy {
+            border-color: rgba(0, 200, 83, 0.3);
+            color: var(--success);
+        }
+
+        .type-btn.buy.active, .type-btn.buy:hover {
+            background: rgba(0, 200, 83, 0.2);
+            border-color: var(--success);
+        }
+
+        .type-btn.sell {
+            border-color: rgba(255, 23, 68, 0.3);
+            color: var(--danger);
+        }
+
+        .type-btn.sell.active, .type-btn.sell:hover {
+            background: rgba(255, 23, 68, 0.2);
+            border-color: var(--danger);
+        }
+
+        .order-summary {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .summary-row:last-child {
+            margin-bottom: 0;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .execute-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border: none;
+            border-radius: 10px;
+            color: var(--dark);
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .execute-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Market Depth */
+        .depth-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .depth-container {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .depth-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .depth-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .depth-column h4 {
+            color: #aaa;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .depth-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem;
+            margin-bottom: 0.3rem;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .depth-row::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        .depth-row.bid::before {
+            background: var(--success);
+            width: var(--depth);
+        }
+
+        .depth-row.ask::before {
+            background: var(--danger);
+            width: var(--depth);
+        }
+
+        .depth-price {
+            position: relative;
+            z-index: 1;
+            font-weight: 600;
+        }
+
+        .depth-row.bid .depth-price { color: var(--success); }
+        .depth-row.ask .depth-price { color: var(--danger); }
+
+        .depth-size {
+            position: relative;
+            z-index: 1;
+            color: #aaa;
+        }
+
+        /* Calendar Section */
+        .calendar-section {
+            padding: 4rem 5%;
+            background: var(--dark);
+        }
+
+        .calendar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .event-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .event-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+        }
+
+        .event-date {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            color: var(--gold);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .event-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-impact {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .impact-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .impact-high { background: var(--danger); }
+        .impact-medium { background: var(--warning); }
+        .impact-low { background: var(--success); }
+
+        .impact-label {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        /* Education Section */
+        .education-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .edu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .edu-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+
+        .edu-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+        }
+
+        .edu-image {
+            height: 180px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .edu-content {
+            padding: 1.5rem;
+        }
+
+        .edu-title {
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .edu-desc {
+            color: #aaa;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .edu-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+            transition: gap 0.3s;
+        }
+
+        .edu-link:hover {
+            gap: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            background: var(--darker);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+        }
+
+        .risk-warning {
+            background: rgba(255, 23, 68, 0.1);
+            border: 1px solid rgba(255, 23, 68, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            color: #ff8a80;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .disclaimer {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid var(--gold);
+            padding: 1rem;
+            border-radius: 10px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 2000;
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+
+        .tooltip.active {
+            opacity: 1;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 2rem;
+            background: var(--glass);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 3000;
+            max-width: 350px;
+        }
+
+        .notification.active {
+            transform: translateX(0);
+        }
+
+        .notification-title {
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-text {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="commodities-bg"></div>
+    <div class="tooltip" id="tooltip"></div>
+    <div class="notification" id="notification">
+        <div class="notification-title">Order Executed</div>
+        <div class="notification-text" id="notificationText">Your trade has been successfully processed.</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">◆ GOLDENICE INTERNATIONAL</div>
+        <ul class="nav-links">
+            <li><a href="./market.html">Markets</a></li>
+            <li><a href="./trading.html">Trading</a></li>
+            <li><a href="./calender.html">Calendar</a></li>
+            <li><a href="./education.html">Learn</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Commodities Trading</h1>
+            <p>Access global commodity markets with competitive spreads, deep liquidity, and advanced trading tools. Trade precious metals, energy, agriculture, and industrial commodities all in one platform.</p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">50+</div>
+                    <div class="hero-stat-label">Commodities</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">0.01</div>
+                    <div class="hero-stat-label">Min Spread</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">1:100</div>
+                    <div class="hero-stat-label">Leverage</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">24/5</div>
+                    <div class="hero-stat-label">Trading</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Ticker -->
+    <section class="ticker-section">
+        <div class="ticker-wrapper" id="tickerWrapper">
+            <!-- Populated by JS -->
+        </div>
+    </section>
+
+    <!-- Commodity Categories -->
+    <section class="categories-section" id="categories">
+        <h2 class="section-title">Commodity Markets</h2>
+        <p class="section-subtitle">Diversify your portfolio with hard and soft commodities from global exchanges</p>
+        
+        <div class="categories-grid">
+            <!-- Precious Metals -->
+            <div class="category-card">
+                <div class="category-header">
+                    <div class="category-icon">🥇</div>
+                    <h3 class="category-title">Precious Metals</h3>
+                    <p class="category-desc">Safe-haven assets and inflation hedges</p>
+                </div>
+                <div class="category-body">
+                    <ul class="commodity-list">
+                        <li class="commodity-item" onclick="selectInstrument('XAUUSD')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">AU</div>
+                                <div>
+                                    <div class="commodity-name">Gold</div>
+                                    <div class="commodity-full">XAU/USD Spot</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="XAUUSD-price">2,045.80</div>
+                                <div class="price-change positive" id="XAUUSD-change">+1.24%</div>
+                            </div>
+                        </li>
+                        <li class="commodity-item" onclick="selectInstrument('XAGUSD')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">AG</div>
+                                <div>
+                                    <div class="commodity-name">Silver</div>
+                                    <div class="commodity-full">XAG/USD Spot</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="XAGUSD-price">24.65</div>
+                                <div class="price-change positive" id="XAGUSD-change">+0.89%</div>
+                            </div>
+                        </li>
+                        <li class="commodity-item" onclick="selectInstrument('XPTUSD')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">PT</div>
+                                <div>
+                                    <div class="commodity-name">Platinum</div>
+                                    <div class="commodity-full">XPT/USD Spot</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="XPTUSD-price">925.40</div>
+                                <div class="price-change negative" id="XPTUSD-change">-0.34%</div>
+                            </div>
+                        </li>
+                        <li class="commodity-item" onclick="selectInstrument('XPDUSD')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">PD</div>
+                                <div>
+                                    <div class="commodity-name">Palladium</div>
+                                    <div class="commodity-full">XPD/USD Spot</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="XPDUSD-price">1,125.60</div>
+                                <div class="price-change negative" id="XPDUSD-change">-1.12%</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Energy -->
+            <div class="category-card">
+                <div class="category-header">
+                    <div class="category-icon">🛢️</div>
+                    <h3 class="category-title">Energy</h3>
+                    <p class="category-desc">Power the global economy</p>
+                </div>
+                <div class="category-body">
+                    <ul class="commodity-list">
+                        <li class="commodity-item" onclick="selectInstrument('USOIL')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">WTI</div>
+                                <div>
+                                    <div class="commodity-name">Crude Oil</div>
+                                    <div class="commodity-full">US Oil - WTI</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="USOIL-price">78.45</div>
+                                <div class="price-change positive" id="USOIL-change">+2.15%</div>
+                            </div>
+                        </li>
+                        <li class="commodity-item" onclick="selectInstrument('UKOIL')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">BRN</div>
+                                <div>
+                                    <div class="commodity-name">Brent Oil</div>
+                                    <div class="commodity-full">UK Oil - Brent</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="UKOIL-price">82.30</div>
+                                <div class="price-change positive" id="UKOIL-change">+1.89%</div>
+                            </div>
+                        </li>
+                        <li class="commodity-item" onclick="selectInstrument('NATGAS')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">GAS</div>
+                                <div>
+                                    <div class="commodity-name">Natural Gas</div>
+                                    <div class="commodity-full">Henry Hub</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="NATGAS-price">2.85</div>
+                                <div class="price-change negative" id="NATGAS-change">-3.24%</div>
+                            </div>
+                        </li>
+                        <li class="commodity-item" onclick="selectInstrument('HEATING')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">HEAT</div>
+                                <div>
+                                    <div class="commodity-name">Heating Oil</div>
+                                    <div class="commodity-full">NY Harbor</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="HEATING-price">2.45</div>
+                                <div class="price-change positive" id="HEATING-change">+1.02%</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Agriculture -->
+            <div class="category-card">
+                <div class="category-header">
+                    <div class="category-icon">🌾</div>
+                    <h3 class="category-title">Agriculture</h3>
+                    <p class="category-desc">Feed and fiber commodities</p>
+                </div>
+                <div class="category-body">
+                    <ul class="commodity-list">
+                        <li class="commodity-item" onclick="selectInstrument('CORN')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">CORN</div>
+                                <div>
+                                    <div class="commodity-name">Corn</div>
+                                    <div class="commodity-full">CBOT Futures</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="CORN-price">445.25</div>
+                                <div class="price-change positive" id="CORN-change">+0.56%</div>
+                            </div>
+                        </li>
+                        <li class="commodity-item" onclick="selectInstrument('WHEAT')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">WHEAT</div>
+                                <div>
+                                    <div class="commodity-name">Wheat</div>
+                                    <div class="commodity-full">CBOT Futures</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="WHEAT-price">612.50</div>
+                                <div class="price-change negative" id="WHEAT-change">-0.78%</div>
+                            </div>
+                        </li>
+                        <li class="commodity-item" onclick="selectInstrument('SOYBEAN')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">SOY</div>
+                                <div>
+                                    <div class="commodity-name">Soybeans</div>
+                                    <div class="commodity-full">CBOT Futures</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="SOYBEAN-price">1,245.75</div>
+                                <div class="price-change positive" id="SOYBEAN-change">+1.23%</div>
+                            </div>
+                        </li>
+                        <li class="commodity-item" onclick="selectInstrument('COFFEE')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">COF</div>
+                                <div>
+                                    <div class="commodity-name">Coffee</div>
+                                    <div class="commodity-full">Arabica ICE</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="COFFEE-price">185.40</div>
+                                <div class="price-change positive" id="COFFEE-change">+2.45%</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Industrial Metals -->
+            <div class="category-card">
+                <div class="category-header">
+                    <div class="category-icon">⚙️</div>
+                    <h3 class="category-title">Industrial Metals</h3>
+                    <p class="category-desc">Building the modern world</p>
+                </div>
+                <div class="category-body">
+                    <ul class="commodity-list">
+                        <li class="commodity-item" onclick="selectInstrument('COPPER')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">CU</div>
+                                <div>
+                                    <div class="commodity-name">Copper</div>
+                                    <div class="commodity-full">HG COMEX</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="COPPER-price">3.85</div>
+                                <div class="price-change positive" id="COPPER-change">+1.56%</div>
+                            </div>
+                        </li>
+                        <li class="commodity-item" onclick="selectInstrument('ALUMINUM')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">AL</div>
+                                <div>
+                                    <div class="commodity-name">Aluminum</div>
+                                    <div class="commodity-full">LME Futures</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="ALUMINUM-price">2,245.00</div>
+                                <div class="price-change negative" id="ALUMINUM-change">-0.45%</div>
+                            </div>
+                        </li>
+                        <li class="commodity-item" onclick="selectInstrument('NICKEL')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">NI</div>
+                                <div>
+                                    <div class="commodity-name">Nickel</div>
+                                    <div class="commodity-full">LME Futures</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="NICKEL-price">16,850.00</div>
+                                <div class="price-change negative" id="NICKEL-change">-2.12%</div>
+                            </div>
+                        </li>
+                        <li class="commodity-item" onclick="selectInstrument('ZINC')">
+                            <div class="commodity-info">
+                                <div class="commodity-symbol">ZN</div>
+                                <div>
+                                    <div class="commodity-name">Zinc</div>
+                                    <div class="commodity-full">LME Futures</div>
+                                </div>
+                            </div>
+                            <div class="commodity-price">
+                                <div class="price-value" id="ZINC-price">2,560.50</div>
+                                <div class="price-change positive" id="ZINC-change">+0.89%</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trading Platform -->
+    <section class="platform-section" id="platform">
+        <h2 class="section-title">Trading Platform</h2>
+        <p class="section-subtitle">Execute trades with precision and speed</p>
+        
+        <div class="platform-grid">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title" id="chartTitle">XAU/USD - Gold Spot</h3>
+                    <div class="instrument-selector">
+                        <button class="inst-btn active" onclick="switchTimeframe('M1')">M1</button>
+                        <button class="inst-btn" onclick="switchTimeframe('M5')">M5</button>
+                        <button class="inst-btn" onclick="switchTimeframe('M15')">M15</button>
+                        <button class="inst-btn" onclick="switchTimeframe('H1')">H1</button>
+                        <button class="inst-btn" onclick="switchTimeframe('D1')">D1</button>
+                    </div>
+                </div>
+                <div class="main-chart">
+                    <canvas id="commodityChart"></canvas>
+                </div>
+            </div>
+
+            <div class="order-panel">
+                <h3 class="order-title">New Order</h3>
+                <form class="order-form" onsubmit="executeOrder(event)">
+                    <div class="form-group">
+                        <label>Instrument</label>
+                        <select id="orderInstrument" onchange="updateOrderSummary()">
+                            <option value="XAUUSD">XAU/USD - Gold</option>
+                            <option value="XAGUSD">XAG/USD - Silver</option>
+                            <option value="USOIL">USOIL - WTI Crude</option>
+                            <option value="UKOIL">UKOIL - Brent Crude</option>
+                            <option value="COPPER">COPPER - Copper</option>
+                            <option value="CORN">CORN - Corn</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Order Type</label>
+                        <div class="order-type">
+                            <button type="button" class="type-btn buy active" onclick="setOrderType('buy')">BUY</button>
+                            <button type="button" class="type-btn sell" onclick="setOrderType('sell')">SELL</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Volume (Lots)</label>
+                        <input type="number" id="orderVolume" value="1" min="0.01" max="100" step="0.01" onchange="updateOrderSummary()">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" id="orderPrice" value="2045.80" step="0.01" readonly>
+                    </div>
+
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <span>Margin Required</span>
+                            <span id="marginRequired">$2,045.80</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Spread</span>
+                            <span>0.03</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Commission</span>
+                            <span>$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Total Cost</span>
+                            <span id="totalCost">$2,045.80</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="execute-btn" id="executeBtn">Execute Buy Order</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Depth -->
+    <section class="depth-section">
+        <div class="depth-container">
+            <h3 class="chart-title">Market Depth - XAU/USD</h3>
+            <div class="depth-grid">
+                <div class="depth-column">
+                    <h4>Bids (Buy Orders)</h4>
+                    <div id="bidsContainer">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <div class="depth-column">
+                    <h4>Asks (Sell Orders)</h4>
+                    <div id="asksContainer">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Economic Calendar -->
+    <section class="calendar-section" id="calendar">
+        <div class="calendar-container">
+            <h2 class="section-title">Economic Calendar</h2>
+            <p class="section-subtitle">Key events affecting commodity markets</p>
+            
+            <div class="events-grid">
+                <div class="event-card">
+                    <span class="event-date">Today, 14:30 GMT</span>
+                    <h4 class="event-title">US Crude Oil Inventories</h4>
+                    <p style="color: #888; font-size: 0.9rem;">Weekly report on US petroleum stockpiles</p>
+                    <div class="event-impact">
+                        <div class="impact-dot impact-high"></div>
+                        <span class="impact-label">High Impact on Oil</span>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <span class="event-date">Tomorrow, 12:30 GMT</span>
+                    <h4 class="event-title">US CPI Data Release</h4>
+                    <p style="color: #888; font-size: 0.9rem;">Consumer Price Index - inflation indicator</p>
+                    <div class="event-impact">
+                        <div class="impact-dot impact-high"></div>
+                        <span class="impact-label">High Impact on Gold</span>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <span class="event-date">Dec 15, 13:00 GMT</span>
+                    <h4 class="event-title">FOMC Interest Rate Decision</h4>
+                    <p style="color: #888; font-size: 0.9rem;">Federal Reserve monetary policy announcement</p>
+                    <div class="event-impact">
+                        <div class="impact-dot impact-high"></div>
+                        <span class="impact-label">High Impact on All Metals</span>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <span class="event-date">Dec 18, 09:00 GMT</span>
+                    <h4 class="event-title">China Industrial Production</h4>
+                    <p style="color: #888; font-size: 0.9rem;">Monthly industrial output data</p>
+                    <div class="event-impact">
+                        <div class="impact-dot impact-medium"></div>
+                        <span class="impact-label">Medium Impact on Copper</span>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <span class="event-date">Dec 20, 15:30 GMT</span>
+                    <h4 class="event-title">USDA Crop Report</h4>
+                    <p style="color: #888; font-size: 0.9rem;">Agricultural supply and demand estimates</p>
+                    <div class="event-impact">
+                        <div class="impact-dot impact-high"></div>
+                        <span class="impact-label">High Impact on Agriculture</span>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <span class="event-date">Dec 22, 07:30 GMT</span>
+                    <h4 class="event-title">OPEC+ Production Meeting</h4>
+                    <p style="color: #888; font-size: 0.9rem;">Oil production quota decisions</p>
+                    <div class="event-impact">
+                        <div class="impact-dot impact-high"></div>
+                        <span class="impact-label">High Impact on Energy</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education -->
+    <section class="education-section" id="education">
+        <h2 class="section-title">Commodity Trading Education</h2>
+        <p class="section-subtitle">Master the fundamentals of commodity markets</p>
+        
+        <div class="edu-grid">
+            <div class="edu-card">
+                <div class="edu-image">📊</div>
+                <div class="edu-content">
+                    <h4 class="edu-title">Understanding Supply & Demand</h4>
+                    <p class="edu-desc">Learn how global production, consumption, and inventory levels drive commodity prices.</p>
+                    <a href="./understanding s&d.html" class="edu-link">Read Guide →</a>
+                </div>
+            </div>
+            <div class="edu-card">
+                <div class="edu-image">🌤️</div>
+                <div class="edu-content">
+                    <h4 class="edu-title">Weather Patterns & Agriculture</h4>
+                    <p class="edu-desc">Discover how climate events affect crop yields and agricultural commodity pricing.</p>
+                    <a href="./Weather Patterns & Agriculture.html" class="edu-link">Read Guide →</a>
+                </div>
+            </div>
+            <div class="edu-card">
+                <div class="edu-image">🏛️</div>
+                <div class="edu-content">
+                    <h4 class="edu-title">Geopolitical Risk Factors</h4>
+                    <p class="edu-desc">Analyze how political instability, trade wars, and sanctions impact energy and metals.</p>
+                    <a href="./Geopolitical Risk Factors.html" class="edu-link">Read Guide →</a>
+                </div>
+            </div>
+            <div class="edu-card">
+                <div class="edu-image">⚖️</div>
+                <div class="edu-content">
+                    <h4 class="edu-title">Hedging Strategies</h4>
+                    <p class="edu-desc">Advanced techniques for using commodities to hedge portfolio risk and inflation.</p>
+                    <a href="./Hedging Strategies.html" class="edu-link">Read Guide →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="risk-warning">
+            <strong>⚠️ Risk Warning:</strong> Commodity trading involves significant risk of loss and is not suitable for all investors. Commodities are highly leveraged products, which means both gains and losses are magnified. You should only trade with money you can afford to lose. Past performance of commodities is not indicative of future results.
+        </div>
+        <div class="footer-content">
+            <div class="logo" style="margin-bottom: 1rem;">◆ GOLDENICE INTERNATIONAL</div>
+            <p style="color: #aaa;">Premium Commodities Trading Since 2025</p>
+            <div class="disclaimer">
+                <p>Goldenice International offers CFD trading on commodities. Prices are indicative and for informational purposes only. Spreads, leverage, and trading conditions are subject to change. Please refer to our Product Disclosure Statement for full details.</p>
+                <p style="margin-top: 1rem;">© 2026 Goldenice International. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Commodity Data
+        const commodities = {
+            XAUUSD: { name: 'Gold', price: 2045.80, spread: 0.03, leverage: 100, unit: 'oz' },
+            XAGUSD: { name: 'Silver', price: 24.65, spread: 0.02, leverage: 50, unit: 'oz' },
+            XPTUSD: { name: 'Platinum', price: 925.40, spread: 0.50, leverage: 50, unit: 'oz' },
+            XPDUSD: { name: 'Palladium', price: 1125.60, spread: 0.80, leverage: 50, unit: 'oz' },
+            USOIL: { name: 'WTI Oil', price: 78.45, spread: 0.03, leverage: 100, unit: 'barrel' },
+            UKOIL: { name: 'Brent Oil', price: 82.30, spread: 0.03, leverage: 100, unit: 'barrel' },
+            NATGAS: { name: 'Natural Gas', price: 2.85, spread: 0.01, leverage: 50, unit: 'mmBtu' },
+            HEATING: { name: 'Heating Oil', price: 2.45, spread: 0.01, leverage: 50, unit: 'gallon' },
+            CORN: { name: 'Corn', price: 445.25, spread: 0.25, leverage: 20, unit: 'bushel' },
+            WHEAT: { name: 'Wheat', price: 612.50, spread: 0.25, leverage: 20, unit: 'bushel' },
+            SOYBEAN: { name: 'Soybeans', price: 1245.75, spread: 0.50, leverage: 20, unit: 'bushel' },
+            COFFEE: { name: 'Coffee', price: 185.40, spread: 0.05, leverage: 20, unit: 'lb' },
+            COPPER: { name: 'Copper', price: 3.85, spread: 0.002, leverage: 50, unit: 'lb' },
+            ALUMINUM: { name: 'Aluminum', price: 2245.00, spread: 0.50, leverage: 50, unit: 'tonne' },
+            NICKEL: { name: 'Nickel', price: 16850.00, spread: 5.00, leverage: 50, unit: 'tonne' },
+            ZINC: { name: 'Zinc', price: 2560.50, spread: 0.50, leverage: 50, unit: 'tonne' }
+        };
+
+        let currentOrderType = 'buy';
+        let currentInstrument = 'XAUUSD';
+
+        // Initialize Ticker
+        function initTicker() {
+            const wrapper = document.getElementById('tickerWrapper');
+            const items = Object.entries(commodities).map(([symbol, data]) => {
+                const change = (Math.random() * 4 - 2).toFixed(2);
+                const color = change >= 0 ? 'var(--success)' : 'var(--danger)';
+                return `
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">${symbol}</span>
+                        <span class="ticker-price">${data.price.toFixed(2)}</span>
+                        <span class="ticker-change" style="background: ${change >= 0 ? 'rgba(0,200,83,0.2)' : 'rgba(255,23,68,0.2)'}; color: ${color};">
+                            ${change >= 0 ? '▲' : '▼'} ${Math.abs(change)}%
+                        </span>
+                    </div>
+                `;
+            }).join('');
+            wrapper.innerHTML = items + items;
+        }
+
+        // Live Price Updates
+        function simulatePriceUpdates() {
+            setInterval(() => {
+                Object.keys(commodities).forEach(symbol => {
+                    const change = (Math.random() - 0.5) * 0.5;
+                    commodities[symbol].price += change;
+                    
+                    const priceEl = document.getElementById(symbol + '-price');
+                    const changeEl = document.getElementById(symbol + '-change');
+                    
+                    if (priceEl) {
+                        priceEl.textContent = commodities[symbol].price.toFixed(2);
+                        const percentChange = ((change / commodities[symbol].price) * 100).toFixed(2);
+                        changeEl.textContent = (change >= 0 ? '+' : '') + percentChange + '%';
+                        changeEl.className = 'price-change ' + (change >= 0 ? 'positive' : 'negative');
+                    }
+                });
+                
+                if (document.getElementById('orderInstrument').value === currentInstrument) {
+                    document.getElementById('orderPrice').value = commodities[currentInstrument].price.toFixed(2);
+                }
+            }, 3000);
+        }
+
+        // Chart Drawing
+        function drawChart() {
+            const canvas = document.getElementById('commodityChart');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = 40;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Generate candle data
+            const candles = 30;
+            const candleWidth = (width - padding * 2) / candles;
+            const data = [];
+            let price = commodities[currentInstrument].price;
+            
+            for (let i = 0; i < candles; i++) {
+                const open = price;
+                const change = (Math.random() - 0.5) * 5;
+                const close = open + change;
+                const high = Math.max(open, close) + Math.random() * 3;
+                const low = Math.min(open, close) - Math.random() * 3;
+                data.push({ open, high, low, close });
+                price = close;
+            }
+            
+            const minPrice = Math.min(...data.map(d => d.low));
+            const maxPrice = Math.max(...data.map(d => d.high));
+            const range = maxPrice - minPrice;
+            
+            // Draw candles
+            data.forEach((candle, i) => {
+                const x = padding + i * candleWidth + candleWidth / 2;
+                const yOpen = padding + (maxPrice - candle.open) / range * (height - padding * 2);
+                const yClose = padding + (maxPrice - candle.close) / range * (height - padding * 2);
+                const yHigh = padding + (maxPrice - candle.high) / range * (height - padding * 2);
+                const yLow = padding + (maxPrice - candle.low) / range * (height - padding * 2);
+                
+                const isGreen = candle.close >= candle.open;
+                
+                // Wick
+                ctx.beginPath();
+                ctx.moveTo(x, yHigh);
+                ctx.lineTo(x, yLow);
+                ctx.strokeStyle = isGreen ? '#00C853' : '#FF1744';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                
+                // Body
+                ctx.fillStyle = isGreen ? '#00C853' : '#FF1744';
+                ctx.fillRect(x - candleWidth * 0.4, Math.min(yOpen, yClose), candleWidth * 0.8, Math.abs(yClose - yOpen) || 1);
+            });
+            
+            // Grid lines
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = padding + (height - padding * 2) * i / 4;
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(width - padding, y);
+                ctx.stroke();
+            }
+        }
+
+        // Market Depth
+        function initMarketDepth() {
+            const bidsContainer = document.getElementById('bidsContainer');
+            const asksContainer = document.getElementById('asksContainer');
+            const basePrice = commodities.XAUUSD.price;
+            
+            // Generate bids (buy orders below price)
+            for (let i = 5; i >= 1; i--) {
+                const price = basePrice - i * 0.05;
+                const size = Math.floor(Math.random() * 500) + 100;
+                const depth = (size / 600) * 100;
+                
+                const row = document.createElement('div');
+                row.className = 'depth-row bid';
+                row.style.setProperty('--depth', depth + '%');
+                row.innerHTML = `
+                    <span class="depth-price">${price.toFixed(2)}</span>
+                    <span class="depth-size">${size}</span>
+                `;
+                bidsContainer.appendChild(row);
+            }
+            
+            // Generate asks (sell orders above price)
+            for (let i = 1; i <= 5; i++) {
+                const price = basePrice + i * 0.05;
+                const size = Math.floor(Math.random() * 500) + 100;
+                const depth = (size / 600) * 100;
+                
+                const row = document.createElement('div');
+                row.className = 'depth-row ask';
+                row.style.setProperty('--depth', depth + '%');
+                row.innerHTML = `
+                    <span class="depth-price">${price.toFixed(2)}</span>
+                    <span class="depth-size">${size}</span>
+                `;
+                asksContainer.appendChild(row);
+            }
+        }
+
+        // Order Functions
+        function selectInstrument(symbol) {
+            currentInstrument = symbol;
+            document.getElementById('orderInstrument').value = symbol;
+            document.getElementById('chartTitle').textContent = symbol + ' - ' + commodities[symbol].name;
+            document.getElementById('orderPrice').value = commodities[symbol].price.toFixed(2);
+            updateOrderSummary();
+            drawChart();
+        }
+
+        function setOrderType(type) {
+            currentOrderType = type;
+            document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('executeBtn').textContent = `Execute ${type.toUpperCase()} Order`;
+            document.getElementById('executeBtn').style.background = type === 'buy' 
+                ? 'linear-gradient(135deg, #00C853, #009624)' 
+                : 'linear-gradient(135deg, #FF1744, #D50000)';
+        }
+
+        function updateOrderSummary() {
+            const symbol = document.getElementById('orderInstrument').value;
+            const volume = parseFloat(document.getElementById('orderVolume').value) || 1;
+            const price = commodities[symbol].price;
+            const leverage = commodities[symbol].leverage;
+            
+            const notional = price * volume * (symbol.includes('OIL') ? 1000 : 100);
+            const margin = notional / leverage;
+            
+            document.getElementById('marginRequired').textContent = '$' + margin.toFixed(2);
+            document.getElementById('totalCost').textContent = '$' + margin.toFixed(2);
+        }
+
+        function executeOrder(e) {
+            e.preventDefault();
+            const symbol = document.getElementById('orderInstrument').value;
+            const volume = document.getElementById('orderVolume').value;
+            const type = currentOrderType.toUpperCase();
+            
+            showNotification(`Order Executed: ${type} ${volume} lots of ${symbol} at ${commodities[symbol].price.toFixed(2)}`);
+        }
+
+        function showNotification(text) {
+            const notif = document.getElementById('notification');
+            document.getElementById('notificationText').textContent = text;
+            notif.classList.add('active');
+            setTimeout(() => notif.classList.remove('active'), 3000);
+        }
+
+        function switchTimeframe(tf) {
+            document.querySelectorAll('.inst-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            drawChart();
+        }
+
+        // Tooltip
+        function showTooltip(x, y, content) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.innerHTML = content;
+            tooltip.style.left = x + 15 + 'px';
+            tooltip.style.top = y - 30 + 'px';
+            tooltip.classList.add('active');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initTicker();
+            simulatePriceUpdates();
+            drawChart();
+            initMarketDepth();
+            updateOrderSummary();
+            
+            window.addEventListener('resize', drawChart);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

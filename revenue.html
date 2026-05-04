@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Revenue & Financial Performance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8941F;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --success: #00C853;
+            --danger: #FF1744;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--darker);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 5% 4rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #aaa;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Revenue Cards */
+        .revenue-overview {
+            padding: 2rem 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .rev-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .rev-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .rev-card:hover::before {
+            left: 100%;
+        }
+
+        .rev-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+
+        .rev-label {
+            color: #aaa;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .rev-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rev-change {
+            font-size: 0.9rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .positive {
+            background: rgba(0, 200, 83, 0.2);
+            color: var(--success);
+        }
+
+        .negative {
+            background: rgba(255, 23, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .rev-chart-mini {
+            margin-top: 1rem;
+            height: 60px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .mini-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--gold-dark), var(--gold));
+            border-radius: 2px;
+            transition: height 0.3s;
+            opacity: 0.7;
+        }
+
+        .mini-bar:hover {
+            opacity: 1;
+        }
+
+        /* Main Chart Section */
+        .chart-section {
+            padding: 3rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .chart-container {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            color: var(--gold);
+        }
+
+        .time-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .time-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .time-btn.active, .time-btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+            border-color: var(--gold);
+        }
+
+        .chart-canvas {
+            position: relative;
+            height: 400px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #mainChart {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Revenue Breakdown */
+        .breakdown-section {
+            padding: 3rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 968px) {
+            .breakdown-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .breakdown-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .breakdown-title {
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .revenue-stream {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .revenue-stream:last-child {
+            border-bottom: none;
+        }
+
+        .stream-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stream-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .stream-name {
+            font-weight: 600;
+        }
+
+        .stream-desc {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .stream-amount {
+            text-align: right;
+        }
+
+        .stream-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .stream-percent {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+            border-radius: 3px;
+            transition: width 1s ease-out;
+        }
+
+        /* Regional Revenue */
+        .region-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .region-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .region-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .flag {
+            font-size: 1.2rem;
+        }
+
+        .region-revenue {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .region-growth {
+            font-size: 0.8rem;
+            color: var(--success);
+        }
+
+        /* Quarterly Table */
+        .table-section {
+            padding: 3rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--glass);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .data-table th, .data-table td {
+            padding: 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .data-table th {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .data-table tr:hover {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .trend-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        /* Interactive Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--gold);
+            padding: 1rem;
+            border-radius: 10px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            font-size: 0.9rem;
+        }
+
+        .tooltip.active {
+            opacity: 1;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            background: var(--darker);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .disclaimer {
+            color: #666;
+            font-size: 0.8rem;
+            max-width: 800px;
+            margin: 2rem auto 0;
+        }
+
+        /* Animations */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: countUp 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="tooltip" id="tooltip"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">◆ GOLDENICE INTERNATIONAL</div>
+        <ul class="nav-links">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#breakdown">Breakdown</a></li>
+            <li><a href="#regions">Regions</a></li>
+            <li><a href="#reports">Reports</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div>
+            <h1>Financial Performance</h1>
+            <p>Transparent revenue reporting and sustainable growth metrics for the 2024 fiscal year</p>
+        </div>
+    </section>
+
+    <!-- Revenue Overview Cards -->
+    <section class="revenue-overview" id="overview">
+        <div class="rev-card animate-in">
+            <div class="rev-label">Total Revenue (YTD)</div>
+            <div class="rev-amount">
+                $<span class="counter" data-target="284.5">0</span>M
+                <span style="font-size: 1rem;">💰</span>
+            </div>
+            <div class="rev-change positive">
+                ▲ 23.4% vs last year
+            </div>
+            <div class="rev-chart-mini" id="chart1">
+                <!-- Mini bars generated by JS -->
+            </div>
+        </div>
+
+        <div class="rev-card animate-in" style="animation-delay: 0.1s;">
+            <div class="rev-label">Trading Volume</div>
+            <div class="rev-amount">
+                $<span class="counter" data-target="892">0</span>B
+                <span style="font-size: 1rem;">📈</span>
+            </div>
+            <div class="rev-change positive">
+                ▲ 18.7% vs last year
+            </div>
+            <div class="rev-chart-mini" id="chart2"></div>
+        </div>
+
+        <div class="rev-card animate-in" style="animation-delay: 0.2s;">
+            <div class="rev-label">Net Profit Margin</div>
+            <div class="rev-amount">
+                <span class="counter" data-target="34.2">0</span>%
+                <span style="font-size: 1rem;">📊</span>
+            </div>
+            <div class="rev-change positive">
+                ▲ 2.1% vs last year
+            </div>
+            <div class="rev-chart-mini" id="chart3"></div>
+        </div>
+
+        <div class="rev-card animate-in" style="animation-delay: 0.3s;">
+            <div class="rev-label">Active Clients Revenue</div>
+            <div class="rev-amount">
+                $<span class="counter" data-target="156.8">0</span>M
+                <span style="font-size: 1rem;">👥</span>
+            </div>
+            <div class="rev-change positive">
+                ▲ 31.2% vs last year
+            </div>
+            <div class="rev-chart-mini" id="chart4"></div>
+        </div>
+    </section>
+
+    <!-- Main Revenue Chart -->
+    <section class="chart-section">
+        <div class="chart-container">
+            <div class="chart-header">
+                <h2 class="chart-title">Revenue Growth Trajectory</h2>
+                <div class="time-selector">
+                    <button class="time-btn" onclick="updateChart('1M')">1M</button>
+                    <button class="time-btn" onclick="updateChart('6M')">6M</button>
+                    <button class="time-btn active" onclick="updateChart('1Y')">1Y</button>
+                    <button class="time-btn" onclick="updateChart('5Y')">5Y</button>
+                </div>
+            </div>
+            <div class="chart-canvas">
+                <canvas id="mainChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Revenue Breakdown -->
+    <section class="breakdown-section" id="breakdown">
+        <div class="breakdown-card">
+            <h3 class="breakdown-title">Revenue by Business Stream</h3>
+            
+            <div class="revenue-stream">
+                <div class="stream-info">
+                    <div class="stream-icon" style="background: rgba(212, 175, 55, 0.2);">💱</div>
+                    <div>
+                        <div class="stream-name">Spot Forex Trading</div>
+                        <div class="stream-desc">Currency pair transactions</div>
+                    </div>
+                </div>
+                <div class="stream-amount">
+                    <div class="stream-value">$142.3M</div>
+                    <div class="stream-percent">50% of total</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 50%;"></div>
+            </div>
+
+            <div class="revenue-stream">
+                <div class="stream-info">
+                    <div class="stream-icon" style="background: rgba(0, 200, 83, 0.2);">🔄</div>
+                    <div>
+                        <div class="stream-name">CFD Trading</div>
+                        <div class="stream-desc">Contracts for difference</div>
+                    </div>
+                </div>
+                <div class="stream-amount">
+                    <div class="stream-value">$71.1M</div>
+                    <div class="stream-percent">25% of total</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 25%;"></div>
+            </div>
+
+            <div class="revenue-stream">
+                <div class="stream-info">
+                    <div class="stream-icon" style="background: rgba(33, 150, 243, 0.2);">🏅</div>
+                    <div>
+                        <div class="stream-name">Precious Metals</div>
+                        <div class="stream-desc">Gold & Silver trading</div>
+                    </div>
+                </div>
+                <div class="stream-amount">
+                    <div class="stream-value">$42.7M</div>
+                    <div class="stream-percent">15% of total</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 15%;"></div>
+            </div>
+
+            <div class="revenue-stream">
+                <div class="stream-info">
+                    <div class="stream-icon" style="background: rgba(156, 39, 176, 0.2);">📊</div>
+                    <div>
+                        <div class="stream-name">Commissions & Fees</div>
+                        <div class="stream-desc">Platform & management fees</div>
+                    </div>
+                </div>
+                <div class="stream-amount">
+                    <div class="stream-value">$28.4M</div>
+                    <div class="stream-percent">10% of total</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 10%;"></div>
+            </div>
+        </div>
+
+        <div class="breakdown-card" id="regions">
+            <h3 class="breakdown-title">Revenue by Region</h3>
+            <div class="region-grid">
+                <div class="region-item">
+                    <div class="region-name">
+                        <span class="flag">🇪🇺</span>
+                        <span>Europe</span>
+                    </div>
+                    <div class="region-revenue">$98.6M</div>
+                    <div class="region-growth">▲ 28.4%</div>
+                </div>
+                <div class="region-item">
+                    <div class="region-name">
+                        <span class="flag">🇺🇸</span>
+                        <span>North America</span>
+                    </div>
+                    <div class="region-revenue">$85.4M</div>
+                    <div class="region-growth">▲ 19.2%</div>
+                </div>
+                <div class="region-item">
+                    <div class="region-name">
+                        <span class="flag">🇦🇸</span>
+                        <span>Asia Pacific</span>
+                    </div>
+                    <div class="region-revenue">$62.3M</div>
+                    <div class="region-growth">▲ 35.7%</div>
+                </div>
+                <div class="region-item">
+                    <div class="region-name">
+                        <span class="flag">🇦🇪</span>
+                        <span>Middle East</span>
+                    </div>
+                    <div class="region-revenue">$28.4M</div>
+                    <div class="region-growth">▲ 15.3%</div>
+                </div>
+                <div class="region-item">
+                    <div class="region-name">
+                        <span class="flag">🇦🇫</span>
+                        <span>Africa</span>
+                    </div>
+                    <div class="region-revenue">$6.8M</div>
+                    <div class="region-growth">▲ 42.1%</div>
+                </div>
+                <div class="region-item">
+                    <div class="region-name">
+                        <span class="flag">🇧🇷</span>
+                        <span>Latin America</span>
+                    </div>
+                    <div class="region-revenue">$3.0M</div>
+                    <div class="region-growth">▲ 56.8%</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quarterly Performance Table -->
+    <section class="table-section" id="reports">
+        <div class="chart-container">
+            <h2 class="chart-title" style="margin-bottom: 2rem;">Quarterly Financial Reports</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Revenue</th>
+                        <th>Operating Costs</th>
+                        <th>Net Profit</th>
+                        <th>Margin</th>
+                        <th>Trend</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Q1 2024</td>
+                        <td style="color: var(--gold); font-weight: 600;">$62.4M</td>
+                        <td>$41.2M</td>
+                        <td style="color: var(--success); font-weight: 600;">$21.2M</td>
+                        <td>34.0%</td>
+                        <td><span class="trend-indicator positive">▲ Strong</span></td>
+                    </tr>
+                    <tr>
+                        <td>Q2 2024</td>
+                        <td style="color: var(--gold); font-weight: 600;">$68.9M</td>
+                        <td>$44.8M</td>
+                        <td style="color: var(--success); font-weight: 600;">$24.1M</td>
+                        <td>35.0%</td>
+                        <td><span class="trend-indicator positive">▲ Growth</span></td>
+                    </tr>
+                    <tr>
+                        <td>Q3 2024</td>
+                        <td style="color: var(--gold); font-weight: 600;">$73.2M</td>
+                        <td>$47.5M</td>
+                        <td style="color: var(--success); font-weight: 600;">$25.7M</td>
+                        <td>35.1%</td>
+                        <td><span class="trend-indicator positive">▲ Peak</span></td>
+                    </tr>
+                    <tr>
+                        <td>Q4 2024 (Proj)</td>
+                        <td style="color: var(--gold); font-weight: 600;">$80.0M</td>
+                        <td>$52.0M</td>
+                        <td style="color: var(--success); font-weight: 600;">$28.0M</td>
+                        <td>35.0%</td>
+                        <td><span class="trend-indicator positive">▲ Outlook</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="logo" style="margin-bottom: 1rem;">◆ GOLDENICE INTERNATIONAL</div>
+        <p style="color: #aaa;">Financial Year 2026 Revenue Report</p>
+        <div class="disclaimer">
+            <p>All financial figures are reported in USD millions. Past performance does not guarantee future results. Revenue figures include gross trading income, spreads, commissions, and ancillary services. Audited by Deloitte & Touche. Reported in accordance with IFRS standards.</p>
+            <p style="margin-top: 1rem;">© 2026 Goldenice International. Confidential & Proprietary.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Revenue Data
+        const revenueData = {
+            '1M': [18.2, 19.5, 20.1, 22.3],
+            '6M': [45.2, 48.1, 52.3, 55.8, 58.2, 62.4],
+            '1Y': [38.5, 42.1, 45.8, 52.3, 58.9, 62.4, 68.9, 73.2, 78.5, 82.1, 85.4, 92.3],
+            '5Y': [120.5, 145.2, 178.6, 210.3, 284.5]
+        };
+
+        // Animate counters
+        function animateCounters() {
+            const counters = document.querySelectorAll('.counter');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = parseFloat(counter.getAttribute('data-target'));
+                        const duration = 2000;
+                        const start = 0;
+                        const increment = target / (duration / 16);
+                        let current = start;
+                        
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= target) {
+                                counter.textContent = target.toFixed(1);
+                                clearInterval(timer);
+                            } else {
+                                counter.textContent = current.toFixed(1);
+                            }
+                        }, 16);
+                        
+                        observer.unobserve(counter);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            counters.forEach(counter => observer.observe(counter));
+        }
+
+        // Create mini charts
+        function createMiniCharts() {
+            const charts = ['chart1', 'chart2', 'chart3', 'chart4'];
+            const dataSets = [
+                [40, 55, 45, 70, 65, 80, 75, 90, 85, 100],
+                [30, 45, 60, 55, 80, 70, 90, 85, 95, 100],
+                [60, 65, 70, 75, 80, 85, 90, 95, 100, 100],
+                [20, 35, 50, 65, 70, 85, 90, 95, 100, 100]
+            ];
+            
+            charts.forEach((chartId, index) => {
+                const container = document.getElementById(chartId);
+                const data = dataSets[index];
+                
+                data.forEach((height, i) => {
+                    const bar = document.createElement('div');
+                    bar.className = 'mini-bar';
+                    bar.style.height = height + '%';
+                    bar.style.animationDelay = (i * 0.1) + 's';
+                    container.appendChild(bar);
+                });
+            });
+        }
+
+        // Main Chart Canvas
+        function drawMainChart(period = '1Y') {
+            const canvas = document.getElementById('mainChart');
+            const ctx = canvas.getContext('2d');
+            const data = revenueData[period];
+            
+            // Set canvas size
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = 60;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Calculate scales
+            const maxValue = Math.max(...data) * 1.1;
+            const minValue = Math.min(...data) * 0.8;
+            const chartWidth = width - padding * 2;
+            const chartHeight = height - padding * 2;
+            
+            // Draw grid lines
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)';
+            ctx.lineWidth = 1;
+            
+            for (let i = 0; i <= 5; i++) {
+                const y = padding + (chartHeight / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(width - padding, y);
+                ctx.stroke();
+                
+                // Y-axis labels
+                ctx.fillStyle = '#aaa';
+                ctx.font = '12px sans-serif';
+                ctx.textAlign = 'right';
+                const value = maxValue - ((maxValue - minValue) / 5) * i;
+                ctx.fillText('$' + value.toFixed(1) + 'M', padding - 10, y + 4);
+            }
+            
+            // Draw line chart
+            ctx.beginPath();
+            ctx.strokeStyle = '#D4AF37';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            const points = [];
+            data.forEach((value, index) => {
+                const x = padding + (chartWidth / (data.length - 1)) * index;
+                const y = padding + chartHeight - ((value - minValue) / (maxValue - minValue)) * chartHeight;
+                points.push({x, y, value});
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    // Bezier curve for smooth lines
+                    const prev = points[index - 1];
+                    const cp1x = prev.x + (x - prev.x) / 2;
+                    const cp1y = prev.y;
+                    const cp2x = prev.x + (x - prev.x) / 2;
+                    const cp2y = y;
+                    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // Fill area under line
+            ctx.lineTo(points[points.length - 1].x, height - padding);
+            ctx.lineTo(padding, height - padding);
+            ctx.closePath();
+            
+            const gradient = ctx.createLinearGradient(0, padding, 0, height - padding);
+            gradient.addColorStop(0, 'rgba(212, 175, 55, 0.3)');
+            gradient.addColorStop(1, 'rgba(212, 175, 55, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // Draw points
+            points.forEach((point, index) => {
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 6, 0, Math.PI * 2);
+                ctx.fillStyle = '#0a0a0a';
+                ctx.fill();
+                ctx.strokeStyle = '#D4AF37';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                // Add glow effect
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 10, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(212, 175, 55, 0.2)';
+                ctx.fill();
+            });
+            
+            // X-axis labels
+            const labels = period === '1M' ? ['Week 1', 'Week 2', 'Week 3', 'Week 4'] :
+                          period === '6M' ? ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'] :
+                          period === '1Y' ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] :
+                          ['2020', '2021', '2022', '2023', '2024'];
+            
+            points.forEach((point, index) => {
+                ctx.fillStyle = '#aaa';
+                ctx.font = '12px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(labels[index] || '', point.x, height - padding + 20);
+            });
+            
+            // Add interactivity
+            canvas.onmousemove = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                
+                points.forEach(point => {
+                    const dist = Math.sqrt(Math.pow(mouseX - point.x, 2) + Math.pow(mouseY - point.y, 2));
+                    if (dist < 20) {
+                        showTooltip(e.clientX, e.clientY, 'Revenue: $' + point.value.toFixed(1) + 'M');
+                    }
+                });
+            };
+            
+            canvas.onmouseleave = () => {
+                hideTooltip();
+            };
+        }
+
+        // Tooltip functions
+        function showTooltip(x, y, text) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.textContent = text;
+            tooltip.style.left = x + 10 + 'px';
+            tooltip.style.top = y - 30 + 'px';
+            tooltip.classList.add('active');
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('active');
+        }
+
+        // Update chart period
+        function updateChart(period) {
+            // Update active button
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === period) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Redraw chart
+            drawMainChart(period);
+        }
+
+        // Animate progress bars
+        function animateProgressBars() {
+            const bars = document.querySelectorAll('.progress-fill');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const bar = entry.target;
+                        const width = bar.style.width;
+                        bar.style.width = '0';
+                        setTimeout(() => {
+                            bar.style.width = width;
+                        }, 100);
+                        observer.unobserve(bar);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            bars.forEach(bar => observer.observe(bar));
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            animateCounters();
+            createMiniCharts();
+            drawMainChart('1Y');
+            animateProgressBars();
+            
+            // Handle resize
+            window.addEventListener('resize', () => {
+                drawMainChart(document.querySelector('.time-btn.active').textContent);
+            });
+        });
+
+        // Navigation scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(5, 5, 5, 0.98)';
+            } else {
+                nav.style.background = 'rgba(5, 5, 5, 0.9)';
+            }
+        });
+    </script>
+</body>
+</html>

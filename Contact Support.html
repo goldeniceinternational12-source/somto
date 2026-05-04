@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Investor Support Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            100: '#F9F1D8',
+                            200: '#F0DEAA',
+                            300: '#E6CB7D',
+                            400: '#DDB850',
+                            500: '#D4A523',
+                            600: '#AA841C',
+                            700: '#806315',
+                            800: '#55420E',
+                            900: '#2B2107',
+                        },
+                        ice: {
+                            50: '#F8FAFC',
+                            900: '#0F172A',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0F172A;
+            color: #e2e8f0;
+        }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 165, 35, 0.1);
+        }
+        
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #F0DEAA 0%, #D4A523 50%, #AA841C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .support-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .support-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(212, 165, 35, 0.15);
+        }
+        
+        .chat-bubble {
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #D4A523;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+            margin: 0 2px;
+        }
+        
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        
+        .ticket-status {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ticket-status::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .faq-answer.open {
+            max-height: 500px;
+        }
+        
+        .search-glow:focus {
+            box-shadow: 0 0 0 3px rgba(212, 165, 35, 0.3);
+        }
+        
+        .status-dot {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulse-green 2s infinite;
+        }
+        
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        
+        .liquid-bg {
+            background: radial-gradient(ellipse at top, rgba(212, 165, 35, 0.15), transparent 70%),
+                        radial-gradient(ellipse at bottom, rgba(15, 23, 42, 1), transparent 70%);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased overflow-x-hidden">
+
+    <!-- Live Status Bar -->
+    <div class="fixed top-0 w-full z-50 bg-slate-900/95 border-b border-gold-500/20 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center text-xs">
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500 status-dot"></span>
+                    <span class="text-green-400">All Systems Operational</span>
+                </div>
+                <div class="hidden md:flex items-center gap-2 text-slate-400">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>Response Time: <span class="text-gold-400">Avg 2m 34s</span></span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-slate-400">
+                <span class="hidden sm:inline">Support Hours: 24/7</span>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-users text-gold-500"></i>
+                    <span class="text-white">142</span>
+                    <span class="text-slate-500">agents online</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-40 top-10 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3 cursor-pointer group">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gold-300 to-gold-600 flex items-center justify-center text-ice-900 font-bold text-xl shadow-lg group-hover:rotate-180 transition-transform duration-700">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <div>
+                        <span class="font-serif text-2xl text-white tracking-wide block">Goldenice</span>
+                        <span class="text-gold-500 text-xs tracking-widest uppercase">Investor Support</span>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#contact" class="text-gray-300 hover:text-gold-400 transition-colors text-sm font-medium">Contact</a>
+                    <a href="#faq" class="text-gray-300 hover:text-gold-400 transition-colors text-sm font-medium">FAQ</a>
+                    <a href="#tickets" class="text-gray-300 hover:text-gold-400 transition-colors text-sm font-medium">My Tickets</a>
+                    <a href="./live chat.html" class="text-gray-300 hover:text-gold-400 transition-colors text-sm font-medium">Live Chat</a>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button class="bg-gold-600 text-white px-6 py-2 rounded-full hover:bg-gold-500 transition-all duration-300 text-sm font-medium shadow-lg shadow-gold-500/25 flex items-center gap-2">
+                        <i class="fa-solid fa-user"></i>
+                <a href="./login.html">Client Login</a>                 
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-[70vh] flex items-center justify-center liquid-bg pt-32 pb-20 overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-gold-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
+        </div>
+
+        <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/30 mb-6">
+                <span class="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
+                <span class="text-gold-400 text-xs font-bold tracking-widest uppercase">24/7 Premium Support</span>
+            </div>
+            
+            <h1 class="font-serif text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                How Can We <br>
+                <span class="gold-gradient-text">Help You Today?</span>
+            </h1>
+            
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+                Dedicated support for our valued investors. Get instant answers or connect with our expert team.
+            </p>
+
+            <!-- Search Bar -->
+            <div class="relative max-w-2xl mx-auto">
+                <div class="relative">
+                    <input type="text" 
+                           id="supportSearch" 
+                           placeholder="Search for answers (e.g., 'withdrawal', 'margin call', 'platform')..."
+                           class="w-full bg-slate-800/50 border border-slate-700 text-white rounded-2xl pl-14 pr-6 py-5 focus:outline-none search-glow transition-all placeholder-slate-500">
+                    <i class="fa-solid fa-search absolute left-5 top-1/2 transform -translate-y-1/2 text-gold-500 text-xl"></i>
+                    <button class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gold-600 hover:bg-gold-500 text-white px-6 py-2 rounded-xl transition-all">
+                        Search
+                    </button>
+                </div>
+                
+                <!-- Quick Suggestions -->
+                <div class="flex flex-wrap justify-center gap-2 mt-4">
+                    <button onclick="quickSearch('withdrawal')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-full transition-colors">Withdrawal</button>
+                    <button onclick="quickSearch('deposit')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-full transition-colors">Deposit</button>
+                    <button onclick="quickSearch('verification')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-full transition-colors">KYC Verification</button>
+                    <button onclick="quickSearch('platform')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-full transition-colors">Trading Platform</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Channels -->
+    <section id="contact" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl font-bold text-white mb-4">Choose Your Support Channel</h2>
+                <p class="text-gray-400">Multiple ways to get the help you need, tailored to your urgency and preference.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Live Chat -->
+                <div class="support-card glass-panel rounded-2xl p-8 border border-gold-500/20 relative overflow-hidden group cursor-pointer" onclick="openChat()">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gold-500/10 rounded-full blur-3xl transform translate-x-16 -translate-y-16 group-hover:bg-gold-500/20 transition-all"></div>
+                    
+                    <div class="w-16 h-16 rounded-2xl bg-gold-500/20 flex items-center justify-center text-gold-400 mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-comments text-3xl"></i>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold text-white mb-2">Live Chat</h3>
+                    <p class="text-gray-400 text-sm mb-4">Instant connection with our trading specialists. Average wait time: <span class="text-green-400">Under 2 minutes</span>.</p>
+                    
+                    <div class="flex items-center gap-2 text-gold-400 text-sm font-medium">
+                        <span>Start Chat</span>
+                        <i class="fa-solid fa-arrow-right transform group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                    
+                    <div class="mt-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="text-xs text-green-400">142 agents available now</span>
+                    </div>
+                </div>
+
+                <!-- Email Support -->
+                <div class="support-card glass-panel rounded-2xl p-8 border border-slate-700 relative overflow-hidden group cursor-pointer" onclick="openTicketModal()">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl transform translate-x-16 -translate-y-16"></div>
+                    
+                    <div class="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-ticket text-3xl"></i>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold text-white mb-2">Submit Ticket</h3>
+                    <p class="text-gray-400 text-sm mb-4">For complex inquiries requiring documentation. Response within <span class="text-blue-400">4 hours</span>.</p>
+                    
+                    <div class="flex items-center gap-2 text-blue-400 text-sm font-medium">
+                        <span>Create Ticket</span>
+                        <i class="fa-solid fa-arrow-right transform group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                    
+                    <div class="mt-4 text-xs text-slate-500">
+                        Best for: Account issues, disputes, document upload
+                    </div>
+                </div>
+
+                <!-- Phone Support -->
+                <div class="support-card glass-panel rounded-2xl p-8 border border-slate-700 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl transform translate-x-16 -translate-y-16"></div>
+                    
+                    <div class="w-16 h-16 rounded-2xl bg-purple-500/20 flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-phone text-3xl"></i>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold text-white mb-2">Phone Support</h3>
+                    <p class="text-gray-400 text-sm mb-4">Speak directly with our dealing desk. Available for VIP clients and emergencies.</p>
+                    
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center gap-2 text-slate-300">
+                            <i class="fa-solid fa-globe text-purple-400"></i>
+                            <span>07065151245</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-300">
+                            <i class="fa-solid fa-globe text-purple-400"></i>
+                            <span>07040856276</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-300">
+                            <i class="fa-solid fa-globe text-purple-400"></i>
+                            <span>08147414049</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 bg-slate-900/50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="font-serif text-4xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+                <p class="text-gray-400">Quick answers to common investor inquiries</p>
+            </div>
+
+            <div class="space-y-4" id="faqContainer">
+                <!-- FAQ Item 1 -->
+                <div class="glass-panel rounded-xl overflow-hidden border border-slate-700">
+                    <button class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-slate-800/50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-white font-medium">How do I withdraw funds from my trading account?</span>
+                        <i class="fa-solid fa-chevron-down text-gold-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+                            Withdrawals can be requested through your Client Portal under "Funds" > "Withdraw". We process withdrawals within 1-3 business days. Funds are returned to the original source of deposit where possible. For bank transfers, please ensure your bank details are verified. Minimum withdrawal is $50. No fees for withdrawals over $500.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="glass-panel rounded-xl overflow-hidden border border-slate-700">
+                    <button class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-slate-800/50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-white font-medium">What is margin call and how does it work?</span>
+                        <i class="fa-solid fa-chevron-down text-gold-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+                            A margin call occurs when your account equity falls below the required margin maintenance level (typically 100% of used margin). You will receive an alert to deposit additional funds or close positions. If your margin level reaches 50% (Stop Out), our system will automatically close your largest losing positions to prevent negative balance.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="glass-panel rounded-xl overflow-hidden border border-slate-700">
+                    <button class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-slate-800/50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-white font-medium">How do I verify my account (KYC)?</span>
+                        <i class="fa-solid fa-chevron-down text-gold-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+                            Account verification requires: (1) Valid government-issued ID (Passport/Driver's License), (2) Proof of Address (Utility bill or bank statement dated within 3 months), (3) Selfie holding your ID. Upload documents through the Client Portal under "Profile" > "Verification". Processing typically takes 4-6 hours during business days.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="glass-panel rounded-xl overflow-hidden border border-slate-700">
+                    <button class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-slate-800/50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-white font-medium">What trading platforms do you offer?</span>
+                        <i class="fa-solid fa-chevron-down text-gold-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+                            We offer MetaTrader 5 (MT5) for desktop and mobile, our proprietary WebTrader platform (no download required), and API access for algorithmic traders. All platforms feature real-time execution, advanced charting, and one-click trading. Demo accounts available for practice.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="glass-panel rounded-xl overflow-hidden border border-slate-700">
+                    <button class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-slate-800/50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="text-white font-medium">How are my funds protected?</span>
+                        <i class="fa-solid fa-chevron-down text-gold-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+                            Client funds are held in segregated accounts with Tier-1 banks (Barclays, HSBC) and never used for operational purposes. We are regulated by the FCA (UK) and participate in the Financial Services Compensation Scheme (FSCS), providing protection up to £85,000 per eligible client. We also maintain professional indemnity insurance.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <p class="text-slate-500 text-sm">Can't find what you're looking for?</p>
+                <button onclick="openChat()" class="mt-2 text-gold-400 hover:text-gold-300 text-sm font-medium">
+                    Ask our AI Assistant <i class="fa-solid fa-robot ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ticket Tracking Section -->
+    <section id="tickets" class="py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="font-serif text-3xl font-bold text-white mb-2">Your Support Tickets</h2>
+                    <p class="text-gray-400 text-sm">Track the status of your inquiries</p>
+                </div>
+                <button onclick="openTicketModal()" class="bg-gold-600 hover:bg-gold-500 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all">
+                    <i class="fa-solid fa-plus mr-2"></i>New Ticket
+                </button>
+            </div>
+
+            <div class="glass-panel rounded-2xl overflow-hidden border border-slate-700">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-800/50 border-b border-slate-700">
+                            <tr>
+                                <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase">Ticket ID</th>
+                                <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase">Subject</th>
+                                <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase">Category</th>
+                                <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase">Status</th>
+                                <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase">Last Update</th>
+                                <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700" id="ticketTable">
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="px-6 py-4 font-mono text-gold-400 text-sm">#SUP-2026-8842</td>
+                                <td class="px-6 py-4 text-white text-sm">Withdrawal delay inquiry</td>
+                                <td class="px-6 py-4 text-slate-400 text-sm">Payments</td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-400">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></span>
+                                        In Progress
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-slate-500 text-sm">2 hours ago</td>
+                                <td class="px-6 py-4">
+                                    <button class="text-gold-400 hover:text-gold-300 text-sm font-medium">View</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="px-6 py-4 font-mono text-gold-400 text-sm">#SUP-2026-8819</td>
+                                <td class="px-6 py-4 text-white text-sm">Platform login issue</td>
+                                <td class="px-6 py-4 text-slate-400 text-sm">Technical</td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400">
+                                        <i class="fa-solid fa-check text-xs"></i>
+                                        Resolved
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-slate-500 text-sm">1 day ago</td>
+                                <td class="px-6 py-4">
+                                    <button class="text-slate-500 hover:text-slate-300 text-sm">View</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="px-6 py-4 font-mono text-gold-400 text-sm">#SUP-2026-8791</td>
+                                <td class="px-6 py-4 text-white text-sm">Account verification documents</td>
+                                <td class="px-6 py-4 text-slate-400 text-sm">KYC</td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400">
+                                        <i class="fa-solid fa-clock text-xs"></i>
+                                        Awaiting Response
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-slate-500 text-sm">3 days ago</td>
+                                <td class="px-6 py-4">
+                                    <button class="text-gold-400 hover:text-gold-300 text-sm font-medium">Reply</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Chat Widget (Fixed) -->
+    <div id="chatWidget" class="fixed bottom-6 right-6 z-50 hidden md:block">
+        <div id="chatWindow" class="hidden w-96 h-[500px] glass-panel rounded-2xl border border-gold-500/30 shadow-2xl flex flex-col overflow-hidden mb-4">
+            <!-- Chat Header -->
+            <div class="bg-gradient-to-r from-gold-600 to-gold-500 p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-gold-500"></span>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-semibold text-sm">Goldenice Assistant</h4>
+                        <p class="text-gold-100 text-xs">Typically replies instantly</p>
+                    </div>
+                </div>
+                <button onclick="toggleChat()" class="text-white/80 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-900/50">
+                <div class="chat-bubble flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gold-500/20 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-robot text-gold-400 text-xs"></i>
+                    </div>
+                    <div class="bg-slate-800 rounded-2xl rounded-tl-none px-4 py-3 text-sm text-slate-300 max-w-[80%]">
+                        Hello! I'm your AI support assistant. I can help with account inquiries, trading questions, or connect you with a human agent. What can I help you with today?
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div id="typingIndicator" class="hidden px-4 py-2">
+                <div class="flex items-center gap-2 text-xs text-slate-500">
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    Assistant is typing...
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="p-4 bg-slate-800/50 border-t border-slate-700">
+                <div class="flex gap-2">
+                    <input type="text" 
+                           id="chatInput" 
+                           placeholder="Type your message..."
+                           class="flex-1 bg-slate-800 border border-slate-600 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:border-gold-500"
+                           onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button onclick="sendMessage()" class="w-10 h-10 rounded-full bg-gold-600 hover:bg-gold-500 text-white flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-paper-plane text-sm"></i>
+                    </button>
+                </div>
+                <div class="flex justify-center gap-2 mt-2">
+                    <button onclick="quickReply('Withdrawal status')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-400 px-3 py-1 rounded-full transition-colors">Withdrawal</button>
+                    <button onclick="quickReply('Talk to human')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-400 px-3 py-1 rounded-full transition-colors">Human agent</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Toggle Button -->
+        <button onclick="toggleChat()" id="chatToggle" class="w-14 h-14 rounded-full bg-gold-600 hover:bg-gold-500 text-white shadow-lg shadow-gold-500/30 flex items-center justify-center transition-all hover:scale-110 animate-float">
+            <i class="fa-solid fa-comments text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- New Ticket Modal -->
+    <div id="ticketModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50 backdrop-blur-sm">
+        <div class="glass-panel w-full max-w-lg rounded-2xl border border-gold-500/30 shadow-2xl transform scale-95 opacity-0 transition-all duration-300" id="ticketModalContent">
+            <div class="p-6 border-b border-slate-700 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-white">Create New Support Ticket</h3>
+                <button onclick="closeTicketModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">Category</label>
+                    <select class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-gold-500 focus:outline-none">
+                        <option>Account & Verification</option>
+                        <option>Deposits & Withdrawals</option>
+                        <option>Trading Platform</option>
+                        <option>Trade Dispute</option>
+                        <option>Technical Issue</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">Subject</label>
+                    <input type="text" placeholder="Brief description of your issue" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-gold-500 focus:outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">Description</label>
+                    <textarea rows="4" placeholder="Please provide detailed information about your inquiry..." class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-gold-500 focus:outline-none resize-none"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm text-slate-400 mb-2">Attachments</label>
+                    <div class="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center hover:border-gold-500 transition-colors cursor-pointer">
+                        <i class="fa-solid fa-cloud-arrow-up text-2xl text-slate-500 mb-2"></i>
+                        <p class="text-sm text-slate-400">Drop files here or click to upload</p>
+                        <p class="text-xs text-slate-500 mt-1">Max file size: 10MB (PDF, JPG, PNG)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-6 border-t border-slate-700 flex gap-3">
+                <button onclick="closeTicketModal()" class="flex-1 py-3 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-800 transition-colors">Cancel</button>
+                <button onclick="submitTicket()" class="flex-1 py-3 bg-gold-600 hover:bg-gold-500 text-white rounded-lg font-medium transition-colors">Submit Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gold-500 flex items-center justify-center text-ice-900 font-bold text-sm">
+                            <i class="fa-solid fa-gem"></i>
+                        </div>
+                        <span class="font-serif text-xl text-white">Goldenice</span>
+                    </div>
+                    <p class="text-slate-500 text-sm">
+                        Premium investor support available 24/7. Your success is our priority.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><a href="./help center.html" class="hover:text-gold-400 transition-colors">Help Center</a></li>
+                        <li><a href="./live chat.html" class="hover:text-gold-400 transition-colors">Live Chat</a></li>
+                        
+                        <li><a href="./status page.html" class="hover:text-gold-400 transition-colors">Status Page</a></li>
+                    </ul>
+                </div>
+
+                
+
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Emergency</h4>
+                    <div class="bg-slate-900 rounded-lg p-4 border border-slate-800">
+                        <p class="text-xs text-slate-500 mb-2">24/7 Dealing Desk</p>
+                        <p class="text-gold-400 font-mono text-lg">07040856276</p>
+                        <p class="text-xs text-slate-600 mt-2">For urgent trade issues only</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-slate-600 text-xs">
+                    &copy; 2026 Goldenice International. All rights reserved.
+                </p>
+                <div class="flex gap-6">
+                    <a href="#" class="text-slate-500 hover:text-gold-400 transition-colors text-sm">Privacy</a>
+                    <a href="./tos.html" class="text-slate-500 hover:text-gold-400 transition-colors text-sm">Terms</a>
+                    <a href="#" class="text-slate-500 hover:text-gold-400 transition-colors text-sm">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Chat functionality
+        let chatOpen = false;
+        
+        function toggleChat() {
+            const window = document.getElementById('chatWindow');
+            const toggle = document.getElementById('chatToggle');
+            
+            if (chatOpen) {
+                window.classList.add('hidden');
+                toggle.classList.remove('hidden');
+            } else {
+                window.classList.remove('hidden');
+                toggle.classList.add('hidden');
+                document.getElementById('chatInput').focus();
+            }
+            chatOpen = !chatOpen;
+        }
+
+        function openChat() {
+            if (!chatOpen) toggleChat();
+            document.getElementById('chatWidget').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+
+            // Show typing indicator
+            document.getElementById('typingIndicator').classList.remove('hidden');
+            
+            // Simulate AI response
+            setTimeout(() => {
+                document.getElementById('typingIndicator').classList.add('hidden');
+                const response = getAIResponse(message);
+                addMessage(response, 'bot');
+            }, 1500);
+        }
+
+        function quickReply(text) {
+            document.getElementById('chatInput').value = text;
+            sendMessage();
+        }
+
+        function addMessage(text, sender) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'chat-bubble flex gap-3 ' + (sender === 'user' ? 'flex-row-reverse' : '');
+            
+            const avatar = sender === 'user' 
+                ? '<div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-user text-slate-400 text-xs"></i></div>'
+                : '<div class="w-8 h-8 rounded-full bg-gold-500/20 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-robot text-gold-400 text-xs"></i></div>';
+            
+            const bubble = sender === 'user'
+                ? `<div class="bg-gold-600 rounded-2xl rounded-tr-none px-4 py-3 text-sm text-white max-w-[80%]">${text}</div>`
+                : `<div class="bg-slate-800 rounded-2xl rounded-tl-none px-4 py-3 text-sm text-slate-300 max-w-[80%]">${text}</div>`;
+            
+            div.innerHTML = avatar + bubble;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function getAIResponse(input) {
+            const lower = input.toLowerCase();
+            if (lower.includes('withdrawal')) {
+                return "I can help with withdrawal inquiries. Standard processing time is 1-3 business days. Have you already submitted a withdrawal request? If so, please provide your ticket number.";
+            } else if (lower.includes('human') || lower.includes('agent')) {
+                return "I'm connecting you with a human support agent. Estimated wait time: <strong>2 minutes</strong>. Please hold...";
+            } else if (lower.includes('margin')) {
+                return "Margin calls occur at 100% margin level, and stop-out (automatic position closure) occurs at 50%. Would you like me to explain how to calculate your margin level?";
+            } else if (lower.includes('verify') || lower.includes('kyc')) {
+                return "Account verification requires: 1) Government ID, 2) Proof of address, 3) Selfie with ID. You can upload these in your Client Portal under Profile > Verification.";
+            } else {
+                return "I understand. To better assist you, could you provide more details about your inquiry? Or type 'human' to speak with a support specialist.";
+            }
+        }
+
+        // FAQ Toggle
+        function toggleFaq(button) {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (answer.classList.contains('open')) {
+                answer.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                // Close others
+                document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+                document.querySelectorAll('.fa-chevron-down').forEach(i => i.style.transform = 'rotate(0deg)');
+                
+                answer.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Search functionality
+        function quickSearch(term) {
+            document.getElementById('supportSearch').value = term;
+            document.getElementById('faq').scrollIntoView({ behavior: 'smooth' });
+            
+            // Highlight matching FAQ
+            document.querySelectorAll('.glass-panel').forEach(panel => {
+                const text = panel.textContent.toLowerCase();
+                if (text.includes(term.toLowerCase())) {
+                    panel.style.borderColor = '#D4A523';
+                    setTimeout(() => {
+                        panel.style.borderColor = '';
+                    }, 3000);
+                }
+            });
+        }
+
+        document.getElementById('supportSearch').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            if (term.length > 2) {
+                // Could implement live search here
+            }
+        });
+
+        // Ticket Modal
+        function openTicketModal() {
+            const modal = document.getElementById('ticketModal');
+            const content = document.getElementById('ticketModalContent');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeTicketModal() {
+            const modal = document.getElementById('ticketModal');
+            const content = document.getElementById('ticketModalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function submitTicket() {
+            // Simulate submission
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = 'Submitting...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                closeTicketModal();
+                btn.innerText = originalText;
+                btn.disabled = false;
+                
+                // Show success toast
+                const toast = document.createElement('div');
+                toast.className = 'fixed bottom-8 right-8 bg-green-600 text-white px-6 py-4 rounded-lg shadow-2xl z-50 flex items-center gap-3 animate-slideIn';
+                toast.innerHTML = '<i class="fa-solid fa-check-circle"></i><div><p class="font-semibold">Ticket Created!</p><p class="text-sm text-green-100">Reference: #SUP-2026-8891</p></div>';
+                document.body.appendChild(toast);
+                
+                setTimeout(() => toast.remove(), 5000);
+            }, 1500);
+        }
+
+        // Close modal on outside click
+        document.getElementById('ticketModal').addEventListener('click', function(e) {
+            if (e.target === this) closeTicketModal();
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('bg-slate-900/95', 'shadow-lg');
+            } else {
+                navbar.classList.remove('bg-slate-900/95', 'shadow-lg');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Leadership & Market Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3, .brand-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+        }
+        .ice-gradient {
+            background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 50%, #80DEEA 100%);
+        }
+        .stock-ticker {
+            animation: ticker 30s linear infinite;
+        }
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .leader-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .leader-card:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+        .metric-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(255, 215, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        .nav-item {
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            transition: width 0.3s ease;
+        }
+        .nav-item:hover::after {
+            width: 100%;
+        }
+        .live-indicator {
+            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+            animation: livePulse 2s infinite;
+        }
+        @keyframes livePulse {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-white overflow-x-hidden grid-bg">
+    <!-- Live Stock Ticker -->
+    <div class="fixed top-0 w-full bg-slate-900 border-b border-slate-800 z-50 overflow-hidden h-10 flex items-center">
+        <div class="stock-ticker whitespace-nowrap flex items-center gap-8 text-sm">
+            <span class="text-slate-400">GOLD:NYSE</span>
+            <span class="text-green-400 font-mono">$284.72 <span class="text-xs">▲ 2.4%</span></span>
+            <span class="text-slate-600">|</span>
+            <span class="text-slate-400">VOL</span>
+            <span class="text-white font-mono">24.8M</span>
+            <span class="text-slate-600">|</span>
+            <span class="text-slate-400">MKT CAP</span>
+            <span class="text-white font-mono">$42.8B</span>
+            <span class="text-slate-600">|</span>
+            <span class="text-slate-400">P/E</span>
+            <span class="text-white font-mono">18.4</span>
+            <span class="text-slate-600">|</span>
+            <span class="text-slate-400">DIV YIELD</span>
+            <span class="text-amber-400 font-mono">3.2%</span>
+            <span class="text-slate-600">|</span>
+            <span class="text-slate-400">52W HIGH</span>
+            <span class="text-white font-mono">$298.45</span>
+            <span class="text-slate-600">|</span>
+            <span class="text-slate-400">52W LOW</span>
+            <span class="text-white font-mono">$201.33</span>
+            <span class="text-slate-600">|</span>
+            <span class="text-slate-400">GOLD:NYSE</span>
+            <span class="text-green-400 font-mono">$284.72 <span class="text-xs">▲ 2.4%</span></span>
+            <span class="text-slate-600">|</span>
+            <span class="text-slate-400">VOL</span>
+            <span class="text-white font-mono">24.8M</span>
+            <span class="text-slate-600">|</span>
+            <span class="text-slate-400">MKT CAP</span>
+            <span class="text-white font-mono">$42.8B</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-10 w-full bg-slate-950/80 backdrop-blur-md border-b border-slate-800 z-40">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 gold-gradient rounded-lg flex items-center justify-center shadow-lg shadow-amber-500/20">
+                    <span class="text-slate-900 font-bold text-xl">G</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">GOLDENICE</h1>
+                    <p class="text-xs text-slate-400 tracking-widest">INTERNATIONAL</p>
+                </div>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium">
+                <a href="#dashboard" class="nav-item text-slate-300 hover:text-white transition-colors">Dashboard</a>
+                <a href="#leadership" class="nav-item text-slate-300 hover:text-white transition-colors">Leadership</a>
+                <a href="#performance" class="nav-item text-slate-300 hover:text-white transition-colors">Performance</a>
+                <a href="#governance" class="nav-item text-slate-300 hover:text-white transition-colors">Governance</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="live-indicator w-2 h-2 bg-green-500 rounded-full"></div>
+                <span class="text-xs text-green-400 font-mono">LIVE</span>
+                <button class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition-colors border border-slate-700">
+                    Investor Login
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+        
+        <!-- Hero Section -->
+        <section id="dashboard" class="mb-20">
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Main Chart -->
+                <div class="lg:col-span-2 glass-panel rounded-2xl p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold mb-1">Stock Performance</h2>
+                            <p class="text-slate-400 text-sm">Real-time market data • NYSE:GOLD</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="updateTimeframe('1D')" class="timeframe-btn px-3 py-1 rounded-lg text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 hover:bg-amber-500/30 transition-all" data-tf="1D">1D</button>
+                            <button onclick="updateTimeframe('1W')" class="timeframe-btn px-3 py-1 rounded-lg text-xs bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700 transition-all" data-tf="1W">1W</button>
+                            <button onclick="updateTimeframe('1M')" class="timeframe-btn px-3 py-1 rounded-lg text-xs bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700 transition-all" data-tf="1M">1M</button>
+                            <button onclick="updateTimeframe('1Y')" class="timeframe-btn px-3 py-1 rounded-lg text-xs bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700 transition-all" data-tf="1Y">1Y</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="stockChart"></canvas>
+                    </div>
+                    <div class="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-800">
+                        <div>
+                            <p class="text-slate-500 text-xs mb-1">Open</p>
+                            <p class="text-lg font-mono font-semibold">$278.15</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-xs mb-1">High</p>
+                            <p class="text-lg font-mono font-semibold text-green-400">$286.90</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-xs mb-1">Low</p>
+                            <p class="text-lg font-mono font-semibold text-red-400">$277.80</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-xs mb-1">Prev Close</p>
+                            <p class="text-lg font-mono font-semibold">$278.05</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="space-y-6">
+                    <div class="glass-panel rounded-2xl p-6 border-l-4 border-amber-500">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-slate-400 text-sm">Market Cap</p>
+                                <h3 class="text-3xl font-bold mt-1">$42.8B</h3>
+                            </div>
+                            <div class="p-2 bg-amber-500/10 rounded-lg">
+                                <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="text-green-400 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                                12.5%
+                            </span>
+                            <span class="text-slate-500">vs last year</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-2xl p-6 border-l-4 border-cyan-500">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-slate-400 text-sm">Revenue (TTM)</p>
+                                <h3 class="text-3xl font-bold mt-1">$18.4B</h3>
+                            </div>
+                            <div class="p-2 bg-cyan-500/10 rounded-lg">
+                                <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="text-green-400 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                                8.3%
+                            </span>
+                            <span class="text-slate-500">YoY Growth</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-2xl p-6 border-l-4 border-purple-500">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-slate-400 text-sm">Dividend Yield</p>
+                                <h3 class="text-3xl font-bold mt-1">3.24%</h3>
+                            </div>
+                            <div class="p-2 bg-purple-500/10 rounded-lg">
+                                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="text-slate-300">Quarterly: $2.30/sh</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leadership Section -->
+        <section id="leadership" class="mb-20">
+            <div class="flex justify-between items-end mb-10">
+                <div>
+                    <h2 class="text-4xl font-bold mb-2">Executive Leadership</h2>
+                    <p class="text-slate-400">Driving innovation and sustainable growth across global markets</p>
+                </div>
+                <button onclick="toggleView()" id="viewToggle" class="px-4 py-2 bg-slate-800 rounded-lg text-sm hover:bg-slate-700 transition-colors border border-slate-700">
+                    Grid View
+                </button>
+            </div>
+
+            <div id="leadershipGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- CEO -->
+                <div class="leader-card glass-panel rounded-2xl p-6 cursor-pointer group" onclick="showLeaderDetail('ceo')">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 rounded-full gold-gradient flex items-center justify-center text-slate-900 font-bold text-2xl shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform">
+                            VS
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30">CEO</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-1">Victoria Sterling</h3>
+                    <p class="text-amber-400 text-sm mb-3">Chief Executive Officer</p>
+                    <p class="text-slate-400 text-sm line-clamp-2">20+ years in global finance and commodities trading. Former Managing Director at Goldman Sachs.</p>
+                    <div class="mt-4 pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-xs text-slate-500">Since 2019</span>
+                        <svg class="w-5 h-5 text-slate-600 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+
+                <!-- President -->
+                <div class="leader-card glass-panel rounded-2xl p-6 cursor-pointer group" onclick="showLeaderDetail('president')">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                            JC
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">President</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-1">James Chen</h3>
+                    <p class="text-cyan-400 text-sm mb-3">President & COO</p>
+                    <p class="text-slate-400 text-sm line-clamp-2">Expert in operational excellence and international expansion. Previously led Asia-Pacific operations at ICE.</p>
+                    <div class="mt-4 pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-xs text-slate-500">Since 2021</span>
+                        <svg class="w-5 h-5 text-slate-600 group-hover:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+
+                <!-- CFO -->
+                <div class="leader-card glass-panel rounded-2xl p-6 cursor-pointer group" onclick="showLeaderDetail('cfo')">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-600 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+                            ER
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs bg-purple-500/20 text-purple-400 border border-purple-500/30">CFO</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-1">Elena Rodriguez</h3>
+                    <p class="text-purple-400 text-sm mb-3">Chief Financial Officer</p>
+                    <p class="text-slate-400 text-sm line-clamp-2">CPA with extensive experience in Fortune 500 financial management. Former VP at Wyndham Hotels.</p>
+                    <div class="mt-4 pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-xs text-slate-500">Since 2020</span>
+                        <svg class="w-5 h-5 text-slate-600 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+
+                <!-- CTO -->
+                <div class="leader-card glass-panel rounded-2xl p-6 cursor-pointer group" onclick="showLeaderDetail('cto')">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+                            AM
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">CTO</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-1">Ahmed Hassan</h3>
+                    <p class="text-emerald-400 text-sm mb-3">Chief Technology Officer</p>
+                    <p class="text-slate-400 text-sm line-clamp-2">Pioneer in fintech and blockchain infrastructure. Former lead architect at Bakkt and ICE Digital.</p>
+                    <div class="mt-4 pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-xs text-slate-500">Since 2022</span>
+                        <svg class="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+
+                <!-- Chief Strategy -->
+                <div class="leader-card glass-panel rounded-2xl p-6 cursor-pointer group" onclick="showLeaderDetail('strategy')">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-red-600 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+                            SK
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs bg-orange-500/20 text-orange-400 border border-orange-500/30">Strategy</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-1">Sarah Kim</h3>
+                    <p class="text-orange-400 text-sm mb-3">Chief Strategy Officer</p>
+                    <p class="text-slate-400 text-sm line-clamp-2">Strategic advisor with background in M&A and corporate development. Former consultant at McKinsey.</p>
+                    <div class="mt-4 pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-xs text-slate-500">Since 2020</span>
+                        <svg class="w-5 h-5 text-slate-600 group-hover:text-orange-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+
+                <!-- General Counsel -->
+                <div class="leader-card glass-panel rounded-2xl p-6 cursor-pointer group" onclick="showLeaderDetail('legal')">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-400 to-blue-600 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
+                            MN
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">Legal</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-1">Michael Norcross</h3>
+                    <p class="text-indigo-400 text-sm mb-3">General Counsel</p>
+                    <p class="text-slate-400 text-sm line-clamp-2">Veteran securities lawyer with 30+ years experience. Former partner at Drinker Biddle & Reath.</p>
+                    <div class="mt-4 pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-xs text-slate-500">Since 2018</span>
+                        <svg class="w-5 h-5 text-slate-600 group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Metrics -->
+        <section id="performance" class="mb-20">
+            <h2 class="text-4xl font-bold mb-10">Leadership Performance Metrics</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="glass-panel rounded-2xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">Stock Performance vs S&P 500</h3>
+                    <div class="h-64">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                </div>
+                <div class="glass-panel rounded-2xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">Revenue Growth Under Current Leadership</h3>
+                    <div class="h-64">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-6 mt-6">
+                <div class="glass-panel rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold text-amber-400 mb-1">17%</p>
+                    <p class="text-xs text-slate-400">CAGR Since 2019</p>
+                </div>
+                <div class="glass-panel rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold text-cyan-400 mb-1">$12B</p>
+                    <p class="text-xs text-slate-400">Market Cap Added</p>
+                </div>
+                <div class="glass-panel rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold text-purple-400 mb-1">24%</p>
+                    <p class="text-xs text-slate-400">ROE Average</p>
+                </div>
+                <div class="glass-panel rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold text-emerald-400 mb-1">4.2x</p>
+                    <p class="text-xs text-slate-400">Debt/EBITDA</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Governance -->
+        <section id="governance" class="mb-20">
+            <h2 class="text-4xl font-bold mb-10">Corporate Governance</h2>
+            <div class="glass-panel rounded-2xl p-8">
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 text-amber-400">Board Composition</h3>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex justify-between">
+                                <span>Independent Directors</span>
+                                <span class="text-white font-semibold">8/11</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span>Average Tenure</span>
+                                <span class="text-white font-semibold">5.2 years</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span>Gender Diversity</span>
+                                <span class="text-white font-semibold">45%</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span>Annual Meetings</span>
+                                <span class="text-white font-semibold">Q1 2026</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 text-cyan-400">Committees</h3>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-cyan-400"></div>
+                                <span>Audit Committee</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-cyan-400"></div>
+                                <span>Compensation Committee</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-cyan-400"></div>
+                                <span>Nominating & Governance</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-cyan-400"></div>
+                                <span>Risk Committee</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 text-purple-400">ESG Leadership</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-slate-300">Carbon Neutral Target</span>
+                                <span class="text-emerald-400 font-semibold">2030</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-slate-300">MSCI ESG Rating</span>
+                                <span class="text-emerald-400 font-semibold">AA</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-slate-300">Sustainalytics Score</span>
+                                <span class="text-emerald-400 font-semibold">Low Risk</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Leader Detail Modal -->
+    <div id="leaderModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-6">
+        <div class="glass-panel rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-slate-700 shadow-2xl shadow-amber-500/10">
+            <div class="p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-4">
+                        <div id="modalAvatar" class="w-20 h-20 rounded-full gold-gradient flex items-center justify-center text-slate-900 font-bold text-3xl">
+                            VS
+                        </div>
+                        <div>
+                            <h2 id="modalName" class="text-3xl font-bold">Victoria Sterling</h2>
+                            <p id="modalRole" class="text-amber-400 text-lg">Chief Executive Officer</p>
+                        </div>
+                    </div>
+                    <button onclick="closeLeaderDetail()" class="p-2 hover:bg-slate-800 rounded-lg transition-colors">
+                        <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                
+                <div id="modalContent" class="space-y-6 text-slate-300">
+                    <p>Victoria Sterling has served as Chief Executive Officer of Goldenice International since 2019, leading the company through a transformative period of digital innovation and global expansion. Under her leadership, Goldenice has achieved a compound annual growth rate of 17% and expanded into 12 new markets.</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Key Achievements</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-amber-400 mt-1">▸</span>
+                                    <span>Led $2.4B acquisition of Arctic Data Systems</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-amber-400 mt-1">▸</span>
+                                    <span>Implemented ESG strategy achieving carbon neutrality in operations</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-amber-400 mt-1">▸</span>
+                                    <span>Grew market cap from $18B to $42B</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Background</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-cyan-400 mt-1">▸</span>
+                                    <span>Former Managing Director, Goldman Sachs Commodities</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-cyan-400 mt-1">▸</span>
+                                    <span>MBA, Harvard Business School</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-cyan-400 mt-1">▸</span>
+                                    <span>Board Member: Federal Reserve Bank of NY</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800">
+                        <h4 class="text-white font-semibold mb-3">Compensation Structure (2025)</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-400">Base Salary</span>
+                                <span class="text-white">$1,200,000</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-400">Stock Awards</span>
+                                <span class="text-white">$8,500,000</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-400">Performance Bonus</span>
+                                <span class="text-green-400">$3,200,000</span>
+                            </div>
+                            <div class="flex justify-between text-sm font-semibold pt-2 border-t border-slate-800">
+                                <span class="text-white">Total Compensation</span>
+                                <span class="text-amber-400">$12,900,000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Stock Chart Configuration
+        const ctx = document.getElementById('stockChart').getContext('2d');
+        let stockChart;
+        
+        const chartData = {
+            '1D': {
+                labels: ['9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '1:00', '1:30', '2:00', '2:30', '3:00', '3:30', '4:00'],
+                data: [278.15, 279.45, 281.20, 280.85, 282.40, 283.15, 282.90, 284.20, 283.75, 284.50, 284.10, 284.85, 284.45, 284.72]
+            },
+            '1W': {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                data: [275.20, 278.45, 276.80, 281.30, 284.72]
+            },
+            '1M': {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                data: [268.50, 272.30, 278.90, 284.72]
+            },
+            '1Y': {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                data: [245.30, 258.60, 271.20, 284.72]
+            }
+        };
+
+        function initChart(timeframe = '1D') {
+            const data = chartData[timeframe];
+            
+            if (stockChart) {
+                stockChart.destroy();
+            }
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(255, 215, 0, 0.3)');
+            gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+
+            stockChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'GOLD Price',
+                        data: data.data,
+                        borderColor: '#FFD700',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#FFD700',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleColor: '#FFD700',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(255, 215, 0, 0.3)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#64748b' }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { 
+                                color: '#64748b',
+                                callback: function(value) {
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+
+        function updateTimeframe(tf) {
+            // Update button styles
+            document.querySelectorAll('.timeframe-btn').forEach(btn => {
+                if (btn.dataset.tf === tf) {
+                    btn.className = 'timeframe-btn px-3 py-1 rounded-lg text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 hover:bg-amber-500/30 transition-all';
+                } else {
+                    btn.className = 'timeframe-btn px-3 py-1 rounded-lg text-xs bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700 transition-all';
+                }
+            });
+            
+            initChart(tf);
+        }
+
+        // Comparison Chart
+        const compCtx = document.getElementById('comparisonChart').getContext('2d');
+        new Chart(compCtx, {
+            type: 'line',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
+                datasets: [{
+                    label: 'GOLD',
+                    data: [100, 115, 132, 145, 168, 189],
+                    borderColor: '#FFD700',
+                    backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4
+                }, {
+                    label: 'S&P 500',
+                    data: [100, 128, 131, 165, 178, 195],
+                    borderColor: '#64748b',
+                    backgroundColor: 'rgba(100, 116, 139, 0.1)',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#94a3b8' }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#64748b' }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#64748b' }
+                    }
+                }
+            }
+        });
+
+        // Revenue Chart
+        const revCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: 'Revenue ($B)',
+                    data: [12.4, 13.8, 15.2, 16.1, 17.3, 18.4],
+                    backgroundColor: [
+                        'rgba(255, 215, 0, 0.3)',
+                        'rgba(255, 215, 0, 0.4)',
+                        'rgba(255, 215, 0, 0.5)',
+                        'rgba(255, 215, 0, 0.6)',
+                        'rgba(255, 215, 0, 0.7)',
+                        'rgba(255, 215, 0, 0.8)'
+                    ],
+                    borderColor: '#FFD700',
+                    borderWidth: 1,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#64748b' }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { 
+                            color: '#64748b',
+                            callback: function(value) {
+                                return '$' + value + 'B';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Leader Data
+        const leaderData = {
+            ceo: {
+                name: 'Victoria Sterling',
+                role: 'Chief Executive Officer',
+                initials: 'VS',
+                color: 'gold-gradient',
+                content: `
+                    <p>Victoria Sterling has served as Chief Executive Officer of Goldenice International since 2019, leading the company through a transformative period of digital innovation and global expansion. Under her leadership, Goldenice has achieved a compound annual growth rate of 17% and expanded into 12 new markets.</p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Key Achievements</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-amber-400 mt-1">▸</span><span>Led $2.4B acquisition of Arctic Data Systems</span></li>
+                                <li class="flex items-start gap-2"><span class="text-amber-400 mt-1">▸</span><span>Implemented ESG strategy achieving carbon neutrality in operations</span></li>
+                                <li class="flex items-start gap-2"><span class="text-amber-400 mt-1">▸</span><span>Grew market cap from $18B to $42B</span></li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Background</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-cyan-400 mt-1">▸</span><span>Former Managing Director, Goldman Sachs Commodities</span></li>
+                                <li class="flex items-start gap-2"><span class="text-cyan-400 mt-1">▸</span><span>MBA, Harvard Business School</span></li>
+                                <li class="flex items-start gap-2"><span class="text-cyan-400 mt-1">▸</span><span>Board Member: Federal Reserve Bank of NY</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 mt-6">
+                        <h4 class="text-white font-semibold mb-3">Compensation Structure (2025)</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm"><span class="text-slate-400">Base Salary</span><span class="text-white">$1,200,000</span></div>
+                            <div class="flex justify-between text-sm"><span class="text-slate-400">Stock Awards</span><span class="text-white">$8,500,000</span></div>
+                            <div class="flex justify-between text-sm"><span class="text-slate-400">Performance Bonus</span><span class="text-green-400">$3,200,000</span></div>
+                            <div class="flex justify-between text-sm font-semibold pt-2 border-t border-slate-800"><span class="text-white">Total Compensation</span><span class="text-amber-400">$12,900,000</span></div>
+                        </div>
+                    </div>
+                `
+            },
+            president: {
+                name: 'James Chen',
+                role: 'President & COO',
+                initials: 'JC',
+                color: 'bg-gradient-to-br from-cyan-400 to-blue-600',
+                content: `
+                    <p>James Chen oversees global operations and business development at Goldenice International. With extensive experience in the Asia-Pacific markets, he has been instrumental in expanding the company's footprint across emerging markets and optimizing operational efficiency.</p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Key Achievements</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-cyan-400 mt-1">▸</span><span>Expanded APAC revenue by 340%</span></li>
+                                <li class="flex items-start gap-2"><span class="text-cyan-400 mt-1">▸</span><span>Implemented AI-driven trading infrastructure</span></li>
+                                <li class="flex items-start gap-2"><span class="text-cyan-400 mt-1">▸</span><span>Reduced operational costs by 15%</span></li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Background</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-blue-400 mt-1">▸</span><span>Former Head of Asia-Pacific, ICE</span></li>
+                                <li class="flex items-start gap-2"><span class="text-blue-400 mt-1">▸</span><span>MS, Operations Research, MIT</span></li>
+                                <li class="flex items-start gap-2"><span class="text-blue-400 mt-1">▸</span><span>Fluent in Mandarin, Japanese, English</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            cfo: {
+                name: 'Elena Rodriguez',
+                role: 'Chief Financial Officer',
+                initials: 'ER',
+                color: 'bg-gradient-to-br from-purple-400 to-pink-600',
+                content: `
+                    <p>Elena Rodriguez brings deep expertise in financial management and strategic planning. As CFO, she has strengthened Goldenice's balance sheet and implemented robust financial controls while supporting aggressive growth initiatives.</p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Key Achievements</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-purple-400 mt-1">▸</span><span>Restructured debt saving $50M annually</span></li>
+                                <li class="flex items-start gap-2"><span class="text-purple-400 mt-1">▸</span><span>Led successful $1B bond issuance</span></li>
+                                <li class="flex items-start gap-2"><span class="text-purple-400 mt-1">▸</span><span>Improved working capital efficiency</span></li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Background</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-pink-400 mt-1">▸</span><span>Former VP Finance, Wyndham Hotels</span></li>
+                                <li class="flex items-start gap-2"><span class="text-pink-400 mt-1">▸</span><span>CPA, PwC Alumni</span></li>
+                                <li class="flex items-start gap-2"><span class="text-pink-400 mt-1">▸</span><span>BS Accounting, University of Miami</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            cto: {
+                name: 'Ahmed Hassan',
+                role: 'Chief Technology Officer',
+                initials: 'AH',
+                color: 'bg-gradient-to-br from-emerald-400 to-teal-600',
+                content: `
+                    <p>Ahmed Hassan leads Goldenice's technology strategy and digital transformation. He is responsible for the company's trading platforms, data infrastructure, and emerging technology initiatives including blockchain and AI integration.</p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Key Achievements</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-emerald-400 mt-1">▸</span><span>Launched Goldenice Digital Assets platform</span></li>
+                                <li class="flex items-start gap-2"><span class="text-emerald-400 mt-1">▸</span><span>Reduced latency by 60% in trading systems</span></li>
+                                <li class="flex items-start gap-2"><span class="text-emerald-400 mt-1">▸</span><span>Built cloud-native infrastructure</span></li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Background</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-teal-400 mt-1">▸</span><span>Former Lead Architect, Bakkt</span></li>
+                                <li class="flex items-start gap-2"><span class="text-teal-400 mt-1">▸</span><span>PhD Computer Science, Stanford</span></li>
+                                <li class="flex items-start gap-2"><span class="text-teal-400 mt-1">▸</span><span>12 patents in distributed systems</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            strategy: {
+                name: 'Sarah Kim',
+                role: 'Chief Strategy Officer',
+                initials: 'SK',
+                color: 'bg-gradient-to-br from-orange-400 to-red-600',
+                content: `
+                    <p>Sarah Kim drives Goldenice's strategic planning, mergers and acquisitions, and corporate development initiatives. She identifies growth opportunities and partnerships that align with the company's long-term vision.</p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Key Achievements</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-orange-400 mt-1">▸</span><span>Executed 5 strategic acquisitions</span></li>
+                                <li class="flex items-start gap-2"><span class="text-orange-400 mt-1">▸</span><span>Established joint venture in Singapore</span></li>
+                                <li class="flex items-start gap-2"><span class="text-orange-400 mt-1">▸</span><span>Developed 2025-2030 strategic roadmap</span></li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Background</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-red-400 mt-1">▸</span><span>Former Engagement Manager, McKinsey</span></li>
+                                <li class="flex items-start gap-2"><span class="text-red-400 mt-1">▸</span><span>MBA, Wharton School</span></li>
+                                <li class="flex items-start gap-2"><span class="text-red-400 mt-1">▸</span><span>BA Economics, Yale University</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            legal: {
+                name: 'Michael Norcross',
+                role: 'General Counsel',
+                initials: 'MN',
+                color: 'bg-gradient-to-br from-indigo-400 to-blue-600',
+                content: `
+                    <p>Michael Norcross oversees all legal, compliance, and regulatory affairs for Goldenice International. With decades of experience in securities law, he ensures the company maintains the highest standards of corporate governance.</p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Key Achievements</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-indigo-400 mt-1">▸</span><span>Zero material litigation losses</span></li>
+                                <li class="flex items-start gap-2"><span class="text-indigo-400 mt-1">▸</span><span>Implemented global compliance framework</span></li>
+                                <li class="flex items-start gap-2"><span class="text-indigo-400 mt-1">▸</span><span>Led successful defense of SEC inquiry</span></li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+                            <h4 class="text-white font-semibold mb-2">Background</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start gap-2"><span class="text-blue-400 mt-1">▸</span><span>Former Partner, Drinker Biddle & Reath</span></li>
+                                <li class="flex items-start gap-2"><span class="text-blue-400 mt-1">▸</span><span>JD, Columbia Law School</span></li>
+                                <li class="flex items-start gap-2"><span class="text-blue-400 mt-1">▸</span><span>Member, NY State Bar since 1982</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        function showLeaderDetail(id) {
+            const leader = leaderData[id];
+            document.getElementById('modalName').textContent = leader.name;
+            document.getElementById('modalRole').textContent = leader.role;
+            document.getElementById('modalAvatar').textContent = leader.initials;
+            document.getElementById('modalAvatar').className = `w-20 h-20 rounded-full ${leader.color} flex items-center justify-center text-slate-900 font-bold text-3xl`;
+            document.getElementById('modalContent').innerHTML = leader.content;
+            document.getElementById('leaderModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLeaderDetail() {
+            document.getElementById('leaderModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on outside click
+        document.getElementById('leaderModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLeaderDetail();
+            }
+        });
+
+        // View Toggle
+        let isGridView = true;
+        function toggleView() {
+            isGridView = !isGridView;
+            const grid = document.getElementById('leadershipGrid');
+            const btn = document.getElementById('viewToggle');
+            
+            if (isGridView) {
+                grid.className = 'grid md:grid-cols-2 lg:grid-cols-3 gap-6';
+                btn.textContent = 'Grid View';
+            } else {
+                grid.className = 'flex flex-col gap-4';
+                btn.textContent = 'List View';
+            }
+        }
+
+        // Simulate live price updates
+        setInterval(() => {
+            const priceEl = document.querySelector('.stock-ticker .text-green-400');
+            if (priceEl) {
+                const currentPrice = parseFloat(priceEl.textContent.replace('$', ''));
+                const change = (Math.random() - 0.5) * 0.5;
+                const newPrice = (currentPrice + change).toFixed(2);
+                priceEl.innerHTML = `$${newPrice} <span class="text-xs">▲ 2.4%</span>`;
+            }
+        }, 5000);
+
+        // Initialize
+        initChart('1D');
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

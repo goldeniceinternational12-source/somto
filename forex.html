@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice Pro | Institutional Forex Trading</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightweight-charts/3.8.0/lightweight-charts.standalone.production.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #020202;
+            color: #e5e7eb;
+            overflow: hidden;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Gold accents */
+        .text-gold {
+            color: #FFD700;
+        }
+        
+        .bg-gold {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        }
+        
+        .border-gold {
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Glass panels */
+        .glass {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(25, 25, 25, 0.9), rgba(10, 10, 10, 0.95));
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+        
+        /* Trading grid background */
+        .trading-grid {
+            background-image: 
+                linear-gradient(rgba(255, 215, 0, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 215, 0, 0.02) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        /* Price ticker animation */
+        @keyframes price-up {
+            0% { color: #22c55e; text-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
+            100% { color: inherit; text-shadow: none; }
+        }
+        
+        @keyframes price-down {
+            0% { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+            100% { color: inherit; text-shadow: none; }
+        }
+        
+        .price-up { animation: price-up 0.5s ease; }
+        .price-down { animation: price-down 0.5s ease; }
+        
+        /* Order book bars */
+        .bid-bar {
+            background: linear-gradient(90deg, rgba(34, 197, 94, 0.3) 0%, transparent 100%);
+        }
+        
+        .ask-bar {
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.3) 0%, transparent 100%);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 2px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFD700;
+        }
+        
+        /* Button states */
+        .btn-buy {
+            background: linear-gradient(145deg, #16a34a, #15803d);
+            box-shadow: 0 4px 0 #14532d;
+            transition: all 0.1s;
+        }
+        
+        .btn-buy:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #14532d;
+        }
+        
+        .btn-sell {
+            background: linear-gradient(145deg, #dc2626, #b91c1c);
+            box-shadow: 0 4px 0 #7f1d1d;
+            transition: all 0.1s;
+        }
+        
+        .btn-sell:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #7f1d1d;
+        }
+        
+        /* Chart container */
+        #chartContainer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Pulse for live indicator */
+        .pulse-live {
+            animation: pulse-live 2s infinite;
+        }
+        
+        @keyframes pulse-live {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        /* Order row hover */
+        .order-row:hover {
+            background: rgba(255, 215, 0, 0.05);
+        }
+        
+        /* Tab active state */
+        .tab-active {
+            background: rgba(255, 215, 0, 0.15);
+            border-bottom: 2px solid #FFD700;
+            color: #FFD700;
+        }
+        
+        /* Input focus */
+        input:focus, select:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.1);
+        }
+        
+        /* Tooltip */
+        .trade-tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body class="trading-grid h-screen flex flex-col">
+    
+    <!-- Top Bar -->
+    <header class="h-14 glass border-b border-gold flex items-center justify-between px-4 flex-shrink-0 z-50">
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-gold rounded-lg flex items-center justify-center">
+                    <span class="text-black font-bold text-sm">G</span>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm tracking-wider">GOLDENICE <span class="text-gold">PRO</span></h1>
+                    <p class="text-[10px] text-gray-500">Institutional Grade</p>
+                </div>
+            </div>
+            
+            <div class="h-8 w-px bg-gray-800 mx-2"></div>
+            
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30">
+                <span class="w-2 h-2 bg-green-400 rounded-full pulse-live"></span>
+                <span class="text-xs text-green-400 font-medium">Connected</span>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-4 text-xs font-mono">
+                <span class="text-gray-500">LATENCY: <span class="text-green-400">12ms</span></span>
+                <span class="text-gray-500">SERVER: <span class="text-blue-400">LD4-LONDON</span></span>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <div class="hidden lg:flex items-center gap-6 text-xs">
+                <div class="text-right">
+                    <p class="text-gray-500">MARGIN LEVEL</p>
+                    <p class="font-mono text-green-400">245.8%</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-gray-500">FREE MARGIN</p>
+                    <p class="font-mono text-gold">$124,580.00</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-gray-500">EQUITY</p>
+                    <p class="font-mono text-white">$142,340.50</p>
+                </div>
+            </div>
+            
+            <div class="h-8 w-px bg-gray-800"></div>
+            
+            <button class="w-8 h-8 rounded-lg glass flex items-center justify-center hover:bg-white/5 transition-colors relative">
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] flex items-center justify-center">3</span>
+            </button>
+            
+            <div class="flex items-center gap-2 pl-2 border-l border-gray-800">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-black font-bold text-xs">
+                    JS
+                </div>
+                <div class="hidden sm:block">
+                    <p class="text-xs font-medium">John Smith</p>
+                    <p class="text-[10px] text-gray-500">Pro Account</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Trading Interface -->
+    <div class="flex-1 flex overflow-hidden">
+        
+        <!-- Left Sidebar - Watchlist -->
+        <aside class="w-64 glass border-r border-gold flex flex-col hidden lg:flex">
+            <div class="p-3 border-b border-gray-800">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Watchlist</h3>
+                    <button class="text-gray-500 hover:text-gold transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    </button>
+                </div>
+                <input type="text" placeholder="Search pairs..." class="w-full bg-black/50 border border-gray-800 rounded px-3 py-1.5 text-xs text-white placeholder-gray-600">
+            </div>
+            
+            <div class="flex-1 overflow-y-auto" id="watchlist">
+                <!-- Watchlist items generated by JS -->
+            </div>
+            
+            <div class="p-3 border-t border-gray-800">
+                <div class="flex gap-2">
+                    <button class="flex-1 py-2 rounded bg-white/5 text-xs hover:bg-white/10 transition-colors">Forex</button>
+                    <button class="flex-1 py-2 rounded bg-white/5 text-xs hover:bg-white/10 transition-colors">Crypto</button>
+                    <button class="flex-1 py-2 rounded bg-white/5 text-xs hover:bg-white/10 transition-colors">Commo</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Center - Chart & Trading -->
+        <main class="flex-1 flex flex-col min-w-0">
+            
+            <!-- Chart Header -->
+            <div class="h-12 glass border-b border-gray-800 flex items-center justify-between px-4 flex-shrink-0">
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg font-bold" id="currentPair">EUR/USD</span>
+                        <span class="text-xs px-2 py-0.5 rounded bg-blue-500/20 text-blue-400">Major</span>
+                    </div>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-2xl font-mono font-bold text-white" id="currentPrice">1.08452</span>
+                        <span class="text-sm font-mono text-green-400" id="priceChange">+0.0024 (+0.22%)</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <select id="timeframe" onchange="changeTimeframe()" class="bg-black/50 border border-gray-700 rounded px-3 py-1.5 text-xs">
+                        <option value="1m">1m</option>
+                        <option value="5m">5m</option>
+                        <option value="15m">15m</option>
+                        <option value="1h" selected>1H</option>
+                        <option value="4h">4H</option>
+                        <option value="1d">1D</option>
+                    </select>
+                    
+                    <div class="flex rounded-lg overflow-hidden border border-gray-700">
+                        <button class="px-3 py-1.5 text-xs bg-white/10 text-white">Candles</button>
+                        <button class="px-3 py-1.5 text-xs hover:bg-white/5 text-gray-400">Line</button>
+                        <button class="px-3 py-1.5 text-xs hover:bg-white/5 text-gray-400">Heikin</button>
+                    </div>
+                    
+                    <button class="p-2 rounded-lg hover:bg-white/5 transition-colors" onclick="toggleIndicators()">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chart Area -->
+            <div class="flex-1 relative bg-black" id="chartWrapper">
+                <div id="chartContainer"></div>
+                
+                <!-- Chart Overlays -->
+                <div class="absolute top-4 left-4 flex flex-col gap-2">
+                    <div class="glass-panel rounded-lg p-2 text-xs">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                            <span class="text-gray-400">MA(20)</span>
+                            <span class="font-mono text-blue-400">1.0834</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                            <span class="text-gray-400">MA(50)</span>
+                            <span class="font-mono text-purple-400">1.0812</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Trade Buttons -->
+                <div class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-3">
+                    <button onclick="quickTrade('buy')" class="btn-buy w-16 h-16 rounded-xl flex flex-col items-center justify-center text-white font-bold shadow-lg group relative overflow-hidden">
+                        <span class="text-xs opacity-80">BUY</span>
+                        <span class="text-sm font-mono" id="quickBuyPrice">1.0846</span>
+                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform"></div>
+                    </button>
+                    <button onclick="quickTrade('sell')" class="btn-sell w-16 h-16 rounded-xl flex flex-col items-center justify-center text-white font-bold shadow-lg group relative overflow-hidden">
+                        <span class="text-xs opacity-80">SELL</span>
+                        <span class="text-sm font-mono" id="quickSellPrice">1.0844</span>
+                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform"></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom Panel - Order Entry & Positions -->
+            <div class="h-80 glass border-t border-gold flex flex-col">
+                <!-- Tabs -->
+                <div class="flex border-b border-gray-800">
+                    <button onclick="switchTab('order')" class="tab-active px-6 py-3 text-xs font-medium transition-colors" data-tab="order">Order Entry</button>
+                    <button onclick="switchTab('positions')" class="px-6 py-3 text-xs font-medium text-gray-400 hover:text-white transition-colors" data-tab="positions">Positions (3)</button>
+                    <button onclick="switchTab('orders')" class="px-6 py-3 text-xs font-medium text-gray-400 hover:text-white transition-colors" data-tab="orders">Pending (2)</button>
+                    <button onclick="switchTab('history')" class="px-6 py-3 text-xs font-medium text-gray-400 hover:text-white transition-colors" data-tab="history">History</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="flex-1 overflow-hidden relative">
+                    
+                    <!-- Order Entry -->
+                    <div id="tab-order" class="tab-panel active h-full p-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+                            <!-- Order Form -->
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button onclick="setOrderType('market')" id="btn-market" class="py-2 rounded-lg bg-gold text-black font-semibold text-sm">Market</button>
+                                    <button onclick="setOrderType('limit')" id="btn-limit" class="py-2 rounded-lg glass text-gray-400 text-sm hover:text-white">Limit</button>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="text-xs text-gray-500 mb-1 block">Volume (Lots)</label>
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="adjustVolume(-0.1)" class="w-8 h-8 rounded bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400">-</button>
+                                            <input type="number" id="volumeInput" value="1.0" step="0.1" class="flex-1 bg-black/50 border border-gray-700 rounded px-3 py-2 text-center font-mono text-sm">
+                                            <button onclick="adjustVolume(0.1)" class="w-8 h-8 rounded bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400">+</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label class="text-xs text-gray-500 mb-1 block">Take Profit</label>
+                                            <input type="number" id="tpInput" placeholder="1.0900" class="w-full bg-black/50 border border-gray-700 rounded px-3 py-2 font-mono text-sm text-green-400">
+                                        </div>
+                                        <div>
+                                            <label class="text-xs text-gray-500 mb-1 block">Stop Loss</label>
+                                            <input type="number" id="slInput" placeholder="1.0800" class="w-full bg-black/50 border border-gray-700 rounded px-3 py-2 font-mono text-sm text-red-400">
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="text-xs text-gray-500 mb-1 block">Comment</label>
+                                        <input type="text" placeholder="Trade note..." class="w-full bg-black/50 border border-gray-700 rounded px-3 py-2 text-sm">
+                                    </div>
+                                </div>
+                                
+                                <div class="pt-2 border-t border-gray-800">
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <span class="text-gray-500">Margin Required:</span>
+                                        <span class="font-mono">$1,084.50</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500">Spread:</span>
+                                        <span class="font-mono text-gold">0.2 pips</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Order Buttons -->
+                            <div class="flex flex-col gap-3">
+                                <button onclick="placeOrder('buy')" class="btn-buy flex-1 rounded-xl flex flex-col items-center justify-center text-white font-bold group relative overflow-hidden">
+                                    <span class="text-lg mb-1">BUY</span>
+                                    <span class="text-2xl font-mono" id="buyPrice">1.08456</span>
+                                    <span class="text-xs opacity-80 mt-1">Click to Buy Market</span>
+                                </button>
+                                <button onclick="placeOrder('sell')" class="btn-sell flex-1 rounded-xl flex flex-col items-center justify-center text-white font-bold group relative overflow-hidden">
+                                    <span class="text-lg mb-1">SELL</span>
+                                    <span class="text-2xl font-mono" id="sellPrice">1.08444</span>
+                                    <span class="text-xs opacity-80 mt-1">Click to Sell Market</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Positions -->
+                    <div id="tab-positions" class="tab-panel h-full overflow-auto">
+                        <table class="w-full text-xs">
+                            <thead class="sticky top-0 bg-[#0f0f0f] z-10">
+                                <tr class="text-gray-500 border-b border-gray-800">
+                                    <th class="text-left p-3 font-medium">Ticket</th>
+                                    <th class="text-left p-3 font-medium">Pair</th>
+                                    <th class="text-left p-3 font-medium">Type</th>
+                                    <th class="text-right p-3 font-medium">Volume</th>
+                                    <th class="text-right p-3 font-medium">Open Price</th>
+                                    <th class="text-right p-3 font-medium">Current</th>
+                                    <th class="text-right p-3 font-medium">SL</th>
+                                    <th class="text-right p-3 font-medium">TP</th>
+                                    <th class="text-right p-3 font-medium">P/L</th>
+                                    <th class="text-center p-3 font-medium">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="positionsTable">
+                                <!-- Generated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pending Orders -->
+                    <div id="tab-orders" class="tab-panel h-full overflow-auto p-4">
+                        <div class="space-y-2" id="pendingOrders">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- History -->
+                    <div id="tab-history" class="tab-panel h-full overflow-auto">
+                        <table class="w-full text-xs">
+                            <thead class="sticky top-0 bg-[#0f0f0f] z-10">
+                                <tr class="text-gray-500 border-b border-gray-800">
+                                    <th class="text-left p-3 font-medium">Time</th>
+                                    <th class="text-left p-3 font-medium">Pair</th>
+                                    <th class="text-left p-3 font-medium">Type</th>
+                                    <th class="text-right p-3 font-medium">Volume</th>
+                                    <th class="text-right p-3 font-medium">Price</th>
+                                    <th class="text-right p-3 font-medium">Close</th>
+                                    <th class="text-right p-3 font-medium">P/L</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTable">
+                                <!-- Generated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar - Order Book & Recent Trades -->
+        <aside class="w-72 glass border-l border-gold flex flex-col hidden xl:flex">
+            
+            <!-- Order Book -->
+            <div class="flex-1 flex flex-col border-b border-gray-800">
+                <div class="p-3 border-b border-gray-800 flex justify-between items-center">
+                    <h3 class="text-xs font-semibold text-gray-400 uppercase">Order Book</h3>
+                    <span class="text-[10px] text-gray-500">L2 Depth</span>
+                </div>
+                
+                <div class="flex-1 overflow-hidden relative">
+                    <div class="absolute inset-0 flex flex-col">
+                        <!-- Asks (Sell orders) -->
+                        <div class="flex-1 overflow-hidden flex flex-col-reverse" id="askBook">
+                            <!-- Generated by JS -->
+                        </div>
+                        
+                        <!-- Current Price -->
+                        <div class="h-10 flex items-center justify-center bg-white/5 border-y border-gray-800">
+                            <span class="text-lg font-mono font-bold text-white" id="bookPrice">1.08452</span>
+                            <span class="ml-2 text-xs text-gray-500">Spread: 0.2</span>
+                        </div>
+                        
+                        <!-- Bids (Buy orders) -->
+                        <div class="flex-1 overflow-hidden" id="bidBook">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Trades -->
+            <div class="h-1/3 flex flex-col">
+                <div class="p-3 border-b border-gray-800">
+                    <h3 class="text-xs font-semibold text-gray-400 uppercase">Recent Trades</h3>
+                </div>
+                <div class="flex-1 overflow-y-auto p-2 space-y-1" id="recentTrades">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        // Global State
+        let currentPair = 'EUR/USD';
+        let currentPrice = 1.08452;
+        let chart;
+        let candleSeries;
+        let positions = [
+            { ticket: '12345', pair: 'EUR/USD', type: 'BUY', volume: 2.5, openPrice: 1.08234, current: 1.08452, sl: 1.08000, tp: 1.09000, pl: 545.00 },
+            { ticket: '12346', pair: 'GBP/USD', type: 'SELL', volume: 1.0, openPrice: 1.26540, current: 1.26320, sl: 1.27000, tp: 1.25500, pl: 220.00 },
+            { ticket: '12347', pair: 'USD/JPY', type: 'BUY', volume: 5.0, openPrice: 151.200, current: 151.450, sl: 150.800, tp: 152.500, pl: 1250.00 }
+        ];
+        let pendingOrders = [
+            { id: 1, pair: 'EUR/USD', type: 'BUY LIMIT', volume: 1.0, price: 1.08000, sl: 1.07500, tp: 1.09000 },
+            { id: 2, pair: 'GBP/USD', type: 'SELL STOP', volume: 2.0, price: 1.27000, sl: 1.27500, tp: 1.26000 }
+        ];
+
+        // Initialize Chart
+        function initChart() {
+            const chartContainer = document.getElementById('chartContainer');
+            
+            chart = LightweightCharts.createChart(chartContainer, {
+                layout: {
+                    background: { type: 'solid', color: '#000000' },
+                    textColor: '#d1d5db',
+                },
+                grid: {
+                    vertLines: { color: 'rgba(255, 255, 255, 0.05)' },
+                    horzLines: { color: 'rgba(255, 255, 255, 0.05)' },
+                },
+                crosshair: {
+                    mode: LightweightCharts.CrosshairMode.Normal,
+                },
+                rightPriceScale: {
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                },
+                timeScale: {
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    timeVisible: true,
+                    secondsVisible: false,
+                },
+            });
+
+            candleSeries = chart.addCandlestickSeries({
+                upColor: '#22c55e',
+                downColor: '#ef4444',
+                borderUpColor: '#22c55e',
+                borderDownColor: '#ef4444',
+                wickUpColor: '#22c55e',
+                wickDownColor: '#ef4444',
+            });
+
+            // Generate sample data
+            const data = generateCandleData(100);
+            candleSeries.setData(data);
+            
+            // Add moving averages
+            const ma20 = calculateMA(data, 20);
+            const ma50 = calculateMA(data, 50);
+            
+            const ma20Series = chart.addLineSeries({
+                color: '#60a5fa',
+                lineWidth: 2,
+                title: 'MA 20',
+            });
+            ma20Series.setData(ma20);
+            
+            const ma50Series = chart.addLineSeries({
+                color: '#a78bfa',
+                lineWidth: 2,
+                title: 'MA 50',
+            });
+            ma50Series.setData(ma50);
+            
+            chart.timeScale().fitContent();
+        }
+
+        function generateCandleData(count) {
+            const data = [];
+            let time = new Date('2024-01-01').getTime() / 1000;
+            let price = 1.08;
+            
+            for (let i = 0; i < count; i++) {
+                const volatility = 0.002;
+                const change = (Math.random() - 0.5) * volatility;
+                const open = price;
+                const close = price + change;
+                const high = Math.max(open, close) + Math.random() * volatility * 0.5;
+                const low = Math.min(open, close) - Math.random() * volatility * 0.5;
+                
+                data.push({
+                    time: time,
+                    open: open,
+                    high: high,
+                    low: low,
+                    close: close
+                });
+                
+                price = close;
+                time += 3600; // 1 hour
+            }
+            return data;
+        }
+
+        function calculateMA(data, period) {
+            const ma = [];
+            for (let i = period - 1; i < data.length; i++) {
+                let sum = 0;
+                for (let j = 0; j < period; j++) {
+                    sum += data[i - j].close;
+                }
+                ma.push({
+                    time: data[i].time,
+                    value: sum / period
+                });
+            }
+            return ma;
+        }
+
+        // Watchlist Generation
+        const watchlistData = [
+            { pair: 'EUR/USD', price: 1.08452, change: 0.22, bid: 1.08444, ask: 1.08456 },
+            { pair: 'GBP/USD', price: 1.26320, change: -0.15, bid: 1.26312, ask: 1.26324 },
+            { pair: 'USD/JPY', price: 151.450, change: 0.35, bid: 151.440, ask: 151.460 },
+            { pair: 'USD/CHF', price: 0.90210, change: -0.08, bid: 0.90202, ask: 0.90218 },
+            { pair: 'AUD/USD', price: 0.65430, change: 0.12, bid: 0.65422, ask: 0.65438 },
+            { pair: 'USD/CAD', price: 1.35420, change: -0.05, bid: 1.35412, ask: 1.35428 },
+            { pair: 'EUR/GBP', price: 0.85840, change: 0.18, bid: 0.85832, ask: 0.85848 },
+            { pair: 'XAU/USD', price: 2234.50, change: 1.25, bid: 2234.20, ask: 2234.80 },
+        ];
+
+        function renderWatchlist() {
+            const container = document.getElementById('watchlist');
+            container.innerHTML = watchlistData.map(item => `
+                <div class="p-3 border-b border-gray-800 hover:bg-white/5 cursor-pointer transition-colors ${item.pair === currentPair ? 'bg-white/10 border-l-2 border-l-yellow-500' : ''}" 
+                     onclick="selectPair('${item.pair}')">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-semibold text-sm">${item.pair}</span>
+                        <span class="text-xs ${item.change >= 0 ? 'text-green-400' : 'text-red-400'} flex items-center gap-1">
+                            ${item.change >= 0 ? '▲' : '▼'} ${Math.abs(item.change)}%
+                        </span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs font-mono">
+                        <span class="text-gray-500">B: ${item.bid.toFixed(5)}</span>
+                        <span class="text-gold">A: ${item.ask.toFixed(5)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Order Book Generation
+        function renderOrderBook() {
+            const askBook = document.getElementById('askBook');
+            const bidBook = document.getElementById('bidBook');
+            
+            // Generate asks (sell orders) - higher prices
+            let askPrice = currentPrice + 0.00010;
+            const asks = [];
+            for (let i = 0; i < 8; i++) {
+                const size = Math.floor(Math.random() * 50 + 10);
+                asks.unshift(`
+                    <div class="flex justify-between items-center px-3 py-1 text-xs hover:bg-white/5 cursor-pointer" onclick="clickPrice(${askPrice.toFixed(5)})">
+                        <span class="text-red-400 font-mono">${askPrice.toFixed(5)}</span>
+                        <div class="flex items-center gap-2">
+                            <div class="ask-bar h-4 rounded-sm" style="width: ${size * 2}px"></div>
+                            <span class="text-gray-400 w-8 text-right">${size}</span>
+                        </div>
+                    </div>
+                `);
+                askPrice += 0.00005 + Math.random() * 0.00005;
+            }
+            askBook.innerHTML = asks.join('');
+            
+            // Generate bids (buy orders) - lower prices
+            let bidPrice = currentPrice - 0.00010;
+            const bids = [];
+            for (let i = 0; i < 8; i++) {
+                const size = Math.floor(Math.random() * 50 + 10);
+                bids.push(`
+                    <div class="flex justify-between items-center px-3 py-1 text-xs hover:bg-white/5 cursor-pointer" onclick="clickPrice(${bidPrice.toFixed(5)})">
+                        <span class="text-green-400 font-mono">${bidPrice.toFixed(5)}</span>
+                        <div class="flex items-center gap-2">
+                            <div class="bid-bar h-4 rounded-sm" style="width: ${size * 2}px"></div>
+                            <span class="text-gray-400 w-8 text-right">${size}</span>
+                        </div>
+                    </div>
+                `);
+                bidPrice -= 0.00005 + Math.random() * 0.00005;
+            }
+            bidBook.innerHTML = bids.join('');
+        }
+
+        // Recent Trades
+        function renderRecentTrades() {
+            const container = document.getElementById('recentTrades');
+            const types = ['BUY', 'SELL'];
+            const sizes = [0.5, 1.0, 2.5, 5.0, 10.0];
+            
+            const trades = [];
+            for (let i = 0; i < 20; i++) {
+                const type = types[Math.floor(Math.random() * types.length)];
+                const size = sizes[Math.floor(Math.random() * sizes.length)];
+                const price = currentPrice + (Math.random() - 0.5) * 0.00020;
+                const time = new Date(Date.now() - i * 30000).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                
+                trades.push(`
+                    <div class="flex justify-between items-center text-xs py-1 border-b border-gray-800/50">
+                        <span class="text-gray-500">${time}</span>
+                        <span class="${type === 'BUY' ? 'text-green-400' : 'text-red-400'} font-medium">${type}</span>
+                        <span class="font-mono">${size.toFixed(1)}</span>
+                        <span class="font-mono text-gray-300">${price.toFixed(5)}</span>
+                    </div>
+                `);
+            }
+            container.innerHTML = trades.join('');
+        }
+
+        // Positions Table
+        function renderPositions() {
+            const tbody = document.getElementById('positionsTable');
+            tbody.innerHTML = positions.map(pos => `
+                <tr class="order-row border-b border-gray-800 text-xs">
+                    <td class="p-3 font-mono text-gray-500">${pos.ticket}</td>
+                    <td class="p-3 font-medium">${pos.pair}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-1 rounded ${pos.type === 'BUY' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'} text-xs font-bold">
+                            ${pos.type}
+                        </span>
+                    </td>
+                    <td class="p-3 text-right font-mono">${pos.volume.toFixed(1)}</td>
+                    <td class="p-3 text-right font-mono text-gray-400">${pos.openPrice.toFixed(5)}</td>
+                    <td class="p-3 text-right font-mono">${pos.current.toFixed(5)}</td>
+                    <td class="p-3 text-right font-mono text-red-400">${pos.sl.toFixed(5)}</td>
+                    <td class="p-3 text-right font-mono text-green-400">${pos.tp.toFixed(5)}</td>
+                    <td class="p-3 text-right font-mono ${pos.pl >= 0 ? 'text-green-400' : 'text-red-400'} font-bold">
+                        ${pos.pl >= 0 ? '+' : ''}${pos.pl.toFixed(2)}
+                    </td>
+                    <td class="p-3 text-center">
+                        <button onclick="closePosition('${pos.ticket}')" class="px-3 py-1 rounded bg-white/10 hover:bg-red-500/20 hover:text-red-400 transition-colors text-xs">
+                            Close
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Pending Orders
+        function renderPendingOrders() {
+            const container = document.getElementById('pendingOrders');
+            container.innerHTML = pendingOrders.map(order => `
+                <div class="flex justify-between items-center p-3 rounded-lg glass hover:bg-white/5 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg ${order.type.includes('BUY') ? 'bg-green-500/20' : 'bg-red-500/20'} flex items-center justify-center">
+                            <span class="text-xs font-bold ${order.type.includes('BUY') ? 'text-green-400' : 'text-red-400'}">${order.type.split(' ')[0]}</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-sm">${order.pair}</p>
+                            <p class="text-xs text-gray-500">${order.type} @ ${order.price.toFixed(5)}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-mono text-sm">${order.volume.toFixed(1)} Lots</p>
+                        <button onclick="cancelOrder(${order.id})" class="text-xs text-red-400 hover:text-red-300 mt-1">Cancel</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // History
+        function renderHistory() {
+            const tbody = document.getElementById('historyTable');
+            const history = [
+                { time: '2024-01-15 14:32:05', pair: 'EUR/USD', type: 'BUY', volume: 1.0, price: 1.08234, close: 1.08456, pl: 222.00 },
+                { time: '2024-01-15 13:15:22', pair: 'GBP/USD', type: 'SELL', volume: 2.5, price: 1.26800, close: 1.26320, pl: 1200.00 },
+                { time: '2024-01-15 11:45:18', pair: 'USD/JPY', type: 'BUY', volume: 3.0, price: 150.800, close: 151.200, pl: -120.00 },
+            ];
+            
+            tbody.innerHTML = history.map(trade => `
+                <tr class="border-b border-gray-800 text-xs hover:bg-white/5">
+                    <td class="p-3 text-gray-500">${trade.time}</td>
+                    <td class="p-3 font-medium">${trade.pair}</td>
+                    <td class="p-3">
+                        <span class="${trade.type === 'BUY' ? 'text-green-400' : 'text-red-400'} font-bold">${trade.type}</span>
+                    </td>
+                    <td class="p-3 text-right font-mono">${trade.volume.toFixed(1)}</td>
+                    <td class="p-3 text-right font-mono text-gray-400">${trade.price.toFixed(5)}</td>
+                    <td class="p-3 text-right font-mono">${trade.close.toFixed(5)}</td>
+                    <td class="p-3 text-right font-mono ${trade.pl >= 0 ? 'text-green-400' : 'text-red-400'} font-bold">
+                        ${trade.pl >= 0 ? '+' : ''}${trade.pl.toFixed(2)}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Trading Functions
+        function selectPair(pair) {
+            currentPair = pair;
+            const data = watchlistData.find(p => p.pair === pair);
+            if (data) {
+                currentPrice = data.price;
+                document.getElementById('currentPair').textContent = pair;
+                updatePrices();
+            }
+            renderWatchlist();
+            showToast('Pair Changed', `Switched to ${pair}`);
+        }
+
+        function updatePrices() {
+            // Simulate price movement
+            const change = (Math.random() - 0.5) * 0.00010;
+            currentPrice += change;
+            
+            const priceEl = document.getElementById('currentPrice');
+            const oldPrice = parseFloat(priceEl.textContent);
+            priceEl.textContent = currentPrice.toFixed(5);
+            priceEl.classList.remove('price-up', 'price-down');
+            void priceEl.offsetWidth; // Trigger reflow
+            priceEl.classList.add(currentPrice > oldPrice ? 'price-up' : 'price-down');
+            
+            // Update order book prices
+            document.getElementById('bookPrice').textContent = currentPrice.toFixed(5);
+            document.getElementById('buyPrice').textContent = (currentPrice + 0.00004).toFixed(5);
+            document.getElementById('sellPrice').textContent = (currentPrice - 0.00004).toFixed(5);
+            document.getElementById('quickBuyPrice').textContent = (currentPrice + 0.00008).toFixed(4);
+            document.getElementById('quickSellPrice').textContent = (currentPrice - 0.00008).toFixed(4);
+            
+            // Update positions P/L
+            positions.forEach(pos => {
+                if (pos.pair === currentPair) {
+                    pos.current = currentPrice;
+                    const diff = pos.type === 'BUY' ? currentPrice - pos.openPrice : pos.openPrice - currentPrice;
+                    pos.pl = diff * pos.volume * 100000;
+                }
+            });
+            renderPositions();
+        }
+
+        function placeOrder(type) {
+            const volume = parseFloat(document.getElementById('volumeInput').value);
+            const price = type === 'buy' ? currentPrice + 0.00004 : currentPrice - 0.00004;
+            
+            const newPosition = {
+                ticket: Math.floor(Math.random() * 100000).toString(),
+                pair: currentPair,
+                type: type.toUpperCase(),
+                volume: volume,
+                openPrice: price,
+                current: price,
+                sl: parseFloat(document.getElementById('slInput').value) || 0,
+                tp: parseFloat(document.getElementById('tpInput').value) || 0,
+                pl: 0
+            };
+            
+            positions.push(newPosition);
+            renderPositions();
+            switchTab('positions');
+            showToast('Order Executed', `${type.toUpperCase()} ${volume} lots ${currentPair} @ ${price.toFixed(5)}`);
+        }
+
+        function quickTrade(type) {
+            const price = type === 'buy' ? currentPrice + 0.00008 : currentPrice - 0.00008;
+            const volume = 1.0;
+            
+            const newPosition = {
+                ticket: Math.floor(Math.random() * 100000).toString(),
+                pair: currentPair,
+                type: type.toUpperCase(),
+                volume: volume,
+                openPrice: price,
+                current: price,
+                sl: 0,
+                tp: 0,
+                pl: 0
+            };
+            
+            positions.push(newPosition);
+            renderPositions();
+            showToast('Quick Trade Executed', `${type.toUpperCase()} ${volume} lot ${currentPair}`);
+        }
+
+        function closePosition(ticket) {
+            const index = positions.findIndex(p => p.ticket === ticket);
+            if (index > -1) {
+                const pos = positions[index];
+                showToast('Position Closed', `Closed ${pos.pair} ${pos.type} with P/L: ${pos.pl >= 0 ? '+' : ''}${pos.pl.toFixed(2)}`);
+                positions.splice(index, 1);
+                renderPositions();
+            }
+        }
+
+        function cancelOrder(id) {
+            const index = pendingOrders.findIndex(o => o.id === id);
+            if (index > -1) {
+                pendingOrders.splice(index, 1);
+                renderPendingOrders();
+                showToast('Order Cancelled', 'Pending order removed');
+            }
+        }
+
+        function adjustVolume(delta) {
+            const input = document.getElementById('volumeInput');
+            let val = parseFloat(input.value) + delta;
+            val = Math.max(0.1, Math.round(val * 10) / 10);
+            input.value = val.toFixed(1);
+        }
+
+        function setOrderType(type) {
+            document.getElementById('btn-market').className = type === 'market' ? 
+                'py-2 rounded-lg bg-gold text-black font-semibold text-sm' : 
+                'py-2 rounded-lg glass text-gray-400 text-sm hover:text-white';
+            document.getElementById('btn-limit').className = type === 'limit' ? 
+                'py-2 rounded-lg bg-gold text-black font-semibold text-sm' : 
+                'py-2 rounded-lg glass text-gray-400 text-sm hover:text-white';
+        }
+
+        function clickPrice(price) {
+            document.getElementById('priceChange').textContent = price.toFixed(5);
+            showToast('Price Selected', `Set order price to ${price.toFixed(5)}`);
+        }
+
+        // UI Functions
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('[data-tab]').forEach(b => {
+                b.classList.remove('tab-active');
+                b.classList.add('text-gray-400');
+            });
+            
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('tab-active');
+            document.querySelector(`[data-tab="${tab}"]`).classList.remove('text-gray-400');
+        }
+
+        function changeTimeframe() {
+            const tf = document.getElementById('timeframe').value;
+            showToast('Timeframe Changed', `Chart switched to ${tf}`);
+            // In real app, this would reload chart data
+        }
+
+        function toggleIndicators() {
+            showToast('Indicators', 'Moving Average (20, 50) active\nRSI, MACD available in settings');
+        }
+
+        function showToast(title, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'glass border-l-4 border-gold rounded-lg p-4 shadow-2xl transform translate-x-full transition-transform duration-300 pointer-events-auto max-w-sm';
+            toast.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center flex-shrink-0">
+                        <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-sm text-white">${title}</p>
+                        <p class="text-xs text-gray-400 mt-1">${message}</p>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-x-full'), 100);
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Live Updates
+        setInterval(() => {
+            updatePrices();
+            renderOrderBook();
+        }, 2000);
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            renderWatchlist();
+            renderOrderBook();
+            renderRecentTrades();
+            renderPositions();
+            renderPendingOrders();
+            renderHistory();
+            updatePrices();
+        });
+
+        // Resize chart on window resize
+        window.addEventListener('resize', () => {
+            if (chart) chart.applyOptions({ width: document.getElementById('chartContainer').clientWidth });
+        });
+    </script>
+</body>
+</html>

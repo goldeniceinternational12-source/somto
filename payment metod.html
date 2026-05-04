@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Payment Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Grotesk', 'monospace'],
+                    },
+                    colors: {
+                        golden: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        ice: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Credit Card Flip Animation */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .card-flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* Input Focus Effects */
+        .input-group:focus-within label {
+            color: #f59e0b;
+        }
+        .input-group:focus-within i {
+            color: #f59e0b;
+        }
+
+        /* Shimmer Effect for Cards */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        .shimmer {
+            animation: shimmer 2s infinite linear;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+            background-size: 1000px 100%;
+        }
+    </style>
+</head>
+<body class="bg-ice-900 text-slate-200 font-sans antialiased overflow-hidden h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-ice-900 border-r border-ice-800 flex-col hidden md:flex z-20">
+        <div class="h-16 flex items-center px-6 border-b border-ice-800">
+            <div class="w-8 h-8 bg-gradient-to-br from-golden-400 to-golden-600 rounded-lg flex items-center justify-center mr-3 shadow-lg shadow-golden-600/20">
+                <i class="fa-solid fa-cube text-ice-900 text-sm"></i>
+            </div>
+            <span class="font-bold text-lg tracking-tight text-white">GOLDENICE INTERNATIONAL</span>
+        </div>
+
+        <nav class="flex-1 py-6 px-3 space-y-1">
+            <a href="./dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-ice-800 hover:text-white transition-colors group">
+                <i class="fa-solid fa-chart-pie w-5 text-center group-hover:text-golden-500 transition-colors"></i>
+                <span class="font-medium">Dashboard</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-ice-800 text-white transition-colors border-l-2 border-golden-500">
+                <i class="fa-solid fa-wallet w-5 text-center text-golden-500"></i>
+                <span class="font-medium">Payments</span>
+            </a>
+            <a href="./Transactions.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-ice-800 hover:text-white transition-colors group">
+                <i class="fa-solid fa-arrow-right-arrow-left w-5 text-center group-hover:text-golden-500 transition-colors"></i>
+                <span class="font-medium">Transactions</span>
+            </a>
+            <a href="./settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-ice-800 hover:text-white transition-colors group">
+                <i class="fa-solid fa-sliders w-5 text-center group-hover:text-golden-500 transition-colors"></i>
+                <span class="font-medium">Settings</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-ice-800">
+            <div class="flex items-center gap-3">
+                <img src="https://ui-avatars.com/api/?name=Alex+Reed&background=0f172a&color=f59e0b" class="w-10 h-10 rounded-full border border-ice-700">
+                <div class="flex-1 min-w-0">
+                    <div class="text-sm font-medium text-white truncate">Alex Reed</div>
+                    <div class="text-xs text-slate-500">Investor ID: #8839</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col min-w-0 bg-slate-950 relative">
+        
+        <!-- Header -->
+        <header class="h-16 border-b border-ice-800 flex items-center justify-between px-4 md:px-8 bg-ice-900/50 backdrop-blur-sm z-10">
+            <div>
+                <h1 class="text-xl font-bold text-white">Payment Center</h1>
+                <p class="text-xs text-slate-400 hidden sm:block">Manage your funds and withdrawal methods</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Secure Connection (SSL)</span>
+                </div>
+                <button class="w-8 h-8 rounded-full bg-ice-800 flex items-center justify-center text-slate-400 hover:text-white relative">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-ice-800"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
+            <div class="max-w-6xl mx-auto space-y-6 pb-20">
+
+                <!-- Balance Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Available -->
+                    <div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <i class="fa-solid fa-wallet text-6xl text-golden-500"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="text-slate-400 text-xs uppercase font-bold tracking-wider mb-1">Available Balance</div>
+                            <div class="text-3xl font-mono font-bold text-white mb-2" id="balance-display">$24,500.00</div>
+                            <div class="flex gap-2 mt-4">
+                                <button onclick="openModal('deposit')" class="flex-1 bg-golden-600 hover:bg-golden-500 text-white py-2 rounded-lg text-xs font-bold transition-colors shadow-lg shadow-golden-600/20">
+                                    <i class="fa-solid fa-plus mr-1"></i><a href="./inves.html"> Add Funds</a>   
+                                </button>
+                                <button onclick="openModal('withdraw')" class="flex-1 bg-ice-800 hover:bg-ice-700 text-white py-2 rounded-lg text-xs font-bold transition-colors border border-ice-700">
+                                    <i class="fa-solid fa-arrow-down mr-1"></i><a href="./withdraw.html">Withdraw</a>    
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Invested -->
+                    <div class="glass-panel p-6 rounded-xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                            <i class="fa-solid fa-chart-line text-6xl text-blue-500"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="text-slate-400 text-xs uppercase font-bold tracking-wider mb-1">Total Invested</div>
+                            <div class="text-3xl font-mono font-bold text-white mb-2">$142,300.00</div>
+                            <div class="text-xs text-emerald-400 flex items-center gap-1 mt-4">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                                <span>+12.5% return YTD</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending -->
+                    <div class="glass-panel p-6 rounded-xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                            <i class="fa-solid fa-clock text-6xl text-orange-500"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="text-slate-400 text-xs uppercase font-bold tracking-wider mb-1">Pending Withdrawals</div>
+                            <div class="text-3xl font-mono font-bold text-white mb-2">$0.00</div>
+                            <div class="text-xs text-slate-400 mt-4">
+                                No pending transactions
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Left Column: Payment Methods -->
+                    <div class="lg:col-span-2 space-y-6">
+                        
+                        <!-- Saved Cards -->
+                        <div class="glass-panel rounded-xl overflow-hidden">
+                            <div class="p-5 border-b border-ice-800 flex justify-between items-center">
+                                <h2 class="font-bold text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-credit-card text-golden-500"></i> Saved Cards
+                                </h2>
+                                <button onclick="openModal('add-card')" class="text-xs bg-ice-800 hover:bg-ice-700 text-white px-3 py-1.5 rounded border border-ice-700 transition-colors">
+                                    <i class="fa-solid fa-plus mr-1"></i> Add New
+                                </button>
+                            </div>
+                            <div class="p-5 space-y-4" id="cards-container">
+                                <!-- Card 1 -->
+                                <div class="relative group cursor-pointer" onclick="flipCard(this)">
+                                    <div class="card-inner duration-500">
+                                        <!-- Front -->
+                                        <div class="absolute w-full h-full backface-hidden">
+                                            <div class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl p-5 border border-slate-600 shadow-xl relative overflow-hidden h-48 flex flex-col justify-between">
+                                                <div class="shimmer absolute inset-0 pointer-events-none"></div>
+                                                <div class="flex justify-between items-start relative z-10">
+                                                    <div class="text-slate-300 font-mono text-sm">Debit Card</div>
+                                                    <i class="fa-brands fa-cc-visa text-3xl text-white"></i>
+                                                </div>
+                                                <div class="relative z-10">
+                                                    <div class="font-mono text-xl text-white tracking-widest mb-4">•••• •••• •••• 4242</div>
+                                                    <div class="flex justify-between text-xs text-slate-300 uppercase">
+                                                        <div>
+                                                            <div class="text-[10px] text-slate-400">Card Holder</div>
+                                                            <div class="font-medium">Alex Reed</div>
+                                                        </div>
+                                                        <div>
+                                                            <div class="text-[10px] text-slate-400">Expires</div>
+                                                            <div class="font-medium">12/25</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Back -->
+                                        <div class="absolute w-full h-full backface-hidden rotate-y-180">
+                                            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-5 border border-slate-600 shadow-xl h-48 flex flex-col justify-center items-center">
+                                                <div class="text-slate-400 text-sm mb-2">CVV</div>
+                                                <div class="font-mono text-2xl text-white tracking-widest">•••</div>
+                                                <div class="mt-4 text-xs text-slate-500 text-center">Click to flip back</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="absolute top-2 right-2 z-20">
+                                        <span class="bg-golden-500 text-ice-900 text-[10px] font-bold px-2 py-0.5 rounded">DEFAULT</span>
+                                    </div>
+                                </div>
+
+                                <!-- Card 2 -->
+                                <div class="relative group cursor-pointer opacity-80 hover:opacity-100 transition-opacity" onclick="flipCard(this)">
+                                    <div class="card-inner duration-500">
+                                        <!-- Front -->
+                                        <div class="absolute w-full h-full backface-hidden">
+                                            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-5 border border-slate-700 shadow-lg relative overflow-hidden h-48 flex flex-col justify-between">
+                                                <div class="flex justify-between items-start relative z-10">
+                                                    <div class="text-slate-400 font-mono text-sm">Credit Card</div>
+                                                    <i class="fa-brands fa-cc-mastercard text-3xl text-white"></i>
+                                                </div>
+                                                <div class="relative z-10">
+                                                    <div class="font-mono text-xl text-white tracking-widest mb-4">•••• •••• •••• 8888</div>
+                                                    <div class="flex justify-between text-xs text-slate-300 uppercase">
+                                                        <div>
+                                                            <div class="text-[10px] text-slate-500">Card Holder</div>
+                                                            <div class="font-medium">Alex Reed</div>
+                                                        </div>
+                                                        <div>
+                                                            <div class="text-[10px] text-slate-500">Expires</div>
+                                                            <div class="font-medium">09/26</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Back -->
+                                        <div class="absolute w-full h-full backface-hidden rotate-y-180">
+                                            <div class="bg-gradient-to-br from-slate-900 to-black rounded-xl p-5 border border-slate-700 shadow-lg h-48 flex flex-col justify-center items-center">
+                                                <div class="text-slate-500 text-sm mb-2">CVV</div>
+                                                <div class="font-mono text-2xl text-white tracking-widest">•••</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bank Accounts -->
+                        <div class="glass-panel rounded-xl overflow-hidden">
+                            <div class="p-5 border-b border-ice-800 flex justify-between items-center">
+                                <h2 class="font-bold text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-building-columns text-golden-500"></i> Bank Accounts
+                                </h2>
+                                <button class="text-xs bg-ice-800 hover:bg-ice-700 text-white px-3 py-1.5 rounded border border-ice-700 transition-colors">
+                                    <i class="fa-solid fa-plus mr-1"></i> Link Account
+                                </button>
+                            </div>
+                            <div class="divide-y divide-ice-800">
+                                <div class="p-4 flex items-center justify-between hover:bg-ice-800/30 transition-colors group">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center text-white">
+                                            <i class="fa-solid fa-building-columns"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-white">Chase Bank</div>
+                                            <div class="text-xs text-slate-400">Checking •••• 4521</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">Verified</span>
+                                        <button class="text-slate-500 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                    </div>
+                                </div>
+                                <div class="p-4 flex items-center justify-between hover:bg-ice-800/30 transition-colors group">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-lg bg-red-600 flex items-center justify-center text-white">
+                                            <i class="fa-solid fa-building-columns"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-white">Wells Fargo</div>
+                                            <div class="text-xs text-slate-400">Savings •••• 9923</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xs text-amber-400 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">Pending</span>
+                                        <button class="text-slate-500 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Recent Activity -->
+                    <div class="space-y-6">
+                        <div class="glass-panel rounded-xl overflow-hidden h-full">
+                            <div class="p-5 border-b border-ice-800">
+                                <h2 class="font-bold text-white">Recent Transactions</h2>
+                            </div>
+                            <div class="p-0">
+                                <div class="divide-y divide-ice-800" id="transaction-list">
+                                    <!-- Transactions injected via JS -->
+                                </div>
+                                <div class="p-4 text-center">
+                                    <button class="text-xs text-golden-500 hover:text-golden-400 font-medium">View All History</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    
+    <!-- Deposit Modal -->
+    <div id="modal-deposit" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('deposit')"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4">
+            <div class="bg-ice-800 border border-ice-700 rounded-2xl shadow-2xl overflow-hidden">
+                <div class="p-6 border-b border-ice-700 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-white">Add Funds</h3>
+                    <button onclick="closeModal('deposit')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-2">Amount (USD)</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">$</span>
+                            <input type="number" id="deposit-amount" class="w-full bg-ice-900 border border-ice-700 rounded-xl py-3 pl-10 pr-4 text-white text-lg font-mono focus:border-golden-500 focus:outline-none" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-2">Payment Method</label>
+                        <select class="w-full bg-ice-900 border border-ice-700 rounded-xl py-3 px-4 text-white focus:border-golden-500 focus:outline-none">
+                            <option>Visa ending in 4242</option>
+                            <option>Chase Bank (•••• 4521)</option>
+                        </select>
+                    </div>
+                    <div class="pt-4">
+                        <button onclick="processDeposit()" class="w-full bg-golden-600 hover:bg-golden-500 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-golden-600/20">
+                            Confirm Deposit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div id="modal-withdraw" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('withdraw')"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4">
+            <div class="bg-ice-800 border border-ice-700 rounded-2xl shadow-2xl overflow-hidden">
+                <div class="p-6 border-b border-ice-700 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-white">Withdraw Funds</h3>
+                    <button onclick="closeModal('withdraw')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="bg-ice-900/50 rounded-lg p-3 border border-ice-700/50 flex justify-between items-center">
+                        <span class="text-xs text-slate-400">Available Balance</span>
+                        <span class="font-mono font-bold text-white" id="withdraw-balance">$24,500.00</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-2">Amount (USD)</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">$</span>
+                            <input type="number" id="withdraw-amount" class="w-full bg-ice-900 border border-ice-700 rounded-xl py-3 pl-10 pr-4 text-white text-lg font-mono focus:border-golden-500 focus:outline-none" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-2">Destination</label>
+                        <select class="w-full bg-ice-900 border border-ice-700 rounded-xl py-3 px-4 text-white focus:border-golden-500 focus:outline-none">
+                            <option>Chase Bank (•••• 4521)</option>
+                            <option>Visa ending in 4242</option>
+                        </select>
+                    </div>
+                    <div class="pt-4">
+                        <button onclick="processWithdraw()" class="w-full bg-ice-700 hover:bg-ice-600 text-white font-bold py-3 rounded-xl transition-colors border border-ice-600">
+                            Request Withdrawal
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Card Modal -->
+    <div id="modal-add-card" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('add-card')"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4">
+            <div class="bg-ice-800 border border-ice-700 rounded-2xl shadow-2xl overflow-hidden">
+                <div class="p-6 border-b border-ice-700 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-white">Add New Card</h3>
+                    <button onclick="closeModal('add-card')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="input-group">
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Card Number</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-credit-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                            <input type="text" class="w-full bg-ice-900 border border-ice-700 rounded-xl py-3 pl-10 pr-4 text-white focus:border-golden-500 focus:outline-none font-mono" placeholder="0000 0000 0000 0000">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="input-group">
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Expiry</label>
+                            <input type="text" class="w-full bg-ice-900 border border-ice-700 rounded-xl py-3 px-4 text-white focus:border-golden-500 focus:outline-none font-mono" placeholder="MM/YY">
+                        </div>
+                        <div class="input-group">
+                            <label class="block text-xs font-medium text-slate-400 mb-1">CVC</label>
+                            <input type="text" class="w-full bg-ice-900 border border-ice-700 rounded-xl py-3 px-4 text-white focus:border-golden-500 focus:outline-none font-mono" placeholder="123">
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <button onclick="addNewCard()" class="w-full bg-golden-600 hover:bg-golden-500 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-golden-600/20">
+                            Add Card
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 w-80 pointer-events-none"></div>
+
+    <script>
+        // State
+        let balance = 24500.00;
+        const transactions = [
+            { id: 1, type: 'deposit', amount: 5000.00, date: 'Today, 10:23 AM', method: 'Visa •••• 4242', status: 'completed' },
+            { id: 2, type: 'investment', amount: -12000.00, date: 'Yesterday', method: 'Portfolio Purchase', status: 'completed' },
+            { id: 3, type: 'withdrawal', amount: -2000.00, date: 'Mar 28, 2026', method: 'Chase •••• 4521', status: 'completed' },
+            { id: 4, type: 'dividend', amount: 450.50, date: 'Mar 25, 2026', method: 'AAPL Dividend', status: 'completed' }
+        ];
+
+        // --- Functions ---
+
+        function formatMoney(amount) {
+            return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+
+        function renderTransactions() {
+            const container = document.getElementById('transaction-list');
+            container.innerHTML = '';
+            
+            transactions.slice(0, 5).forEach(t => {
+                const isPositive = t.amount > 0;
+                const colorClass = isPositive ? 'text-emerald-400' : 'text-white';
+                const icon = isPositive ? 'fa-arrow-down' : 'fa-arrow-up';
+                const bg = isPositive ? 'bg-emerald-500/10' : 'bg-rose-500/10';
+                const iconColor = isPositive ? 'text-emerald-500' : 'text-rose-500';
+                
+                const div = document.createElement('div');
+                div.className = 'p-4 flex items-center justify-between hover:bg-ice-800/30 transition-colors';
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full ${bg} flex items-center justify-center ${iconColor}">
+                            <i class="fa-solid ${icon} transform ${isPositive ? '' : 'rotate-45'}"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white text-sm">${t.type.charAt(0).toUpperCase() + t.type.slice(1)}</div>
+                            <div class="text-xs text-slate-400">${t.method}</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-mono font-bold ${colorClass}">${isPositive ? '+' : ''}${formatMoney(t.amount)}</div>
+                        <div class="text-[10px] text-slate-500">${t.date}</div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function openModal(type) {
+            document.getElementById(`modal-${type}`).classList.remove('hidden');
+            if(type === 'withdraw') {
+                document.getElementById('withdraw-balance').innerText = formatMoney(balance);
+            }
+        }
+
+        function closeModal(type) {
+            document.getElementById(`modal-${type}`).classList.add('hidden');
+        }
+
+        function processDeposit() {
+            const amount = parseFloat(document.getElementById('deposit-amount').value);
+            if (!amount || amount <= 0) {
+                showToast('Please enter a valid amount', 'error');
+                return;
+            }
+
+            // Simulate processing
+            const btn = event.target;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                balance += amount;
+                document.getElementById('balance-display').innerText = formatMoney(balance);
+                
+                transactions.unshift({
+                    id: Date.now(),
+                    type: 'deposit',
+                    amount: amount,
+                    date: 'Just now',
+                    method: 'Visa •••• 4242',
+                    status: 'completed'
+                });
+                
+                renderTransactions();
+                closeModal('deposit');
+                showToast(`Successfully deposited ${formatMoney(amount)}`);
+                
+                // Reset button
+                btn.innerHTML = 'Confirm Deposit';
+                btn.disabled = false;
+                document.getElementById('deposit-amount').value = '';
+            }, 1500);
+        }
+
+        function processWithdraw() {
+            const amount = parseFloat(document.getElementById('withdraw-amount').value);
+            if (!amount || amount <= 0) {
+                showToast('Please enter a valid amount', 'error');
+                return;
+            }
+            if (amount > balance) {
+                showToast('Insufficient funds available', 'error');
+                return;
+            }
+
+            const btn = event.target;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                balance -= amount;
+                document.getElementById('balance-display').innerText = formatMoney(balance);
+                
+                transactions.unshift({
+                    id: Date.now(),
+                    type: 'withdrawal',
+                    amount: -amount,
+                    date: 'Just now',
+                    method: 'Chase •••• 4521',
+                    status: 'pending'
+                });
+                
+                renderTransactions();
+                closeModal('withdraw');
+                showToast(`Withdrawal request for ${formatMoney(amount)} submitted`);
+                
+                btn.innerHTML = 'Request Withdrawal';
+                btn.disabled = false;
+                document.getElementById('withdraw-amount').value = '';
+            }, 1500);
+        }
+
+        function addNewCard() {
+            const btn = event.target;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Adding...';
+            
+            setTimeout(() => {
+                closeModal('add-card');
+                showToast('New card added successfully');
+                btn.innerHTML = 'Add Card';
+                
+                // In a real app, this would add the DOM element. 
+                // Here we just simulate success.
+            }, 1000);
+        }
+
+        function flipCard(element) {
+            const inner = element.querySelector('.card-inner');
+            inner.classList.toggle('card-flipped');
+        }
+
+        // Toast System
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const colors = type === 'success' 
+                ? 'border-l-4 border-golden-500 bg-ice-800 text-white' 
+                : 'border-l-4 border-rose-500 bg-ice-800 text-white';
+            
+            const icon = type === 'success' ? 'fa-check-circle text-golden-500' : 'fa-exclamation-circle text-rose-500';
+
+            toast.className = `pointer-events-auto p-4 rounded shadow-2xl flex items-start gap-3 toast-enter ${colors}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} mt-0.5"></i>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold">${type === 'success' ? 'Success' : 'Error'}</h4>
+                    <p class="text-xs text-slate-400 mt-0.5">${message}</p>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-slate-500 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTransactions();
+        });
+
+    </script>
+</body>
+</html>

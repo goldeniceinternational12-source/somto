@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International HQ - Virtual Tour</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --ice-blue: #00D9FF;
+            --deep-blue: #0A1628;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+        
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background: #0A1628;
+        }
+        
+        .font-display {
+            font-family: 'Cinzel', serif;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .ui-layer {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .ui-layer > * {
+            pointer-events: auto;
+        }
+        
+        .glass-panel {
+            background: rgba(10, 22, 40, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #D4AF37 0%, #F4E4BC 50%, #AA8C2C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .view-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .view-btn:hover, .view-btn.active {
+            background: linear-gradient(135deg, #D4AF37, #AA8C2C);
+            color: #0A1628;
+            border-color: #D4AF37;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+        
+        .floor-indicator {
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0A1628;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loader {
+            width: 80px;
+            height: 80px;
+            border: 3px solid transparent;
+            border-top-color: #D4AF37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: relative;
+        }
+        
+        .loader:before, .loader:after {
+            content: '';
+            position: absolute;
+            border: 3px solid transparent;
+            border-radius: 50%;
+        }
+        
+        .loader:before {
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border-top-color: #00D9FF;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .holographic-card {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0, 217, 255, 0.1));
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .holographic-card:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .financial-ticker {
+            animation: ticker 20s linear infinite;
+        }
+        
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .ceo-desk-overlay {
+            background: radial-gradient(circle at center, transparent 0%, rgba(10, 22, 40, 0.9) 100%);
+        }
+        
+        .interactive-hotspot {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #D4AF37, #AA8C2C);
+            cursor: pointer;
+            animation: pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #0A1628;
+            transition: transform 0.3s ease;
+        }
+        
+        .interactive-hotspot:hover {
+            transform: scale(1.2);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+            50% { box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); }
+        }
+        
+        .info-popup {
+            position: absolute;
+            background: rgba(10, 22, 40, 0.95);
+            border: 1px solid #D4AF37;
+            padding: 1rem;
+            border-radius: 8px;
+            max-width: 300px;
+            display: none;
+            z-index: 100;
+        }
+        
+        .weather-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loading" class="loading-screen">
+        <div class="loader mb-8"></div>
+        <h2 class="font-display text-2xl gold-gradient-text tracking-widest">GOLDENICE INTERNATIONAL</h2>
+        <p class="text-gray-400 mt-4 text-sm">Loading Virtual Headquarters...</p>
+        <div class="mt-8 w-64 h-1 bg-gray-800 rounded-full overflow-hidden">
+            <div id="progress-bar" class="h-full bg-gradient-to-r from-yellow-600 to-yellow-400 w-0 transition-all duration-300"></div>
+        </div>
+    </div>
+
+    <!-- 3D Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Layer -->
+    <div class="ui-layer absolute inset-0 flex flex-col justify-between p-6">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-start">
+            <div class="glass-panel rounded-2xl p-6 max-w-md">
+                <div class="flex items-center space-x-4 mb-4">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-lg shadow-yellow-500/30">
+                        <span class="text-3xl font-bold text-black font-display">G</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-display font-bold gold-gradient-text">GOLDENICE</h1>
+                        <p class="text-xs text-blue-300 tracking-widest uppercase">International Headquarters</p>
+                        <p class="text-xs text-gray-400 mt-1">New York • London • Dubai • Singapore</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                        <p class="text-2xl font-bold text-yellow-400">58</p>
+                        <p class="text-xs text-gray-400">Floors</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-blue-400">2.4M</p>
+                        <p class="text-xs text-gray-400">Sq Ft</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-purple-400">LEED</p>
+                        <p class="text-xs text-gray-400">Platinum</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather & Time Widget -->
+            <div class="glass-panel rounded-xl p-4 text-right">
+                <div class="flex items-center space-x-4 justify-end">
+                    <div>
+                        <p class="text-3xl font-bold text-white" id="clock">13:00</p>
+                        <p class="text-xs text-gray-400" id="date">March 31, 2026</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-2 flex items-center justify-end space-x-2 text-sm">
+                    <span class="text-yellow-400">72°F</span>
+                    <span class="text-gray-500">|</span>
+                    <span class="text-blue-300">NYC</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- View Controls -->
+        <div class="absolute top-1/2 left-6 transform -translate-y-1/2 space-y-4">
+            <button onclick="changeView('front')" class="view-btn active w-14 h-14 rounded-xl flex flex-col items-center justify-center text-yellow-100" data-view="front">
+                <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                <span class="text-xs">Front</span>
+            </button>
+            <button onclick="changeView('rear')" class="view-btn w-14 h-14 rounded-xl flex flex-col items-center justify-center text-yellow-100" data-view="rear">
+                <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span class="text-xs">Rear</span>
+            </button>
+            <button onclick="changeView('side')" class="view-btn w-14 h-14 rounded-xl flex flex-col items-center justify-center text-yellow-100" data-view="side">
+                <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                <span class="text-xs">Side</span>
+            </button>
+            <button onclick="changeView('financial')" class="view-btn w-14 h-14 rounded-xl flex flex-col items-center justify-center text-yellow-100" data-view="financial">
+                <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                <span class="text-xs">Finance</span>
+            </button>
+            <button onclick="changeView('ceo')" class="view-btn w-14 h-14 rounded-xl flex flex-col items-center justify-center text-yellow-100" data-view="ceo">
+                <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <span class="text-xs">CEO</span>
+            </button>
+        </div>
+
+        <!-- Floor Navigation (Vertical) -->
+        <div class="absolute right-6 top-1/2 transform -translate-y-1/2 glass-panel rounded-2xl p-4 max-h-96 overflow-y-auto scrollbar-hide">
+            <p class="text-xs text-yellow-400 font-semibold mb-4 text-center tracking-wider">FLOORS</p>
+            <div class="space-y-2" id="floor-list">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+
+        <!-- Financial Center Panel (Hidden by default) -->
+        <div id="financial-panel" class="hidden absolute bottom-24 left-1/2 transform -translate-x-1/2 glass-panel rounded-2xl p-6 w-full max-w-4xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-display font-bold gold-gradient-text">Financial Command Center</h3>
+                <button onclick="toggleFinancial()" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="grid grid-cols-4 gap-4 mb-4">
+                <div class="holographic-card rounded-lg p-4 text-center">
+                    <p class="text-xs text-gray-400 mb-1">GLDI Price</p>
+                    <p class="text-2xl font-bold text-green-400">$142.85</p>
+                    <p class="text-xs text-green-400">+2.34%</p>
+                </div>
+                <div class="holographic-card rounded-lg p-4 text-center">
+                    <p class="text-xs text-gray-400 mb-1">Volume</p>
+                    <p class="text-2xl font-bold text-blue-400">2.4M</p>
+                    <p class="text-xs text-blue-400">High Activity</p>
+                </div>
+                <div class="holographic-card rounded-lg p-4 text-center">
+                    <p class="text-xs text-gray-400 mb-1">Market Cap</p>
+                    <p class="text-2xl font-bold text-yellow-400">$8.4B</p>
+                    <p class="text-xs text-yellow-400">Rank #142</p>
+                </div>
+                <div class="holographic-card rounded-lg p-4 text-center">
+                    <p class="text-xs text-gray-400 mb-1">P/E Ratio</p>
+                    <p class="text-2xl font-bold text-purple-400">18.5</p>
+                    <p class="text-xs text-purple-400">Sector Avg: 22</p>
+                </div>
+            </div>
+            <div class="bg-black/40 rounded-lg p-4 overflow-hidden">
+                <div class="flex space-x-8 financial-ticker whitespace-nowrap">
+                    <span class="text-green-400">AAPL +1.2%</span>
+                    <span class="text-red-400">MSFT -0.8%</span>
+                    <span class="text-green-400">GOOGL +2.1%</span>
+                    <span class="text-green-400">AMZN +1.5%</span>
+                    <span class="text-yellow-400 font-bold">GLDI +2.34%</span>
+                    <span class="text-red-400">TSLA -1.2%</span>
+                    <span class="text-green-400">NVDA +3.4%</span>
+                    <span class="text-green-400">META +0.9%</span>
+                    <span class="text-green-400">AAPL +1.2%</span>
+                    <span class="text-red-400">MSFT -0.8%</span>
+                    <span class="text-green-400">GOOGL +2.1%</span>
+                    <span class="text-green-400">AMZN +1.5%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CEO Desk Overlay (Hidden by default) -->
+        <div id="ceo-panel" class="hidden absolute inset-0 bg-black/90 z-50 flex items-center justify-center">
+            <div class="relative w-full max-w-6xl h-full max-h-[90vh] flex">
+                <!-- 3D CEO Office View -->
+                <div class="flex-1 relative" id="ceo-office-container">
+                    <canvas id="ceo-canvas" class="w-full h-full"></canvas>
+                    
+                    <!-- Interactive Hotspots -->
+                    <div class="interactive-hotspot" style="top: 40%; left: 50%;" onclick="showInfo('desk')" data-info="CEO Desk">1</div>
+                    <div class="interactive-hotspot" style="top: 30%; left: 20%;" onclick="showInfo('window')" data-info="City View">2</div>
+                    <div class="interactive-hotspot" style="top: 60%; left: 70%;" onclick="showInfo('books')" data-info="Library">3</div>
+                    
+                    <!-- Info Popups -->
+                    <div id="info-desk" class="info-popup" style="top: 45%; left: 55%;">
+                        <h4 class="text-yellow-400 font-bold mb-2">Executive Desk</h4>
+                        <p class="text-sm text-gray-300">Custom mahogany desk with integrated trading terminals and secure communication systems.</p>
+                    </div>
+                    <div id="info-window" class="info-popup" style="top: 35%; left: 25%;">
+                        <h4 class="text-yellow-400 font-bold mb-2">Panoramic View</h4>
+                        <p class="text-sm text-gray-300">Floor-to-ceiling windows overlooking Central Park and the Manhattan skyline.</p>
+                    </div>
+                    <div id="info-books" class="info-popup" style="top: 65%; left: 75%;">
+                        <h4 class="text-yellow-400 font-bold mb-2">Executive Library</h4>
+                        <p class="text-sm text-gray-300">Collection of financial classics and real-time market data displays.</p>
+                    </div>
+                </div>
+                
+                <!-- CEO Info Sidebar -->
+                <div class="w-96 glass-panel rounded-2xl p-6 m-4 overflow-y-auto">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <p class="text-xs text-yellow-400 tracking-widest uppercase">Executive Suite</p>
+                            <h2 class="text-2xl font-display font-bold gold-gradient-text">CEO Office</h2>
+                            <p class="text-sm text-gray-400">58th Floor • Penthouse</p>
+                        </div>
+                        <button onclick="toggleCEO()" class="text-gray-400 hover:text-white">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="border-l-2 border-yellow-500 pl-4">
+                            <p class="text-xs text-gray-500 uppercase mb-1">Current Occupant</p>
+                            <h3 class="text-xl font-semibold text-white">Eleanor Whitmore</h3>
+                            <p class="text-sm text-blue-300">Chairman & Chief Executive Officer</p>
+                            <p class="text-xs text-gray-400 mt-2">Since 2015 • 28 years experience</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-white/5 rounded-lg p-3 text-center">
+                                <p class="text-2xl font-bold text-yellow-400">$45M</p>
+                                <p class="text-xs text-gray-400">Annual Revenue</p>
+                            </div>
+                            <div class="bg-white/5 rounded-lg p-3 text-center">
+                                <p class="text-2xl font-bold text-blue-400">12,450</p>
+                                <p class="text-xs text-gray-400">Global Employees</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <p class="text-xs text-yellow-400 uppercase tracking-wider">Office Features</p>
+                            <div class="flex items-center space-x-3 text-sm text-gray-300">
+                                <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span>Secure panic room</span>
+                            </div>
+                            <div class="flex items-center space-x-3 text-sm text-gray-300">
+                                <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span>Private elevator access</span>
+                            </div>
+                            <div class="flex items-center space-x-3 text-sm text-gray-300">
+                                <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span>Climate-controlled wine cellar</span>
+                            </div>
+                            <div class="flex items-center space-x-3 text-sm text-gray-300">
+                                <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span>Direct fiber to exchanges</span>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-4 border-t border-white/10">
+                            <p class="text-xs text-gray-500 mb-3">Click numbered hotspots to explore office details</p>
+                            <button class="w-full py-3 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black font-bold rounded-lg hover:shadow-lg hover:shadow-yellow-500/30 transition">
+                                Schedule Meeting
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Controls -->
+        <footer class="flex justify-between items-end">
+            <div class="glass-panel rounded-xl p-4">
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleAutoRotate()" id="rotate-btn" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        <span class="text-sm font-medium">Auto-Rotate</span>
+                    </button>
+                    <div class="w-px h-6 bg-white/20"></div>
+                    <button onclick="resetView()" class="flex items-center space-x-2 text-blue-400 hover:text-blue-300 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        <span class="text-sm font-medium">Reset View</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-xl px-6 py-3">
+                <p class="text-xs text-gray-400 text-center">Use mouse to rotate • Scroll to zoom • Click floors to navigate</p>
+            </div>
+
+            <div class="glass-panel rounded-xl p-4 flex items-center space-x-4">
+                <div class="flex -space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-yellow-500 border-2 border-black flex items-center justify-center text-xs font-bold text-black">EW</div>
+                    <div class="w-8 h-8 rounded-full bg-blue-500 border-2 border-black flex items-center justify-center text-xs font-bold text-white">JC</div>
+                    <div class="w-8 h-8 rounded-full bg-purple-500 border-2 border-black flex items-center justify-center text-xs font-bold text-white">SR</div>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-gray-400">Board Members Present</p>
+                    <p class="text-sm font-semibold text-yellow-400">3 Active</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Global variables
+        let scene, camera, renderer, controls, composer;
+        let building, buildingGroup;
+        let autoRotate = false;
+        let currentView = 'front';
+        let ceoScene, ceoCamera, ceoRenderer, ceoControls;
+        
+        // Initialize loading
+        let progress = 0;
+        const progressBar = document.getElementById('progress-bar');
+        const loadingScreen = document.getElementById('loading');
+        
+        function updateProgress() {
+            progress += Math.random() * 15;
+            if (progress > 100) progress = 100;
+            progressBar.style.width = progress + '%';
+            if (progress < 100) {
+                setTimeout(updateProgress, 200);
+            } else {
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => loadingScreen.style.display = 'none', 500);
+                }, 500);
+            }
+        }
+        updateProgress();
+
+        // Clock update
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Initialize Three.js
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0A1628);
+            scene.fog = new THREE.FogExp2(0x0A1628, 0.002);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 30, 80);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2;
+            controls.minDistance = 20;
+            controls.maxDistance = 150;
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 1);
+            sunLight.position.set(50, 100, 50);
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 2048;
+            sunLight.shadow.mapSize.height = 2048;
+            scene.add(sunLight);
+
+            // Golden accent lights
+            const goldLight1 = new THREE.PointLight(0xD4AF37, 0.8, 100);
+            goldLight1.position.set(20, 40, 20);
+            scene.add(goldLight1);
+
+            const goldLight2 = new THREE.PointLight(0xD4AF37, 0.8, 100);
+            goldLight2.position.set(-20, 40, -20);
+            scene.add(goldLight2);
+
+            // Blue ice lights
+            const iceLight = new THREE.PointLight(0x00D9FF, 0.6, 80);
+            iceLight.position.set(0, 20, 30);
+            scene.add(iceLight);
+
+            // Create Building
+            createBuilding();
+
+            // Create Environment
+            createEnvironment();
+
+            // Post-processing
+            const renderScene = new THREE.RenderPass(scene, camera);
+            const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+            bloomPass.threshold = 0.2;
+            bloomPass.strength = 0.8;
+            bloomPass.radius = 0.5;
+
+            composer = new THREE.EffectComposer(renderer);
+            composer.addPass(renderScene);
+            composer.addPass(bloomPass);
+
+            // Floor list generation
+            generateFloorList();
+
+            // Event listeners
+            window.addEventListener('resize', onWindowResize, false);
+            
+            // Start animation
+            animate();
+        }
+
+        function createBuilding() {
+            buildingGroup = new THREE.Group();
+
+            // Main tower structure - sleek glass skyscraper
+            const towerGeometry = new THREE.BoxGeometry(20, 100, 20);
+            
+            // Create glass material with gold tint
+            const glassMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x1a2a3a,
+                metalness: 0.9,
+                roughness: 0.1,
+                transmission: 0.6,
+                transparent: true,
+                opacity: 0.8,
+                reflectivity: 1,
+                clearcoat: 1,
+                clearcoatRoughness: 0.1
+            });
+
+            const tower = new THREE.Mesh(towerGeometry, glassMaterial);
+            tower.position.y = 50;
+            tower.castShadow = true;
+            tower.receiveShadow = true;
+            buildingGroup.add(tower);
+
+            // Gold accent framework
+            const frameGeometry = new THREE.BoxGeometry(22, 100, 22);
+            const frameMaterial = new THREE.MeshStandardMaterial({
+                color: 0xD4AF37,
+                metalness: 1,
+                roughness: 0.3,
+                wireframe: true
+            });
+            const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+            frame.position.y = 50;
+            buildingGroup.add(frame);
+
+            // Horizontal gold bands (floors)
+            for (let i = 0; i < 58; i++) {
+                const bandGeometry = new THREE.BoxGeometry(20.5, 0.2, 20.5);
+                const bandMaterial = new THREE.MeshStandardMaterial({
+                    color: 0xD4AF37,
+                    metalness: 0.8,
+                    roughness: 0.4
+                });
+                const band = new THREE.Mesh(bandGeometry, bandMaterial);
+                band.position.y = i * 1.7 + 1;
+                buildingGroup.add(band);
+
+                // Add windows with lights
+                if (i > 5 && i < 55) {
+                    const windowGeometry = new THREE.PlaneGeometry(18, 1.2);
+                    const windowMaterial = new THREE.MeshBasicMaterial({
+                        color: Math.random() > 0.3 ? 0xF4E4BC : 0x0A1628,
+                        side: THREE.DoubleSide,
+                        transparent: true,
+                        opacity: 0.9
+                    });
+                    
+                    // Front windows
+                    const windowFront = new THREE.Mesh(windowGeometry, windowMaterial);
+                    windowFront.position.set(0, i * 1.7 + 0.8, 10.1);
+                    buildingGroup.add(windowFront);
+
+                    // Back windows
+                    const windowBack = new THREE.Mesh(windowGeometry, windowMaterial.clone());
+                    windowBack.position.set(0, i * 1.7 + 0.8, -10.1);
+                    windowBack.rotation.y = Math.PI;
+                    buildingGroup.add(windowBack);
+
+                    // Side windows
+                    const sideWindowGeometry = new THREE.PlaneGeometry(18, 1.2);
+                    const windowLeft = new THREE.Mesh(sideWindowGeometry, windowMaterial.clone());
+                    windowLeft.position.set(-10.1, i * 1.7 + 0.8, 0);
+                    windowLeft.rotation.y = -Math.PI / 2;
+                    buildingGroup.add(windowLeft);
+
+                    const windowRight = new THREE.Mesh(sideWindowGeometry, windowMaterial.clone());
+                    windowRight.position.set(10.1, i * 1.7 + 0.8, 0);
+                    windowRight.rotation.y = Math.PI / 2;
+                    buildingGroup.add(windowRight);
+                }
+            }
+
+            // Crown/Spire
+            const crownGeometry = new THREE.ConeGeometry(8, 15, 4);
+            const crownMaterial = new THREE.MeshStandardMaterial({
+                color: 0xD4AF37,
+                metalness: 1,
+                roughness: 0.2
+            });
+            const crown = new THREE.Mesh(crownGeometry, crownMaterial);
+            crown.position.y = 107.5;
+            crown.rotation.y = Math.PI / 4;
+            buildingGroup.add(crown);
+
+            // Glowing top
+            const glowGeometry = new THREE.SphereGeometry(3, 32, 32);
+            const glowMaterial = new THREE.MeshBasicMaterial({
+                color: 0x00D9FF,
+                transparent: true,
+                opacity: 0.6
+            });
+            const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+            glow.position.y = 115;
+            buildingGroup.add(glow);
+
+            // Entrance canopy
+            const canopyGeometry = new THREE.BoxGeometry(25, 1, 15);
+            const canopyMaterial = new THREE.MeshStandardMaterial({
+                color: 0xD4AF37,
+                metalness: 0.6,
+                roughness: 0.4
+            });
+            const canopy = new THREE.Mesh(canopyGeometry, canopyMaterial);
+            canopy.position.set(0, 2, 12);
+            buildingGroup.add(canopy);
+
+            // Revolving doors
+            const doorGeometry = new THREE.CylinderGeometry(3, 3, 4, 8);
+            const doorMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x00D9FF,
+                metalness: 0.5,
+                roughness: 0.1,
+                transmission: 0.8,
+                transparent: true
+            });
+            const door = new THREE.Mesh(doorGeometry, doorMaterial);
+            door.position.set(0, 2, 12);
+            buildingGroup.add(door);
+
+            // Logo on building
+            const logoGeometry = new THREE.PlaneGeometry(8, 8);
+            const logoCanvas = document.createElement('canvas');
+            logoCanvas.width = 256;
+            logoCanvas.height = 256;
+            const ctx = logoCanvas.getContext('2d');
+            
+            // Draw G logo
+            ctx.fillStyle = '#0A1628';
+            ctx.fillRect(0, 0, 256, 256);
+            ctx.strokeStyle = '#D4AF37';
+            ctx.lineWidth = 20;
+            ctx.beginPath();
+            ctx.arc(128, 128, 100, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fillStyle = '#D4AF37';
+            ctx.font = 'bold 140px serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('G', 128, 128);
+            
+            const logoTexture = new THREE.CanvasTexture(logoCanvas);
+            const logoMaterial = new THREE.MeshBasicMaterial({
+                map: logoTexture,
+                transparent: true,
+                side: THREE.DoubleSide
+            });
+            const logo = new THREE.Mesh(logoGeometry, logoMaterial);
+            logo.position.set(0, 15, 10.2);
+            buildingGroup.add(logo);
+
+            scene.add(buildingGroup);
+        }
+
+        function createEnvironment() {
+            // Ground
+            const groundGeometry = new THREE.PlaneGeometry(500, 500);
+            const groundMaterial = new THREE.MeshStandardMaterial({
+                color: 0x0a0a0a,
+                roughness: 0.8,
+                metalness: 0.2
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // Grid pattern on ground
+            const gridHelper = new THREE.GridHelper(500, 50, 0xD4AF37, 0x1a2a3a);
+            gridHelper.position.y = 0.01;
+            gridHelper.material.opacity = 0.3;
+            gridHelper.material.transparent = true;
+            scene.add(gridHelper);
+
+            // Surrounding buildings (simplified)
+            for (let i = 0; i < 20; i++) {
+                const height = Math.random() * 30 + 10;
+                const width = Math.random() * 10 + 5;
+                const buildingGeo = new THREE.BoxGeometry(width, height, width);
+                const buildingMat = new THREE.MeshStandardMaterial({
+                    color: 0x1a2a3a,
+                    metalness: 0.5,
+                    roughness: 0.5
+                });
+                const building = new THREE.Mesh(buildingGeo, buildingMat);
+                
+                const angle = (i / 20) * Math.PI * 2;
+                const radius = 60 + Math.random() * 40;
+                building.position.set(
+                    Math.cos(angle) * radius,
+                    height / 2,
+                    Math.sin(angle) * radius
+                );
+                scene.add(building);
+            }
+
+            // Street lights
+            for (let i = 0; i < 8; i++) {
+                const poleGeometry = new THREE.CylinderGeometry(0.2, 0.2, 8);
+                const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
+                const pole = new THREE.Mesh(poleGeometry, poleMaterial);
+                
+                const angle = (i / 8) * Math.PI * 2;
+                const radius = 35;
+                pole.position.set(Math.cos(angle) * radius, 4, Math.sin(angle) * radius);
+                scene.add(pole);
+
+                const lightGeometry = new THREE.SphereGeometry(0.5);
+                const lightMaterial = new THREE.MeshBasicMaterial({ color: 0xF4E4BC });
+                const light = new THREE.Mesh(lightGeometry, lightMaterial);
+                light.position.set(Math.cos(angle) * radius, 8, Math.sin(angle) * radius);
+                scene.add(light);
+
+                const pointLight = new THREE.PointLight(0xF4E4BC, 0.5, 20);
+                pointLight.position.set(Math.cos(angle) * radius, 8, Math.sin(angle) * radius);
+                scene.add(pointLight);
+            }
+        }
+
+        function generateFloorList() {
+            const floorList = document.getElementById('floor-list');
+            const floors = [
+                { num: 58, name: 'Penthouse', type: 'ceo' },
+                { num: 57, name: 'Executive', type: 'exec' },
+                { num: 56, name: 'Boardroom', type: 'exec' },
+                { num: 50, name: 'Financial Ctr', type: 'finance' },
+                { num: 45, name: 'Trading Floor', type: 'finance' },
+                { num: 40, name: 'Legal', type: 'office' },
+                { num: 35, name: 'HR & Admin', type: 'office' },
+                { num: 30, name: 'Marketing', type: 'office' },
+                { num: 25, name: 'Operations', type: 'office' },
+                { num: 20, name: 'Research', type: 'office' },
+                { num: 15, name: 'Development', type: 'office' },
+                { num: 10, name: 'IT & Systems', type: 'tech' },
+                { num: 5, name: 'Conference', type: 'meeting' },
+                { num: 2, name: 'Lobby', type: 'public' },
+                { num: 1, name: 'Entrance', type: 'public' }
+            ];
+
+            floors.forEach(floor => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-3 py-2 rounded-lg text-sm transition hover:bg-white/10 ${floor.type === 'ceo' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50' : 'text-gray-300'}`;
+                btn.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold">${floor.num}</span>
+                        <span class="text-xs truncate ml-2">${floor.name}</span>
+                    </div>
+                `;
+                btn.onclick = () => navigateToFloor(floor.num, floor.type);
+                floorList.appendChild(btn);
+            });
+        }
+
+        function changeView(view) {
+            currentView = view;
+            
+            // Update buttons
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.view === view) btn.classList.add('active');
+            });
+
+            // Camera positions
+            const positions = {
+                front: { pos: [0, 30, 80], target: [0, 40, 0] },
+                rear: { pos: [0, 30, -80], target: [0, 40, 0] },
+                side: { pos: [80, 30, 0], target: [0, 40, 0] },
+                financial: { pos: [30, 85, 30], target: [0, 85, 0] },
+                ceo: { pos: [0, 98, 20], target: [0, 98, 0] }
+            };
+
+            const pos = positions[view];
+            animateCamera(pos.pos, pos.target);
+
+            // Show/hide panels
+            if (view === 'financial') {
+                document.getElementById('financial-panel').classList.remove('hidden');
+            } else {
+                document.getElementById('financial-panel').classList.add('hidden');
+            }
+
+            if (view === 'ceo') {
+                toggleCEO();
+            }
+        }
+
+        function animateCamera(position, target) {
+            const startPos = camera.position.clone();
+            const startTarget = controls.target.clone();
+            const endPos = new THREE.Vector3(...position);
+            const endTarget = new THREE.Vector3(...target);
+            
+            let progress = 0;
+            function animate() {
+                progress += 0.02;
+                if (progress <= 1) {
+                    camera.position.lerpVectors(startPos, endPos, progress);
+                    controls.target.lerpVectors(startTarget, endTarget, progress);
+                    controls.update();
+                    requestAnimationFrame(animate);
+                }
+            }
+            animate();
+        }
+
+        function navigateToFloor(floorNum, type) {
+            const height = floorNum * 1.7;
+            animateCamera([20, height + 10, 20], [0, height, 0]);
+            
+            if (type === 'finance') {
+                setTimeout(() => changeView('financial'), 1000);
+            } else if (type === 'ceo') {
+                setTimeout(() => changeView('ceo'), 1000);
+            }
+        }
+
+        function toggleFinancial() {
+            const panel = document.getElementById('financial-panel');
+            panel.classList.toggle('hidden');
+        }
+
+        function toggleCEO() {
+            const panel = document.getElementById('ceo-panel');
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                initCEOOffice();
+            } else {
+                panel.classList.add('hidden');
+            }
+        }
+
+        function initCEOOffice() {
+            if (ceoScene) return; // Already initialized
+
+            const container = document.getElementById('ceo-office-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            ceoScene = new THREE.Scene();
+            ceoScene.background = new THREE.Color(0x1a1a2e);
+
+            ceoCamera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+            ceoCamera.position.set(0, 5, 10);
+
+            ceoRenderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById('ceo-canvas') });
+            ceoRenderer.setSize(width, height);
+            ceoRenderer.shadowMap.enabled = true;
+
+            ceoControls = new THREE.OrbitControls(ceoCamera, ceoRenderer.domElement);
+            ceoControls.enableDamping = true;
+
+            // CEO Office lighting
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+            ceoScene.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            sunLight.position.set(10, 20, 10);
+            sunLight.castShadow = true;
+            ceoScene.add(sunLight);
+
+            // City view background (simple)
+            const cityGeometry = new THREE.PlaneGeometry(50, 30);
+            const cityCanvas = document.createElement('canvas');
+            cityCanvas.width = 512;
+            cityCanvas.height = 256;
+            const ctx = cityCanvas.getContext('2d');
+            
+            // Draw city skyline
+            const gradient = ctx.createLinearGradient(0, 0, 0, 256);
+            gradient.addColorStop(0, '#0A1628');
+            gradient.addColorStop(1, '#1a2a3a');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 512, 256);
+            
+            // Buildings
+            ctx.fillStyle = '#0f1f2f';
+            for (let i = 0; i < 20; i++) {
+                const h = Math.random() * 100 + 50;
+                ctx.fillRect(i * 25, 256 - h, 20, h);
+            }
+            
+            const cityTexture = new THREE.CanvasTexture(cityCanvas);
+            const cityMaterial = new THREE.MeshBasicMaterial({ map: cityTexture });
+            const cityView = new THREE.Mesh(cityGeometry, cityMaterial);
+            cityView.position.set(0, 10, -15);
+            ceoScene.add(cityView);
+
+            // Floor
+            const floorGeometry = new THREE.PlaneGeometry(20, 20);
+            const floorMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x2a1a0a,
+                roughness: 0.1,
+                metalness: 0.1
+            });
+            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor.rotation.x = -Math.PI / 2;
+            floor.receiveShadow = true;
+            ceoScene.add(floor);
+
+            // CEO Desk
+            const deskGeometry = new THREE.BoxGeometry(4, 0.1, 2);
+            const deskMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x4a2c0a,
+                roughness: 0.2,
+                metalness: 0.1
+            });
+            const desk = new THREE.Mesh(deskGeometry, deskMaterial);
+            desk.position.set(0, 1.5, 0);
+            desk.castShadow = true;
+            ceoScene.add(desk);
+
+            // Desk legs
+            const legGeometry = new THREE.BoxGeometry(0.1, 1.5, 0.1);
+            const legMaterial = new THREE.MeshStandardMaterial({ color: 0xD4AF37, metalness: 0.8 });
+            const leg1 = new THREE.Mesh(legGeometry, legMaterial);
+            leg1.position.set(-1.8, 0.75, -0.8);
+            ceoScene.add(leg1);
+            const leg2 = new THREE.Mesh(legGeometry, legMaterial);
+            leg2.position.set(1.8, 0.75, -0.8);
+            ceoScene.add(leg2);
+
+            // Chair
+            const chairGeometry = new THREE.BoxGeometry(1.5, 0.1, 1.5);
+            const chairMaterial = new THREE.MeshStandardMaterial({ color: 0x8B0000 });
+            const chair = new THREE.Mesh(chairGeometry, chairMaterial);
+            chair.position.set(0, 1, 2);
+            ceoScene.add(chair);
+
+            // Chair back
+            const chairBackGeometry = new THREE.BoxGeometry(1.5, 2, 0.2);
+            const chairBack = new THREE.Mesh(chairBackGeometry, chairMaterial);
+            chairBack.position.set(0, 2, 2.7);
+            ceoScene.add(chairBack);
+
+            // Monitors
+            const monitorGeometry = new THREE.BoxGeometry(1.2, 0.8, 0.05);
+            const monitorMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x111111,
+                emissive: 0x001133,
+                emissiveIntensity: 0.5
+            });
+            const monitor1 = new THREE.Mesh(monitorGeometry, monitorMaterial);
+            monitor1.position.set(-1, 2.2, -0.5);
+            monitor1.rotation.x = -0.1;
+            ceoScene.add(monitor1);
+
+            const monitor2 = new THREE.Mesh(monitorGeometry, monitorMaterial);
+            monitor2.position.set(1, 2.2, -0.5);
+            monitor2.rotation.x = -0.1;
+            ceoScene.add(monitor2);
+
+            // Bookshelf
+            const shelfGeometry = new THREE.BoxGeometry(0.3, 6, 8);
+            const shelfMaterial = new THREE.MeshStandardMaterial({ color: 0x4a2c0a });
+            const shelf = new THREE.Mesh(shelfGeometry, shelfMaterial);
+            shelf.position.set(-8, 3, -5);
+            shelf.rotation.y = 0.3;
+            ceoScene.add(shelf);
+
+            // Books
+            for (let i = 0; i < 20; i++) {
+                const bookGeometry = new THREE.BoxGeometry(0.05, 0.8, 0.6);
+                const bookColors = [0x8B0000, 0x006400, 0x00008B, 0x4B0082, 0xD4AF37];
+                const bookMaterial = new THREE.MeshStandardMaterial({ 
+                    color: bookColors[Math.floor(Math.random() * bookColors.length)]
+                });
+                const book = new THREE.Mesh(bookGeometry, bookMaterial);
+                book.position.set(-7.8, 1 + Math.floor(i/5) * 1.5, -8 + (i%5) * 1.2);
+                book.rotation.y = 0.3;
+                ceoScene.add(book);
+            }
+
+            // Window frames
+            const frameGeometry = new THREE.BoxGeometry(20, 0.2, 0.2);
+            const frameMaterial = new THREE.MeshStandardMaterial({ color: 0xD4AF37, metalness: 0.8 });
+            const topFrame = new THREE.Mesh(frameGeometry, frameMaterial);
+            topFrame.position.set(0, 15, -15);
+            ceoScene.add(topFrame);
+
+            // Animate CEO office
+            function animateCEO() {
+                if (!document.getElementById('ceo-panel').classList.contains('hidden')) {
+                    requestAnimationFrame(animateCEO);
+                    ceoControls.update();
+                    ceoRenderer.render(ceoScene, ceoCamera);
+                }
+            }
+            animateCEO();
+        }
+
+        function showInfo(type) {
+            // Hide all popups
+            document.querySelectorAll('.info-popup').forEach(popup => {
+                popup.style.display = 'none';
+            });
+            
+            // Show selected
+            const popup = document.getElementById('info-' + type);
+            if (popup) {
+                popup.style.display = 'block';
+                setTimeout(() => {
+                    popup.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function toggleAutoRotate() {
+            autoRotate = !autoRotate;
+            controls.autoRotate = autoRotate;
+            document.getElementById('rotate-btn').classList.toggle('text-yellow-400');
+            document.getElementById('rotate-btn').classList.toggle('text-green-400');
+        }
+
+        function resetView() {
+            changeView('front');
+            controls.reset();
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            controls.update();
+            
+            // Subtle building animation
+            if (buildingGroup) {
+                buildingGroup.rotation.y += 0.001;
+            }
+
+            composer.render();
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>

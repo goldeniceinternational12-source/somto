@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - Terms of Service</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-dark: #B8860B;
+            --gold-light: #FFD700;
+            --ice-blue: #E0F7FA;
+            --dark-bg: #0a0a0a;
+            --card-bg: #111;
+            --text-primary: #f0f0f0;
+            --text-secondary: #888;
+            --accent-blue: #4FC3F7;
+            --success-green: #4CAF50;
+            --border-color: rgba(212, 175, 55, 0.2);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--gold-primary);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .version-badge {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--gold-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--gold-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--gold-primary), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .effective-date {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.8rem 1.5rem;
+            background: rgba(79, 195, 247, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 8px;
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        .toc-nav {
+            background: rgba(17, 17, 17, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 80px;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .nav-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-item {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            white-space: nowrap;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--gold-primary);
+            border-color: var(--gold-primary);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .search-results {
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* Terms Sections */
+        .terms-section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 150px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gold-primary);
+        }
+
+        .section-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+            font-size: 1.1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+            font-weight: 600;
+        }
+
+        .section-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .section-content p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .section-content ul, .section-content ol {
+            margin-left: 2rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .section-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.8;
+        }
+
+        .section-content strong {
+            color: var(--gold-light);
+        }
+
+        /* Subsections */
+        .subsection {
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+            border-left: 3px solid var(--border-color);
+        }
+
+        .subsection h3 {
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .subsection:hover {
+            border-left-color: var(--gold-primary);
+        }
+
+        /* Highlight Boxes */
+        .highlight-box {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 4px solid var(--gold-primary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .highlight-box h4 {
+            color: var(--gold-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-box {
+            background: rgba(255, 68, 68, 0.1);
+            border-left: 4px solid #ff4444;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .warning-box h4 {
+            color: #ff4444;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box {
+            background: rgba(79, 195, 247, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        /* Definition List */
+        .definition-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .definition-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .definition-term {
+            color: var(--gold-primary);
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .definition-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--gold-primary);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        tr:hover td {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        /* Agreement Section */
+        .agreement-section {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0, 0, 0, 0.3));
+            border: 2px solid var(--gold-primary);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 4rem 0;
+            text-align: center;
+        }
+
+        .agreement-section h2 {
+            color: var(--gold-primary);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .agreement-text {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            text-align: left;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--gold-primary);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            accent-color: var(--gold-primary);
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            color: var(--text-secondary);
+            cursor: pointer;
+            flex: 1;
+            line-height: 1.6;
+        }
+
+        .checkbox-item.checked {
+            border-color: var(--success-green);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .checkbox-item.checked label {
+            color: var(--text-primary);
+        }
+
+        .signature-area {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .signature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .input-group {
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--gold-light);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: #000;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 2rem;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Print Button */
+        .print-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--card-bg);
+            border: 2px solid var(--gold-primary);
+            color: var(--gold-primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .print-btn:hover {
+            background: var(--gold-primary);
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 2px solid var(--gold-primary);
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            color: var(--gold-primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold-primary);
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 2px solid var(--gold-primary);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            padding: 2rem;
+            text-align: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal h3 {
+            color: var(--gold-primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .modal p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.8rem; }
+            .section-title { font-size: 1.2rem; }
+            .signature-grid { grid-template-columns: 1fr; }
+            .agreement-section { padding: 2rem 1rem; }
+            .nav-content { padding: 0 1rem; }
+        }
+
+        /* Print Styles */
+        @media print {
+            .bg-animation, header, .toc-nav, .print-btn, .agreement-section, footer {
+                display: none;
+            }
+            .terms-section { page-break-inside: avoid; }
+            body { background: white; color: black; }
+            .section-content { border: 1px solid #ccc; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-primary);
+        }
+
+        /* Highlight animation for search */
+        .highlight {
+            background: rgba(212, 175, 55, 0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">G</div>
+                <div class="logo-text">GOLDENICE INTERNATIONAL</div>
+            </div>
+            <div class="version-badge">Version 3.0 | Effective March 2026</div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Terms of Service</h1>
+        <p>Please read these Terms of Service carefully before opening an account with Goldenice International. By accessing our services, you agree to be bound by these terms.</p>
+        <div class="effective-date">
+            📅 Effective Date: March 1, 2026 | Last Modified: February 15, 2026
+        </div>
+    </section>
+
+    <nav class="toc-nav">
+        <div class="nav-content">
+            <a href="#definitions" class="nav-item">Definitions</a>
+            <a href="#eligibility" class="nav-item">Eligibility</a>
+            <a href="#account" class="nav-item">Account Terms</a>
+            <a href="#trading" class="nav-item">Trading Rules</a>
+            <a href="#funds" class="nav-item">Funds & Margin</a>
+            <a href="#fees" class="nav-item">Fees & Charges</a>
+            <a href="#liability" class="nav-item">Liability</a>
+            <a href="#termination" class="nav-item">Termination</a>
+            <a href="#disputes" class="nav-item">Disputes</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Search -->
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search terms and conditions..." onkeyup="searchTerms()">
+            <div class="search-results" id="searchResults"></div>
+        </div>
+
+        <!-- Section 1: Definitions -->
+        <section class="terms-section" id="definitions">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2 class="section-title">Definitions & Interpretations</h2>
+            </div>
+            <div class="section-content">
+                <p>In these Terms of Service, unless the context otherwise requires, the following terms shall have the meanings assigned to them:</p>
+                
+                <div class="definition-list">
+                    <div class="definition-item">
+                        <div class="definition-term">"Agreement"</div>
+                        <div class="definition-desc">Means these Terms of Service together with the Risk Disclosure Statement, Privacy Policy, and any other documents incorporated by reference.</div>
+                    </div>
+                    <div class="definition-item">
+                        <div class="definition-term">"Client" or "You"</div>
+                        <div class="definition-desc">Means any individual or entity that has opened an account with Goldenice International and is bound by these terms.</div>
+                    </div>
+                    <div class="definition-item">
+                        <div class="definition-term">"Company" or "Goldenice"</div>
+                        <div class="definition-desc">Means Goldenice International, its subsidiaries, affiliates, successors, and assigns.</div>
+                    </div>
+                    <div class="definition-item">
+                        <div class="definition-term">"Trading Platform"</div>
+                        <div class="definition-desc">Means the electronic trading systems, software, and applications provided by Goldenice for executing trades.</div>
+                    </div>
+                    <div class="definition-item">
+                        <div class="definition-term">"Margin"</div>
+                        <div class="definition-desc">Means the collateral required to open and maintain leveraged positions in forex and CFD trading.</div>
+                    </div>
+                    <div class="definition-item">
+                        <div class="definition-term">"Spread"</div>
+                        <div class="definition-desc">Means the difference between the bid and ask price of a financial instrument.</div>
+                    </div>
+                    <div class="definition-item">
+                        <div class="definition-term">"Force Majeure"</div>
+                        <div class="definition-desc">Means any event beyond the reasonable control of Goldenice, including but not limited to acts of God, war, terrorism, strikes, technological failures, or market disruptions.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Eligibility -->
+        <section class="terms-section" id="eligibility">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2 class="section-title">Eligibility & Account Opening</h2>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>2.1 Age and Capacity</h3>
+                    <p>You must be at least 18 years old (or the legal age of majority in your jurisdiction) and have the legal capacity to enter into binding contracts. By opening an account, you represent and warrant that you meet these requirements.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>2.2 Prohibited Jurisdictions</h3>
+                    <p>Goldenice International does not accept clients from jurisdictions where forex trading is prohibited or where our services would violate local laws. It is your sole responsibility to ensure that your use of our services complies with applicable laws in your country of residence.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>2.3 Accredited Investors</h3>
+                    <p>In certain jurisdictions, you may be required to qualify as an accredited or professional investor to access higher leverage or certain products. You must provide accurate information regarding your financial status, trading experience, and investment objectives.</p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Important Notice</h4>
+                    <p>Providing false or misleading information during the account opening process constitutes a material breach of these terms and may result in immediate account closure, forfeiture of funds, and legal action.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>2.4 Verification Requirements</h3>
+                    <p>You must provide valid identification documents and proof of address as required by our Know Your Customer (KYC) and Anti-Money Laundering (AML) policies. Accounts will not be activated until verification is complete.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Account Terms -->
+        <section class="terms-section" id="account">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2 class="section-title">Account Operations & Security</h2>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>3.1 Account Types</h3>
+                    <p>Goldenice offers various account types (Standard, Premium, VIP, Islamic/Swap-free) with different features, spreads, and minimum deposit requirements. The specific terms for each account type are detailed on our website and may be updated periodically.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>3.2 Account Security</h3>
+                    <p>You are solely responsible for maintaining the confidentiality of your account credentials, including username, password, and any two-factor authentication devices. You must:</p>
+                    <ul>
+                        <li>Use strong, unique passwords and change them regularly</li>
+                        <li>Enable two-factor authentication (2FA) where available</li>
+                        <li>Immediately notify Goldenice of any unauthorized access or security breach</li>
+                        <li>Not share your account credentials with any third party</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🔐 Security Disclaimer</h4>
+                    <p>Goldenice International will never ask for your password via email, phone, or chat. Any such request should be reported immediately as phishing.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>3.3 Joint Accounts</h3>
+                    <p>Joint accounts require all parties to consent to transactions. Each joint account holder is jointly and severally liable for all obligations and losses incurred in the account.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>3.4 Corporate Accounts</h3>
+                    <p>Corporate clients must provide certified copies of incorporation documents, board resolutions authorizing trading, and identification for all beneficial owners owning 25% or more of the entity.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Trading Rules -->
+        <section class="terms-section" id="trading">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2 class="section-title">Trading Conditions & Execution</h2>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>4.1 Order Execution</h3>
+                    <p>Goldenice acts as principal (market maker) and is the sole execution venue for your trades. While we strive to provide best execution, you acknowledge that:</p>
+                    <ul>
+                        <li>Prices quoted are indicative and subject to market conditions</li>
+                        <li>Execution prices may differ from quoted prices due to market volatility</li>
+                        <li>Goldenice reserves the right to reject orders at its sole discretion</li>
+                        <li>Slippage may occur during high volatility or low liquidity periods</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>4.2 Prohibited Trading Strategies</h3>
+                    <p>The following activities are strictly prohibited and may result in account termination and forfeiture of profits:</p>
+                    <ul>
+                        <li><strong>Arbitrage:</strong> Exploiting price discrepancies between platforms or systems</li>
+                        <li><strong>Scalping:</strong> Opening and closing positions within extremely short timeframes (typically under 2 minutes)</li>
+                        <li><strong>Hedging Manipulation:</strong> Offsetting positions across multiple accounts to abuse bonus programs</li>
+                        <li><strong>Latency Arbitrage:</strong> Using technological advantages to exploit price feed delays</li>
+                        <li><strong>Insider Trading:</strong> Trading based on material non-public information</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>🚫 Trading Restrictions</h4>
+                    <p>Goldenice employs sophisticated monitoring systems to detect prohibited trading patterns. Violations will result in immediate account suspension, cancellation of trades, and potential legal action.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>4.3 Leverage and Margin</h3>
+                    <p>Leverage ratios range from 1:1 to 1:500 depending on account type, instrument, and regulatory jurisdiction. Margin requirements are subject to change without prior notice during periods of high volatility.</p>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Account Type</th>
+                                    <th>Max Leverage</th>
+                                    <th>Margin Call</th>
+                                    <th>Stop Out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Standard</td>
+                                    <td>1:500</td>
+                                    <td>100%</td>
+                                    <td>20%</td>
+                                </tr>
+                                <tr>
+                                    <td>Premium</td>
+                                    <td>1:500</td>
+                                    <td>120%</td>
+                                    <td>30%</td>
+                                </tr>
+                                <tr>
+                                    <td>VIP</td>
+                                    <td>1:200</td>
+                                    <td>150%</td>
+                                    <td>50%</td>
+                                </tr>
+                                <tr>
+                                    <td>Islamic</td>
+                                    <td>1:100</td>
+                                    <td>100%</td>
+                                    <td>20%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>4.4 Market Hours and Rollovers</h3>
+                    <p>Trading hours vary by instrument. Positions held overnight are subject to swap/rollover fees (except Islamic accounts). Triple swaps apply on Wednesdays for most currency pairs to account for weekend settlement.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Funds -->
+        <section class="terms-section" id="funds">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2 class="section-title">Deposits, Withdrawals & Fund Management</h2>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>5.1 Deposit Methods</h3>
+                    <p>Goldenice accepts deposits via bank wire transfer, credit/debit cards, and approved e-wallets. Third-party deposits are strictly prohibited. All deposits must originate from accounts held in your name.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>5.2 Withdrawal Policy</h3>
+                    <ul>
+                        <li>Withdrawals must be made to the same source as the original deposit (anti-money laundering requirement)</li>
+                        <li>Processing time: 1-5 business days depending on method</li>
+                        <li>Minimum withdrawal: $500 (or equivalent)</li>
+                        <li>Withdrawal fees may apply depending on method and frequency</li>
+                        <li>Bonus funds cannot be withdrawn until volume requirements are met</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>💡 Withdrawal Priority</h4>
+                    <p>For accounts that have received deposits via multiple methods, withdrawals will be processed back to the original sources in proportion to the deposit amounts.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>5.3 Negative Balance Protection</h3>
+                    <p>While Goldenice implements negative balance protection for retail clients, you acknowledge that in extreme market conditions (such as during the 2015 Swiss Franc event), losses may exceed account balances due to gapping. Professional clients and residents of certain jurisdictions may not be eligible for negative balance protection.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>5.4 Segregated Accounts</h3>
+                    <p>Client funds are held in segregated accounts with tier-1 banking institutions. However, segregation does not guarantee complete protection in the event of insolvency or bank failure.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Fees -->
+        <section class="terms-section" id="fees">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2 class="section-title">Fees, Charges & Compensation</h2>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>6.1 Spread and Commission</h3>
+                    <p>Goldenice generates revenue through spreads (the difference between bid and ask prices) and, on certain account types, commissions. Spreads are variable and may widen during news events or low liquidity periods.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>6.2 Inactivity Fees</h3>
+                    <p>Accounts with no trading activity for 12 consecutive months will be charged a monthly inactivity fee of $50 (or equivalent) or 10% of account balance, whichever is lower, until the account is reactivated or balance reaches zero.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>6.3 Currency Conversion</h3>
+                    <p>Deposits and withdrawals in currencies other than your account base currency will be converted at prevailing exchange rates plus a 1.5% conversion fee.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>6.4 Dormant Accounts</h3>
+                    <p>Accounts dormant for 24 months may be classified as abandoned and escheated to relevant authorities in accordance with applicable laws.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Liability -->
+        <section class="terms-section" id="liability">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <h2 class="section-title">Limitation of Liability & Indemnification</h2>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>7.1 No Investment Advice</h3>
+                    <p>Goldenice does not provide investment, tax, or legal advice. Any market analysis, research, or commentary provided is for informational purposes only and should not be construed as a recommendation to buy or sell any financial instrument.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>7.2 Technology Limitations</h3>
+                    <p>Goldenice shall not be liable for:</p>
+                    <ul>
+                        <li>Losses resulting from platform downtime, system failures, or connectivity issues</li>
+                        <li>Delays in order transmission or execution due to internet latency</li>
+                        <li>Losses due to viruses, malware, or unauthorized access to your devices</li>
+                        <li>Errors in price feeds or data provided by third-party vendors</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚖️ Limitation of Liability</h4>
+                    <p>To the maximum extent permitted by law, Goldenice's total liability shall not exceed the total amount of fees paid by you to Goldenice in the 12 months preceding the claim.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>7.3 Indemnification</h3>
+                    <p>You agree to indemnify and hold harmless Goldenice, its officers, directors, employees, and agents from any claims, damages, or expenses (including reasonable attorneys' fees) arising from your use of our services, violation of these terms, or infringement of any third-party rights.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>7.4 Force Majeure</h3>
+                    <p>Goldenice shall not be liable for any failure or delay in performing its obligations where such failure or delay results from events beyond our reasonable control, including but not limited to: acts of God, war, terrorism, riots, embargoes, acts of civil or military authorities, fire, floods, accidents, strikes, or shortages of transportation, facilities, fuel, energy, labor, or materials.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8: Termination -->
+        <section class="terms-section" id="termination">
+            <div class="section-header">
+                <div class="section-number">8</div>
+                <h2 class="section-title">Termination & Account Closure</h2>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>8.1 Termination by Client</h3>
+                    <p>You may close your account at any time by submitting a written request to goldeniceinternational12@gmail.com. All open positions must be closed and pending withdrawals completed before account closure.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>8.2 Termination by Goldenice</h3>
+                    <p>Goldenice reserves the right to suspend or terminate your account immediately, without prior notice, if:</p>
+                    <ul>
+                        <li>You violate any provision of these Terms of Service</li>
+                        <li>We suspect fraudulent, abusive, or illegal activity</li>
+                        <li>You provide false or misleading information</li>
+                        <li>Regulatory requirements mandate such action</li>
+                        <li>You engage in prohibited trading strategies</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>8.3 Effects of Termination</h3>
+                    <p>Upon termination:</p>
+                    <ul>
+                        <li>All open positions may be closed at prevailing market prices</li>
+                        <li>Pending orders will be cancelled</li>
+                        <li>Bonus funds and promotional credits will be forfeited</li>
+                        <li>You remain liable for any negative balance</li>
+                        <li>Goldenice may retain records as required by law</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 9: Disputes -->
+        <section class="terms-section" id="disputes">
+            <div class="section-header">
+                <div class="section-number">9</div>
+                <h2 class="section-title">Dispute Resolution & Governing Law</h2>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>9.1 Governing Law</h3>
+                    <p>These Terms of Service shall be governed by and construed in accordance with the laws of [Jurisdiction], without regard to its conflict of law provisions.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>9.2 Arbitration</h3>
+                    <p>Any dispute arising out of or relating to these terms shall be resolved through binding arbitration administered by the [Arbitration Association] in accordance with its Commercial Arbitration Rules. The arbitration shall be conducted in [City, Country] in the English language.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>9.3 Class Action Waiver</h3>
+                    <p>You agree that any proceedings will be conducted only on an individual basis and not in a class, consolidated, or representative action. You waive any right to participate in class actions against Goldenice.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>9.4 Complaints Procedure</h3>
+                    <p>Complaints must be submitted in writing to goldeniceinternational12@gmail.com  10 business days of the incident. Goldenice will acknowledge receipt within 48 hours and provide a final response within 30 days. If unsatisfied, you may escalate to the relevant financial ombudsman service.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 10: General -->
+        <section class="terms-section" id="general">
+            <div class="section-header">
+                <div class="section-number">10</div>
+                <h2 class="section-title">General Provisions</h2>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>10.1 Amendments</h3>
+                    <p>Goldenice reserves the right to modify these terms at any time. Material changes will be notified via email or platform announcement 30 days prior to effectiveness. Continued use of services after changes constitutes acceptance.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>10.2 Severability</h3>
+                    <p>If any provision of these terms is found to be unenforceable, the remaining provisions shall remain in full force and effect.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>10.3 Assignment</h3>
+                    <p>You may not assign or transfer these terms without Goldenice's prior written consent. Goldenice may assign these terms without restriction.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>10.4 Entire Agreement</h3>
+                    <p>These Terms of Service constitute the entire agreement between you and Goldenice regarding the subject matter herein and supersede all prior agreements, understandings, and representations.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>📧 Contact Information</h4>
+                    <p><strong>General Inquiries:</strong> goldeniceinternational12@gmail.com<br>
+                    <strong>Compliance:</strong>  goldeniceinternational12@gmail.com<br>
+                    <strong>Legal:</strong>  goldeniceinternational12@gmail.com<br>
+                    <strong>Address:</strong> Goldenice International Tower, Financial District, [Port-Harcourt, Nigeria]</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agreement Section -->
+        <div class="agreement-section" id="agreement">
+            <h2>Acceptance of Terms</h2>
+            <p class="agreement-text">
+                By checking the boxes below and clicking "I Agree," you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. You confirm that you are of legal age and have the authority to enter into this agreement.
+            </p>
+
+            <div class="checkbox-group">
+                <div class="checkbox-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" id="agree1">
+                    <label for="agree1">I have read and agree to the Terms of Service, Risk Disclosure Statement, and Privacy Policy</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" id="agree2">
+                    <label for="agree2">I confirm that I am at least 18 years old and legally competent to enter into this agreement</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" id="agree3">
+                    <label for="agree3">I understand that forex trading carries high risk and I may lose all my invested capital</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" id="agree4">
+                    <label for="agree4">I agree to receive electronic communications from Goldenice International regarding my account and market updates</label>
+                </div>
+            </div>
+
+            <div class="signature-area">
+                <div class="signature-grid">
+                    <div class="input-group">
+                        <label>Full Legal Name</label>
+                        <input type="text" id="fullName" placeholder="Enter your full name">
+                    </div>
+                    <div class="input-group">
+                        <label>Date</label>
+                        <input type="date" id="agreementDate" readonly>
+                    </div>
+                </div>
+                <button class="btn-primary" id="agreeBtn" onclick="submitAgreement()" disabled>
+                    I Agree to Terms of Service
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">✅</div>
+            <h3>Agreement Accepted</h3>
+            <p>Thank you for accepting the Terms of Service. You may now proceed with account funding and trading.</p>
+            <button class="btn-primary" onclick="closeModal()">Continue to Platform</button>
+        </div>
+    </div>
+
+    <!-- Print Button -->
+    <button class="print-btn" onclick="window.print()" title="Print Terms">🖨️</button>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">GOLDENICE INTERNATIONAL</div>
+            <div class="footer-links">
+                <a href="./riskwarning.html">Risk Warning</a>
+                <a href="./privacy policy.html">Privacy Policy</a>
+                <a href="./Cookie Policy.html">Cookie Policy</a>
+                <a href="./aml.html">AML Policy</a>
+                <a href="./live chat.html">Complaints</a>
+                <a href="./contact.html">Contact Us</a>
+            </div>
+            <div class="copyright">
+                © 2026 Goldenice International. All rights reserved.<br>
+                Registered in [Jurisdiction] | Company Number: [Number]<br>
+                Authorized and regulated by [Regulatory Body]<br>
+                <br>
+                <small>Trading foreign exchange and derivatives carries a high level of risk. Please ensure you fully understand the risks involved.</small>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Set current date
+        document.getElementById('agreementDate').value = new Date().toISOString().split('T')[0];
+
+        // Navigation active state
+        const sections = document.querySelectorAll('.terms-section');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').slice(1) === current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Search functionality
+        function searchTerms() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const sections = document.querySelectorAll('.terms-section');
+            const resultsDiv = document.getElementById('searchResults');
+            let matches = 0;
+
+            // Remove previous highlights
+            document.querySelectorAll('.highlight').forEach(el => {
+                el.outerHTML = el.innerText;
+            });
+
+            if (filter.length < 3) {
+                resultsDiv.style.display = 'none';
+                sections.forEach(section => {
+                    section.style.display = 'block';
+                    section.style.opacity = '1';
+                });
+                return;
+            }
+
+            sections.forEach(section => {
+                const text = section.innerText.toLowerCase();
+                const content = section.querySelector('.section-content');
+                
+                if (text.includes(filter)) {
+                    section.style.display = 'block';
+                    section.style.opacity = '1';
+                    matches++;
+                    
+                    // Highlight matches
+                    highlightText(content, filter);
+                } else {
+                    section.style.opacity = '0.3';
+                }
+            });
+
+            resultsDiv.style.display = 'block';
+            resultsDiv.textContent = `Found ${matches} section(s) containing "${input.value}"`;
+            resultsDiv.style.color = matches > 0 ? 'var(--success-green)' : '#ff4444';
+        }
+
+        function highlightText(element, filter) {
+            const walker = document.createTreeWalker(
+                element,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+
+            const nodes = [];
+            while (walker.nextNode()) {
+                if (walker.currentNode.textContent.toLowerCase().includes(filter)) {
+                    nodes.push(walker.currentNode);
+                }
+            }
+
+            nodes.forEach(node => {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                const regex = new RegExp(`(${filter})`, 'gi');
+                span.innerHTML = node.textContent.replace(regex, '<span class="highlight">$1</span>');
+                node.parentNode.replaceChild(span, node);
+            });
+        }
+
+        // Checkbox functionality
+        function toggleCheck(item) {
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            item.classList.toggle('checked', checkbox.checked);
+            checkAllChecked();
+        }
+
+        function checkAllChecked() {
+            const checkboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            const nameFilled = document.getElementById('fullName').value.trim() !== '';
+            
+            const btn = document.getElementById('agreeBtn');
+            btn.disabled = !(allChecked && nameFilled);
+        }
+
+        document.getElementById('fullName').addEventListener('input', checkAllChecked);
+
+        // Submit agreement
+        function submitAgreement() {
+            const name = document.getElementById('fullName').value;
+            const date = document.getElementById('agreementDate').value;
+            
+            // Here you would typically send data to server
+            console.log('Agreement accepted:', { name, date, timestamp: new Date() });
+            
+            document.getElementById('successModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').style.display = 'none';
+            // Redirect to platform or next step
+            // window.location.href = '/dashboard';
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('successModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Animate sections on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'all 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

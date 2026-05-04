@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Spreads & Trading Conditions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                        },
+                        midnight: {
+                            900: #020617,
+                            800: #0F172A',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #020617;
+            color: #e2e8f0;
+        }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(to right, #eab308, #facc15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Spread Flash Animation */
+        @keyframes flashGreen {
+            0% { background-color: rgba(34, 197, 94, 0.2); }
+            100% { background-color: transparent; }
+        }
+        @keyframes flashRed {
+            0% { background-color: rgba(239, 68, 68, 0.2); }
+            100% { background-color: transparent; }
+        }
+        .flash-up { animation: flashGreen 0.5s ease-out; }
+        .flash-down { animation: flashRed 0.5s ease-out; }
+
+        /* Toggle Switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #eab308;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #eab308;
+        }
+        
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #eab308;
+            cursor: pointer;
+            margin-top: -8px; 
+            box-shadow: 0 0 10px rgba(234, 179, 8, 0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #334155;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-gold-500 selection:text-midnight-900">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded bg-gradient-to-br from-gold-400 to-yellow-700 flex items-center justify-center text-midnight-900 font-bold text-xl shadow-lg shadow-yellow-900/20">G</div>
+                    <span class="font-serif text-2xl font-bold text-white tracking-tight">Goldenice <span class="text-gold-500">International</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="./market.html" class="text-slate-300 hover:text-white transition-colors">Markets</a>
+                    <a href="#" class="text-gold-400 font-medium border-b-2 border-gold-500 pb-1">Spreads</a>
+                    <a href="./dashboard.html" class="text-slate-300 hover:text-white transition-colors">Platforms</a>
+                    <a href="./about.html" class="text-slate-300 hover:text-white transition-colors">About</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="text-slate-300 hover:text-white font-medium"><a href="./login.html">Login</a>    </button>
+                    <button class="bg-gold-600 hover:bg-gold-500 text-midnight-900 px-6 py-2.5 rounded font-bold transition-all shadow-lg shadow-yellow-900/20"><a href="./index.html">Register</a></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-32 pb-20 overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800 via-midnight-900 to-midnight-900 opacity-50"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 text-gold-400 text-sm font-semibold mb-6">
+                <i class="fa-solid fa-bolt"></i> Industry Leading Conditions
+            </div>
+            <h1 class="text-5xl md:text-7xl font-serif font-bold text-white mb-6">
+                Razor-Sharp <span class="gold-gradient-text">Spreads</span>
+            </h1>
+            <p class="text-xl text-slate-400 max-w-3xl mx-auto mb-10">
+                Trade with institutional-grade pricing. Our deep liquidity partnerships ensure minimal slippage and ultra-tight spreads starting from 0.0 pips on major pairs.
+            </p>
+            
+            <!-- Live Stats Ticker -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                <div class="glass-panel p-4 rounded-xl border border-slate-700">
+                    <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">EUR/USD Spread</div>
+                    <div class="text-3xl font-mono font-bold text-white">0.0 <span class="text-sm text-slate-500">pips</span></div>
+                </div>
+                <div class="glass-panel p-4 rounded-xl border border-slate-700">
+                    <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">Avg. Execution</div>
+                    <div class="text-3xl font-mono font-bold text-white">12 <span class="text-sm text-slate-500">ms</span></div>
+                </div>
+                <div class="glass-panel p-4 rounded-xl border border-slate-700">
+                    <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">Max Leverage</div>
+                    <div class="text-3xl font-mono font-bold text-white">1:500</div>
+                </div>
+                <div class="glass-panel p-4 rounded-xl border border-slate-700">
+                    <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">Margin Call</div>
+                    <div class="text-3xl font-mono font-bold text-white">50%</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-24">
+
+        <!-- Section 1: Live Spread Table -->
+        <section>
+            <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-white mb-2">Live Market Spreads</h2>
+                    <p class="text-slate-400">Real-time pricing feed from our liquidity providers.</p>
+                </div>
+                <div class="flex items-center gap-3 bg-slate-800 p-1 rounded-lg border border-slate-700">
+                    <button onclick="filterTable('all')" class="px-4 py-2 rounded-md text-sm font-medium bg-slate-700 text-white shadow">All</button>
+                    <button onclick="filterTable('majors')" class="px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:text-white">Majors</button>
+                    <button onclick="filterTable('minors')" class="px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:text-white">Minors</button>
+                    <button onclick="filterTable('metals')" class="px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:text-white">Metals</button>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl border border-slate-700 overflow-hidden shadow-2xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/50 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700">
+                                <th class="p-5 font-medium">Instrument</th>
+                                <th class="p-5 font-medium text-right">Bid</th>
+                                <th class="p-5 font-medium text-right">Ask</th>
+                                <th class="p-5 font-medium text-right">Spread</th>
+                                <th class="p-5 font-medium text-center">Trend</th>
+                                <th class="p-5 font-medium text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="spreadTableBody" class="text-sm font-mono">
+                            <!-- Rows generated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Account Type Comparison -->
+        <section class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <h2 class="text-3xl font-serif font-bold text-white">Choose Your <span class="text-gold-500">Edge</span></h2>
+                <p class="text-slate-400 leading-relaxed">
+                    Whether you are a high-frequency scalper or a long-term position trader, we have an account type engineered for your strategy. Toggle below to compare our Raw Spread vs Standard accounts.
+                </p>
+                
+                <div class="flex items-center gap-4 mt-8">
+                    <span class="text-slate-300 font-medium" id="labelStandard">Standard</span>
+                    
+                    <div class="relative inline-block w-16 mr-2 align-middle select-none transition duration-200 ease-in">
+                        <input type="checkbox" name="toggle" id="accountToggle" class="toggle-checkbox absolute block w-8 h-8 rounded-full bg-white border-4 border-slate-700 appearance-none cursor-pointer transition-all duration-300 ease-in-out left-0"/>
+                        <label for="accountToggle" class="toggle-label block overflow-hidden h-8 rounded-full bg-slate-700 cursor-pointer border border-slate-600"></label>
+                    </div>
+                    
+                    <span class="text-slate-500 font-medium" id="labelRaw">Raw Spread</span>
+                </div>
+            </div>
+
+            <!-- Dynamic Comparison Card -->
+            <div class="glass-panel p-8 rounded-2xl border border-slate-700 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <i class="fa-solid fa-crown text-9xl text-gold-500"></i>
+                </div>
+
+                <div id="accountDetails">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-gold-500 text-xl">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white" id="accTitle">Standard Account</h3>
+                            <p class="text-gold-500 text-sm font-medium" id="accSubtitle">Best for Beginners</p>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-4 mb-8 relative z-10">
+                        <li class="flex justify-between items-center border-b border-slate-800 pb-3">
+                            <span class="text-slate-400">Spreads</span>
+                            <span class="text-white font-bold" id="accSpread">From 1.0 pips</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-slate-800 pb-3">
+                            <span class="text-slate-400">Commission</span>
+                            <span class="text-white font-bold" id="accCommission">$0 per lot</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-slate-800 pb-3">
+                            <span class="text-slate-400">Min. Deposit</span>
+                            <span class="text-white font-bold" id="accDeposit">$100</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-slate-800 pb-3">
+                            <span class="text-slate-400">Execution</span>
+                            <span class="text-white font-bold">Market Execution</span>
+                        </li>
+                    </ul>
+
+                    <button class="w-full py-4 bg-gold-600 hover:bg-gold-500 text-midnight-900 font-bold rounded-lg transition-all shadow-lg shadow-yellow-900/20">
+                    <a href="./inves.html">Open Standard Account</a>    
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Cost Calculator -->
+        <section class="glass-panel rounded-2xl p-8 md:p-12 border border-slate-700 bg-gradient-to-br from-slate-900 to-midnight-900">
+            <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-white mb-4">Trading Cost Calculator</h2>
+                    <p class="text-slate-400 mb-8">Calculate your potential costs before you trade. Transparency is our policy.</p>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Instrument</label>
+                            <select id="calcInstrument" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 text-white focus:border-gold-500 focus:outline-none">
+                                <option value="1.2">EUR/USD (Avg Spread 1.2)</option>
+                                <option value="1.8">GBP/USD (Avg Spread 1.8)</option>
+                                <option value="20">XAU/USD (Avg Spread 20)</option>
+                                <option value="3.0">USD/JPY (Avg Spread 3.0)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Volume (Lots)</label>
+                            <input type="range" id="calcVolume" min="0.01" max="10" step="0.01" value="1" class="w-full mb-2">
+                            <div class="flex justify-between text-xs text-slate-500">
+                                <span>0.01</span>
+                                <span id="volValue" class="text-gold-400 font-bold text-lg">1.00 Lot</span>
+                                <span>10</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Account Type</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="calcType" value="std" checked class="peer sr-only">
+                                    <div class="p-3 rounded-lg border border-slate-600 text-center text-slate-400 peer-checked:bg-gold-500/10 peer-checked:border-gold-500 peer-checked:text-gold-400 transition-all">
+                                        Standard
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="calcType" value="raw" class="peer sr-only">
+                                    <div class="p-3 rounded-lg border border-slate-600 text-center text-slate-400 peer-checked:bg-gold-500/10 peer-checked:border-gold-500 peer-checked:text-gold-400 transition-all">
+                                        Raw Spread
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center">
+                    <div class="bg-slate-800/50 rounded-xl p-8 border border-slate-700 text-center">
+                        <p class="text-slate-400 mb-2">Estimated Cost per Trade</p>
+                        <div class="text-5xl font-mono font-bold text-white mb-2" id="totalCost">$12.00</div>
+                        <p class="text-xs text-slate-500 mb-6">Spread Cost + Commission (if applicable)</p>
+                        
+                        <div class="space-y-3 text-left bg-slate-900/50 p-4 rounded-lg">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-400">Spread Cost:</span>
+                                <span class="text-white" id="detailSpread">$12.00</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-400">Commission:</span>
+                                <span class="text-white" id="detailComm">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Trading Hours -->
+        <section>
+            <h2 class="text-3xl font-serif font-bold text-white mb-8 text-center">Global Market Sessions</h2>
+            <div class="glass-panel rounded-2xl p-8 border border-slate-700">
+                <div class="relative pt-6 pb-2">
+                    <!-- Timeline Bar -->
+                    <div class="h-2 bg-slate-800 rounded-full w-full relative overflow-hidden">
+                        <!-- Sydney -->
+                        <div class="absolute top-0 bottom-0 bg-blue-500/30 left-[0%] w-[16%] border-r border-slate-900/50" title="Sydney"></div>
+                        <!-- Tokyo -->
+                        <div class="absolute top-0 bottom-0 bg-red-500/30 left-[8%] w-[16%] border-r border-slate-900/50" title="Tokyo"></div>
+                        <!-- London -->
+                        <div class="absolute top-0 bottom-0 bg-purple-500/30 left-[32%] w-[16%] border-r border-slate-900/50" title="London"></div>
+                        <!-- New York -->
+                        <div class="absolute top-0 bottom-0 bg-green-500/30 left-[48%] w-[16%] border-r border-slate-900/50" title="New York"></div>
+                        
+                        <!-- Current Time Indicator (Mock) -->
+                        <div class="absolute top-[-4px] bottom-[-4px] w-1 bg-gold-500 shadow-[0_0_10px_#eab308] left-[45%] z-10 rounded"></div>
+                    </div>
+                    
+                    <!-- Labels -->
+                    <div class="flex justify-between text-xs text-slate-500 mt-4 font-mono uppercase">
+                        <div class="text-center w-1/4">
+                            <span class="block text-blue-400 font-bold mb-1">Sydney</span>
+                            22:00 - 07:00 GMT
+                        </div>
+                        <div class="text-center w-1/4">
+                            <span class="block text-red-400 font-bold mb-1">Tokyo</span>
+                            00:00 - 09:00 GMT
+                        </div>
+                        <div class="text-center w-1/4">
+                            <span class="block text-purple-400 font-bold mb-1">London</span>
+                            08:00 - 17:00 GMT
+                        </div>
+                        <div class="text-center w-1/4">
+                            <span class="block text-green-400 font-bold mb-1">New York</span>
+                            13:00 - 22:00 GMT
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 text-center text-sm text-slate-400">
+                    <i class="fa-solid fa-circle-info text-gold-500 mr-2"></i>
+                    Highest volatility typically occurs during <span class="text-white font-bold">London-New York Overlap</span> (13:00 - 17:00 GMT).
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-slate-800 bg-midnight-900 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-600 text-sm">
+            <p class="mb-4">&copy; 2026 Goldenice International. All rights reserved.</p>
+            <p class="max-w-2xl mx-auto">Risk Warning: Trading foreign exchange on margin carries a high level of risk, and may not be suitable for all investors. Before deciding to trade foreign exchange you should carefully consider your investment objectives, level of experience, and risk appetite.</p>
+        </div>
+    </footer>
+
+    <!-- Application Logic -->
+    <script>
+        // --- Data Model ---
+        const instruments = [
+            { id: 1, name: 'EUR/USD', type: 'majors', bid: 1.08450, ask: 1.08452, digits: 5 },
+            { id: 2, name: 'GBP/USD', type: 'majors', bid: 1.26310, ask: 1.26314, digits: 5 },
+            { id: 3, name: 'USD/JPY', type: 'majors', bid: 151.220, ask: 151.226, digits: 3 },
+            { id: 4, name: 'USD/CHF', type: 'majors', bid: 0.90500, ask: 0.90505, digits: 5 },
+            { id: 5, name: 'AUD/USD', type: 'majors', bid: 0.65420, ask: 0.65425, digits: 5 },
+            { id: 6, name: 'USD/CAD', type: 'majors', bid: 1.35800, ask: 1.35806, digits: 5 },
+            { id: 7, name: 'EUR/GBP', type: 'minors', bid: 0.85820, ask: 0.85828, digits: 5 },
+            { id: 8, name: 'EUR/JPY', type: 'minors', bid: 164.020, ask: 164.030, digits: 3 },
+            { id: 9, name: 'GBP/JPY', type: 'minors', bid: 191.120, ask: 191.140, digits: 3 },
+            { id: 10, name: 'XAU/USD', type: 'metals', bid: 2345.60, ask: 2345.80, digits: 2 },
+            { id: 11, name: 'XAG/USD', type: 'metals', bid: 27.850, ask: 27.890, digits: 3 },
+        ];
+
+        let currentFilter = 'all';
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable();
+            setInterval(simulateMarket, 1500); // Update prices every 1.5s
+            
+            // Calculator Listeners
+            document.getElementById('calcVolume').addEventListener('input', (e) => {
+                document.getElementById('volValue').innerText = parseFloat(e.target.value).toFixed(2) + " Lot";
+                calculateCost();
+            });
+            document.getElementById('calcInstrument').addEventListener('change', calculateCost);
+            document.querySelectorAll('input[name="calcType"]').forEach(radio => {
+                radio.addEventListener('change', calculateCost);
+            });
+
+            // Toggle Listener
+            document.getElementById('accountToggle').addEventListener('change', toggleAccount);
+        });
+
+        // --- Table Rendering ---
+        function renderTable() {
+            const tbody = document.getElementById('spreadTableBody');
+            tbody.innerHTML = '';
+
+            const filtered = currentFilter === 'all' ? instruments : instruments.filter(i => i.type === currentFilter);
+
+            filtered.forEach(inst => {
+                const spread = ((inst.ask - inst.bid) * Math.pow(10, inst.digits === 3 ? 2 : (inst.digits === 2 ? 0 : 4))).toFixed(1);
+                const isHigh = spread > 2.0;
+                
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-800 hover:bg-slate-800/50 transition-colors group";
+                tr.id = `row-${inst.id}`;
+                tr.innerHTML = `
+                    <td class="p-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400 group-hover:text-gold-500 transition-colors">
+                                ${inst.name.substring(0,1)}
+                            </div>
+                            <span class="font-bold text-white">${inst.name}</span>
+                        </div>
+                    </td>
+                    <td class="p-5 text-right text-slate-300 bid-cell">${inst.bid.toFixed(inst.digits)}</td>
+                    <td class="p-5 text-right text-slate-300 ask-cell">${inst.ask.toFixed(inst.digits)}</td>
+                    <td class="p-5 text-right">
+                        <span class="px-2 py-1 rounded text-xs font-bold ${isHigh ? 'bg-red-500/10 text-red-400' : 'bg-green-500/10 text-green-400'} spread-val">
+                            ${spread}
+                        </span>
+                    </td>
+                    <td class="p-5 text-center">
+                        <div class="w-16 h-8 mx-auto opacity-50">
+                             <!-- Simple SVG Sparkline -->
+                             <svg viewBox="0 0 100 50" class="w-full h-full stroke-current ${Math.random() > 0.5 ? 'text-green-500' : 'text-red-500'} fill-none" stroke-width="2">
+                                <path d="M0,25 Q25,${Math.random()*50} 50,25 T100,25" />
+                             </svg>
+                        </div>
+                    </td>
+                    <td class="p-5 text-center">
+                        <button class="text-xs bg-slate-800 hover:bg-gold-600 hover:text-midnight-900 text-white px-3 py-1.5 rounded transition-colors font-medium">Trade</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterTable(type) {
+            currentFilter = type;
+            // Update buttons
+            const buttons = document.querySelectorAll('button[onclick^="filterTable"]');
+            buttons.forEach(btn => {
+                if(btn.getAttribute('onclick').includes(type)) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium bg-slate-700 text-white shadow";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:text-white";
+                }
+            });
+            renderTable();
+        }
+
+        // --- Market Simulation ---
+        function simulateMarket() {
+            instruments.forEach(inst => {
+                // Random walk
+                const move = (Math.random() - 0.5) * 0.0001 * (inst.digits === 2 ? 100 : 1);
+                inst.bid += move;
+                inst.ask += move;
+
+                // Update DOM if visible
+                const row = document.getElementById(`row-${inst.id}`);
+                if (row) {
+                    const bidCell = row.querySelector('.bid-cell');
+                    const askCell = row.querySelector('.ask-cell');
+                    const spreadCell = row.querySelector('.spread-val');
+
+                    // Flash effect logic
+                    if (move > 0) {
+                        bidCell.classList.add('flash-up');
+                        setTimeout(() => bidCell.classList.remove('flash-up'), 500);
+                    } else {
+                        bidCell.classList.add('flash-down');
+                        setTimeout(() => bidCell.classList.remove('flash-down'), 500);
+                    }
+
+                    bidCell.innerText = inst.bid.toFixed(inst.digits);
+                    askCell.innerText = inst.ask.toFixed(inst.digits);
+                    
+                    const spread = ((inst.ask - inst.bid) * Math.pow(10, inst.digits === 3 ? 2 : (inst.digits === 2 ? 0 : 4))).toFixed(1);
+                    spreadCell.innerText = spread;
+                }
+            });
+        }
+
+        // --- Account Toggle Logic ---
+        function toggleAccount() {
+            const isRaw = document.getElementById('accountToggle').checked;
+            
+            const title = document.getElementById('accTitle');
+            const subtitle = document.getElementById('accSubtitle');
+            const spread = document.getElementById('accSpread');
+            const comm = document.getElementById('accCommission');
+            const deposit = document.getElementById('accDeposit');
+            const btn = document.querySelector('#accountDetails button');
+
+            if (isRaw) {
+                title.innerText = "Raw Spread Account";
+                subtitle.innerText = "Best for Scalpers & Algos";
+                spread.innerText = "From 0.0 pips";
+                comm.innerText = "$3.5 per lot";
+                deposit.innerText = "$500";
+                btn.innerText = "Open Raw Spread Account";
+                btn.classList.replace('bg-gold-600', 'bg-slate-700');
+                btn.classList.replace('text-midnight-900', 'text-white');
+                document.getElementById('labelRaw').classList.replace('text-slate-500', 'text-white');
+                document.getElementById('labelStandard').classList.replace('text-slate-300', 'text-slate-500');
+            } else {
+                title.innerText = "Standard Account";
+                subtitle.innerText = "Best for Beginners";
+                spread.innerText = "From 1.0 pips";
+                comm.innerText = "$0 per lot";
+                deposit.innerText = "$100";
+                btn.innerText = "Open Standard Account";
+                btn.classList.replace('bg-slate-700', 'bg-gold-600');
+                btn.classList.replace('text-white', 'text-midnight-900');
+                document.getElementById('labelStandard').classList.replace('text-slate-500', 'text-slate-300');
+                document.getElementById('labelRaw').classList.replace('text-white', 'text-slate-500');
+            }
+            calculateCost(); // Recalculate calculator based on new context
+        }
+
+        // --- Calculator Logic ---
+        function calculateCost() {
+            const spreadVal = parseFloat(document.getElementById('calcInstrument').value);
+            const volume = parseFloat(document.getElementById('calcVolume').value);
+            const isRaw = document.querySelector('input[name="calcType"]:checked').value === 'raw';
+            
+            // Standard Lot = 100,000 units. 
+            // Simplified Calculation: Spread * Volume * Pip Value (approx $10 for majors per lot)
+            // 1 pip = $10 on 1 lot for EUR/USD approx.
+            
+            const spreadCost = spreadVal * volume * 10; 
+            const commission = isRaw ? (3.5 * volume) : 0;
+            const total = spreadCost + commission;
+
+            // Animate Numbers
+            animateValue("totalCost", parseFloat(document.getElementById('totalCost').innerText.replace('$','')), total, 500);
+            document.getElementById('detailSpread').innerText = '$' + spreadCost.toFixed(2);
+            document.getElementById('detailComm').innerText = '$' + commission.toFixed(2);
+        }
+
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const val = (progress * (end - start) + start).toFixed(2);
+                obj.innerHTML = '$' + val;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+    </script>
+</body>
+</html>

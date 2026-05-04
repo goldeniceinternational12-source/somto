@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Regulatory Framework</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --ice-blue: #E0F7FA;
+            --deep-navy: #0B1120;
+        }
+        
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--deep-navy);
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-primary); 
+        }
+
+        /* Gold Gradient Text */
+        .text-gold-gradient {
+            background: linear-gradient(to right, var(--gold-light), var(--gold-primary), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Card Hover Effects */
+        .reg-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .reg-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: 0.5s;
+        }
+        .reg-card:hover::before {
+            left: 100%;
+        }
+        .reg-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold-primary);
+            box-shadow: 0 10px 40px -10px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Accordion Animation */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.5s ease;
+            opacity: 0;
+        }
+        .accordion-content.active {
+            opacity: 1;
+        }
+
+        /* Animated Background Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        /* Loader */
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0B1120;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease;
+        }
+        .loader-ring {
+            width: 80px;
+            height: 80px;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--gold-primary);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-yellow-900 selection:text-white">
+
+    <!-- Loader -->
+    <div class="loader-overlay" id="loader">
+        <div class="text-center">
+            <div class="loader-ring mx-auto mb-4"></div>
+            <h2 class="text-gold-gradient text-xl tracking-[0.3em] uppercase">Goldenice International</h2>
+            <p class="text-slate-500 text-xs mt-2 tracking-widest">INITIALIZING COMPLIANCE PROTOCOLS</p>
+        </div>
+    </div>
+
+    <!-- Background Animation -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/5 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full border border-yellow-600 flex items-center justify-center bg-yellow-900/20">
+                        <i class="fas fa-gem text-yellow-500 text-xs"></i>
+                    </div>
+                    <span class="text-xl font-bold tracking-wider text-white serif">GOLDENICE <span class="text-yellow-600 font-light">INT'L</span></span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="./overview.html" class="hover:text-yellow-500 transition-colors px-3 py-2 rounded-md text-sm font-medium">Overview</a>
+                        <a href="./jurisdictions.html" class="hover:text-yellow-500 transition-colors px-3 py-2 rounded-md text-sm font-medium">Jurisdictions</a>
+                        <a href="compliance.html" class="hover:text-yellow-500 transition-colors px-3 py-2 rounded-md text-sm font-medium">Compliance</a>
+                        <a href="./protection.html" class="hover:text-yellow-500 transition-colors px-3 py-2 rounded-md text-sm font-medium">Protection</a>
+                    </div>
+                </div>
+                <div>
+                    <button class="bg-yellow-700/20 hover:bg-yellow-600/30 text-yellow-500 border border-yellow-600/50 px-4 py-2 rounded text-xs font-bold tracking-widest transition-all">
+                <a href="./login.html">CLIENT LOGIN</a>           
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0B1120]/50 to-[#0B1120] z-0"></div>
+        
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto" id="hero-content">
+            <div class="inline-block mb-4 px-4 py-1 rounded-full border border-yellow-500/30 bg-yellow-900/10 backdrop-blur-sm">
+                <span class="text-yellow-500 text-xs font-bold tracking-[0.2em] uppercase">Regulated & Secure</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                <span class="block text-white mb-2">Global Standards,</span>
+                <span class="text-gold-gradient">Unwavering Trust.</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+                Goldenice International operates under the strictest regulatory frameworks. 
+                Explore our commitment to transparency, security, and ethical trading practices.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <button onclick="document.getElementById('jurisdictions').scrollIntoView({behavior: 'smooth'})" class="group relative px-8 py-4 bg-yellow-600 text-white font-bold rounded overflow-hidden transition-all hover:scale-105">
+                    <span class="relative z-10">VIEW REGULATIONS</span>
+                    <div class="absolute inset-0 bg-yellow-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                </button>
+                <button class="px-8 py-4 border border-slate-600 text-slate-300 hover:border-yellow-500 hover:text-yellow-500 rounded transition-all">
+                <a href="./VERIFY LICENSE.html">VERIFY LICENSE</a>               
+                </button>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-yellow-500/50 text-xl"></i>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-20 border-y border-white/5 bg-[#0f172a]/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="p-4">
+                    <div class="text-4xl font-bold text-white mb-2 counter" data-target="5">0</div>
+                    <div class="text-sm text-slate-400 uppercase tracking-widest">Regulatory Licenses</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-4xl font-bold text-white mb-2 counter" data-target="150">0</div>
+                    <div class="text-sm text-slate-400 uppercase tracking-widest">Countries Served</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-4xl font-bold text-white mb-2">$<span class="counter" data-target="500">0</span>M+</div>
+                    <div class="text-sm text-slate-400 uppercase tracking-widest">Segregated Funds</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-4xl font-bold text-white mb-2 counter" data-target="10">0</div>
+                    <div class="text-sm text-slate-400 uppercase tracking-widest">Years of Trust</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jurisdictions Grid -->
+    <section id="jurisdictions" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Global Regulatory Footprint</h2>
+                <div class="h-1 w-20 bg-yellow-600 mx-auto rounded-full"></div>
+                <p class="mt-4 text-slate-400 max-w-2xl mx-auto">
+                    We are authorized and regulated by tier-1 financial authorities across multiple continents, ensuring your capital is protected by the highest legal standards.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="jurisdiction-grid">
+                <!-- Cards injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Compliance Dashboard -->
+    <section id="compliance" class="py-24 bg-[#0B1120] relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-blue-900/10 to-transparent pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col lg:flex-row gap-12">
+                
+                <!-- Left: Controls -->
+                <div class="lg:w-1/3">
+                    <h2 class="text-3xl font-bold text-white mb-6">Compliance <br><span class="text-gold-gradient">Protocols</span></h2>
+                    <p class="text-slate-400 mb-8">
+                        Our operations adhere to rigorous Anti-Money Laundering (AML) and Know Your Customer (KYC) policies. Select a protocol to inspect our procedures.
+                    </p>
+                    
+                    <div class="space-y-4" id="compliance-menu">
+                        <!-- Buttons injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Right: Interactive Display -->
+                <div class="lg:w-2/3">
+                    <div class="glass-panel rounded-2xl p-8 min-h-[500px] relative border border-yellow-500/20 shadow-2xl shadow-yellow-900/10">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                            <i class="fas fa-shield-alt text-9xl text-yellow-500"></i>
+                        </div>
+                        
+                        <div id="compliance-display" class="relative z-10 h-full flex flex-col justify-center">
+                            <!-- Dynamic Content -->
+                            <div class="text-center animate-pulse">
+                                <i class="fas fa-fingerprint text-5xl text-yellow-500 mb-4"></i>
+                                <h3 class="text-2xl text-white font-bold">Select a Protocol</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Client Protection Accordion -->
+    <section id="protection" class="py-24">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4">Client Protection Measures</h2>
+                <p class="text-slate-400">Your security is our priority. Learn how we safeguard your assets.</p>
+            </div>
+
+            <div class="space-y-4" id="accordion-container">
+                <!-- Accordion Items injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#050911] border-t border-white/5 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fas fa-gem text-yellow-600 text-xl"></i>
+                        <span class="text-2xl font-bold text-white serif">GOLDENICE</span>
+                    </div>
+                    <p class="text-slate-500 text-sm leading-relaxed max-w-md">
+                        Goldenice International is a premier financial services provider specializing in foreign exchange and CFD trading. We are committed to providing a transparent, fair, and secure trading environment regulated by top-tier authorities.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-4 uppercase tracking-wider text-sm">Legal</h4>
+                    <ul class="space-y-2 text-slate-500 text-sm">
+                        <li><a href="./privacy policy.html" class="hover:text-yellow-500 transition-colors">Privacy Policy</a></li>
+                        <li><a href="./tos.html" class="hover:text-yellow-500 transition-colors">Terms of Service</a></li>
+                        <li><a href="./riskwarning.html" class="hover:text-yellow-500 transition-colors">Risk Disclosure</a></li>
+                        <li><a href="./Cookie Policy.html" class="hover:text-yellow-500 transition-colors">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-slate-600 text-xs">&copy; 2026 Goldenice International. All rights reserved.</p>
+                
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Data Models ---
+
+        const jurisdictions = [
+            {
+                id: 'fca',
+                name: 'Financial Conduct Authority',
+                code: 'FCA',
+                region: 'United Kingdom',
+                license: 'No. 542573',
+                icon: 'fa-crown',
+                color: 'text-blue-400',
+                desc: 'Regarded as one of the strictest regulators globally. Ensures firm capitalization and consumer protection.',
+                details: ['Segregated Client Funds', 'FSCS Protection up to £85,000', 'Negative Balance Protection']
+            },
+            {
+                id: 'asic',
+                name: 'Australian Securities & Investments Commission',
+                code: 'ASIC',
+                region: 'Australia',
+                license: 'No. 389879',
+                icon: 'fa-map-marker-alt',
+                color: 'text-yellow-400',
+                desc: 'Oversees financial markets and services in Australia, enforcing high standards of transparency.',
+                details: ['Strict Leverage Limits', 'Segregated Trust Accounts', 'Regular Audit Requirements']
+            },
+            {
+                id: 'cysec',
+                name: 'Cyprus Securities and Exchange Commission',
+                code: 'CySEC',
+                region: 'Cyprus / EU',
+                license: 'No. 331/17',
+                icon: 'fa-globe-europe',
+                color: 'text-blue-300',
+                desc: 'The financial regulatory agency of Cyprus. MiFID II compliant for EU market access.',
+                details: ['Investor Compensation Fund (ICF)', 'MiFID II Compliance', 'KYC & AML Enforcement']
+            },
+            {
+                id: 'fsca',
+                name: 'Financial Sector Conduct Authority',
+                code: 'FSCA',
+                region: 'South Africa',
+                license: 'No. 49835',
+                icon: 'fa-flag',
+                color: 'text-green-400',
+                desc: 'Market conduct regulator of financial institutions in South Africa.',
+                details: ['Financial Advisory Standards', 'Client Asset Protection', 'Dispute Resolution']
+            },
+            {
+                id: 'cima',
+                name: 'Cayman Islands Monetary Authority',
+                code: 'CIMA',
+                region: 'Cayman Islands',
+                license: 'No. 1444862',
+                icon: 'fa-water',
+                color: 'text-cyan-400',
+                desc: 'Regulatory body for financial services in the Cayman Islands.',
+                details: ['Anti-Money Laundering Regs', 'Segregated Accounts', 'Regular Reporting']
+            },
+            {
+                id: 'fsa',
+                name: 'Financial Services Authority',
+                code: 'FSA',
+                region: 'Seychelles',
+                license: 'No. SD036',
+                icon: 'fa-sun',
+                color: 'text-orange-400',
+                desc: 'Regulates non-bank financial services in the Seychelles.',
+                details: ['Brokerage License', 'Capital Adequacy', 'Client Fund Safety']
+            }
+        ];
+
+        const complianceData = {
+            'kyc': {
+                title: 'Know Your Customer (KYC)',
+                icon: 'fa-id-card',
+                content: `
+                    <div class="space-y-6 animate-fade-in">
+                        <h3 class="text-2xl font-bold text-white mb-2">Identity Verification</h3>
+                        <p class="text-slate-300">We verify the identity of every client to prevent fraud and ensure platform integrity.</p>
+                        
+                        <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+                            <h4 class="text-yellow-500 font-bold mb-2 text-sm uppercase">Required Documents</h4>
+                            <ul class="list-disc list-inside text-slate-400 text-sm space-y-1">
+                                <li>Government-issued Photo ID (Passport, Driver's License)</li>
+                                <li>Proof of Address (Utility Bill, Bank Statement < 3 months)</li>
+                                <li>Proof of Payment Method (Card scans, Bank statements)</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 100%"></div>
+                            </div>
+                            <p class="text-right text-xs text-yellow-500 mt-1">Verification Status: Automated & Secure</p>
+                        </div>
+                    </div>
+                `
+            },
+            'aml': {
+                title: 'Anti-Money Laundering (AML)',
+                icon: 'fa-search-dollar',
+                content: `
+                    <div class="space-y-6 animate-fade-in">
+                        <h3 class="text-2xl font-bold text-white mb-2">Transaction Monitoring</h3>
+                        <p class="text-slate-300">Our AI-driven systems monitor transactions in real-time to detect and report suspicious activity.</p>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-slate-800/50 p-4 rounded border border-slate-700 text-center">
+                                <i class="fas fa-robot text-3xl text-blue-400 mb-2"></i>
+                                <div class="text-white font-bold">AI Surveillance</div>
+                                <div class="text-xs text-slate-500">24/7 Automated Scanning</div>
+                            </div>
+                            <div class="bg-slate-800/50 p-4 rounded border border-slate-700 text-center">
+                                <i class="fas fa-user-shield text-3xl text-green-400 mb-2"></i>
+                                <div class="text-white font-bold">Compliance Team</div>
+                                <div class="text-xs text-slate-500">Expert Manual Review</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            'risk': {
+                title: 'Risk Management',
+                icon: 'fa-chart-line',
+                content: `
+                    <div class="space-y-6 animate-fade-in">
+                        <h3 class="text-2xl font-bold text-white mb-2">Leverage & Margin</h3>
+                        <p class="text-slate-300">We provide tools to help you manage risk effectively, including negative balance protection.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-400">Stop Loss Orders</span>
+                                <span class="text-green-400"><i class="fas fa-check"></i> Available</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-400">Negative Balance Protection</span>
+                                <span class="text-green-400"><i class="fas fa-check"></i> Guaranteed</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-400">Margin Call Notifications</span>
+                                <span class="text-green-400"><i class="fas fa-check"></i> Real-time</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        const protectionItems = [
+            {
+                title: 'Segregated Client Funds',
+                content: 'All client funds are held in segregated bank accounts with top-tier banks, completely separate from Goldenice International\'s operational funds. This ensures that your money is protected and cannot be used for any company expenses or debts.'
+            },
+            {
+                title: 'Data Encryption (SSL)',
+                content: 'We use industry-standard 256-bit SSL (Secure Socket Layer) encryption to protect all data transmitted between your browser and our servers. This is the same level of security used by major banks worldwide.'
+            },
+            {
+                title: 'Investor Compensation',
+                content: 'Depending on your entity, you may be covered by investor compensation schemes (such as the FSCS in the UK or ICF in Cyprus) which protect your funds up to a certain limit in the unlikely event of company insolvency.'
+            },
+            {
+                title: 'Regular Audits',
+                content: 'Our financial statements and operational procedures are audited annually by independent third-party firms to ensure full compliance with regulatory capital requirements and operational standards.'
+            }
+        ];
+
+        // --- Initialization & Logic ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Loader Removal
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 800);
+            }, 1500);
+
+            // 2. Render Jurisdiction Cards
+            const grid = document.getElementById('jurisdiction-grid');
+            jurisdictions.forEach(j => {
+                const card = document.createElement('div');
+                card.className = 'reg-card glass-panel p-6 rounded-xl border border-slate-700 cursor-pointer group';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700 group-hover:border-yellow-500/50 transition-colors">
+                            <i class="fas ${j.icon} ${j.color} text-xl"></i>
+                        </div>
+                        <span class="text-xs font-mono text-slate-500 border border-slate-700 px-2 py-1 rounded">LIC: ${j.license}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-1 group-hover:text-yellow-500 transition-colors">${j.code}</h3>
+                    <p class="text-xs text-slate-400 uppercase tracking-wider mb-3">${j.region}</p>
+                    <p class="text-sm text-slate-400 mb-4 line-clamp-2">${j.desc}</p>
+                    <div class="pt-4 border-t border-slate-700/50">
+                        <ul class="space-y-2">
+                            ${j.details.map(d => `<li class="text-xs text-slate-500 flex items-center"><i class="fas fa-check text-green-500/50 mr-2"></i>${d}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // 3. Render Compliance Menu
+            const compMenu = document.getElementById('compliance-menu');
+            Object.keys(complianceData).forEach((key, index) => {
+                const item = complianceData[key];
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-lg border transition-all duration-300 flex items-center gap-4 ${index === 0 ? 'bg-yellow-600/10 border-yellow-500/50 text-white' : 'bg-slate-800/30 border-slate-700 text-slate-400 hover:bg-slate-800'}`;
+                btn.innerHTML = `
+                    <div class="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center border border-slate-700">
+                        <i class="fas ${item.icon}"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold">${item.title}</div>
+                    </div>
+                `;
+                btn.onclick = () => loadCompliance(key, btn);
+                compMenu.appendChild(btn);
+            });
+
+            // Load first compliance item by default
+            loadCompliance('kyc', compMenu.children[0]);
+
+            // 4. Render Accordion
+            const accContainer = document.getElementById('accordion-container');
+            protectionItems.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'glass-panel rounded-lg border border-slate-700 overflow-hidden';
+                div.innerHTML = `
+                    <button class="accordion-btn w-full px-6 py-4 text-left flex justify-between items-center bg-slate-800/20 hover:bg-slate-800/40 transition-colors">
+                        <span class="font-bold text-slate-200">${item.title}</span>
+                        <i class="fas fa-chevron-down text-slate-500 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content bg-[#0B1120]/50">
+                        <div class="p-6 text-slate-400 text-sm leading-relaxed border-t border-slate-700/50">
+                            ${item.content}
+                        </div>
+                    </div>
+                `;
+                
+                const btn = div.querySelector('.accordion-btn');
+                const content = div.querySelector('.accordion-content');
+                const icon = div.querySelector('.fa-chevron-down');
+
+                btn.addEventListener('click', () => {
+                    const isOpen = content.style.maxHeight;
+                    
+                    // Close all others
+                    document.querySelectorAll('.accordion-content').forEach(el => {
+                        el.style.maxHeight = null;
+                        el.classList.remove('active');
+                        el.previousElementSibling.querySelector('.fa-chevron-down').style.transform = 'rotate(0deg)';
+                        el.previousElementSibling.classList.remove('text-yellow-500');
+                    });
+
+                    if (!isOpen) {
+                        content.classList.add('active');
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        icon.style.transform = 'rotate(180deg)';
+                        btn.classList.add('text-yellow-500');
+                    }
+                });
+
+                accContainer.appendChild(div);
+            });
+
+            // 5. Number Counters
+            const counters = document.querySelectorAll('.counter');
+            const observerOptions = { threshold: 0.5 };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = +counter.getAttribute('data-target');
+                        const duration = 2000; 
+                        const increment = target / (duration / 16); 
+                        
+                        let current = 0;
+                        const updateCounter = () => {
+                            current += increment;
+                            if (current < target) {
+                                counter.innerText = Math.ceil(current);
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                counter.innerText = target;
+                            }
+                        };
+                        updateCounter();
+                        observer.unobserve(counter);
+                    }
+                });
+            }, observerOptions);
+
+            counters.forEach(c => observer.observe(c));
+
+            // 6. Navbar Scroll Effect
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('navbar');
+                if (window.scrollY > 50) {
+                    nav.classList.add('bg-[#0B1120]/90', 'shadow-lg');
+                } else {
+                    nav.classList.remove('bg-[#0B1120]/90', 'shadow-lg');
+                }
+            });
+
+            // 7. Canvas Animation (Network Effect)
+            initCanvas();
+        });
+
+        // --- Helper Functions ---
+
+        function loadCompliance(key, btnElement) {
+            const data = complianceData[key];
+            const display = document.getElementById('compliance-display');
+            
+            // Update Buttons
+            const buttons = document.getElementById('compliance-menu').children;
+            for (let btn of buttons) {
+                btn.className = 'w-full text-left p-4 rounded-lg border border-slate-700 bg-slate-800/30 text-slate-400 hover:bg-slate-800 transition-all duration-300 flex items-center gap-4';
+            }
+            btnElement.className = 'w-full text-left p-4 rounded-lg border border-yellow-500/50 bg-yellow-600/10 text-white shadow-lg shadow-yellow-900/10 transition-all duration-300 flex items-center gap-4';
+
+            // Update Content with Fade
+            display.style.opacity = 0;
+            setTimeout(() => {
+                display.innerHTML = data.content;
+                display.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- Canvas Logic ---
+        function initCanvas() {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width, height;
+            let particles = [];
+
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+            
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.size = Math.random() * 2;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
+
+                draw() {
+                    ctx.fillStyle = 'rgba(212, 175, 55, 0.3)'; // Gold color
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < 50; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                    
+                    // Draw connections
+                    for (let j = i; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < 150) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(212, 175, 55, ${0.1 - distance/1500})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+    </script>
+</body>
+</html>

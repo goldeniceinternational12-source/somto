@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Live Investor Volume Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8860B;
+            --gold-glow: rgba(212, 175, 55, 0.3);
+            --ice-blue: #00D9FF;
+            --ice-dark: #006064;
+            --success: #00C853;
+            --danger: #FF1744;
+            --black: #0a0a0a;
+            --dark-gray: #111111;
+            --card-bg: rgba(255, 255, 255, 0.03);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--black);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated Background Grid */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: floatUp 15s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        /* Main Container */
+        .dashboard {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--black);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+        }
+
+        .brand-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-text p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid var(--ice-blue);
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--ice-blue);
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--ice-blue);
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .header-stat {
+            text-align: right;
+        }
+
+        .header-stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--gold-primary);
+            font-weight: 600;
+        }
+
+        .header-stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold-primary);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: var(--gold-primary);
+            margin-bottom: 1rem;
+        }
+
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.9rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+            background: rgba(0, 200, 83, 0.1);
+        }
+
+        .stat-change.negative {
+            color: var(--danger);
+            background: rgba(255, 23, 68, 0.1);
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Main Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Chart Section */
+        .chart-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--gold-primary);
+        }
+
+        .time-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .time-filter {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .time-filter.active,
+        .time-filter:hover {
+            background: var(--gold-primary);
+            color: var(--black);
+            border-color: var(--gold-primary);
+        }
+
+        .chart-area {
+            height: 300px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+
+        .chart-bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .chart-bar {
+            width: 60%;
+            background: linear-gradient(180deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 8px 8px 0 0;
+            transition: all 0.5s ease;
+            position: relative;
+            min-height: 20px;
+        }
+
+        .chart-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.3), transparent);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .chart-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .chart-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--gold-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .chart-bar-wrapper:hover .chart-tooltip {
+            opacity: 1;
+        }
+
+        /* Live Activity Feed */
+        .activity-feed {
+            background: var(--card-bg);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        .activity-feed::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .activity-feed::-webkit-scrollbar-thumb {
+            background: var(--gold-primary);
+            border-radius: 3px;
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .feed-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--gold-primary);
+        }
+
+        .feed-count {
+            background: rgba(0, 217, 255, 0.1);
+            color: var(--ice-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .activity-item.new {
+            border-left-color: var(--success);
+            background: rgba(0, 200, 83, 0.05);
+        }
+
+        .activity-item.investment {
+            border-left-color: var(--gold-primary);
+        }
+
+        .activity-item.withdrawal {
+            border-left-color: var(--danger);
+        }
+
+        .activity-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--black);
+            font-size: 0.9rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 0.9rem;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-text span {
+            color: var(--gold-primary);
+            font-weight: 600;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .activity-amount {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .activity-amount.positive {
+            color: var(--success);
+        }
+
+        .activity-amount.negative {
+            color: var(--danger);
+        }
+
+        /* Investor Map Section */
+        .map-section {
+            background: var(--card-bg);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .map-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--gold-primary);
+        }
+
+        .region-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .region-stat {
+            text-align: center;
+        }
+
+        .region-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .region-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .map-visual {
+            height: 300px;
+            background: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 70%),
+                        linear-gradient(180deg, rgba(0, 217, 255, 0.05) 0%, transparent 100%);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--gold-primary);
+            animation: ping 2s infinite;
+        }
+
+        @keyframes ping {
+            0% { transform: scale(1); opacity: 1; }
+            75%, 100% { transform: scale(3); opacity: 0; }
+        }
+
+        .map-point::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border: 2px solid var(--gold-primary);
+            border-radius: 50%;
+            animation: ripple 2s infinite;
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* Bottom Grid */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-primary);
+        }
+
+        .info-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold-primary);
+            font-size: 1.1rem;
+        }
+
+        .investor-list {
+            list-style: none;
+        }
+
+        .investor-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .investor-item:last-child {
+            border-bottom: none;
+        }
+
+        .investor-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .investor-rank {
+            width: 28px;
+            height: 28px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--gold-primary);
+        }
+
+        .investor-name {
+            font-size: 0.9rem;
+            color: var(--white);
+        }
+
+        .investor-amount {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--gold-primary);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-light));
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        /* Ticker */
+        .ticker {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 1rem 0;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .ticker-content {
+            display: flex;
+            animation: ticker 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .ticker-label {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .ticker-value {
+            color: var(--gold-primary);
+            font-weight: 600;
+        }
+
+        .ticker-change {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .header-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+            .dashboard {
+                padding: 1rem;
+            }
+        }
+
+        /* Glow Effects */
+        .glow-text {
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .ice-glow {
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-grid"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="dashboard">
+        <!-- Header -->
+        <header class="header">
+            <div class="brand">
+                <div class="brand-logo">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>Goldenice International</h1>
+                    <p>INVESTOR DASHBOARD v2.6.0</p>
+                </div>
+            </div>
+            
+            <div class="live-indicator">
+                <div class="live-dot"></div>
+                <span>LIVE DATA</span>
+            </div>
+
+            <div class="header-stats">
+                <div class="header-stat">
+                    <div class="header-stat-value" id="totalInvestors">0</div>
+                    <div class="header-stat-label">Total Investors</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value" id="activeNow">0</div>
+                    <div class="header-stat-label">Active Now</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value" id="volume24h">$0M</div>
+                    <div class="header-stat-label">24h Volume</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-value">
+                    <span id="newInvestors">0</span>
+                    <span class="stat-change positive">+12.5%</span>
+                </div>
+                <div class="stat-label">New Investors (24h)</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-value">
+                    <span id="avgInvestment">$0</span>
+                    <span class="stat-change positive">+8.3%</span>
+                </div>
+                <div class="stat-label">Average Investment</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="stat-value">
+                    <span id="totalVolume">$0M</span>
+                    <span class="stat-change positive">+24.7%</span>
+                </div>
+                <div class="stat-label">Total Volume</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-value">
+                    <span id="retentionRate">0%</span>
+                    <span class="stat-change positive">+2.1%</span>
+                </div>
+                <div class="stat-label">Retention Rate</div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="content-grid">
+            <!-- Chart Section -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Investment Volume Trends</h3>
+                    <div class="time-filters">
+                        <button class="time-filter" onclick="updateChart('1h')">1H</button>
+                        <button class="time-filter" onclick="updateChart('24h')">24H</button>
+                        <button class="time-filter active" onclick="updateChart('7d')">7D</button>
+                        <button class="time-filter" onclick="updateChart('30d')">30D</button>
+                    </div>
+                </div>
+                <div class="chart-area" id="chartArea">
+                    <!-- Bars generated by JS -->
+                </div>
+            </div>
+
+            <!-- Live Activity Feed -->
+            <div class="activity-feed" id="activityFeed">
+                <div class="feed-header">
+                    <h3 class="feed-title">Live Activity</h3>
+                    <span class="feed-count" id="activityCount">0 updates</span>
+                </div>
+                <div id="feedContent">
+                    <!-- Activity items generated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Investor Map -->
+        <div class="map-section">
+            <div class="map-header">
+                <h3 class="map-title">Global Investor Distribution</h3>
+                <div class="region-stats">
+                    <div class="region-stat">
+                        <div class="region-value" id="africaCount">0</div>
+                        <div class="region-label">Africa</div>
+                    </div>
+                    <div class="region-stat">
+                        <div class="region-value" id="europeCount">0</div>
+                        <div class="region-label">Europe</div>
+                    </div>
+                    <div class="region-stat">
+                        <div class="region-value" id="asiaCount">0</div>
+                        <div class="region-label">Asia</div>
+                    </div>
+                    <div class="region-stat">
+                        <div class="region-value" id="americasCount">0</div>
+                        <div class="region-label">Americas</div>
+                    </div>
+                </div>
+            </div>
+            <div class="map-visual" id="mapVisual">
+                <!-- Map points generated by JS -->
+            </div>
+        </div>
+
+        <!-- Bottom Grid -->
+        <div class="bottom-grid">
+            <!-- Top Investors -->
+            <div class="info-card">
+                <div class="info-header">
+                    <div class="info-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h4 class="info-title">Top Investors</h4>
+                </div>
+                <ul class="investor-list" id="topInvestors">
+                    <!-- Generated by JS -->
+                </ul>
+            </div>
+
+            <!-- Investment Tiers -->
+            <div class="info-card">
+                <div class="info-header">
+                    <div class="info-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h4 class="info-title">Investment Tiers</h4>
+                </div>
+                <ul class="investor-list" id="investmentTiers">
+                    <!-- Generated by JS -->
+                </ul>
+            </div>
+
+            <!-- Recent Milestones -->
+            <div class="info-card">
+                <div class="info-header">
+                    <div class="info-icon">
+                        <i class="fas fa-flag-checkered"></i>
+                    </div>
+                    <h4 class="info-title">Recent Milestones</h4>
+                </div>
+                <ul class="investor-list" id="milestones">
+                    <!-- Generated by JS -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Ticker -->
+    <div class="ticker">
+        <div class="ticker-content" id="tickerContent">
+            <!-- Ticker items generated by JS -->
+        </div>
+    </div>
+
+    <script>
+        // Initialize particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Data State
+        const state = {
+            totalInvestors: 2847,
+            activeNow: 156,
+            volume24h: 4.2,
+            newInvestors: 47,
+            avgInvestment: 12500,
+            totalVolume: 35.6,
+            retentionRate: 94.3,
+            chartData: [65, 78, 90, 81, 96, 105, 120],
+            activities: [],
+            regions: {
+                africa: 1247,
+                europe: 689,
+                asia: 534,
+                americas: 377
+            }
+        };
+
+        // Format currency
+        const formatCurrency = (num) => {
+            if (num >= 1000000) return '$' + (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return '$' + (num / 1000).toFixed(1) + 'K';
+            return '$' + num.toLocaleString();
+        };
+
+        // Animate number counter
+        const animateValue = (id, start, end, duration, prefix = '', suffix = '') => {
+            const obj = document.getElementById(id);
+            const range = end - start;
+            const minTimer = 50;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            stepTime = Math.max(stepTime, minTimer);
+            
+            let startTime = new Date().getTime();
+            let endTime = startTime + duration;
+            let timer;
+            
+            const run = () => {
+                let now = new Date().getTime();
+                let remaining = Math.max((endTime - now) / duration, 0);
+                let value = Math.round(end - (remaining * range));
+                obj.innerHTML = prefix + value.toLocaleString() + suffix;
+                if (value == end) clearInterval(timer);
+            };
+            
+            timer = setInterval(run, stepTime);
+            run();
+        };
+
+        // Initialize stats
+        const initStats = () => {
+            animateValue('totalInvestors', 0, state.totalInvestors, 2000);
+            animateValue('activeNow', 0, state.activeNow, 1500);
+            animateValue('volume24h', 0, state.volume24h, 2000, '$', 'M');
+            animateValue('newInvestors', 0, state.newInvestors, 1500);
+            animateValue('avgInvestment', 0, state.avgInvestment, 2000, '$');
+            animateValue('totalVolume', 0, state.totalVolume, 2000, '$', 'M');
+            animateValue('retentionRate', 0, state.retentionRate, 1500, '', '%');
+            
+            animateValue('africaCount', 0, state.regions.africa, 1500);
+            animateValue('europeCount', 0, state.regions.europe, 1500);
+            animateValue('asiaCount', 0, state.regions.asia, 1500);
+            animateValue('americasCount', 0, state.regions.americas, 1500);
+        };
+
+        // Render Chart
+        const renderChart = () => {
+            const chartArea = document.getElementById('chartArea');
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const maxVal = Math.max(...state.chartData);
+            
+            chartArea.innerHTML = '';
+            
+            state.chartData.forEach((val, idx) => {
+                const height = (val / maxVal) * 100;
+                const wrapper = document.createElement('div');
+                wrapper.className = 'chart-bar-wrapper';
+                wrapper.innerHTML = `
+                    <div class="chart-tooltip">$${val}K invested</div>
+                    <div class="chart-bar" style="height: ${height}%"></div>
+                    <div class="chart-label">${days[idx]}</div>
+                `;
+                chartArea.appendChild(wrapper);
+                
+                // Animate bars
+                setTimeout(() => {
+                    wrapper.querySelector('.chart-bar').style.height = height + '%';
+                }, idx * 100);
+            });
+        };
+
+        // Update chart based on time filter
+        const updateChart = (period) => {
+            document.querySelectorAll('.time-filter').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Generate new random data based on period
+            const multiplier = period === '1h' ? 0.1 : period === '24h' ? 0.5 : period === '7d' ? 1 : 2;
+            state.chartData = state.chartData.map(() => Math.floor(Math.random() * 100 * multiplier) + 20);
+            renderChart();
+        };
+
+        // Activity Feed
+        const names = ['James Wilson', 'Sarah Chen', 'Michael Brown', 'Emma Davis', 'David Lee', 'Lisa Anderson', 'Robert Taylor', 'Jennifer Martinez'];
+        const actions = ['invested', 'joined as new investor', 'increased stake by', 'referred a new investor', 'completed KYC verification'];
+        
+        const addActivity = () => {
+            const feedContent = document.getElementById('feedContent');
+            const name = names[Math.floor(Math.random() * names.length)];
+            const action = actions[Math.floor(Math.random() * actions.length)];
+            const amount = Math.floor(Math.random() * 50000) + 5000;
+            
+            const item = document.createElement('div');
+            const isInvestment = action.includes('invested') || action.includes('increased');
+            const isNew = action.includes('joined') || action.includes('referred');
+            
+            item.className = `activity-item ${isNew ? 'new' : ''} ${isInvestment ? 'investment' : ''}`;
+            item.innerHTML = `
+                <div class="activity-avatar">${name.split(' ').map(n => n[0]).join('')}</div>
+                <div class="activity-content">
+                    <div class="activity-text"><span>${name}</span> ${action} ${isInvestment ? '$' + amount.toLocaleString() : ''}</div>
+                    <div class="activity-time">Just now</div>
+                </div>
+                ${isInvestment ? `<div class="activity-amount positive">+$${(amount/1000).toFixed(1)}K</div>` : ''}
+            `;
+            
+            feedContent.insertBefore(item, feedContent.firstChild);
+            
+            // Keep only last 10 items
+            while (feedContent.children.length > 10) {
+                feedContent.removeChild(feedContent.lastChild);
+            }
+            
+            // Update count
+            document.getElementById('activityCount').textContent = feedContent.children.length + ' updates';
+            
+            // Update times
+            updateActivityTimes();
+        };
+
+        const updateActivityTimes = () => {
+            const items = document.querySelectorAll('.activity-item');
+            items.forEach((item, idx) => {
+                const timeDiv = item.querySelector('.activity-time');
+                if (idx === 0) timeDiv.textContent = 'Just now';
+                else if (idx === 1) timeDiv.textContent = '1 min ago';
+                else if (idx < 5) timeDiv.textContent = idx + ' mins ago';
+                else timeDiv.textContent = Math.floor(idx / 2) + ' hours ago';
+            });
+        };
+
+        // Initialize feed
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => addActivity(), i * 200);
+        }
+
+        // Add new activity every 3-8 seconds
+        setInterval(() => {
+            addActivity();
+            // Randomly update stats
+            if (Math.random() > 0.7) {
+                state.activeNow += Math.floor(Math.random() * 5) - 2;
+                document.getElementById('activeNow').textContent = state.activeNow;
+            }
+        }, 3000 + Math.random() * 5000);
+
+        // Render Map Points
+        const renderMap = () => {
+            const mapVisual = document.getElementById('mapVisual');
+            const locations = [
+                { top: '40%', left: '50%', name: 'Nigeria' },
+                { top: '30%', left: '48%', name: 'UK' },
+                { top: '35%', left: '55%', name: 'Germany' },
+                { top: '45%', left: '75%', name: 'China' },
+                { top: '40%', left: '80%', name: 'Japan' },
+                { top: '50%', left: '25%', name: 'USA' },
+                { top: '60%', left: '30%', name: 'Brazil' },
+                { top: '70%', left: '55%', name: 'South Africa' }
+            ];
+            
+            locations.forEach((loc, idx) => {
+                const point = document.createElement('div');
+                point.className = 'map-point';
+                point.style.top = loc.top;
+                point.style.left = loc.left;
+                point.style.animationDelay = (idx * 0.5) + 's';
+                point.title = loc.name;
+                mapVisual.appendChild(point);
+            });
+        };
+
+        // Top Investors
+        const renderTopInvestors = () => {
+            const list = document.getElementById('topInvestors');
+            const investors = [
+                { name: 'Venture Capital Ltd', amount: 2500000, progress: 100 },
+                { name: 'Tech Holdings Inc', amount: 1800000, progress: 72 },
+                { name: 'Global Partners', amount: 1250000, progress: 50 },
+                { name: 'Innovation Fund', amount: 980000, progress: 39 },
+                { name: 'Private Investor A', amount: 750000, progress: 30 }
+            ];
+            
+            investors.forEach((inv, idx) => {
+                const li = document.createElement('li');
+                li.className = 'investor-item';
+                li.innerHTML = `
+                    <div style="width: 100%;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <div class="investor-info">
+                                <div class="investor-rank">${idx + 1}</div>
+                                <span class="investor-name">${inv.name}</span>
+                            </div>
+                            <span class="investor-amount">${formatCurrency(inv.amount)}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(li);
+                
+                // Animate progress
+                setTimeout(() => {
+                    li.querySelector('.progress-fill').style.width = inv.progress + '%';
+                }, idx * 200);
+            });
+        };
+
+        // Investment Tiers
+        const renderTiers = () => {
+            const list = document.getElementById('investmentTiers');
+            const tiers = [
+                { name: 'Platinum ($100K+)', count: 24, color: 'var(--gold-primary)' },
+                { name: 'Gold ($50K-$100K)', count: 67, color: '#FFD700' },
+                { name: 'Silver ($10K-$50K)', count: 234, color: '#C0C0C0' },
+                { name: 'Bronze ($1K-$10K)', count: 892, color: '#CD7F32' },
+                { name: 'Starter (<$1K)', count: 1630, color: 'rgba(255,255,255,0.3)' }
+            ];
+            
+            tiers.forEach((tier, idx) => {
+                const li = document.createElement('li');
+                li.className = 'investor-item';
+                li.innerHTML = `
+                    <div style="width: 100%;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span class="investor-name" style="color: ${tier.color}">${tier.name}</span>
+                            <span class="investor-amount" style="font-family: 'JetBrains Mono', monospace;">${tier.count}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%; background: ${tier.color}"></div>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(li);
+                
+                setTimeout(() => {
+                    li.querySelector('.progress-fill').style.width = (tier.count / 1630 * 100) + '%';
+                }, idx * 150);
+            });
+        };
+
+        // Milestones
+        const renderMilestones = () => {
+            const list = document.getElementById('milestones');
+            const milestones = [
+                { name: 'Reached 2,000 Investors', date: '2 days ago', icon: 'fa-users' },
+                { name: '$10M Total Volume', date: '1 week ago', icon: 'fa-dollar-sign' },
+                { name: 'Expanded to Asia', date: '2 weeks ago', icon: 'fa-globe-asia' },
+                { name: 'Launched Mobile App', date: '1 month ago', icon: 'fa-mobile-alt' },
+                { name: 'Series A Funding', date: '3 months ago', icon: 'fa-rocket' }
+            ];
+            
+            milestones.forEach((ms, idx) => {
+                const li = document.createElement('li');
+                li.className = 'investor-item';
+                li.innerHTML = `
+                    <div class="investor-info">
+                        <div class="investor-rank" style="background: rgba(0, 217, 255, 0.1); color: var(--ice-blue);">
+                            <i class="fas ${ms.icon}" style="font-size: 0.7rem;"></i>
+                        </div>
+                        <div>
+                            <div class="investor-name">${ms.name}</div>
+                            <div style="font-size: 0.75rem; color: rgba(255,255,255,0.4);">${ms.date}</div>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        };
+
+        // Live Ticker
+        const renderTicker = () => {
+            const ticker = document.getElementById('tickerContent');
+            const items = [
+                { label: 'BTC/GOLD', value: '45.23', change: '+2.4%', positive: true },
+                { label: 'ETH/GOLD', value: '3.42', change: '+1.8%', positive: true },
+                { label: 'GIC/USD', value: '1.24', change: '+5.2%', positive: true },
+                { label: 'Volume', value: '$4.2M', change: '+12%', positive: true },
+                { label: 'Investors', value: '2,847', change: '+47', positive: true },
+                { label: 'Active', value: '156', change: '+12', positive: true }
+            ];
+            
+            // Duplicate for seamless loop
+            const allItems = [...items, ...items];
+            
+            allItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'ticker-item';
+                div.innerHTML = `
+                    <span class="ticker-label">${item.label}:</span>
+                    <span class="ticker-value">${item.value}</span>
+                    <span class="ticker-change ${item.positive ? 'positive' : 'negative'}" 
+                          style="color: ${item.positive ? 'var(--success)' : 'var(--danger)'}; 
+                                 background: ${item.positive ? 'rgba(0,200,83,0.1)' : 'rgba(255,23,68,0.1)'};">
+                        ${item.change}
+                    </span>
+                `;
+                ticker.appendChild(div);
+            });
+        };
+
+        // Simulate live updates
+        const simulateLiveUpdates = () => {
+            setInterval(() => {
+                // Update random stat
+                const stats = ['totalInvestors', 'volume24h', 'activeNow'];
+                const stat = stats[Math.floor(Math.random() * stats.length)];
+                const element = document.getElementById(stat);
+                
+                if (stat === 'totalInvestors') {
+                    state.totalInvestors += Math.floor(Math.random() * 3);
+                    element.textContent = state.totalInvestors.toLocaleString();
+                } else if (stat === 'volume24h') {
+                    state.volume24h += (Math.random() * 0.1);
+                    element.textContent = '$' + state.volume24h.toFixed(1) + 'M';
+                } else if (stat === 'activeNow') {
+                    state.activeNow += Math.floor(Math.random() * 5) - 2;
+                    element.textContent = state.activeNow;
+                }
+                
+                // Flash effect
+                element.style.color = 'var(--ice-blue)';
+                setTimeout(() => {
+                    element.style.color = '';
+                }, 500);
+            }, 5000);
+        };
+
+        // Initialize everything
+        window.addEventListener('load', () => {
+            initStats();
+            renderChart();
+            renderMap();
+            renderTopInvestors();
+            renderTiers();
+            renderMilestones();
+            renderTicker();
+            simulateLiveUpdates();
+        });
+
+        // Smooth scroll for any internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

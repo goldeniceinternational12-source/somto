@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International (GLDI) - Official Investor Relations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --ice-blue: #E0F7FA;
+            --deep-blue: #0A1628;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0A1628 0%, #1a2a3a 100%);
+            color: #ffffff;
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #F4E4BC 50%, #AA8C2C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gold-border {
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #0A1628, #0A1628) padding-box,
+                        linear-gradient(135deg, #D4AF37, #F4E4BC, #AA8C2C) border-box;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .ticker-tape {
+            animation: ticker 30s linear infinite;
+        }
+        
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .pulse-gold {
+            animation: pulse-gold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse-gold {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+            50% { opacity: .8; box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
+        }
+        
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        
+        .data-table th {
+            background: rgba(212, 175, 55, 0.1);
+            color: #D4AF37;
+        }
+        
+        .data-table tr:hover {
+            background: rgba(212, 175, 55, 0.05);
+        }
+        
+        .tab-active {
+            background: linear-gradient(135deg, #D4AF37, #AA8C2C);
+            color: #0A1628;
+            font-weight: 600;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #D4AF37 0%, #F4E4BC 100%);
+        }
+        
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 1em;
+            animation: fall linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+        
+        .metric-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            border-left: 3px solid #D4AF37;
+        }
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+
+    <!-- Animated Snowflakes Background -->
+    <div id="snowflakes"></div>
+
+    <!-- Top Ticker -->
+    <div class="bg-black/40 border-b border-yellow-600/30 overflow-hidden py-2">
+        <div class="flex whitespace-nowrap ticker-tape">
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">GLDI</span> $142.85 <span class="text-green-400">▲ 2.34%</span></span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">VOLUME</span> 2.4M <span class="text-blue-400">▲ 15%</span></span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">MARKET CAP</span> $8.4B</span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">P/E</span> 18.5</span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">DIV YIELD</span> 2.8%</span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">52W HIGH</span> $156.20</span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">52W LOW</span> $89.45</span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">GLDI</span> $142.85 <span class="text-green-400">▲ 2.34%</span></span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">VOLUME</span> 2.4M <span class="text-blue-400">▲ 15%</span></span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">MARKET CAP</span> $8.4B</span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">P/E</span> 18.5</span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">DIV YIELD</span> 2.8%</span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">52W HIGH</span> $156.20</span>
+            <span class="mx-8 text-sm font-mono"><span class="text-yellow-400">52W LOW</span> $89.45</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 glass-panel border-b border-yellow-600/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-full gold-border flex items-center justify-center pulse-gold">
+                        <span class="text-2xl font-bold gold-gradient">G</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-display font-bold gold-gradient">GOLDENICE</h1>
+                        <p class="text-xs text-yellow-200/60 tracking-widest">INTERNATIONAL</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="showSection('overview')" class="nav-btn text-yellow-100 hover:text-yellow-400 transition font-medium">Overview</button>
+                    <button onclick="showSection('financials')" class="nav-btn text-yellow-100 hover:text-yellow-400 transition font-medium">Financials</button>
+                    <button onclick="showSection('stock-data')" class="nav-btn text-yellow-100 hover:text-yellow-400 transition font-medium">Stock Data</button>
+                    <button onclick="showSection('news')" class="nav-btn text-yellow-100 hover:text-yellow-400 transition font-medium">News</button>
+                    <button onclick="showSection('governance')" class="nav-btn text-yellow-100 hover:text-yellow-400 transition font-medium">Governance</button>
+                </div>
+                <button class="md:hidden text-yellow-400" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="overview" class="section-content relative py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <div class="inline-block px-4 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-semibold tracking-wide">
+                        NASDAQ: GLDI | SINCE 1998
+                    </div>
+                    <h2 class="text-5xl md:text-7xl font-display font-bold leading-tight">
+                        Where <span class="gold-gradient">Gold</span> Meets <span class="text-blue-300">Innovation</span>
+                    </h2>
+                    <p class="text-xl text-gray-300 leading-relaxed">
+                        Goldenice International is a global leader in precious metals extraction, cold-chain logistics, and sustainable mining technologies. Listed on major exchanges worldwide.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <button onclick="downloadReport()" class="px-8 py-4 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black font-bold rounded-lg hover:shadow-lg hover:shadow-yellow-500/30 transition transform hover:-translate-y-1">
+                            Download Annual Report
+                        </button>
+                        <button onclick="showSection('stock-data')" class="px-8 py-4 border-2 border-yellow-500/50 text-yellow-400 font-semibold rounded-lg hover:bg-yellow-500/10 transition">
+                            View Real-Time Data
+                        </button>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/20 to-blue-500/20 rounded-3xl blur-3xl"></div>
+                    <div class="relative glass-panel rounded-3xl p-8 hover-lift">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <p class="text-gray-400 text-sm">Current Price</p>
+                                <p class="text-4xl font-bold text-white" id="currentPrice">$142.85</p>
+                                <p class="text-green-400 flex items-center mt-1">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                                    +$3.27 (2.34%)
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-gray-400 text-sm">Market Status</p>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm font-semibold">
+                                    <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                                    Market Open
+                                </span>
+                            </div>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="miniChart"></canvas>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-white/10">
+                            <div class="text-center">
+                                <p class="text-gray-400 text-xs">Open</p>
+                                <p class="font-semibold">$139.50</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-gray-400 text-xs">High</p>
+                                <p class="font-semibold text-green-400">$144.20</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-gray-400 text-xs">Low</p>
+                                <p class="font-semibold text-red-400">$138.90</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Metrics Grid -->
+    <section class="py-12 px-4 bg-black/20">
+        <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="metric-card p-6 rounded-xl hover-lift">
+                <p class="text-gray-400 text-sm mb-1">Market Cap</p>
+                <p class="text-2xl font-bold gold-gradient">$8.4B</p>
+                <p class="text-xs text-green-400 mt-1">↑ 12% YTD</p>
+            </div>
+            <div class="metric-card p-6 rounded-xl hover-lift">
+                <p class="text-gray-400 text-sm mb-1">Revenue (TTM)</p>
+                <p class="text-2xl font-bold gold-gradient">$2.1B</p>
+                <p class="text-xs text-green-400 mt-1">↑ 8.5% YoY</p>
+            </div>
+            <div class="metric-card p-6 rounded-xl hover-lift">
+                <p class="text-gray-400 text-sm mb-1">Employees</p>
+                <p class="text-2xl font-bold gold-gradient">12,450</p>
+                <p class="text-xs text-blue-400 mt-1">Global Presence</p>
+            </div>
+            <div class="metric-card p-6 rounded-xl hover-lift">
+                <p class="text-gray-400 text-sm mb-1">Dividend Yield</p>
+                <p class="text-2xl font-bold gold-gradient">2.8%</p>
+                <p class="text-xs text-yellow-400 mt-1">Quarterly Payout</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stock Data Section -->
+    <section id="stock-data" class="section-content hidden py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h3 class="text-3xl font-display font-bold mb-8 gold-gradient">Stock Performance</h3>
+            
+            <!-- Time Period Tabs -->
+            <div class="flex space-x-2 mb-6 bg-white/5 p-2 rounded-lg inline-flex">
+                <button onclick="updateChart('1D')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium transition hover:bg-white/10" data-period="1D">1D</button>
+                <button onclick="updateChart('1W')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium transition hover:bg-white/10" data-period="1W">1W</button>
+                <button onclick="updateChart('1M')" class="tab-btn tab-active px-4 py-2 rounded-md text-sm font-medium transition" data-period="1M">1M</button>
+                <button onclick="updateChart('3M')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium transition hover:bg-white/10" data-period="3M">3M</button>
+                <button onclick="updateChart('1Y')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium transition hover:bg-white/10" data-period="1Y">1Y</button>
+                <button onclick="updateChart('5Y')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium transition hover:bg-white/10" data-period="5Y">5Y</button>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-6 mb-8">
+                <div class="chart-container">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass-panel rounded-2xl p-6">
+                    <h4 class="text-xl font-semibold mb-4 text-yellow-400">Trading Information</h4>
+                    <table class="w-full text-sm data-table">
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">Previous Close</td><td class="py-3 text-right font-semibold">$139.58</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">Open</td><td class="py-3 text-right font-semibold">$139.50</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">Bid</td><td class="py-3 text-right font-semibold">$142.80 x 800</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">Ask</td><td class="py-3 text-right font-semibold">$142.85 x 1200</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">Day's Range</td><td class="py-3 text-right font-semibold">$138.90 - $144.20</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">52 Week Range</td><td class="py-3 text-right font-semibold">$89.45 - $156.20</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">Volume</td><td class="py-3 text-right font-semibold">2,405,832</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">Avg. Volume</td><td class="py-3 text-right font-semibold">1,850,000</td></tr>
+                        <tr><td class="py-3 text-gray-400">Market Cap</td><td class="py-3 text-right font-semibold">$8.42B</td></tr>
+                    </table>
+                </div>
+                <div class="glass-panel rounded-2xl p-6">
+                    <h4 class="text-xl font-semibold mb-4 text-yellow-400">Share Statistics</h4>
+                    <table class="w-full text-sm data-table">
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">Shares Outstanding</td><td class="py-3 text-right font-semibold">58.9M</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">Float</td><td class="py-3 text-right font-semibold">52.3M</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">% Held by Insiders</td><td class="py-3 text-right font-semibold">8.4%</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">% Held by Institutions</td><td class="py-3 text-right font-semibold">72.1%</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">Short % of Float</td><td class="py-3 text-right font-semibold text-red-400">2.1%</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-3 text-gray-400">Short Ratio</td><td class="py-3 text-right font-semibold">1.8</td></tr>
+                        <tr><td class="py-3 text-gray-400">Beta (5Y Monthly)</td><td class="py-3 text-right font-semibold">1.15</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Financials Section -->
+    <section id="financials" class="section-content hidden py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h3 class="text-3xl font-display font-bold mb-8 gold-gradient">Financial Highlights</h3>
+            
+            <div class="grid lg:grid-cols-3 gap-6 mb-8">
+                <div class="glass-panel rounded-2xl p-6 hover-lift">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <span class="text-green-400 text-sm font-semibold">+12.4%</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">Total Revenue (2025)</p>
+                    <p class="text-3xl font-bold mt-1">$2.14B</p>
+                    <div class="mt-4 h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 85%"></div>
+                    </div>
+                </div>
+                
+                <div class="glass-panel rounded-2xl p-6 hover-lift">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                        </div>
+                        <span class="text-green-400 text-sm font-semibold">+18.2%</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">Net Income</p>
+                    <p class="text-3xl font-bold mt-1">$456M</p>
+                    <div class="mt-4 h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div class="bg-blue-400 h-full rounded-full" style="width: 72%"></div>
+                    </div>
+                </div>
+                
+                <div class="glass-panel rounded-2xl p-6 hover-lift">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        </div>
+                        <span class="text-green-400 text-sm font-semibold">+5.3%</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">EBITDA Margin</p>
+                    <p class="text-3xl font-bold mt-1">34.2%</p>
+                    <div class="mt-4 h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div class="bg-purple-400 h-full rounded-full" style="width: 68%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-8">
+                <h4 class="text-xl font-semibold mb-6 text-yellow-400">Quarterly Financial Summary</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full data-table">
+                        <thead>
+                            <tr class="text-left border-b border-yellow-500/30">
+                                <th class="py-4 px-4 font-semibold">Metric</th>
+                                <th class="py-4 px-4 font-semibold text-right">Q1 2025</th>
+                                <th class="py-4 px-4 font-semibold text-right">Q4 2024</th>
+                                <th class="py-4 px-4 font-semibold text-right">Q3 2024</th>
+                                <th class="py-4 px-4 font-semibold text-right">Q2 2024</th>
+                                <th class="py-4 px-4 font-semibold text-right">YoY Change</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-b border-white/5">
+                                <td class="py-4 px-4 font-medium">Revenue</td>
+                                <td class="py-4 px-4 text-right">$542M</td>
+                                <td class="py-4 px-4 text-right">$518M</td>
+                                <td class="py-4 px-4 text-right">$498M</td>
+                                <td class="py-4 px-4 text-right">$475M</td>
+                                <td class="py-4 px-4 text-right text-green-400">+14.1%</td>
+                            </tr>
+                            <tr class="border-b border-white/5">
+                                <td class="py-4 px-4 font-medium">Gross Profit</td>
+                                <td class="py-4 px-4 text-right">$298M</td>
+                                <td class="py-4 px-4 text-right">$285M</td>
+                                <td class="py-4 px-4 text-right">$274M</td>
+                                <td class="py-4 px-4 text-right">$261M</td>
+                                <td class="py-4 px-4 text-right text-green-400">+14.2%</td>
+                            </tr>
+                            <tr class="border-b border-white/5">
+                                <td class="py-4 px-4 font-medium">Operating Income</td>
+                                <td class="py-4 px-4 text-right">$142M</td>
+                                <td class="py-4 px-4 text-right">$135M</td>
+                                <td class="py-4 px-4 text-right">$128M</td>
+                                <td class="py-4 px-4 text-right">$118M</td>
+                                <td class="py-4 px-4 text-right text-green-400">+20.3%</td>
+                            </tr>
+                            <tr class="border-b border-white/5">
+                                <td class="py-4 px-4 font-medium">Net Income</td>
+                                <td class="py-4 px-4 text-right">$118M</td>
+                                <td class="py-4 px-4 text-right">$112M</td>
+                                <td class="py-4 px-4 text-right">$105M</td>
+                                <td class="py-4 px-4 text-right">$98M</td>
+                                <td class="py-4 px-4 text-right text-green-400">+20.4%</td>
+                            </tr>
+                            <tr class="border-b border-white/5">
+                                <td class="py-4 px-4 font-medium">EPS (Diluted)</td>
+                                <td class="py-4 px-4 text-right font-bold text-yellow-400">$2.01</td>
+                                <td class="py-4 px-4 text-right">$1.91</td>
+                                <td class="py-4 px-4 text-right">$1.79</td>
+                                <td class="py-4 px-4 text-right">$1.67</td>
+                                <td class="py-4 px-4 text-right text-green-400">+20.4%</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-4 font-medium">Free Cash Flow</td>
+                                <td class="py-4 px-4 text-right">$165M</td>
+                                <td class="py-4 px-4 text-right">$158M</td>
+                                <td class="py-4 px-4 text-right">$142M</td>
+                                <td class="py-4 px-4 text-right">$138M</td>
+                                <td class="py-4 px-4 text-right text-green-400">+19.6%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section id="news" class="section-content hidden py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h3 class="text-3xl font-display font-bold mb-8 gold-gradient">Latest News & Events</h3>
+            
+            <div class="grid md:grid-cols-3 gap-6 mb-12">
+                <div class="md:col-span-2 glass-panel rounded-2xl p-8 hover-lift">
+                    <span class="inline-block px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-semibold mb-4">PRESS RELEASE</span>
+                    <h4 class="text-2xl font-bold mb-3 hover:text-yellow-400 transition cursor-pointer">Goldenice International Reports Record Q1 2025 Results; Raises Full-Year Guidance</h4>
+                    <p class="text-gray-300 mb-4">Company announces 14% revenue growth and 20% increase in net income driven by strong performance in precious metals segment and expansion of cold-chain logistics network...</p>
+                    <div class="flex items-center text-sm text-gray-400">
+                        <span>March 28, 2025</span>
+                        <span class="mx-2">•</span>
+                        <span>8:30 AM ET</span>
+                    </div>
+                </div>
+                <div class="glass-panel rounded-2xl p-6 hover-lift">
+                    <h4 class="font-semibold mb-4 text-yellow-400">Upcoming Events</h4>
+                    <div class="space-y-4">
+                        <div class="border-l-2 border-yellow-500 pl-4">
+                            <p class="text-sm text-gray-400">April 15, 2025</p>
+                            <p class="font-medium">Q1 Earnings Call</p>
+                        </div>
+                        <div class="border-l-2 border-blue-500 pl-4">
+                            <p class="text-sm text-gray-400">May 22, 2025</p>
+                            <p class="font-medium">Annual Shareholders Meeting</p>
+                        </div>
+                        <div class="border-l-2 border-purple-500 pl-4">
+                            <p class="text-sm text-gray-400">June 10, 2025</p>
+                            <p class="font-medium">Investor Day 2025</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="glass-panel rounded-xl p-6 flex items-start space-x-4 hover:bg-white/5 transition cursor-pointer">
+                    <div class="w-16 h-16 rounded-lg bg-yellow-500/20 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-semibold text-blue-400 uppercase tracking-wide">Expansion</span>
+                                <h5 class="text-lg font-semibold mt-1">Goldenice Announces New Mining Operations in Northern Canada</h5>
+                                <p class="text-gray-400 text-sm mt-2">$340M investment to establish sustainable extraction facility targeting 15% production increase by 2026...</p>
+                            </div>
+                            <span class="text-sm text-gray-500 whitespace-nowrap">2 days ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-xl p-6 flex items-start space-x-4 hover:bg-white/5 transition cursor-pointer">
+                    <div class="w-16 h-16 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-semibold text-green-400 uppercase tracking-wide">Dividend</span>
+                                <h5 class="text-lg font-semibold mt-1">Board Declares Quarterly Dividend of $0.95 Per Share</h5>
+                                <p class="text-gray-400 text-sm mt-2">15% increase from previous quarter; marks 28th consecutive year of dividend growth...</p>
+                            </div>
+                            <span class="text-sm text-gray-500 whitespace-nowrap">5 days ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-xl p-6 flex items-start space-x-4 hover:bg-white/5 transition cursor-pointer">
+                    <div class="w-16 h-16 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-semibold text-purple-400 uppercase tracking-wide">Innovation</span>
+                                <h5 class="text-lg font-semibold mt-1">Partnership with Tesla for Sustainable Cold-Chain Solutions</h5>
+                                <p class="text-gray-400 text-sm mt-2">Strategic collaboration to develop energy-efficient logistics network for electric vehicle battery transport...</p>
+                            </div>
+                            <span class="text-sm text-gray-500 whitespace-nowrap">1 week ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Governance Section -->
+    <section id="governance" class="section-content hidden py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h3 class="text-3xl font-display font-bold mb-8 gold-gradient">Corporate Governance</h3>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="glass-panel rounded-2xl p-8">
+                    <h4 class="text-xl font-semibold mb-6 text-yellow-400">Board of Directors</h4>
+                    <div class="space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-black font-bold text-xl">EW</div>
+                            <div>
+                                <p class="font-semibold text-lg">Eleanor Whitmore</p>
+                                <p class="text-yellow-400 text-sm">Chairman & CEO</p>
+                                <p class="text-gray-400 text-xs mt-1">Since 2015 • Audit Committee Chair</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-xl">JC</div>
+                            <div>
+                                <p class="font-semibold text-lg">James Chen</p>
+                                <p class="text-blue-400 text-sm">Lead Independent Director</p>
+                                <p class="text-gray-400 text-xs mt-1">Since 2012 • Compensation Committee</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold text-xl">SR</div>
+                            <div>
+                                <p class="font-semibold text-lg">Sarah Rodriguez</p>
+                                <p class="text-purple-400 text-sm">Director</p>
+                                <p class="text-gray-400 text-xs mt-1">Since 2019 • ESG Committee Chair</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-panel rounded-2xl p-8">
+                    <h4 class="text-xl font-semibold mb-6 text-yellow-400">ESG Commitment</h4>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-4 bg-white/5 rounded-lg">
+                            <span class="font-medium">Carbon Neutral Goal</span>
+                            <span class="text-green-400 font-bold">2030</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-white/5 rounded-lg">
+                            <span class="font-medium">Renewable Energy Usage</span>
+                            <span class="text-green-400 font-bold">78%</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-white/5 rounded-lg">
+                            <span class="font-medium">Water Recycling Rate</span>
+                            <span class="text-blue-400 font-bold">94%</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-white/5 rounded-lg">
+                            <span class="font-medium">Board Diversity</span>
+                            <span class="text-purple-400 font-bold">45% Women</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 p-4 border border-yellow-500/30 rounded-lg bg-yellow-500/5">
+                        <p class="text-sm text-gray-300">Rated <span class="text-yellow-400 font-bold">AA</span> by MSCI ESG Research and included in Dow Jones Sustainability World Index for 5 consecutive years.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-8">
+                <h4 class="text-xl font-semibold mb-6 text-yellow-400">Stock Exchange Listings</h4>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="text-center p-6 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                        <p class="text-2xl font-bold text-yellow-400">NASDAQ</p>
+                        <p class="text-sm text-gray-400 mt-1">GLDI</p>
+                        <p class="text-xs text-green-400 mt-2">Primary</p>
+                    </div>
+                    <div class="text-center p-6 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                        <p class="text-2xl font-bold text-blue-400">LSE</p>
+                        <p class="text-sm text-gray-400 mt-1">GLDI.L</p>
+                        <p class="text-xs text-gray-400 mt-2">Secondary</p>
+                    </div>
+                    <div class="text-center p-6 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                        <p class="text-2xl font-bold text-red-400">TSE</p>
+                        <p class="text-sm text-gray-400 mt-1">GLDI.T</p>
+                        <p class="text-xs text-gray-400 mt-2">Secondary</p>
+                    </div>
+                    <div class="text-center p-6 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                        <p class="text-2xl font-bold text-purple-400">XETRA</p>
+                        <p class="text-sm text-gray-400 mt-1">GLDI.DE</p>
+                        <p class="text-xs text-gray-400 mt-2">Secondary</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black/40 border-t border-yellow-600/20 py-12 px-4 mt-20">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center space-x-2 mb-4">
+                    <div class="w-10 h-10 rounded-full gold-border flex items-center justify-center">
+                        <span class="text-lg font-bold gold-gradient">G</span>
+                    </div>
+                    <span class="text-xl font-display font-bold gold-gradient">GOLDENICE</span>
+                </div>
+                <p class="text-gray-400 text-sm">Global leader in precious metals and sustainable logistics solutions.</p>
+            </div>
+            <div>
+                <h5 class="font-semibold text-yellow-400 mb-4">Investor Relations</h5>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-yellow-400 transition">Financial Reports</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition">SEC Filings</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition">Event Calendar</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition">Email Alerts</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-semibold text-yellow-400 mb-4">Contact</h5>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li>ir@goldenice.com</li>
+                    <li>+1 (555) 123-4567</li>
+                    <li>500 Ice Plaza, New York, NY</li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-semibold text-yellow-400 mb-4">Legal</h5>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-yellow-400 transition">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition">Terms of Use</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-8 pt-8 border-t border-white/10 text-center text-sm text-gray-500">
+            <p>&copy; 2025 Goldenice International. All rights reserved. NASDAQ: GLDI</p>
+            <p class="mt-2 text-xs">Market data delayed by 15 minutes. For informational purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Create snowflakes
+        function createSnowflakes() {
+            const container = document.getElementById('snowflakes');
+            const snowflakeCount = 50;
+            
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerHTML = '❄';
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowflake.style.opacity = Math.random();
+                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+                container.appendChild(snowflake);
+            }
+        }
+        createSnowflakes();
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            // Mobile menu toggle logic
+            alert('Mobile menu would open here');
+        }
+
+        function downloadReport() {
+            alert('Annual Report 2025 PDF download would start here');
+        }
+
+        // Chart.js Configuration
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        const miniCtx = document.getElementById('miniChart').getContext('2d');
+
+        // Generate realistic stock data
+        function generateStockData(points, startPrice, volatility) {
+            let data = [startPrice];
+            for (let i = 1; i < points; i++) {
+                let change = (Math.random() - 0.5) * volatility;
+                data.push(data[i-1] + change);
+            }
+            return data;
+        }
+
+        // Gradient for chart
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(212, 175, 55, 0.3)');
+        gradient.addColorStop(1, 'rgba(212, 175, 55, 0)');
+
+        const miniGradient = miniCtx.createLinearGradient(0, 0, 0, 300);
+        miniGradient.addColorStop(0, 'rgba(212, 175, 55, 0.4)');
+        miniGradient.addColorStop(1, 'rgba(212, 175, 55, 0)');
+
+        // Main Chart
+        const mainChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 30}, (_, i) => `Day ${i+1}`),
+                datasets: [{
+                    label: 'GLDI Price',
+                    data: generateStockData(30, 140, 3),
+                    borderColor: '#D4AF37',
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: '#D4AF37',
+                    pointHoverBorderColor: '#fff',
+                    pointHoverBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(10, 22, 40, 0.9)',
+                        titleColor: '#D4AF37',
+                        bodyColor: '#fff',
+                        borderColor: '#D4AF37',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return '$' + context.parsed.y.toFixed(2);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: 'rgba(255, 255, 255, 0.5)' }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { 
+                            color: 'rgba(255, 255, 255, 0.5)',
+                            callback: function(value) { return '$' + value.toFixed(0); }
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                }
+            }
+        });
+
+        // Mini Chart (Hero Section)
+        const miniChart = new Chart(miniCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+                datasets: [{
+                    label: 'Today',
+                    data: generateStockData(24, 139, 1.5),
+                    borderColor: '#D4AF37',
+                    backgroundColor: miniGradient,
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                },
+                elements: {
+                    point: { radius: 0 }
+                }
+            }
+        });
+
+        // Update chart based on time period
+        function updateChart(period) {
+            // Update active tab
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                if (btn.dataset.period === period) {
+                    btn.classList.add('tab-active');
+                }
+            });
+
+            // Generate new data based on period
+            let points, volatility, startPrice;
+            switch(period) {
+                case '1D': points = 24; volatility = 1; startPrice = 139; break;
+                case '1W': points = 7; volatility = 2; startPrice = 138; break;
+                case '1M': points = 30; volatility = 3; startPrice = 135; break;
+                case '3M': points = 90; volatility = 5; startPrice = 130; break;
+                case '1Y': points = 365; volatility = 15; startPrice = 90; break;
+                case '5Y': points = 60; volatility = 40; startPrice = 50; break;
+                default: points = 30; volatility = 3; startPrice = 140;
+            }
+
+            const newData = generateStockData(points, startPrice, volatility);
+            const newLabels = Array.from({length: points}, (_, i) => {
+                if (period === '1D') return `${i}:00`;
+                if (period === '1W') return `Day ${i+1}`;
+                if (period === '1M') return `Mar ${i+1}`;
+                if (period === '3M') return `Week ${i+1}`;
+                if (period === '1Y') return `Day ${i+1}`;
+                return `Q${Math.floor(i/3)+1} ${2020+Math.floor(i/12)}`;
+            });
+
+            mainChart.data.labels = newLabels;
+            mainChart.data.datasets[0].data = newData;
+            mainChart.update();
+        }
+
+        // Simulate real-time price updates
+        setInterval(() => {
+            const priceElement = document.getElementById('currentPrice');
+            const currentPrice = parseFloat(priceElement.textContent.replace('$', ''));
+            const change = (Math.random() - 0.5) * 0.5;
+            const newPrice = (currentPrice + change).toFixed(2);
+            priceElement.textContent = '$' + newPrice;
+            
+            // Update mini chart last point
+            const data = miniChart.data.datasets[0].data;
+            data[data.length - 1] = parseFloat(newPrice);
+            miniChart.update('none');
+        }, 3000);
+
+        // Initialize with overview
+        showSection('overview');
+    </script>
+</body>
+</html>

@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - Live Chat Support</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-dark: #B8860B;
+            --gold-light: #FFD700;
+            --ice-blue: #4FC3F7;
+            --dark-bg: #0a0a0a;
+            --card-bg: #111;
+            --chat-bg: #1a1a1a;
+            --text-primary: #f0f0f0;
+            --text-secondary: #888;
+            --success-green: #4CAF50;
+            --typing-dot: #666;
+            --border-color: rgba(212, 175, 55, 0.2);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Demo Page Content */
+        .demo-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .demo-content h1 {
+            color: var(--gold-primary);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-content p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 600px;
+        }
+
+        /* Chat Widget Container */
+        .chat-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Chat Button */
+        .chat-button {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s;
+            position: relative;
+            border: none;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 15px 40px rgba(212, 175, 55, 0.6); }
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-button svg {
+            width: 35px;
+            height: 35px;
+            fill: #000;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 24px;
+            height: 24px;
+            background: #ff4444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: white;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Chat Window */
+        .chat-window {
+            position: absolute;
+            bottom: 90px;
+            right: 0;
+            width: 400px;
+            height: 600px;
+            background: var(--chat-bg);
+            border: 2px solid var(--gold-primary);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-window.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: all;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-agent {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .agent-avatar {
+            width: 50px;
+            height: 50px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            border: 3px solid white;
+        }
+
+        .agent-info h4 {
+            color: #000;
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #000;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success-green);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-action-btn {
+            width: 35px;
+            height: 35px;
+            background: rgba(0,0,0,0.2);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            color: #000;
+            font-size: 1.2rem;
+        }
+
+        .chat-action-btn:hover {
+            background: rgba(0,0,0,0.4);
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: var(--chat-bg);
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .message {
+            margin-bottom: 1.5rem;
+            animation: messageSlide 0.3s ease;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-agent {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1rem;
+            max-width: 280px;
+        }
+
+        .message-content p {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .message-user {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .message-user .message-content {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border: none;
+        }
+
+        .message-user .message-content p {
+            color: #000;
+            font-weight: 500;
+        }
+
+        /* Quick Replies */
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+
+        .quick-reply {
+            background: transparent;
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-reply:hover {
+            background: var(--gold-primary);
+            color: #000;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            padding: 1rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            width: fit-content;
+            margin-bottom: 1.5rem;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--typing-dot);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Chat Input */
+        .chat-input-container {
+            padding: 1rem;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            padding: 0.8rem 1.2rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .chat-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .chat-send-btn {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .chat-send-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #000;
+        }
+
+        .chat-tools {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+
+        .chat-tool {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0.3rem;
+            transition: color 0.3s;
+        }
+
+        .chat-tool:hover {
+            color: var(--gold-primary);
+        }
+
+        /* Suggested Topics */
+        .suggested-topics {
+            padding: 1rem;
+            background: rgba(0,0,0,0.3);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .suggested-topics p {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .topic-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .topic-tag {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .topic-tag:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--chat-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            z-index: 10;
+            transition: opacity 0.3s;
+        }
+
+        .welcome-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .welcome-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .welcome-screen h3 {
+            color: var(--gold-primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-screen p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .start-chat-btn {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: #000;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .start-chat-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        /* File Attachment Modal */
+        .file-modal {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            left: 1rem;
+            right: 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1rem;
+            z-index: 20;
+        }
+
+        .file-modal.active {
+            display: block;
+        }
+
+        .file-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .file-option:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .chat-widget {
+                bottom: 1rem;
+                right: 1rem;
+            }
+            
+            .chat-window {
+                width: calc(100vw - 2rem);
+                height: 70vh;
+                right: -1rem;
+            }
+            
+            .chat-button {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        /* Sound toggle */
+        .sound-toggle {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Page Content -->
+    <div class="demo-content">
+        <h1>Goldenice International</h1>
+        <p>Premium Forex Trading & Investment Services. Click the chat button in the bottom right corner to experience our automated live chat support.</p>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <!-- Chat Button -->
+        <button class="chat-button" onclick="toggleChat()" aria-label="Open chat">
+            <svg viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                <path d="M7 9h10v2H7zm0-3h10v2H7z"/>
+            </svg>
+            <span class="notification-badge">1</span>
+        </button>
+
+        <!-- Chat Window -->
+        <div class="chat-window" id="chatWindow">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-icon">💬</div>
+                <h3>Welcome to Goldenice</h3>
+                <p>Experience instant support for your forex trading and investment inquiries. Our AI assistant is available 24/7.</p>
+                <button class="start-chat-btn" onclick="startChat()">Start Conversation</button>
+            </div>
+
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="chat-agent">
+                    <div class="agent-avatar">🤖</div>
+                    <div class="agent-info">
+                        <h4>Goldenice Assistant</h4>
+                        <div class="agent-status">
+                            <span class="status-dot"></span>
+                            <span>Online</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="chat-action-btn" onclick="toggleSound()" title="Toggle sound">🔔</button>
+                    <button class="chat-action-btn" onclick="clearChat()" title="Clear chat">🗑️</button>
+                    <button class="chat-action-btn" onclick="toggleChat()" title="Close">✕</button>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be inserted here -->
+                
+                <!-- Typing Indicator -->
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+
+            <!-- Suggested Topics -->
+            <div class="suggested-topics" id="suggestedTopics">
+                <p>Quick topics:</p>
+                <div class="topic-tags">
+                    <span class="topic-tag" onclick="sendQuickReply('Account opening')">Account opening</span>
+                    <span class="topic-tag" onclick="sendQuickReply('Deposit methods')">Deposit methods</span>
+                    <span class="topic-tag" onclick="sendQuickReply('Trading platforms')">Trading platforms</span>
+                    <span class="topic-tag" onclick="sendQuickReply('Spreads & fees')">Spreads & fees</span>
+                    <span class="topic-tag" onclick="sendQuickReply('Withdrawal')">Withdrawal</span>
+                </div>
+            </div>
+
+            <!-- File Modal -->
+            <div class="file-modal" id="fileModal">
+                <div class="file-option" onclick="sendFile('image')">
+                    <div class="file-icon">📷</div>
+                    <div>
+                        <div style="color: var(--text-primary); font-weight: 600;">Photo</div>
+                        <div style="color: var(--text-secondary); font-size: 0.85rem;">Send a screenshot</div>
+                    </div>
+                </div>
+                <div class="file-option" onclick="sendFile('document')">
+                    <div class="file-icon">📄</div>
+                    <div>
+                        <div style="color: var(--text-primary); font-weight: 600;">Document</div>
+                        <div style="color: var(--text-secondary); font-size: 0.85rem;">Send a file</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+                    <button class="chat-send-btn" onclick="sendMessage()">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="chat-tools">
+                    <button class="chat-tool" onclick="toggleFileModal()" title="Attach file">📎</button>
+                    <button class="chat-tool" onclick="sendEmoji()" title="Emoji">😊</button>
+                    <button class="chat-tool" onclick="requestHuman()" title="Request human agent">👤 Human</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chat State
+        let chatOpen = false;
+        let soundEnabled = true;
+        let chatStarted = false;
+        let messageHistory = [];
+
+        // Knowledge Base for Automated Responses
+        const knowledgeBase = {
+            'hello': {
+                response: "Hello! Welcome to Goldenice International! 👋 I'm your AI assistant, here to help with your forex trading and investment questions 24/7. How may I assist you today?",
+                quickReplies: ['Account opening', 'Trading platforms', 'Deposit methods', 'Market hours']
+            },
+            'hi': {
+                response: "Hi there! Welcome to Goldenice International! 🌟 I'm here to help you with forex trading, account management, or any investment questions. What can I do for you?",
+                quickReplies: ['Open account', 'Platform demo', 'Current spreads', 'Contact support']
+            },
+            'account': {
+                response: "We offer four account types tailored to different investment levels:\n\n🥉 Standard ($100 min): Spreads from 1.0 pip, 1:500 leverage\n🥈 Premium ($5,000 min): Spreads from 0.5 pip, priority support\n🥇 VIP ($25,000 min): Spreads from 0.0 pip, dedicated manager\n☪️ Islamic ($100 min): Swap-free, Shariah-compliant\n\nWhich account interests you?",
+                quickReplies: ['Standard details', 'Premium benefits', 'VIP features', 'Islamic account']
+            },
+            'deposit': {
+                response: "We support multiple deposit methods for your convenience:\n\n💳 Credit/Debit Cards (Visa, Mastercard) - Instant\n🏦 Bank Wire Transfer - 1-3 business days\n💰 E-wallets (Skrill, Neteller, PayPal) - Instant\n💎 Cryptocurrency (BTC, ETH, USDT) - 10-30 minutes\n\nMinimum deposit: $100 (Standard/Islamic), $5,000 (Premium), $25,000 (VIP)\n\nWould you like instructions for a specific method?",
+                quickReplies: ['Card deposit', 'Bank transfer', 'Crypto deposit', 'Deposit bonus']
+            },
+            'withdrawal': {
+                response: "Withdrawals are processed quickly and securely:\n\n⏱️ Processing time: Within 24 hours\n💳 Return to original payment method\n🔒 No fees for bank wire (1/month)\n📱 Track status in client portal\n\nNote: For security, withdrawals must return to the same source as deposits. Would you like to know about withdrawal limits or initiate a withdrawal?",
+                quickReplies: ['Withdrawal limits', 'Processing time', 'Fees', 'Track withdrawal']
+            },
+            'spread': {
+                response: "Our competitive spreads help maximize your profits:\n\n✨ EUR/USD: from 0.0 pips (VIP) / 0.5 pips (Premium) / 1.0 pips (Standard)\n✨ GBP/USD: from 0.1 pips\n✨ USD/JPY: from 0.1 pips\n✨ XAU/USD (Gold): from 0.15 pips\n✨ BTC/USD: from 15 pips\n\nAll spreads are variable and raw from our liquidity providers. Would you like to see our full spreads table?",
+                quickReplies: ['Full spreads', 'Commission rates', 'Swap rates', 'Compare accounts']
+            },
+            'leverage': {
+                response: "Goldenice offers flexible leverage options:\n\n📊 Standard/Premium/Islamic: Up to 1:500\n📊 VIP: Up to 1:200 (lower risk profile)\n📊 Professional clients: Up to 1:500\n\nExample: With 1:500 leverage, $1,000 controls $500,000 position\n\n⚠️ Remember: Higher leverage increases both potential profits and losses. We offer negative balance protection for all retail clients.\n\nWould you like to learn about margin requirements?",
+                quickReplies: ['Margin calculator', 'Margin call level', 'Stop out level', 'Risk management']
+            },
+            'platform': {
+                response: "We provide multiple trading platforms:\n\n💻 MetaTrader 4 (MT4): Industry standard, EA support\n💻 MetaTrader 5 (MT5): Advanced features, more timeframes\n📱 Mobile Apps: iOS & Android, full functionality\n🌐 WebTrader: No download required\n\nAll platforms feature:\n✓ 50+ technical indicators\n✓ One-click trading\n✓ Automated trading (EAs)\n✓ Real-time news & analysis\n\nWhich platform would you like to download?",
+                quickReplies: ['MT4 download', 'MT5 download', 'Mobile app', 'WebTrader']
+            },
+            'bonus': {
+                response: "Current promotional offers:\n\n🎁 Welcome Bonus: 100% on first deposit up to $10,000\n🎁 Trading Credit: 30% on deposits above $5,000\n🎁 Referral Program: $200 for each referred client\n\nTerms:\n• Minimum deposit: $500\n• Trading volume requirement: 1 lot per $10 bonus\n• Valid for 60 days\n\nWould you like to claim a bonus or learn about terms?",
+                quickReplies: ['Claim bonus', 'Bonus terms', 'Referral program', 'Loyalty rewards']
+            },
+            'support': {
+                response: "Our support team is available 24/5 (Sunday 22:00 - Friday 22:00 GMT):\n\n📧 Email: support@goldenice.com\n📞 Phone: +1 (800) GOLD-ICE\n💬 Live Chat: You're here!\n📱 WhatsApp: +1 (555) 123-4567\n\nFor urgent trading issues, please call our dealing desk directly. For complaints, contact complaints@goldenice.com\n\nWould you like to speak with a human agent?",
+                quickReplies: ['Human agent', 'Call me back', 'Email support', 'Schedule call']
+            },
+            'regulation': {
+                response: "Goldenice International operates with full regulatory compliance:\n\n✅ Licensed by [Regulatory Authority]\n✅ Client funds segregated at Tier-1 banks\n✅ $85,000 investor protection per client\n✅ Regular financial audits\n✅ GDPR compliant data protection\n\nYour security is our priority. All client funds are held in segregated accounts separate from company operational funds.\n\nWould you like to see our regulatory certificates?",
+                quickReplies: ['License details', 'Fund security', 'Insurance', 'Compliance']
+            },
+            'default': {
+                response: "Thank you for your message. To better assist you, could you please select one of these topics or rephrase your question?\n\nI can help with:\n• Account opening and verification\n• Deposits and withdrawals\n• Trading platforms and tools\n• Spreads, leverage, and fees\n• Technical support\n• General inquiries\n\nOr type 'human' to speak with a customer service representative.",
+                quickReplies: ['Account help', 'Trading help', 'Technical issue', 'Speak to human']
+            }
+        };
+
+        // Synonym mapping
+        const synonyms = {
+            'open account': 'account',
+            'new account': 'account',
+            'create account': 'account',
+            'register': 'account',
+            'sign up': 'account',
+            'money in': 'deposit',
+            'add funds': 'deposit',
+            'fund account': 'deposit',
+            'payment': 'deposit',
+            'money out': 'withdrawal',
+            'cash out': 'withdrawal',
+            'take out': 'withdrawal',
+            'get money': 'withdrawal',
+            'cost': 'spread',
+            'fee': 'spread',
+            'charge': 'spread',
+            'price': 'spread',
+            'mt4': 'platform',
+            'mt5': 'platform',
+            'metatrader': 'platform',
+            'app': 'platform',
+            'software': 'platform',
+            'help': 'support',
+            'contact': 'support',
+            'assistance': 'support',
+            'license': 'regulation',
+            'safe': 'regulation',
+            'secure': 'regulation',
+            'protected': 'regulation'
+        };
+
+        // Toggle Chat Window
+        function toggleChat() {
+            chatOpen = !chatOpen;
+            const window = document.getElementById('chatWindow');
+            const badge = document.querySelector('.notification-badge');
+            
+            if (chatOpen) {
+                window.classList.add('active');
+                badge.style.display = 'none';
+                if (!chatStarted) {
+                    document.getElementById('welcomeScreen').classList.remove('hidden');
+                } else {
+                    document.getElementById('chatInput').focus();
+                }
+            } else {
+                window.classList.remove('active');
+            }
+        }
+
+        // Start Chat
+        function startChat() {
+            chatStarted = true;
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            
+            // Send welcome message
+            setTimeout(() => {
+                addMessage('agent', knowledgeBase.hello.response, knowledgeBase.hello.quickReplies);
+                playSound('welcome');
+            }, 500);
+        }
+
+        // Add Message to Chat
+        function addMessage(sender, text, quickReplies = []) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingIndicator = document.getElementById('typingIndicator');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message message-${sender}`;
+            
+            const time = new Date().toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            });
+            
+            let content = '';
+            if (sender === 'agent') {
+                content = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <p>${formatMessage(text)}</p>
+                        <div class="message-time">${time}</div>
+                        ${quickReplies.length > 0 ? createQuickReplies(quickReplies) : ''}
+                    </div>
+                `;
+            } else {
+                content = `
+                    <div class="message-content">
+                        <p>${text}</p>
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+            }
+            
+            messageDiv.innerHTML = content;
+            messagesContainer.insertBefore(messageDiv, typingIndicator);
+            scrollToBottom();
+            
+            // Save to history
+            messageHistory.push({
+                sender,
+                text,
+                time,
+                quickReplies
+            });
+        }
+
+        // Format message with line breaks
+        function formatMessage(text) {
+            return text.replace(/\n/g, '<br>');
+        }
+
+        // Create Quick Replies HTML
+        function createQuickReplies(replies) {
+            const buttons = replies.map(reply => 
+                `<button class="quick-reply" onclick="sendQuickReply('${reply}')">${reply}</button>`
+            ).join('');
+            return `<div class="quick-replies">${buttons}</div>`;
+        }
+
+        // Send Message
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            // Add user message
+            addMessage('user', text);
+            input.value = '';
+            
+            // Play sound
+            if (soundEnabled) playSound('send');
+            
+            // Show typing indicator
+            showTyping();
+            
+            // Generate response
+            setTimeout(() => {
+                const response = generateResponse(text);
+                hideTyping();
+                addMessage('agent', response.response, response.quickReplies);
+                if (soundEnabled) playSound('receive');
+            }, 1500 + Math.random() * 1000);
+        }
+
+        // Send Quick Reply
+        function sendQuickReply(text) {
+            document.getElementById('chatInput').value = text;
+            sendMessage();
+        }
+
+        // Generate Automated Response
+        function generateResponse(input) {
+            const lowerInput = input.toLowerCase();
+            
+            // Check for exact matches
+            for (let key in knowledgeBase) {
+                if (key === 'default') continue;
+                if (lowerInput.includes(key)) {
+                    return knowledgeBase[key];
+                }
+            }
+            
+            // Check synonyms
+            for (let synonym in synonyms) {
+                if (lowerInput.includes(synonym)) {
+                    const key = synonyms[synonym];
+                    return knowledgeBase[key];
+                }
+            }
+            
+            // Check for human request
+            if (lowerInput.includes('human') || lowerInput.includes('agent') || lowerInput.includes('person')) {
+                return {
+                    response: "I'll connect you with a human agent right away. Please hold while I transfer your chat...\n\n⏱️ Estimated wait time: 2-3 minutes\n📋 Your chat history has been saved for reference\n\nIn the meantime, is there anything specific you'd like me to note for the agent?",
+                    quickReplies: ['Trading issue', 'Account problem', 'Technical support', 'Billing question']
+                };
+            }
+            
+            // Default response
+            return knowledgeBase.default;
+        }
+
+        // Show/Hide Typing Indicator
+        function showTyping() {
+            document.getElementById('typingIndicator').classList.add('active');
+            scrollToBottom();
+        }
+
+        function hideTyping() {
+            document.getElementById('typingIndicator').classList.remove('active');
+        }
+
+        // Handle Enter Key
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Scroll to Bottom
+        function scrollToBottom() {
+            const container = document.getElementById('chatMessages');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Toggle Sound
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = event.target;
+            btn.textContent = soundEnabled ? '🔔' : '🔕';
+            showToast(soundEnabled ? 'Sound enabled' : 'Sound muted');
+        }
+
+        // Clear Chat
+        function clearChat() {
+            if (confirm('Clear all messages?')) {
+                const messages = document.querySelectorAll('.message');
+                messages.forEach(m => m.remove());
+                messageHistory = [];
+                addMessage('agent', "Chat cleared. How can I help you today?", ['Account opening', 'Deposit help', 'Platform support']);
+            }
+        }
+
+        // Toggle File Modal
+        function toggleFileModal() {
+            const modal = document.getElementById('fileModal');
+            modal.classList.toggle('active');
+        }
+
+        // Send File
+        function sendFile(type) {
+            document.getElementById('fileModal').classList.remove('active');
+            const fileName = type === 'image' ? 'screenshot.png' : 'document.pdf';
+            addMessage('user', `[📎 ${fileName}]`);
+            showTyping();
+            
+            setTimeout(() => {
+                hideTyping();
+                addMessage('agent', `Thank you for sharing the ${type}. Our team will review it shortly. Is there anything specific you'd like me to help you with regarding this file?`, ['Technical issue', 'Account verification', 'Trading problem', 'Speak to human']);
+            }, 1000);
+        }
+
+        // Send Emoji
+        function sendEmoji() {
+            const emojis = ['👍', '👎', '😊', '😞', '🎉', '❤️', '🔥', '💯'];
+            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            document.getElementById('chatInput').value += randomEmoji;
+        }
+
+        // Request Human Agent
+        function requestHuman() {
+            addMessage('user', 'Request human agent');
+            showTyping();
+            
+            setTimeout(() => {
+                hideTyping();
+                addMessage('agent', "🔄 Transferring you to a human agent...\n\nYour position in queue: **3**\nEstimated wait time: **2-3 minutes**\n\nYour chat history has been forwarded to the agent. Please don't close this window.\n\nWhile you wait, feel free to continue browsing our website or check our FAQ section.", ['View FAQ', 'Trading hours', 'Contact info', 'Cancel request']);
+            }, 1000);
+        }
+
+        // Play Sound Effects
+        function playSound(type) {
+            if (!soundEnabled) return;
+            
+            // Create audio context for simple beep sounds
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            if (type === 'send') {
+                oscillator.frequency.value = 800;
+                gainNode.gain.value = 0.1;
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.1);
+            } else if (type === 'receive') {
+                oscillator.frequency.value = 600;
+                gainNode.gain.value = 0.1;
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.15);
+            } else if (type === 'welcome') {
+                oscillator.frequency.value = 500;
+                gainNode.gain.value = 0.1;
+                oscillator.start();
+                setTimeout(() => {
+                    oscillator.frequency.value = 700;
+                }, 100);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            }
+        }
+
+        // Show Toast Notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                right: 2rem;
+                background: var(--card-bg);
+                border: 1px solid var(--gold-primary);
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: var(--text-primary);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Auto-open chat after 5 seconds
+        setTimeout(() => {
+            if (!chatOpen && !chatStarted) {
+                const badge = document.querySelector('.notification-badge');
+                badge.style.animation = 'bounce 0.5s infinite';
+            }
+        }, 5000);
+
+        // Prevent closing when clicking inside window
+        document.getElementById('chatWindow').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    </script>
+</body>
+</html>

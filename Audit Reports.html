@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - Audit Reports Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --ice-blue: #E8F4F8;
+            --ice-dark: #2C3E50;
+            --dark-bg: #0A0E17;
+            --card-bg: #111827;
+            --card-hover: #1F2937;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --text-primary: #F9FAFB;
+            --text-secondary: #9CA3AF;
+            --border: rgba(212, 175, 55, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f172a 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Animated Grid Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header */
+        header {
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-icon::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .brand-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--gold-primary), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text span {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.625rem 1rem 0.625rem 2.5rem;
+            color: var(--text-primary);
+            width: 280px;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            background: rgba(212, 175, 55, 0.05);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .btn-icon:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+            transform: translateY(-2px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 18px;
+            height: 18px;
+            background: var(--danger);
+            border-radius: 50%;
+            font-size: 0.65rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Page Title */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .breadcrumb a:hover {
+            opacity: 0.8;
+        }
+
+        /* Stats Overview */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-primary), transparent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.blue { background: rgba(59, 130, 246, 0.1); color: var(--info); }
+        .stat-icon.green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .stat-icon.gold { background: rgba(212, 175, 55, 0.1); color: var(--gold-primary); }
+        .stat-icon.red { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        .trend-up {
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .trend-down {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .panel-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--gold-primary);
+            border-radius: 2px;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-sm:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        .btn-sm.active {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        .panel-body {
+            padding: 1.5rem;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin-bottom: 1rem;
+        }
+
+        /* Audit List */
+        .audit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .audit-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .audit-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gold-primary);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .audit-item:hover {
+            background: rgba(212, 175, 55, 0.05);
+            border-color: rgba(212, 175, 55, 0.2);
+            transform: translateX(4px);
+        }
+
+        .audit-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .audit-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(212, 175, 55, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .audit-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .audit-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .audit-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .audit-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .audit-status {
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        .status-completed {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .status-review {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .audit-actions {
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .audit-item:hover .audit-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        /* Findings Section */
+        .findings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .finding-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .finding-card:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .finding-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .finding-type {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .finding-count {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+
+        .finding-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .finding-list {
+            list-style: none;
+        }
+
+        .finding-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .finding-list li:last-child {
+            border-bottom: none;
+        }
+
+        .severity-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .severity-high { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+        .severity-medium { background: var(--warning); }
+        .severity-low { background: var(--success); }
+
+        /* Document Table */
+        .table-container {
+            overflow-x: auto;
+            margin: 0 -1.5rem;
+            padding: 0 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        thead {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        tr {
+            transition: background 0.3s;
+        }
+
+        tbody tr:hover {
+            background: rgba(212, 175, 55, 0.03);
+        }
+
+        .doc-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .doc-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .doc-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .doc-type {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-gold {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold-primary);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .progress-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .mini-progress {
+            width: 100px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .mini-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-light));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.3s;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .toast {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--gold-primary);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 300px;
+            transform: translateX(400px);
+            animation: slideIn 0.3s forwards;
+        }
+
+        @keyframes slideIn {
+            to { transform: translateX(0); }
+        }
+
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
+
+        /* Loading */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-box input {
+                width: 200px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .audit-meta {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .bg-grid, header, .btn-icon, .panel-actions, .action-btn, .audit-actions {
+                display: none !important;
+            }
+
+            .container {
+                padding: 0;
+            }
+
+            .panel {
+                break-inside: avoid;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="brand">
+                <div class="brand-icon">📊</div>
+                <div class="brand-text">
+                    <h1>GOLDENICE</h1>
+                    <span>Audit & Compliance Portal</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Search audit reports..." id="searchInput">
+                </div>
+                <button class="btn-icon" onclick="showNotifications()">
+                    🔔
+                    <span class="notification-badge">5</span>
+                </button>
+                <button class="btn-icon" onclick="toggleSettings()">
+                    ⚙️
+                </button>
+                <button class="btn-icon" onclick="exportData()">
+                    📥
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Breadcrumb & Title -->
+        <div class="page-header">
+            <div class="breadcrumb">
+                <a href="#">Home</a>
+                <span>/</span>
+                <a href="#">Compliance</a>
+                <span>/</span>
+                <span style="color: var(--text-primary);">Audit Reports</span>
+            </div>
+            <h2 class="page-title">
+                <span>Audit Reports Dashboard</span>
+                <span style="font-size: 0.875rem; background: rgba(212, 175, 55, 0.1); color: var(--gold-primary); padding: 0.25rem 0.75rem; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.2);">FY 2025-2026</span>
+            </h2>
+            <p class="page-subtitle">Comprehensive audit management and financial oversight system</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon blue">📋</div>
+                    <div class="stat-trend trend-up">
+                        <span>↑</span> 12%
+                    </div>
+                </div>
+                <div class="stat-label">Total Audits</div>
+                <div class="stat-value">24</div>
+                <div class="stat-desc">8 completed this quarter</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon green">✓</div>
+                    <div class="stat-trend trend-up">
+                        <span>↑</span> 5%
+                    </div>
+                </div>
+                <div class="stat-label">Compliance Rate</div>
+                <div class="stat-value">94.2%</div>
+                <div class="stat-desc">Above industry standard</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon gold">💰</div>
+                    <div class="stat-trend trend-down">
+                        <span>↓</span> 2%
+                    </div>
+                </div>
+                <div class="stat-label">Audited Value</div>
+                <div class="stat-value">$48.5M</div>
+                <div class="stat-desc">Across 12 jurisdictions</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon red">⚠️</div>
+                    <div class="stat-trend trend-up">
+                        <span>↑</span> 3
+                    </div>
+                </div>
+                <div class="stat-label">Open Findings</div>
+                <div class="stat-value">7</div>
+                <div class="stat-desc">2 critical, 5 moderate</div>
+            </div>
+        </div>
+
+        <!-- Charts & Recent Audits -->
+        <div class="dashboard-grid">
+            <!-- Chart Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">Audit Trends</h3>
+                    <div class="panel-actions">
+                        <button class="btn-sm active" onclick="switchChart('quarterly')">Quarterly</button>
+                        <button class="btn-sm" onclick="switchChart('monthly')">Monthly</button>
+                        <button class="btn-sm" onclick="switchChart('yearly')">Yearly</button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="chart-container">
+                        <canvas id="auditChart"></canvas>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.25rem; font-weight: 700; color: var(--success);">18</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Clean</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.25rem; font-weight: 700; color: var(--warning);">4</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Qualified</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.25rem; font-weight: 700; color: var(--danger);">2</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Adverse</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Audits Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">Recent Audits</h3>
+                    <button class="btn-sm" onclick="viewAllAudits()">View All</button>
+                </div>
+                <div class="panel-body">
+                    <div class="audit-list" id="auditList">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Findings -->
+        <div class="findings-grid">
+            <div class="finding-card">
+                <div class="finding-header">
+                    <div class="finding-type">
+                        <span style="color: var(--danger);">🔴</span>
+                        <span>Critical Findings</span>
+                    </div>
+                    <span class="badge" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);">2 Open</span>
+                </div>
+                <div class="finding-count" style="color: var(--danger);">2</div>
+                <div class="finding-desc">High-risk issues requiring immediate attention</div>
+                <ul class="finding-list">
+                    <li>
+                        <span class="severity-dot severity-high"></span>
+                        Internal controls gap - Treasury
+                    </li>
+                    <li>
+                        <span class="severity-dot severity-high"></span>
+                        Data classification inconsistency
+                    </li>
+                </ul>
+            </div>
+
+            <div class="finding-card">
+                <div class="finding-header">
+                    <div class="finding-type">
+                        <span style="color: var(--warning);">🟡</span>
+                        <span>Moderate Findings</span>
+                    </div>
+                    <span class="badge" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">5 Open</span>
+                </div>
+                <div class="finding-count" style="color: var(--warning);">5</div>
+                <div class="finding-desc">Process improvements recommended</div>
+                <ul class="finding-list">
+                    <li>
+                        <span class="severity-dot severity-medium"></span>
+                        Documentation delays - APAC
+                    </li>
+                    <li>
+                        <span class="severity-dot severity-medium"></span>
+                        Vendor verification backlog
+                    </li>
+                    <li>
+                        <span class="severity-dot severity-medium"></span>
+                        Training compliance gaps
+                    </li>
+                </ul>
+            </div>
+
+            <div class="finding-card">
+                <div class="finding-header">
+                    <div class="finding-type">
+                        <span style="color: var(--success);">🟢</span>
+                        <span>Low Findings</span>
+                    </div>
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">0 Open</span>
+                </div>
+                <div class="finding-count" style="color: var(--success);">0</div>
+                <div class="finding-desc">All minor observations resolved</div>
+                <ul class="finding-list">
+                    <li style="color: var(--text-secondary); font-style: italic;">
+                        <span class="severity-dot severity-low"></span>
+                        No pending low-priority items
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Detailed Reports Table -->
+        <div class="panel" style="margin-bottom: 2rem;">
+            <div class="panel-header">
+                <h3 class="panel-title">Audit Documentation</h3>
+                <div class="panel-actions">
+                    <button class="btn-sm" onclick="filterReports('all')">All</button>
+                    <button class="btn-sm" onclick="filterReports('financial')">Financial</button>
+                    <button class="btn-sm" onclick="filterReports('compliance')">Compliance</button>
+                    <button class="btn-sm" onclick="filterReports('operational')">Operational</button>
+                </div>
+            </div>
+            <div class="panel-body" style="padding: 0;">
+                <div class="table-container">
+                    <table id="reportsTable">
+                        <thead>
+                            <tr>
+                                <th>Document</th>
+                                <th>Type</th>
+                                <th>Period</th>
+                                <th>Auditor</th>
+                                <th>Status</th>
+                                <th>Progress</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Audit Details</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // Data
+        const auditData = {
+            quarterly: {
+                labels: ['Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025', 'Q1 2026'],
+                datasets: [{
+                    label: 'Completed Audits',
+                    data: [4, 6, 5, 7, 2],
+                    borderColor: '#D4AF37',
+                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Findings',
+                    data: [3, 2, 4, 1, 2],
+                    borderColor: '#EF4444',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            monthly: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Completed Audits',
+                    data: [2, 1, 3, 2, 2, 1],
+                    borderColor: '#D4AF37',
+                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Findings',
+                    data: [1, 0, 2, 1, 0, 1],
+                    borderColor: '#EF4444',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            yearly: {
+                labels: ['2022', '2023', '2024', '2025', '2026'],
+                datasets: [{
+                    label: 'Completed Audits',
+                    data: [12, 18, 22, 24, 6],
+                    borderColor: '#D4AF37',
+                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Findings',
+                    data: [15, 12, 8, 10, 4],
+                    borderColor: '#EF4444',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            }
+        };
+
+        const recentAudits = [
+            {
+                id: 'AUD-2026-001',
+                title: 'Q1 Financial Audit - Americas',
+                date: 'Mar 15, 2026',
+                auditor: 'Deloitte',
+                status: 'completed',
+                findings: 0
+            },
+            {
+                id: 'AUD-2026-002',
+                title: 'IT Security Assessment',
+                date: 'Mar 20, 2026',
+                auditor: 'EY',
+                status: 'review',
+                findings: 3
+            },
+            {
+                id: 'AUD-2026-003',
+                title: 'Regulatory Compliance Review',
+                date: 'Mar 25, 2026',
+                auditor: 'KPMG',
+                status: 'pending',
+                findings: null
+            },
+            {
+                id: 'AUD-2026-004',
+                title: 'Operational Audit - APAC',
+                date: 'Mar 28, 2026',
+                auditor: 'PwC',
+                status: 'completed',
+                findings: 1
+            }
+        ];
+
+        const reportsData = [
+            {
+                id: 'RPT-001',
+                name: 'Annual Financial Statements 2025',
+                type: 'Financial',
+                period: 'FY 2025',
+                auditor: 'Deloitte',
+                status: 'Completed',
+                progress: 100,
+                date: 'Dec 31, 2025'
+            },
+            {
+                id: 'RPT-002',
+                name: 'Q1 2026 Internal Controls Report',
+                type: 'Compliance',
+                period: 'Q1 2026',
+                auditor: 'EY',
+                status: 'In Review',
+                progress: 75,
+                date: 'Mar 31, 2026'
+            },
+            {
+                id: 'RPT-003',
+                name: 'Tax Compliance Assessment',
+                type: 'Compliance',
+                period: 'FY 2025',
+                auditor: 'KPMG',
+                status: 'Pending',
+                progress: 30,
+                date: 'Apr 15, 2026'
+            },
+            {
+                id: 'RPT-004',
+                name: 'Operational Efficiency Audit',
+                type: 'Operational',
+                period: 'Q4 2025',
+                auditor: 'PwC',
+                status: 'Completed',
+                progress: 100,
+                date: 'Jan 15, 2026'
+            },
+            {
+                id: 'RPT-005',
+                name: 'Cybersecurity Framework Review',
+                type: 'Operational',
+                period: 'Q1 2026',
+                auditor: 'EY',
+                status: 'In Progress',
+                progress: 60,
+                date: 'Apr 30, 2026'
+            }
+        ];
+
+        let currentChart = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart('quarterly');
+            renderRecentAudits();
+            renderReportsTable();
+            setupSearch();
+        });
+
+        // Chart Initialization
+        function initChart(period) {
+            const ctx = document.getElementById('auditChart').getContext('2d');
+            
+            if (currentChart) {
+                currentChart.destroy();
+            }
+
+            currentChart = new Chart(ctx, {
+                type: 'line',
+                data: auditData[period],
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#9CA3AF',
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                            titleColor: '#F9FAFB',
+                            bodyColor: '#9CA3AF',
+                            borderColor: 'rgba(212, 175, 55, 0.2)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#9CA3AF'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#9CA3AF'
+                            },
+                            beginAtZero: true
+                        }
+                    },
+                    elements: {
+                        point: {
+                            radius: 4,
+                            hoverRadius: 6,
+                            backgroundColor: '#D4AF37',
+                            borderColor: '#0A0E17',
+                            borderWidth: 2
+                        }
+                    }
+                }
+            });
+        }
+
+        function switchChart(period) {
+            // Update button states
+            document.querySelectorAll('.panel-actions .btn-sm').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            initChart(period);
+            showToast(`Switched to ${period} view`, 'success');
+        }
+
+        // Render Recent Audits
+        function renderRecentAudits() {
+            const container = document.getElementById('auditList');
+            container.innerHTML = recentAudits.map(audit => `
+                <div class="audit-item" onclick="showAuditDetails('${audit.id}')">
+                    <div class="audit-icon">📋</div>
+                    <div class="audit-info">
+                        <div class="audit-title">${audit.title}</div>
+                        <div class="audit-meta">
+                            <span>📅 ${audit.date}</span>
+                            <span>👤 ${audit.auditor}</span>
+                            ${audit.findings !== null ? `<span>⚠️ ${audit.findings} findings</span>` : ''}
+                        </div>
+                    </div>
+                    <span class="audit-status status-${audit.status}">
+                        ${audit.status.charAt(0).toUpperCase() + audit.status.slice(1)}
+                    </span>
+                    <div class="audit-actions">
+                        <button class="action-btn" onclick="event.stopPropagation(); downloadReport('${audit.id}')" title="Download">
+                            📥
+                        </button>
+                        <button class="action-btn" onclick="event.stopPropagation(); shareReport('${audit.id}')" title="Share">
+                            🔗
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Reports Table
+        function renderReportsTable(filter = 'all') {
+            const tbody = document.getElementById('reportsTableBody');
+            const filtered = filter === 'all' ? reportsData : reportsData.filter(r => r.type.toLowerCase() === filter);
+            
+            tbody.innerHTML = filtered.map(report => `
+                <tr onclick="showReportDetails('${report.id}')" style="cursor: pointer;">
+                    <td>
+                        <div class="doc-info">
+                            <div class="doc-icon">📄</div>
+                            <div>
+                                <div class="doc-name">${report.name}</div>
+                                <div class="doc-type">${report.id} • ${report.date}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge badge-gold">${report.type}</span></td>
+                    <td>${report.period}</td>
+                    <td>${report.auditor}</td>
+                    <td>
+                        <span style="color: ${report.status === 'Completed' ? 'var(--success)' : report.status === 'In Review' ? 'var(--warning)' : 'var(--info)'};">
+                            ${report.status}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="progress-cell">
+                            <div class="mini-progress">
+                                <div class="mini-fill" style="width: ${report.progress}%"></div>
+                            </div>
+                            <span style="font-size: 0.875rem; color: var(--text-secondary);">${report.progress}%</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="action-btn" onclick="event.stopPropagation(); downloadReport('${report.id}')" title="Download">
+                                📥
+                            </button>
+                            <button class="action-btn" onclick="event.stopPropagation(); previewReport('${report.id}')" title="Preview">
+                                👁️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterReports(type) {
+            renderReportsTable(type);
+            showToast(`Filtered by: ${type.charAt(0).toUpperCase() + type.slice(1)}`, 'success');
+        }
+
+        // Modal Functions
+        function showAuditDetails(id) {
+            const audit = recentAudits.find(a => a.id === id);
+            const modal = document.getElementById('modal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+            
+            title.textContent = audit.title;
+            body.innerHTML = `
+                <div class="detail-grid">
+                    <div class="detail-section">
+                        <div class="detail-label">Audit ID</div>
+                        <div class="detail-value">${audit.id}</div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value">
+                            <span class="audit-status status-${audit.status}" style="display: inline-block;">
+                                ${audit.status.charAt(0).toUpperCase() + audit.status.slice(1)}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-label">Audit Date</div>
+                        <div class="detail-value">${audit.date}</div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-label">Auditor</div>
+                        <div class="detail-value">${audit.auditor}</div>
+                    </div>
+                </div>
+                <div class="detail-section" style="margin-top: 1.5rem;">
+                    <div class="detail-label">Scope</div>
+                    <div class="detail-value" style="line-height: 1.6; color: var(--text-secondary);">
+                        Comprehensive review of financial controls, regulatory compliance, and operational procedures. 
+                        Includes assessment of internal controls, risk management frameworks, and adherence to international standards.
+                    </div>
+                </div>
+                ${audit.findings !== null ? `
+                <div class="detail-section">
+                    <div class="detail-label">Findings</div>
+                    <div class="detail-value" style="color: ${audit.findings > 0 ? 'var(--warning)' : 'var(--success)'};">
+                        ${audit.findings} ${audit.findings === 1 ? 'finding' : 'findings'} identified
+                    </div>
+                </div>
+                ` : ''}
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="btn-sm" style="flex: 1; justify-content: center;" onclick="downloadReport('${audit.id}')">
+                        📥 Download Report
+                    </button>
+                    <button class="btn-sm" style="flex: 1; justify-content: center;" onclick="closeModal()">
+                        Close
+                    </button>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function showReportDetails(id) {
+            const report = reportsData.find(r => r.id === id);
+            showToast(`Opening ${report.name}...`, 'success');
+        }
+
+        function closeModal(event) {
+            if (!event || event.target.id === 'modal') {
+                document.getElementById('modal').classList.remove('active');
+            }
+        }
+
+        // Action Functions
+        function downloadReport(id) {
+            showToast(`Downloading report ${id}...`, 'success');
+            setTimeout(() => {
+                showToast('Download completed', 'success');
+            }, 1500);
+        }
+
+        function shareReport(id) {
+            showToast('Link copied to clipboard', 'success');
+        }
+
+        function previewReport(id) {
+            showToast(`Opening preview for ${id}...`, 'success');
+        }
+
+        function viewAllAudits() {
+            showToast('Loading all audits...', 'success');
+        }
+
+        function exportData() {
+            showToast('Preparing export...', 'success');
+            setTimeout(() => {
+                showToast('Audit data exported to Excel', 'success');
+            }, 2000);
+        }
+
+        function showNotifications() {
+            showToast('5 new audit notifications', 'warning');
+        }
+
+        function toggleSettings() {
+            showToast('Settings panel opened', 'success');
+        }
+
+        // Search Functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const rows = document.querySelectorAll('#reportsTableBody tr');
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(term) ? '' : 'none';
+                });
+            });
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠'
+            };
+            
+            toast.innerHTML = `
+                <span style="font-size: 1.25rem;">${icons[type]}</span>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s reverse forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                exportData();
+            }
+        });
+    </script>
+</body>
+</html>

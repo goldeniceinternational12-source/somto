@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Press & Media Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                        },
+                        midnight: {
+                            900: '#020617',
+                            800: '#0F172A',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #020617;
+            color: #e2e8f0;
+        }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(to right, #eab308, #facc15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Timeline Styles */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #eab308, #334155);
+            transform: translateX(-50%);
+        }
+        
+        @media (max-width: 768px) {
+            .timeline-line {
+                left: 20px;
+            }
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background: #eab308;
+            border: 4px solid #0F172A;
+            border-radius: 50%;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-dot {
+                left: 20px;
+            }
+        }
+
+        /* Card Hover */
+        .press-card {
+            transition: all 0.3s ease;
+        }
+        .press-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(234, 179, 8, 0.3);
+        }
+
+        /* Search Input */
+        .search-input:focus {
+            box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.3);
+        }
+
+        /* Download Button Animation */
+        .download-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .download-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        .download-btn:hover::after {
+            left: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-gold-500 selection:text-midnight-900">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded bg-gradient-to-br from-gold-400 to-yellow-700 flex items-center justify-center text-midnight-900 font-bold text-xl shadow-lg shadow-yellow-900/20">G</div>
+                    <span class="font-serif text-2xl font-bold text-white tracking-tight">Goldenice <span class="text-gold-500">International</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="./company view.html" class="text-slate-300 hover:text-white transition-colors">Company</a>
+                    <a href="#" class="text-gold-400 font-medium border-b-2 border-gold-500 pb-1">Press</a>
+                    <a href="./carrers.html" class="text-slate-300 hover:text-white transition-colors">Careers</a>
+                    <a href="./contact.html" class="text-slate-300 hover:text-white transition-colors">Contact</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="text-slate-300 hover:text-white font-medium"><a href="Investor Relations.html">Investor Relations</a>   </button>
+                    <button class="bg-gold-600 hover:bg-gold-500 text-midnight-900 px-6 py-2.5 rounded font-bold transition-all shadow-lg shadow-yellow-900/20"><a href="./inves.html">Trade Now</a></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-32 pb-20 overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800 via-midnight-900 to-midnight-900 opacity-50"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 text-gold-400 text-sm font-semibold mb-6">
+                    <i class="fa-solid fa-newspaper"></i> Media Center
+                </div>
+                <h1 class="text-5xl md:text-6xl font-serif font-bold text-white mb-6">
+                    Press & <span class="gold-gradient-text">Media</span>
+                </h1>
+                <p class="text-xl text-slate-400 mb-10">
+                    Official news, press releases, and media resources from Goldenice International. For press inquiries, interview requests, and corporate information.
+                </p>
+                
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-3 gap-6 max-w-2xl mx-auto">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white">50+</div>
+                        <div class="text-sm text-slate-500">Countries Covered</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white">2008</div>
+                        <div class="text-sm text-slate-500">Founded</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white">$2.4B</div>
+                        <div class="text-sm text-slate-500">Daily Volume</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-24">
+
+        <!-- Press Releases Section -->
+        <section>
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-white mb-2">Press Releases</h2>
+                    <p class="text-slate-400">Official company announcements and news</p>
+                </div>
+                
+                <!-- Search & Filter -->
+                <div class="flex gap-3 w-full md:w-auto">
+                    <div class="relative flex-1 md:w-64">
+                        <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500"></i>
+                        <input type="text" id="searchInput" placeholder="Search press releases..." 
+                               class="search-input w-full bg-slate-800 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-gold-500 transition-colors">
+                    </div>
+                    <select id="yearFilter" class="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-gold-500">
+                        <option value="all">All Years</option>
+                        <option value="2025">2025</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="space-y-4" id="pressReleases">
+                <!-- Press releases populated by JS -->
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button id="loadMoreBtn" class="px-8 py-3 border border-slate-600 text-slate-300 rounded-lg hover:border-gold-500 hover:text-gold-400 transition-all">
+                    Load More Releases
+                </button>
+            </div>
+        </section>
+
+        <!-- Company Timeline -->
+        <section class="relative">
+            <h2 class="text-3xl font-serif font-bold text-white mb-12 text-center">Our Journey</h2>
+            
+            <div class="relative max-w-4xl mx-auto" id="timelineContainer">
+                <div class="timeline-line"></div>
+                <!-- Timeline items populated by JS -->
+            </div>
+        </section>
+
+        <!-- Media Coverage -->
+        <section>
+            <h2 class="text-3xl font-serif font-bold text-white mb-8">In The News</h2>
+            <div class="grid md:grid-cols-3 gap-6" id="mediaCoverage">
+                <!-- Coverage items populated by JS -->
+            </div>
+        </section>
+
+        <!-- Media Kit & Resources -->
+        <section class="glass-panel rounded-2xl p-8 md:p-12 border border-slate-700">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-white mb-4">Media Kit</h2>
+                    <p class="text-slate-400 mb-8 leading-relaxed">
+                        Download official brand assets, executive photographs, and company fact sheets for editorial use. All assets are provided in high-resolution formats.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg border border-slate-700 group hover:border-gold-500/30 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-lg bg-gold-500/10 flex items-center justify-center text-gold-400">
+                                    <i class="fa-solid fa-image text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">Brand Assets</h4>
+                                    <p class="text-xs text-slate-500">Logos, color palette, guidelines (ZIP, 15MB)</p>
+                                </div>
+                            </div>
+                            <button class="download-btn px-4 py-2 bg-slate-700 hover:bg-gold-600 text-white hover:text-midnight-900 rounded-lg text-sm font-medium transition-all">
+                                <i class="fa-solid fa-download mr-2"></i>Download
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg border border-slate-700 group hover:border-gold-500/30 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
+                                    <i class="fa-solid fa-file-pdf text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">Fact Sheet 2026</h4>
+                                    <p class="text-xs text-slate-500">Company overview, statistics (PDF, 2MB)</p>
+                                </div>
+                            </div>
+                            <button class="download-btn px-4 py-2 bg-slate-700 hover:bg-gold-600 text-white hover:text-midnight-900 rounded-lg text-sm font-medium transition-all">
+                                <i class="fa-solid fa-download mr-2"></i>Download
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg border border-slate-700 group hover:border-gold-500/30 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+                                    <i class="fa-solid fa-user-tie text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">Executive Bios</h4>
+                                    <p class="text-xs text-slate-500">Leadership team photos & bios (ZIP, 8MB)</p>
+                                </div>
+                            </div>
+                            <button class="download-btn px-4 py-2 bg-slate-700 hover:bg-gold-600 text-white hover:text-midnight-900 rounded-lg text-sm font-medium transition-all">
+                                <i class="fa-solid fa-download mr-2"></i>Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-gold-gradient opacity-10 blur-2xl rounded-full"></div>
+                    <div class="relative bg-slate-800 rounded-2xl p-8 border border-slate-700">
+                        <h3 class="text-xl font-bold text-white mb-6">Press Contact</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-gold-400">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-slate-400">Email</p>
+                                    <a href="goldeniceinternational12@gmail.com" class="text-white hover:text-gold-400 transition-colors">goldeniceinternational12@gmail.com</a>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-gold-400">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-slate-400">Phone</p>
+                                    <p class="text-white">07065151245,07040856276</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-gold-400">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-slate-400">Headquarters</p>
+                                    <p class="text-white">Port-Harcourt, Rivers State, Nigeria</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Media Inquiry Form -->
+        <section>
+            <h2 class="text-3xl font-serif font-bold text-white mb-8 text-center">Media Inquiry</h2>
+            <div class="max-w-2xl mx-auto glass-panel rounded-2xl p-8 border border-slate-700">
+                <form id="pressForm" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">First Name *</label>
+                            <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Last Name *</label>
+                            <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Email *</label>
+                        <input type="email" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Organization/Media Outlet *</label>
+                        <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Inquiry Type</label>
+                        <select class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors">
+                            <option>Interview Request</option>
+                            <option>Press Release Distribution</option>
+                            <option>Speaking Opportunity</option>
+                            <option>General Inquiry</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Message *</label>
+                        <textarea rows="4" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full py-4 bg-gold-600 hover:bg-gold-500 text-midnight-900 font-bold rounded-lg transition-all shadow-lg shadow-yellow-900/20">
+                    <a href="https://wa.me/7040856276">Submit Inquiry</a>    
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-slate-800 bg-midnight-900 py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded bg-gradient-to-br from-gold-400 to-yellow-700 flex items-center justify-center text-midnight-900 font-bold">G</div>
+                        <span class="font-serif text-xl font-bold text-white">Goldenice International</span>
+                    </div>
+                    <p class="text-slate-500 text-sm max-w-sm">
+                        A leading global forex and CFD broker, providing institutional-grade trading services since 2026.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><a href="./about.html" class="hover:text-gold-400 transition-colors">About Us</a></li>
+                        <li><a href="./regulations.html" class="hover:text-gold-400 transition-colors">Regulation</a></li>
+                        <li><a href="./carrers.html" class="hover:text-gold-400 transition-colors">Careers</a></li>
+                        <li><a href="./contact.html" class="hover:text-gold-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><a href="./privacy policy.html" class="hover:text-gold-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="./tos.html" class="hover:text-gold-400 transition-colors">Terms of Service</a></li>
+                        <li><a href="./Cookie Policy.html" class="hover:text-gold-400 transition-colors">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-8 text-center text-slate-600 text-sm">
+                <p>&copy; 2026 Goldenice International Ltd. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Models ---
+        
+        const pressReleases = [
+            {
+                id: 1,
+                date: '2024-03-15',
+                year: '2026',
+                title: 'Goldenice International Reports Record Trading Volume in Q1 2024',
+                excerpt: 'Company announces $2.8 billion in daily average trading volume, marking a 15% increase year-over-year driven by expansion in APAC markets.',
+                category: 'Financial',
+                featured: true
+            },
+            {
+                id: 2,
+                date: '2024-02-28',
+                year: '2026',
+                title: 'Goldenice Expands Regulatory Portfolio with Dubai DFSA License',
+                excerpt: 'Strategic licensing in Dubai International Financial Centre strengthens Middle East presence and regulatory framework.',
+                category: 'Regulation',
+                featured: false
+            },
+            {
+                id: 3,
+                date: '2024-01-10',
+                year: '2025',
+                title: 'New Partnership with Bloomberg Terminal Integration Announced',
+                excerpt: 'Institutional clients now benefit from seamless Bloomberg LP integration for enhanced market data and execution capabilities.',
+                category: 'Technology',
+                featured: false
+            },
+            {
+                id: 4,
+                date: '2023-11-20',
+                year: '2025',
+                title: 'Goldenice International Wins "Best Forex Broker Europe 2023" Award',
+                excerpt: 'Prestigious industry recognition awarded at the London Finance Excellence Awards for outstanding client service and platform innovation.',
+                category: 'Awards',
+                featured: true
+            },
+            {
+                id: 5,
+                date: '2023-09-05',
+                year: '2025',
+                title: 'Launch of Next-Generation Mobile Trading App',
+                excerpt: 'Revolutionary mobile experience introduces AI-powered trading insights and biometric security features.',
+                category: 'Product',
+                featured: false
+            },
+            {
+                id: 6,
+                date: '2023-06-12',
+                year: '2026',
+                title: 'Appointment of New Chief Technology Officer',
+                excerpt: 'Industry veteran Sarah Chen joins executive team to lead digital transformation and infrastructure scaling initiatives.',
+                category: 'Executive',
+                featured: false
+            }
+        ];
+
+        const timelineEvents = [
+            { year: '2020', title: 'Foundation', desc: 'Goldenice International founded in London with FCA authorization', icon: 'fa-building' },
+            { year: '2021', title: 'Global Expansion', desc: 'Opened offices in Sydney and Singapore to serve APAC markets', icon: 'fa-globe' },
+            { year: '2022', title: 'Platform Launch', desc: 'Released proprietary Goldenice Terminal trading platform', icon: 'fa-rocket' },
+            { year: '2023', title: 'Institutional Services', desc: 'Launched prime brokerage and liquidity solutions for hedge funds', icon: 'fa-landmark' },
+            { year: '2024', title: 'Digital Assets', desc: 'Introduced cryptocurrency CFD trading to retail and institutional clients', icon: 'fa-bitcoin' },
+            { year: '2026', title: 'Record Growth', desc: 'Achieved $2.8B daily volume and expanded to Middle East markets', icon: 'fa-chart-line' }
+        ];
+
+        const mediaCoverage = [
+            {
+                outlet: 'Financial Times',
+                title: 'Goldenice International: Redefining Retail Forex Standards',
+                date: 'March 2025',
+                image: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&auto=format&fit=crop&q=60',
+                link: '#'
+            },
+            {
+                outlet: 'Bloomberg',
+                title: 'Brokerage Sector Sees Consolidation, Goldenice Expands',
+                date: 'January 2025',
+                image: 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800&auto=format&fit=crop&q=60',
+                link: '#'
+            },
+            {
+                outlet: 'Reuters',
+                title: 'Technology Investment Pays Off for Mid-Tier Brokers',
+                date: 'November 2026',
+                image: 'https://images.unsplash.com/photo-1611974765270-ca1258634369?w=800&auto=format&fit=crop&q=60',
+                link: '#'
+            }
+        ];
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPressReleases(pressReleases);
+            renderTimeline();
+            renderMediaCoverage();
+            setupEventListeners();
+        });
+
+        // --- Press Releases ---
+        function renderPressReleases(data) {
+            const container = document.getElementById('pressReleases');
+            container.innerHTML = '';
+            
+            if (data.length === 0) {
+                container.innerHTML = '<div class="text-center py-12 text-slate-500">No press releases found matching your criteria.</div>';
+                return;
+            }
+            
+            data.forEach((release, index) => {
+                const date = new Date(release.date);
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                
+                const div = document.createElement('div');
+                div.className = `press-card glass-panel rounded-xl p-6 border ${release.featured ? 'border-gold-500/30 bg-gold-500/5' : 'border-slate-700'}`;
+                div.innerHTML = `
+                    <div class="flex flex-col md:flex-row md:items-center gap-4">
+                        <div class="md:w-32 flex-shrink-0">
+                            <div class="text-gold-400 font-bold text-sm uppercase tracking-wider">${formattedDate}</div>
+                            <div class="text-slate-500 text-xs mt-1">${release.category}</div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-white mb-2 hover:text-gold-400 transition-colors cursor-pointer">
+                                ${release.title}
+                            </h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">${release.excerpt}</p>
+                        </div>
+                        <div class="md:w-32 flex-shrink-0 text-right">
+                            <a href="#" class="inline-flex items-center gap-2 text-gold-400 hover:text-gold-300 text-sm font-medium transition-colors">
+                                Read More <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function setupEventListeners() {
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            const yearFilter = document.getElementById('yearFilter');
+            
+            function filterReleases() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const year = yearFilter.value;
+                
+                const filtered = pressReleases.filter(release => {
+                    const matchesSearch = release.title.toLowerCase().includes(searchTerm) || 
+                                         release.excerpt.toLowerCase().includes(searchTerm);
+                    const matchesYear = year === 'all' || release.year === year;
+                    
+                    return matchesSearch && matchesYear;
+                });
+                
+                renderPressReleases(filtered);
+            }
+            
+            searchInput.addEventListener('input', filterReleases);
+            yearFilter.addEventListener('change', filterReleases);
+            
+            // Load more button
+            document.getElementById('loadMoreBtn').addEventListener('click', function() {
+                this.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading...';
+                setTimeout(() => {
+                    // Simulate loading more
+                    this.innerHTML = 'No More Releases';
+                    this.disabled = true;
+                    this.classList.add('opacity-50', 'cursor-not-allowed');
+                }, 1000);
+            });
+            
+            // Form submission
+            document.getElementById('pressForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const btn = this.querySelector('button[type="submit"]');
+                const originalText = btn.innerText;
+                
+                btn.innerHTML = '<i class="fa-solid fa-check mr-2"></i>Submitted Successfully';
+                btn.classList.remove('bg-gold-600', 'hover:bg-gold-500');
+                btn.classList.add('bg-green-600', 'hover:bg-green-500');
+                
+                setTimeout(() => {
+                    this.reset();
+                    btn.innerText = originalText;
+                    btn.classList.add('bg-gold-600', 'hover:bg-gold-500');
+                    btn.classList.remove('bg-green-600', 'hover:bg-green-500');
+                }, 3000);
+            });
+        }
+
+        // --- Timeline ---
+        function renderTimeline() {
+            const container = document.getElementById('timelineContainer');
+            
+            timelineEvents.forEach((event, index) => {
+                const isLeft = index % 2 === 0;
+                
+                const div = document.createElement('div');
+                div.className = `relative flex items-center justify-between md:justify-normal mb-12 ${isLeft ? 'md:flex-row-reverse' : ''}`;
+                
+                div.innerHTML = `
+                    <div class="hidden md:block w-5/12"></div>
+                    
+                    <div class="timeline-dot top-6"></div>
+                    
+                    <div class="w-full md:w-5/12 ${isLeft ? 'md:text-right md:pr-8' : 'md:pl-8'} pl-12 md:pl-0">
+                        <div class="glass-panel rounded-xl p-6 border border-slate-700 hover:border-gold-500/30 transition-colors">
+                            <div class="flex items-center gap-3 mb-3 ${isLeft ? 'md:justify-end' : ''}">
+                                <div class="w-10 h-10 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400">
+                                    <i class="fa-solid ${event.icon}"></i>
+                                </div>
+                                <span class="text-2xl font-bold text-gold-400">${event.year}</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-2">${event.title}</h4>
+                            <p class="text-slate-400 text-sm">${event.desc}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // --- Media Coverage ---
+        function renderMediaCoverage() {
+            const container = document.getElementById('mediaCoverage');
+            
+            mediaCoverage.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'glass-panel rounded-xl overflow-hidden border border-slate-700 group';
+                div.innerHTML = `
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-midnight-900/80 backdrop-blur-sm px-3 py-1 rounded text-gold-400 text-xs font-bold">
+                            ${item.outlet}
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-xs text-slate-500 mb-2">${item.date}</p>
+                        <h4 class="text-lg font-bold text-white mb-4 leading-tight group-hover:text-gold-400 transition-colors">
+                            ${item.title}
+                        </h4>
+                        <a href="${item.link}" target="_blank" class="inline-flex items-center gap-2 text-gold-400 hover:text-gold-300 text-sm font-medium transition-colors">
+                            Read Article <i class="fa-solid fa-external-link-alt text-xs"></i>
+                        </a>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+    </script>
+</body>
+</html>

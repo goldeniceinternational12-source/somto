@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - Trading History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --profit-green: #10B981;
+            --loss-red: #EF4444;
+            --deep-navy: #0A1628;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(212, 175, 55, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0A1628 0%, #0f2130 50%, #0d1b2a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px -12px rgba(212, 175, 55, 0.15);
+        }
+
+        .text-gold-gradient {
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-light) 50%, var(--gold-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* Trade Type Badges */
+        .badge-buy {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--profit-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-sell {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--loss-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* P&L Colors */
+        .profit { color: var(--profit-green); }
+        .loss { color: var(--loss-red); }
+
+        /* Table Styling */
+        .trade-table th {
+            background: rgba(255, 255, 255, 0.03);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            color: #9CA3AF;
+        }
+
+        .trade-table tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.2s;
+        }
+
+        .trade-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 4px;
+        }
+
+        /* Filter Chips */
+        .filter-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #9CA3AF;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-chip:hover, .filter-chip.active {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        /* Metric Cards */
+        .metric-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-dark));
+        }
+
+        /* Progress Ring */
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s ease-in-out;
+        }
+
+        /* Tooltip */
+        .custom-tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--gold-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+
+        /* Export Button */
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+            color: var(--deep-navy);
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Win Rate Bar */
+        .win-rate-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .win-rate-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Trade Detail Modal */
+        .modal-backdrop {
+            background: rgba(10, 22, 40, 0.95);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Date Range Picker */
+        .date-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+        .date-input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+        }
+
+        /* Pagination */
+        .page-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #9CA3AF;
+            transition: all 0.3s;
+        }
+        .page-btn:hover, .page-btn.active {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--gold-primary);
+        }
+
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-grid"></div>
+
+    <!-- Header -->
+    <header class="relative z-10 border-b border-white/10 bg-[#0A1628]/80 backdrop-blur-md sticky top-0">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-lg shadow-yellow-500/20">
+                    <i class="fas fa-chart-line text-[#0A1628] text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-display text-2xl font-bold text-gold-gradient">GOLDENICE</h1>
+                    <p class="text-xs text-gray-400 tracking-[0.2em] uppercase">Trading History</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="hidden md:block text-right">
+                    <div class="text-xs text-gray-500">Account ID</div>
+                    <div class="text-sm font-mono text-yellow-400">GI-2024-8847563</div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 border border-yellow-500/30 flex items-center justify-center">
+                    <i class="fas fa-user text-yellow-400"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-7xl mx-auto px-6 py-8">
+
+        <!-- Portfolio Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="metric-card glass-panel p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-gray-400 text-sm mb-1">Total Balance</p>
+                        <h3 class="text-3xl font-bold text-white font-mono">€284,592.40</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center text-yellow-400">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 text-sm">
+                    <i class="fas fa-arrow-up text-green-400"></i>
+                    <span class="text-green-400 font-medium">+12.4%</span>
+                    <span class="text-gray-500">vs last month</span>
+                </div>
+            </div>
+
+            <div class="metric-card glass-panel p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-gray-400 text-sm mb-1">Total P&L</p>
+                        <h3 class="text-3xl font-bold text-green-400 font-mono">+€42,184.20</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-400">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 text-sm">
+                    <span class="text-gray-400">Realized:</span>
+                    <span class="text-green-400 font-mono">€38,290.50</span>
+                </div>
+            </div>
+
+            <div class="metric-card glass-panel p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-gray-400 text-sm mb-1">Win Rate</p>
+                        <h3 class="text-3xl font-bold text-white font-mono">68.5%</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                </div>
+                <div class="win-rate-bar">
+                    <div class="win-rate-fill bg-gradient-to-r from-yellow-400 to-yellow-600" style="width: 68.5%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-500 mt-2">
+                    <span>137 Wins</span>
+                    <span>63 Losses</span>
+                </div>
+            </div>
+
+            <div class="metric-card glass-panel p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-gray-400 text-sm mb-1">Total Trades</p>
+                        <h3 class="text-3xl font-bold text-white font-mono">200</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 text-sm">
+                    <span class="text-gray-400">This Month:</span>
+                    <span class="text-white font-mono">24 trades</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="lg:col-span-2 glass-panel p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-display text-xl font-semibold text-gold-gradient">P&L Performance</h3>
+                    <div class="flex gap-2">
+                        <button onclick="updateChart('1M')" class="filter-chip active" data-period="1M">1M</button>
+                        <button onclick="updateChart('3M')" class="filter-chip" data-period="3M">3M</button>
+                        <button onclick="updateChart('6M')" class="filter-chip" data-period="6M">6M</button>
+                        <button onclick="updateChart('1Y')" class="filter-chip" data-period="1Y">1Y</button>
+                        <button onclick="updateChart('ALL')" class="filter-chip" data-period="ALL">ALL</button>
+                    </div>
+                </div>
+                <div class="h-80">
+                    <canvas id="pnlChart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6">
+                <h3 class="font-display text-xl font-semibold text-gold-gradient mb-6">Asset Allocation</h3>
+                <div class="h-64 mb-4">
+                    <canvas id="allocationChart"></canvas>
+                </div>
+                <div class="space-y-3" id="allocation-legend">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Trading Activity -->
+        <div class="glass-panel p-6 mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                <div>
+                    <h3 class="font-display text-xl font-semibold text-gold-gradient">Trade History</h3>
+                    <p class="text-sm text-gray-400 mt-1">Complete record of your trading activity</p>
+                </div>
+                
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2 bg-white/5 rounded-lg p-1">
+                        <input type="date" class="date-input bg-transparent" value="2024-01-01">
+                        <span class="text-gray-500">to</span>
+                        <input type="date" class="date-input bg-transparent" value="2024-12-31">
+                    </div>
+                    
+                    <select class="date-input" onchange="filterTrades(this.value)">
+                        <option value="all">All Instruments</option>
+                        <option value="forex">Forex</option>
+                        <option value="crypto">Crypto</option>
+                        <option value="commodities">Commodities</option>
+                        <option value="indices">Indices</option>
+                    </select>
+
+                    <button onclick="exportTrades()" class="btn-gold px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button onclick="filterType('all')" class="filter-chip active" data-filter="all">All Trades</button>
+                <button onclick="filterType('buy')" class="filter-chip" data-filter="buy">Buy Only</button>
+                <button onclick="filterType('sell')" class="filter-chip" data-filter="sell">Sell Only</button>
+                <button onclick="filterType('profit')" class="filter-chip" data-filter="profit">Profitable</button>
+                <button onclick="filterType('loss')" class="filter-chip" data-filter="loss">Loss Making</button>
+            </div>
+
+            <!-- Trades Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full trade-table text-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-left p-4 rounded-tl-lg">Date/Time</th>
+                            <th class="text-left p-4">Instrument</th>
+                            <th class="text-left p-4">Type</th>
+                            <th class="text-right p-4">Entry Price</th>
+                            <th class="text-right p-4">Exit Price</th>
+                            <th class="text-right p-4">Size</th>
+                            <th class="text-right p-4">P&L</th>
+                            <th class="text-right p-4">Status</th>
+                            <th class="text-center p-4 rounded-tr-lg">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trades-tbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex justify-between items-center mt-6 pt-6 border-t border-white/10">
+                <div class="text-sm text-gray-400">
+                    Showing <span class="text-white" id="showing-start">1</span> - <span class="text-white" id="showing-end">10</span> of <span class="text-white" id="total-trades">200</span> trades
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="changePage(-1)" class="page-btn" id="prev-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn" onclick="changePage(1)">2</button>
+                    <button class="page-btn" onclick="changePage(2)">3</button>
+                    <button class="page-btn" onclick="changePage(1)" id="next-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="glass-panel p-6 text-center">
+                <div class="text-3xl font-bold text-green-400 font-mono mb-2">€1,847.32</div>
+                <div class="text-sm text-gray-400 mb-1">Best Trade</div>
+                <div class="text-xs text-yellow-500">EUR/USD - Mar 15</div>
+            </div>
+            <div class="glass-panel p-6 text-center">
+                <div class="text-3xl font-bold text-red-400 font-mono mb-2">-€432.18</div>
+                <div class="text-sm text-gray-400 mb-1">Worst Trade</div>
+                <div class="text-xs text-yellow-500">GBP/JPY - Feb 28</div>
+            </div>
+            <div class="glass-panel p-6 text-center">
+                <div class="text-3xl font-bold text-white font-mono mb-2">2.4</div>
+                <div class="text-sm text-gray-400 mb-1">Avg R:R Ratio</div>
+                <div class="text-xs text-green-400">Above target 2.0</div>
+            </div>
+            <div class="glass-panel p-6 text-center">
+                <div class="text-3xl font-bold text-white font-mono mb-2">18h 42m</div>
+                <div class="text-sm text-gray-400 mb-1">Avg Hold Time</div>
+                <div class="text-xs text-gray-500">Swing trading</div>
+            </div>
+        </div>
+
+        <!-- Monthly Breakdown -->
+        <div class="glass-panel p-6">
+            <h3 class="font-display text-xl font-semibold text-gold-gradient mb-6">Monthly Performance</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-left border-b border-white/10 text-gray-400">
+                            <th class="pb-3">Month</th>
+                            <th class="pb-3 text-right">Trades</th>
+                            <th class="pb-3 text-right">Win Rate</th>
+                            <th class="pb-3 text-right">Gross P&L</th>
+                            <th class="pb-3 text-right">Fees</th>
+                            <th class="pb-3 text-right">Net P&L</th>
+                            <th class="pb-3 text-center">Chart</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monthly-tbody" class="text-gray-300">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Trade Detail Modal -->
+    <div id="trade-modal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-2xl p-6 transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="font-display text-xl font-semibold text-gold-gradient">Trade Details</h3>
+                    <p class="text-sm text-gray-400 font-mono mt-1" id="modal-trade-id">TRX-2026-0892</p>
+                </div>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="text-xs text-gray-500 uppercase tracking-wider">Instrument</label>
+                    <div class="text-lg font-semibold text-white mt-1" id="modal-instrument">EUR/USD</div>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 uppercase tracking-wider">Type</label>
+                    <div class="mt-1" id="modal-type"><span class="badge-buy px-3 py-1 rounded-full text-sm font-medium">BUY</span></div>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 uppercase tracking-wider">Entry Price</label>
+                    <div class="text-lg font-mono text-white mt-1" id="modal-entry">1.08450</div>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 uppercase tracking-wider">Exit Price</label>
+                    <div class="text-lg font-mono text-white mt-1" id="modal-exit">1.09230</div>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 uppercase tracking-wider">Position Size</label>
+                    <div class="text-lg font-mono text-white mt-1" id="modal-size">1.5 lots</div>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 uppercase tracking-wider">Duration</label>
+                    <div class="text-lg font-mono text-white mt-1" id="modal-duration">14h 23m</div>
+                </div>
+            </div>
+
+            <div class="bg-white/5 rounded-lg p-4 mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Gross P&L</span>
+                    <span class="text-lg font-mono text-white" id="modal-gross">+€1,170.00</span>
+                </div>
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">Spread & Commission</span>
+                    <span class="text-lg font-mono text-red-400" id="modal-fees">-€24.50</span>
+                </div>
+                <div class="border-t border-white/10 pt-2 flex justify-between items-center">
+                    <span class="font-semibold text-white">Net P&L</span>
+                    <span class="text-2xl font-bold font-mono text-green-400" id="modal-net">+€1,145.50</span>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button class="flex-1 py-3 rounded-lg border border-white/20 text-gray-300 hover:bg-white/5 transition-colors">
+                    <i class="fas fa-file-alt mr-2"></i>View Statement
+                </button>
+                <button class="flex-1 py-3 rounded-lg border border-white/20 text-gray-300 hover:bg-white/5 transition-colors">
+                    <i class="fas fa-chart-bar mr-2"></i>Similar Trades
+                </button>
+                <button class="flex-1 btn-gold py-3 rounded-lg">
+                    <i class="fas fa-redo mr-2"></i>Replicate Trade
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 glass-panel p-4 transform translate-y-20 opacity-0 transition-all duration-300 z-50 max-w-sm border-l-4 border-green-500">
+        <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-check text-green-400"></i>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white text-sm mb-1" id="toast-title">Success</h4>
+                <p class="text-xs text-gray-400" id="toast-message">Operation completed successfully</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Trading Data
+        let trades = [
+            { id: 'TRX-2024-0200', date: '2024-03-27 14:32:05', instrument: 'EUR/USD', type: 'buy', entry: 1.08450, exit: 1.09230, size: 1.5, pnl: 1145.50, status: 'closed', asset: 'forex' },
+            { id: 'TRX-2024-0199', date: '2024-03-26 09:15:33', instrument: 'GBP/USD', type: 'sell', entry: 1.26400, exit: 1.25800, size: 2.0, pnl: 1200.00, status: 'closed', asset: 'forex' },
+            { id: 'TRX-2024-0198', date: '2024-03-25 16:45:12', instrument: 'XAU/USD', type: 'buy', entry: 2180.50, exit: 2195.20, size: 0.5, pnl: 735.00, status: 'closed', asset: 'commodities' },
+            { id: 'TRX-2024-0197', date: '2024-03-24 11:20:08', instrument: 'USD/JPY', type: 'sell', entry: 151.200, exit: 150.850, size: 1.0, pnl: -350.00, status: 'closed', asset: 'forex' },
+            { id: 'TRX-2024-0196', date: '2024-03-23 08:30:15', instrument: 'BTC/USD', type: 'buy', entry: 67250.00, exit: 68500.00, size: 0.1, pnl: 1250.00, status: 'closed', asset: 'crypto' },
+            { id: 'TRX-2024-0195', date: '2024-03-22 13:10:22', instrument: 'EUR/GBP', type: 'buy', entry: 0.85600, exit: 0.85450, size: 1.0, pnl: -150.00, status: 'closed', asset: 'forex' },
+            { id: 'TRX-2024-0194', date: '2024-03-21 10:05:45', instrument: 'SPX500', type: 'sell', entry: 5240.00, exit: 5180.00, size: 0.2, pnl: 1200.00, status: 'closed', asset: 'indices' },
+            { id: 'TRX-2024-0193', date: '2024-03-20 15:30:18', instrument: 'AUD/USD', type: 'buy', entry: 0.65400, exit: 0.65800, size: 1.5, pnl: 600.00, status: 'closed', asset: 'forex' },
+            { id: 'TRX-2024-0192', date: '2024-03-19 09:45:30', instrument: 'ETH/USD', type: 'sell', entry: 3520.00, exit: 3480.00, size: 0.5, pnl: 200.00, status: 'closed', asset: 'crypto' },
+            { id: 'TRX-2024-0191', date: '2024-03-18 14:20:12', instrument: 'USD/CHF', type: 'buy', entry: 0.88400, exit: 0.88900, size: 1.0, pnl: 500.00, status: 'closed', asset: 'forex' }
+        ];
+
+        let currentPage = 1;
+        let currentFilter = 'all';
+        let currentType = 'all';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            renderTrades();
+            renderMonthlyBreakdown();
+            renderAllocationLegend();
+        });
+
+        // Charts
+        function initCharts() {
+            // P&L Chart
+            const ctx1 = document.getElementById('pnlChart').getContext('2d');
+            window.pnlChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Cumulative P&L (€)',
+                        data: [2500, 4200, 8900, 12400, 15800, 22100, 28400, 31200, 35600, 39800, 42184, 42184],
+                        borderColor: '#D4AF37',
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#D4AF37',
+                        pointBorderColor: '#0A1628',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(10, 22, 40, 0.9)',
+                            titleColor: '#D4AF37',
+                            bodyColor: '#fff',
+                            borderColor: '#D4AF37',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'P&L: €' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#6B7280' }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { 
+                                color: '#6B7280',
+                                callback: function(value) {
+                                    return '€' + value/1000 + 'k';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Allocation Chart
+            const ctx2 = document.getElementById('allocationChart').getContext('2d');
+            window.allocationChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Forex', 'Crypto', 'Commodities', 'Indices'],
+                    datasets: [{
+                        data: [45, 25, 20, 10],
+                        backgroundColor: [
+                            'rgba(212, 175, 55, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(139, 92, 246, 0.8)'
+                        ],
+                        borderColor: [
+                            '#D4AF37',
+                            '#3B82F6',
+                            '#10B981',
+                            '#8B5CF6'
+                        ],
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(10, 22, 40, 0.9)',
+                            borderColor: '#D4AF37',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderAllocationLegend() {
+            const data = [
+                { label: 'Forex', value: 45, color: '#D4AF37', pnl: '+€18,982' },
+                { label: 'Crypto', value: 25, color: '#3B82F6', pnl: '+€10,546' },
+                { label: 'Commodities', value: 20, color: '#10B981', pnl: '+€8,437' },
+                { label: 'Indices', value: 10, color: '#8B5CF6', pnl: '+€4,219' }
+            ];
+
+            document.getElementById('allocation-legend').innerHTML = data.map(item => `
+                <div class="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full" style="background-color: ${item.color}"></div>
+                        <span class="text-sm text-white">${item.label}</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm font-medium text-white">${item.value}%</div>
+                        <div class="text-xs text-green-400">${item.pnl}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateChart(period) {
+            // Update active button
+            document.querySelectorAll('[data-period]').forEach(btn => {
+                if (btn.dataset.period === period) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Simulate data update
+            const newData = period === '1M' ? 
+                [40000, 40500, 41200, 41800, 42184] :
+                period === '3M' ?
+                [38000, 39500, 42184] :
+                [2500, 4200, 8900, 12400, 15800, 22100, 28400, 31200, 35600, 39800, 42184, 42184];
+
+            const newLabels = period === '1M' ?
+                ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Current'] :
+                period === '3M' ?
+                ['Jan', 'Feb', 'Mar'] :
+                ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            window.pnlChart.data.labels = newLabels;
+            window.pnlChart.data.datasets[0].data = newData;
+            window.pnlChart.update();
+
+            showToast('Chart Updated', `Showing data for ${period} period`);
+        }
+
+        // Render Trades Table
+        function renderTrades() {
+            const tbody = document.getElementById('trades-tbody');
+            let filtered = trades;
+
+            if (currentFilter !== 'all') {
+                filtered = trades.filter(t => t.asset === currentFilter);
+            }
+            if (currentType !== 'all') {
+                if (currentType === 'buy') filtered = filtered.filter(t => t.type === 'buy');
+                else if (currentType === 'sell') filtered = filtered.filter(t => t.type === 'sell');
+                else if (currentType === 'profit') filtered = filtered.filter(t => t.pnl > 0);
+                else if (currentType === 'loss') filtered = filtered.filter(t => t.pnl < 0);
+            }
+
+            const start = (currentPage - 1) * 10;
+            const end = Math.min(start + 10, filtered.length);
+            const pageTrades = filtered.slice(start, end);
+
+            document.getElementById('showing-start').textContent = start + 1;
+            document.getElementById('showing-end').textContent = end;
+            document.getElementById('total-trades').textContent = filtered.length;
+
+            tbody.innerHTML = pageTrades.map(trade => {
+                const pnlClass = trade.pnl >= 0 ? 'profit' : 'loss';
+                const pnlSign = trade.pnl >= 0 ? '+' : '';
+                const typeBadge = trade.type === 'buy' ? 
+                    '<span class="badge-buy px-2 py-1 rounded text-xs font-medium uppercase">Buy</span>' : 
+                    '<span class="badge-sell px-2 py-1 rounded text-xs font-medium uppercase">Sell</span>';
+
+                return `
+                    <tr class="cursor-pointer" onclick="showTradeDetail('${trade.id}')">
+                        <td class="p-4">
+                            <div class="text-white">${trade.date.split(' ')[0]}</div>
+                            <div class="text-xs text-gray-500 font-mono">${trade.date.split(' ')[1]}</div>
+                        </td>
+                        <td class="p-4">
+                            <div class="font-semibold text-white">${trade.instrument}</div>
+                            <div class="text-xs text-gray-500">${trade.asset}</div>
+                        </td>
+                        <td class="p-4">${typeBadge}</td>
+                        <td class="p-4 text-right font-mono text-gray-300">${trade.entry.toFixed(5)}</td>
+                        <td class="p-4 text-right font-mono text-gray-300">${trade.exit.toFixed(5)}</td>
+                        <td class="p-4 text-right font-mono text-white">${trade.size} lots</td>
+                        <td class="p-4 text-right font-mono font-bold ${pnlClass}">
+                            ${pnlSign}€${trade.pnl.toFixed(2)}
+                        </td>
+                        <td class="p-4 text-right">
+                            <span class="px-2 py-1 rounded-full bg-green-500/10 text-green-400 text-xs border border-green-500/20">
+                                ${trade.status}
+                            </span>
+                        </td>
+                        <td class="p-4 text-center">
+                            <button class="text-gray-400 hover:text-yellow-400 transition-colors" onclick="event.stopPropagation(); showTradeDetail('${trade.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterTrades(asset) {
+            currentFilter = asset;
+            currentPage = 1;
+            renderTrades();
+        }
+
+        function filterType(type) {
+            currentType = type;
+            currentPage = 1;
+            
+            // Update UI
+            document.querySelectorAll('[data-filter]').forEach(btn => {
+                if (btn.dataset.filter === type) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            renderTrades();
+        }
+
+        function changePage(direction) {
+            const maxPage = Math.ceil(trades.length / 10);
+            const newPage = currentPage + direction;
+            
+            if (newPage >= 1 && newPage <= maxPage) {
+                currentPage = newPage;
+                renderTrades();
+                
+                // Update pagination buttons
+                document.querySelectorAll('.page-btn').forEach((btn, idx) => {
+                    if (idx > 0 && idx < 4) {
+                        btn.textContent = newPage + idx - 1;
+                        btn.classList.toggle('active', idx === 1);
+                    }
+                });
+            }
+        }
+
+        // Monthly Breakdown
+        function renderMonthlyBreakdown() {
+            const months = [
+                { month: 'March 2025', trades: 24, winRate: 70, gross: 5240, fees: 180, net: 5060 },
+                { month: 'February 2025', trades: 31, winRate: 65, gross: 4890, fees: 220, net: 4670 },
+                { month: 'January 2025', trades: 28, winRate: 72, gross: 6120, fees: 195, net: 5925 },
+                { month: 'December 2024', trades: 35, winRate: 68, gross: 4580, fees: 240, net: 4340 },
+                { month: 'November 2024', trades: 22, winRate: 64, gross: 3210, fees: 150, net: 3060 },
+                { month: 'October 2024', trades: 29, winRate: 69, gross: 3890, fees: 205, net: 3685 }
+            ];
+
+            document.getElementById('monthly-tbody').innerHTML = months.map(m => {
+                const winColor = m.winRate >= 65 ? 'text-green-400' : 'text-yellow-400';
+                return `
+                    <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                        <td class="py-4 font-medium text-white">${m.month}</td>
+                        <td class="py-4 text-right font-mono">${m.trades}</td>
+                        <td class="py-4 text-right font-mono ${winColor}">${m.winRate}%</td>
+                        <td class="py-4 text-right font-mono text-green-400">+€${m.gross.toLocaleString()}</td>
+                        <td class="py-4 text-right font-mono text-red-400">-€${m.fees}</td>
+                        <td class="py-4 text-right font-mono font-bold text-white">+€${m.net.toLocaleString()}</td>
+                        <td class="py-4 text-center">
+                            <div class="w-24 h-8 mx-auto bg-white/5 rounded overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-yellow-400 to-yellow-600" style="width: ${m.winRate}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Trade Detail Modal
+        function showTradeDetail(tradeId) {
+            const trade = trades.find(t => t.id === tradeId);
+            if (!trade) return;
+
+            document.getElementById('modal-trade-id').textContent = trade.id;
+            document.getElementById('modal-instrument').textContent = trade.instrument;
+            document.getElementById('modal-type').innerHTML = trade.type === 'buy' ? 
+                '<span class="badge-buy px-3 py-1 rounded-full text-sm font-medium">BUY</span>' : 
+                '<span class="badge-sell px-3 py-1 rounded-full text-sm font-medium">SELL</span>';
+            document.getElementById('modal-entry').textContent = trade.entry.toFixed(5);
+            document.getElementById('modal-exit').textContent = trade.exit.toFixed(5);
+            document.getElementById('modal-size').textContent = trade.size + ' lots';
+            
+            const pnlClass = trade.pnl >= 0 ? 'text-green-400' : 'text-red-400';
+            const pnlSign = trade.pnl >= 0 ? '+' : '';
+            
+            document.getElementById('modal-gross').textContent = pnlSign + '€' + (trade.pnl + 24.5).toFixed(2);
+            document.getElementById('modal-net').className = 'text-2xl font-bold font-mono ' + pnlClass;
+            document.getElementById('modal-net').textContent = pnlSign + '€' + trade.pnl.toFixed(2);
+
+            const modal = document.getElementById('trade-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('trade-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function exportTrades() {
+            showToast('Export Started', 'Your trading history is being prepared for download');
+            
+            setTimeout(() => {
+                const csvContent = "data:text/csv;charset=utf-8," 
+                    + "Trade ID,Date,Instrument,Type,Entry,Exit,Size,P&L,Status\n"
+                    + trades.map(t => `${t.id},${t.date},${t.instrument},${t.type},${t.entry},${t.exit},${t.size},${t.pnl},${t.status}`).join("\n");
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "goldenice_trading_history.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showToast('Download Complete', 'Trading history exported successfully');
+            }, 1500);
+        }
+
+        // Toast
+        function showToast(title, message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-message').textContent = message;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('trade-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+    </script>
+</body>
+</html>

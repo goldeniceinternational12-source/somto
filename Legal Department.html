@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Department | Goldenice International</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E8C1;
+            --gold-dark: #AA8C2C;
+            --ice-blue: #E8F4F8;
+            --deep-navy: #0A1628;
+            --navy-secondary: #1E3A5F;
+            --text-primary: #1A1A1A;
+            --text-secondary: #6B7280;
+            --white: #FFFFFF;
+            --danger: #DC2626;
+            --success: #059669;
+            --warning: #D97706;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--deep-navy) 0%, var(--navy-secondary) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.03) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(10, 22, 40, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--deep-navy);
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .logo-text h1 {
+            font-family: 'Crimson Text', serif;
+            color: var(--gold-primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-text span {
+            color: var(--ice-blue);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--ice-blue);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--gold-primary);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--gold-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: scale(1.1);
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--deep-navy);
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            height: fit-content;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: linear-gradient(135deg, var(--gold-light), rgba(212, 175, 55, 0.1));
+            color: var(--gold-dark);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu a.active {
+            border-left: 3px solid var(--gold-primary);
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-dark));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.blue { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+        .stat-icon.gold { background: rgba(212, 175, 55, 0.1); color: var(--gold-dark); }
+        .stat-icon.green { background: rgba(5, 150, 105, 0.1); color: var(--success); }
+        .stat-icon.red { background: rgba(220, 38, 38, 0.1); color: var(--danger); }
+
+        .stat-trend {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--success);
+        }
+
+        .trend-down {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--danger);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Content Area */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Dashboard Panel */
+        .panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.5rem;
+            color: var(--deep-navy);
+            font-weight: 700;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: var(--deep-navy);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--text-secondary);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-dark);
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.875rem 1.25rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .filter-btn {
+            padding: 0.875rem 1.25rem;
+            background: var(--white);
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-dark);
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #F3F4F6;
+            font-size: 0.9rem;
+        }
+
+        tr {
+            transition: all 0.3s ease;
+        }
+
+        tr:hover {
+            background: rgba(212, 175, 55, 0.03);
+        }
+
+        .case-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .case-id {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-active {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+
+        .status-pending {
+            background: rgba(217, 119, 6, 0.1);
+            color: var(--warning);
+        }
+
+        .status-closed {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--success);
+        }
+
+        .status-urgent {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--danger);
+            animation: urgent-pulse 2s infinite;
+        }
+
+        @keyframes urgent-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .priority-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .priority-high { background: var(--danger); }
+        .priority-medium { background: var(--warning); }
+        .priority-low { background: var(--success); }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Calendar Widget */
+        .calendar-widget {
+            background: linear-gradient(135deg, var(--deep-navy), var(--navy-secondary));
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .calendar-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.25rem;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .calendar-nav button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav button:hover {
+            background: rgba(212, 175, 55, 0.3);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .calendar-day-header {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0.5rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .calendar-day.active {
+            background: var(--gold-primary);
+            color: var(--deep-navy);
+            font-weight: 600;
+        }
+
+        .calendar-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            width: 4px;
+            height: 4px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+        }
+
+        /* Upcoming Events */
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .event-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border-left: 3px solid var(--gold-primary);
+            transition: all 0.3s ease;
+        }
+
+        .event-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .event-time {
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .event-time .day {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+        }
+
+        .event-time .month {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .event-details h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .event-details p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Document Cards */
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .doc-card {
+            background: var(--white);
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .doc-card:hover {
+            border-color: var(--gold-primary);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .doc-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            color: var(--gold-dark);
+        }
+
+        .doc-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .doc-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 22, 40, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid #E5E7EB;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.5rem;
+            color: var(--deep-navy);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            padding: 1rem 2rem 2rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 3000;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 300px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--success);
+        }
+
+        .toast-content h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-content p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            .doc-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-menu {
+                display: none;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--gold-primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">⚖️</div>
+                <div class="logo-text">
+                    <h1>Goldenice International</h1>
+                    <span>Legal Department</span>
+                </div>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#cases">Cases</a></li>
+                    <li><a href="#contracts">Contracts</a></li>
+                    <li><a href="#compliance">Compliance</a></li>
+                    <li><a href="#resources">Resources</a></li>
+                </ul>
+            </nav>
+
+            <div class="user-section">
+                <button class="notification-btn" onclick="showNotifications()">
+                    🔔
+                    <span class="badge">3</span>
+                </button>
+                <div class="user-avatar" onclick="toggleProfile()">JD</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Main Menu</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active" onclick="setActive(this)">
+                        <span class="icon">📊</span> Dashboard
+                    </a></li>
+                    <li><a href="#" onclick="setActive(this)">
+                        <span class="icon">📁</span> Case Management
+                    </a></li>
+                    <li><a href="#" onclick="setActive(this)">
+                        <span class="icon">📝</span> Contract Review
+                    </a></li>
+                    <li><a href="#" onclick="setActive(this)">
+                        <span class="icon">⚖️</span> Litigation
+                    </a></li>
+                    <li><a href="#" onclick="setActive(this)">
+                        <span class="icon">🔒</span> IP & Patents
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Quick Access</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" onclick="setActive(this)">
+                        <span class="icon">📚</span> Legal Library
+                    </a></li>
+                    <li><a href="#" onclick="setActive(this)">
+                        <span class="icon">👥</span> External Counsel
+                    </a></li>
+                    <li><a href="#" onclick="setActive(this)">
+                        <span class="icon">📈</span> Reports
+                    </a></li>
+                    <li><a href="#" onclick="setActive(this)">
+                        <span class="icon">⚙️</span> Settings
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Department</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" onclick="setActive(this)">
+                        <span class="icon">👤</span> Team Directory
+                    </a></li>
+                    <li><a href="#" onclick="setActive(this)">
+                        <span class="icon">📋</span> Policies
+                    </a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon blue">📂</div>
+                        <span class="stat-trend trend-up">↑ 12%</span>
+                    </div>
+                    <div class="stat-value">48</div>
+                    <div class="stat-label">Active Cases</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon gold">⏳</div>
+                        <span class="stat-trend trend-down">↓ 5%</span>
+                    </div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Pending Review</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon green">✅</div>
+                        <span class="stat-trend trend-up">↑ 8%</span>
+                    </div>
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">Closed This Year</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon red">🚨</div>
+                        <span class="stat-trend trend-up">↑ 2</span>
+                    </div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Urgent Matters</div>
+                </div>
+            </div>
+
+            <!-- Cases Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Active Legal Matters</h2>
+                    <div class="panel-actions">
+                        <button class="btn btn-secondary" onclick="exportData()">
+                            <span>📥</span> Export
+                        </button>
+                        <button class="btn btn-primary" onclick="openNewCaseModal()">
+                            <span>+</span> New Case
+                        </button>
+                    </div>
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search cases, clients, or case numbers..." id="searchInput" onkeyup="searchCases()">
+                    <button class="filter-btn">🔍 Advanced Filter</button>
+                </div>
+
+                <div class="table-container">
+                    <table id="casesTable">
+                        <thead>
+                            <tr>
+                                <th>Case Details</th>
+                                <th>Client/Department</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Assigned To</th>
+                                <th>Due Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="casesTableBody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Two Column Layout -->
+            <div class="two-column">
+                <!-- Calendar Panel -->
+                <div class="calendar-widget">
+                    <div class="calendar-header">
+                        <h3 class="calendar-title">March 2026</h3>
+                        <div class="calendar-nav">
+                            <button onclick="changeMonth(-1)">←</button>
+                            <button onclick="changeMonth(1)">→</button>
+                        </div>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Generated by JavaScript -->
+                    </div>
+                    
+                    <h4 style="margin-top: 1.5rem; margin-bottom: 1rem; font-family: 'Crimson Text', serif;">Upcoming Deadlines</h4>
+                    <div class="events-list" id="eventsList">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Recent Documents -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Recent Documents</h2>
+                        <button class="btn btn-secondary">View All</button>
+                    </div>
+                    <div class="doc-grid" id="docGrid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Case Modal -->
+    <div class="modal-overlay" id="newCaseModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Legal Case</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newCaseForm">
+                    <div class="form-group">
+                        <label class="form-label">Case Title</label>
+                        <input type="text" class="form-input" placeholder="Enter case title" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Case Type</label>
+                        <select class="form-select">
+                            <option>Contract Dispute</option>
+                            <option>Intellectual Property</option>
+                            <option>Employment Law</option>
+                            <option>Regulatory Compliance</option>
+                            <option>Litigation</option>
+                            <option>Corporate Transaction</option>
+                        </select>
+                    </div>
+                    <div class="two-column" style="gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Priority</label>
+                            <select class="form-select">
+                                <option>High</option>
+                                <option>Medium</option>
+                                <option>Low</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Due Date</label>
+                            <input type="date" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" placeholder="Enter case details..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="submitNewCase()">Create Case</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // Sample Data
+        const cases = [
+            {
+                id: 'GI-2026-001',
+                title: 'Merger Agreement Review',
+                client: 'Corporate Development',
+                status: 'active',
+                priority: 'high',
+                assigned: 'Sarah Chen',
+                dueDate: '2026-04-15',
+                type: 'Corporate'
+            },
+            {
+                id: 'GI-2026-002',
+                title: 'Patent Infringement Defense',
+                client: 'Tech Division',
+                status: 'urgent',
+                priority: 'high',
+                assigned: 'Michael Ross',
+                dueDate: '2026-04-02',
+                type: 'IP'
+            },
+            {
+                id: 'GI-2026-003',
+                title: 'Employment Contract Updates',
+                client: 'Human Resources',
+                status: 'pending',
+                priority: 'medium',
+                assigned: 'Jennifer Walsh',
+                dueDate: '2026-04-20',
+                type: 'Employment'
+            },
+            {
+                id: 'GI-2026-004',
+                title: 'GDPR Compliance Audit',
+                client: 'Data Protection',
+                status: 'active',
+                priority: 'high',
+                assigned: 'David Park',
+                dueDate: '2026-05-01',
+                type: 'Compliance'
+            },
+            {
+                id: 'GI-2026-005',
+                title: 'Vendor Agreement Negotiation',
+                client: 'Procurement',
+                status: 'pending',
+                priority: 'low',
+                assigned: 'Sarah Chen',
+                dueDate: '2026-04-30',
+                type: 'Contract'
+            }
+        ];
+
+        const documents = [
+            { title: 'Merger Agreement v2.3', type: 'PDF', size: '2.4 MB', date: '2 hours ago', icon: '📄' },
+            { title: 'Patent Filing Summary', type: 'DOCX', size: '1.8 MB', date: '5 hours ago', icon: '📝' },
+            { title: 'Compliance Checklist Q1', type: 'XLSX', size: '856 KB', date: '1 day ago', icon: '📊' },
+            { title: 'Litigation Strategy 2026', type: 'PPTX', size: '4.2 MB', date: '2 days ago', icon: '🎯' },
+            { title: 'Employment Handbook', type: 'PDF', size: '3.1 MB', date: '3 days ago', icon: '📘' },
+            { title: 'IP Portfolio Review', type: 'PDF', size: '5.7 MB', date: '1 week ago', icon: '🔒' }
+        ];
+
+        const events = [
+            { day: '02', month: 'APR', title: 'Court Hearing: Case GI-2026-002', time: '09:00 AM' },
+            { day: '15', month: 'APR', title: 'Merger Closing Deadline', time: '05:00 PM' },
+            { day: '22', month: 'APR', title: 'Board Legal Review', time: '02:00 PM' }
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCases();
+            renderCalendar();
+            renderEvents();
+            renderDocuments();
+        });
+
+        // Render Cases Table
+        function renderCases(filter = '') {
+            const tbody = document.getElementById('casesTableBody');
+            tbody.innerHTML = '';
+
+            const filteredCases = cases.filter(c => 
+                c.title.toLowerCase().includes(filter.toLowerCase()) ||
+                c.client.toLowerCase().includes(filter.toLowerCase()) ||
+                c.id.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            filteredCases.forEach(caseItem => {
+                const row = document.createElement('tr');
+                const statusClass = `status-${caseItem.status}`;
+                const priorityClass = `priority-${caseItem.priority}`;
+                
+                row.innerHTML = `
+                    <td>
+                        <div class="case-title">${caseItem.title}</div>
+                        <div class="case-id">${caseItem.id}</div>
+                    </td>
+                    <td>${caseItem.client}</td>
+                    <td><span class="status-badge ${statusClass}">${caseItem.status.toUpperCase()}</span></td>
+                    <td><span class="priority-indicator ${priorityClass}"></span>${caseItem.priority.toUpperCase()}</td>
+                    <td>${caseItem.assigned}</td>
+                    <td>${formatDate(caseItem.dueDate)}</td>
+                    <td>
+                        <button class="btn btn-secondary" style="padding: 0.5rem;" onclick="viewCase('${caseItem.id}')">View</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Render Calendar
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            
+            // Headers
+            days.forEach(day => {
+                const div = document.createElement('div');
+                div.className = 'calendar-day-header';
+                div.textContent = day;
+                grid.appendChild(div);
+            });
+
+            // Days (March 2026)
+            for (let i = 1; i <= 31; i++) {
+                const div = document.createElement('div');
+                div.className = 'calendar-day';
+                div.textContent = i;
+                
+                if (i === 31) div.classList.add('active');
+                if ([2, 15, 22].includes(i)) div.classList.add('has-event');
+                
+                div.onclick = () => selectDate(i);
+                grid.appendChild(div);
+            }
+        }
+
+        // Render Events
+        function renderEvents() {
+            const container = document.getElementById('eventsList');
+            events.forEach(event => {
+                const div = document.createElement('div');
+                div.className = 'event-item';
+                div.innerHTML = `
+                    <div class="event-time">
+                        <div class="day">${event.day}</div>
+                        <div class="month">${event.month}</div>
+                    </div>
+                    <div class="event-details">
+                        <h4>${event.title}</h4>
+                        <p>${event.time}</p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Render Documents
+        function renderDocuments() {
+            const grid = document.getElementById('docGrid');
+            documents.forEach(doc => {
+                const div = document.createElement('div');
+                div.className = 'doc-card';
+                div.innerHTML = `
+                    <div class="doc-icon">${doc.icon}</div>
+                    <div class="doc-title">${doc.title}</div>
+                    <div class="doc-meta">${doc.type} • ${doc.size} • ${doc.date}</div>
+                `;
+                div.onclick = () => openDocument(doc.title);
+                grid.appendChild(div);
+            });
+        }
+
+        // Search Functionality
+        function searchCases() {
+            const input = document.getElementById('searchInput');
+            renderCases(input.value);
+        }
+
+        // Modal Functions
+        function openNewCaseModal() {
+            document.getElementById('newCaseModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('newCaseModal').classList.remove('active');
+        }
+
+        function submitNewCase() {
+            const form = document.getElementById('newCaseForm');
+            if (form.checkValidity()) {
+                showToast('Success', 'New case created successfully!');
+                closeModal();
+                form.reset();
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        // Toast Notification
+        function showToast(title, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <div class="toast-icon">✓</div>
+                <div class="toast-content">
+                    <h4>${title}</h4>
+                    <p>${message}</p>
+                </div>
+            `;
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Utility Functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function setActive(element) {
+            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function viewCase(id) {
+            showToast('Case Opened', `Viewing case ${id}`);
+        }
+
+        function openDocument(title) {
+            showToast('Document', `Opening ${title}...`);
+        }
+
+        function exportData() {
+            showToast('Export', 'Downloading report...');
+        }
+
+        function showNotifications() {
+            showToast('Notifications', 'You have 3 new notifications');
+        }
+
+        function toggleProfile() {
+            showToast('Profile', 'Opening user profile...');
+        }
+
+        function changeMonth(direction) {
+            showToast('Calendar', 'Navigating...');
+        }
+
+        function selectDate(day) {
+            document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('newCaseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                openNewCaseModal();
+            }
+        });
+    </script>
+</body>
+</html>

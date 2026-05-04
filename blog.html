@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insights & Analysis | Goldenice International</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --deep-navy: #0B1120;
+        }
+        
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--deep-navy);
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Gold Gradient Text */
+        .text-gold-gradient {
+            background: linear-gradient(to right, var(--gold-light), var(--gold-primary), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold-primary); }
+
+        /* Card Hover Effects */
+        .blog-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .blog-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(212, 175, 55, 0.15);
+        }
+        .blog-card:hover .card-image {
+            transform: scale(1.05);
+        }
+        .card-image {
+            transition: transform 0.6s ease;
+        }
+
+        /* Category Filter Active State */
+        .filter-btn.active {
+            background: var(--gold-primary);
+            color: #0f172a;
+            border-color: var(--gold-primary);
+        }
+
+        /* Reading Progress Bar */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-light));
+            z-index: 100;
+            transition: width 0.1s;
+        }
+
+        /* Modal Animation */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: all 0.3s ease-out;
+        }
+        .modal-exit {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.2s ease-in;
+        }
+
+        /* Ticker Animation */
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            white-space: nowrap;
+        }
+        .ticker {
+            display: inline-block;
+            animation: ticker 30s linear infinite;
+        }
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+        .ticker-item {
+            display: inline-block;
+            padding: 0 2rem;
+            font-size: 0.875rem;
+        }
+        .ticker-up { color: #10b981; }
+        .ticker-down { color: #ef4444; }
+
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-yellow-900 selection:text-white">
+
+    <!-- Reading Progress Bar -->
+    <div id="progress-bar" style="width: 0%"></div>
+
+    <!-- Live Market Ticker -->
+    <div class="ticker-wrap fixed top-0 z-40 pt-20 hidden md:block">
+        <div class="ticker" id="market-ticker">
+            <!-- Ticker items injected via JS -->
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/5 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3 cursor-pointer">
+                    <div class="w-8 h-8 rounded-full border border-yellow-600 flex items-center justify-center bg-yellow-900/20">
+                        <i class="fas fa-gem text-yellow-500 text-xs"></i>
+                    </div>
+                    <span class="text-xl font-bold tracking-wider text-white serif">GOLDENICE <span class="text-yellow-600 font-light">INT'L</span></span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="./market.html" class="text-slate-300 hover:text-yellow-500 transition-colors px-3 py-2 rounded-md text-sm font-medium">Markets</a>
+                        <a href="./trading.html" class="text-slate-300 hover:text-yellow-500 transition-colors px-3 py-2 rounded-md text-sm font-medium">Trading</a>
+                        <a href="./insights.html" class="text-yellow-500 px-3 py-2 rounded-md text-sm font-medium">Insights</a>
+                        <a href="./contact.html" class="text-slate-300 hover:text-yellow-500 transition-colors px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="hidden md:block text-slate-300 hover:text-white">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="bg-yellow-600 hover:bg-yellow-500 text-white px-5 py-2 rounded text-sm font-bold tracking-wider transition-all shadow-lg shadow-yellow-900/20">
+                     <a href="./inves.html"> TRADE NOW</a>         
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-yellow-900/10 to-transparent pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-900/20 border border-yellow-500/20 mb-6">
+                    <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
+                    <span class="text-yellow-500 text-xs font-bold tracking-widest uppercase">Daily Market Intelligence</span>
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                    <span class="block text-white mb-2">Master the</span>
+                    <span class="text-gold-gradient">Markets</span>
+                </h1>
+                <p class="text-lg text-slate-400 mb-10 leading-relaxed">
+                    Expert analysis, trading strategies, and market insights from Goldenice International's team of seasoned analysts.
+                </p>
+                
+                <!-- Search Bar -->
+                <div class="relative max-w-xl mx-auto">
+                    <input type="text" id="searchInput" placeholder="Search articles, analysis, or topics..." 
+                           class="w-full bg-slate-800/50 border border-slate-700 rounded-full py-4 pl-12 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Categories -->
+    <section class="sticky top-20 z-30 bg-[#0B1120]/95 backdrop-blur-md border-b border-white/5 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide" id="category-filters">
+                <button class="filter-btn active px-6 py-2 rounded-full border border-slate-700 text-sm font-medium text-slate-300 hover:border-yellow-500 hover:text-yellow-500 transition-all whitespace-nowrap" data-category="all">
+                    All Insights
+                </button>
+                <button class="filter-btn px-6 py-2 rounded-full border border-slate-700 text-sm font-medium text-slate-300 hover:border-yellow-500 hover:text-yellow-500 transition-all whitespace-nowrap" data-category="forex">
+                    <i class="fas fa-exchange-alt mr-2"></i><a href="./forex.html">Forex</a>      
+                </button>
+                
+                <button class="filter-btn px-6 py-2 rounded-full border border-slate-700 text-sm font-medium text-slate-300 hover:border-yellow-500 hover:text-yellow-500 transition-all whitespace-nowrap" data-category="commodities">
+                    <i class="fas fa-oil-can mr-2"></i><a href="./Commodities.html">Commodities</a>      
+                <button class="filter-btn px-6 py-2 rounded-full border border-slate-700 text-sm font-medium text-slate-300 hover:border-yellow-500 hover:text-yellow-500 transition-all whitespace-nowrap" data-category="stocks">
+                    <i class="fas fa-chart-line mr-2"></i><a href="./stocks.html">Stocks</a>       
+                </button>
+                <button class="filter-btn px-6 py-2 rounded-full border border-slate-700 text-sm font-medium text-slate-300 hover:border-yellow-500 hover:text-yellow-500 transition-all whitespace-nowrap" data-category="education">
+                    <i class="fas fa-graduation-cap mr-2"></i><a href="./education.html">Education</a>    
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Article -->
+    <section class="py-12" id="featured-section">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-panel rounded-2xl overflow-hidden border border-yellow-500/20">
+                <div class="grid grid-cols-1 lg:grid-cols-2">
+                    <div class="relative h-64 lg:h-auto overflow-hidden group cursor-pointer" onclick="openArticle(0)">
+                        <img src="https://images.unsplash.com/photo-1611974765270-ca1258634369?w=800&h=600&fit=crop" 
+                             alt="Featured" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-transparent to-transparent opacity-60"></div>
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-yellow-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Featured</span>
+                        </div>
+                    </div>
+                    <div class="p-8 lg:p-12 flex flex-col justify-center">
+                        <div class="flex items-center gap-4 mb-4 text-sm text-slate-400">
+                            <span class="text-yellow-500 font-medium">Forex Analysis</span>
+                            <span>•</span>
+                            <span><i class="far fa-clock mr-1"></i> 8 min read</span>
+                            <span>•</span>
+                            <span>Dec 15, 2023</span>
+                        </div>
+                        <h2 class="text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight hover:text-yellow-500 transition-colors cursor-pointer" onclick="openArticle(0)">
+                            EUR/USD Outlook: Navigating the ECB's Hawkish Pivot Amidst Inflation Concerns
+                        </h2>
+                        <p class="text-slate-400 mb-6 leading-relaxed">
+                            As the European Central Bank signals a more aggressive stance on monetary policy, we analyze the technical and fundamental factors driving the euro-dollar pair towards key resistance levels...
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <img src="./Somto.jpg" class="w-10 h-10 rounded-full border-2 border-yellow-600" alt="Author">
+                                <div>
+                                    <div class="text-white font-medium text-sm">Somtochukwu Chiazam Chukwuka</div>
+                                    <div class="text-slate-500 text-xs">Senior FX Analyst</div>
+                                </div>
+                            </div>
+                            <button onclick="openArticle(0)" class="text-yellow-500 hover:text-yellow-400 font-medium text-sm flex items-center gap-2 group">
+                                Read Analysis <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Grid -->
+    <section class="py-12 pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-2xl font-bold text-white">Latest Insights</h3>
+                <div class="flex gap-2">
+                    <button class="p-2 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors" onclick="changeLayout('grid')">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="p-2 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors" onclick="changeLayout('list')">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Blog cards injected via JS -->
+            </div>
+
+            <!-- Load More -->
+            <div class="mt-12 text-center">
+                <button id="loadMoreBtn" onclick="loadMore()" class="px-8 py-3 border border-yellow-600 text-yellow-500 rounded-full hover:bg-yellow-600 hover:text-white transition-all font-medium">
+                    Load More Articles
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-20 bg-gradient-to-b from-[#0B1120] to-[#050911] border-t border-white/5">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="glass-panel p-8 md:p-12 rounded-2xl border border-yellow-500/20 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-yellow-600/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+                
+                <i class="fas fa-envelope-open-text text-5xl text-yellow-500 mb-6"></i>
+                <h2 class="text-3xl font-bold text-white mb-4">Stay Ahead of the Markets</h2>
+                <p class="text-slate-400 mb-8 max-w-lg mx-auto">
+                    Subscribe to our daily market digest and get exclusive analysis, trading signals, and educational content delivered to your inbox.
+                </p>
+                
+                <form onsubmit="subscribeNewsletter(event)" class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                    <input type="email" placeholder="Enter your email" required
+                           class="flex-1 bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500">
+                    <button type="submit" class="bg-yellow-600 hover:bg-yellow-500 text-white px-6 py-3 rounded-lg font-bold transition-colors whitespace-nowrap">
+                    <a href="https://wa.me/07040856276">Subscribe</a>               
+                    </button>
+                </form>
+                <p class="text-slate-500 text-xs mt-4">Join 50,000+ traders. Unsubscribe anytime.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#050911] border-t border-white/5 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fas fa-gem text-yellow-600 text-xl"></i>
+                        <span class="text-2xl font-bold text-white serif">GOLDENICE</span>
+                    </div>
+                    <p class="text-slate-500 text-sm leading-relaxed max-w-md">
+                        Your trusted partner in global financial markets. Providing cutting-edge trading technology and expert market analysis since 2025.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 uppercase tracking-wider text-sm">Categories</h4>
+                    <ul class="space-y-2 text-slate-500 text-sm">
+                        <li><a href="./Forex Analysis.html" class="hover:text-yellow-500 transition-colors">Forex Analysis</a></li>
+                        <li><a href="./Crypto Updates.html" class="hover:text-yellow-500 transition-colors">Crypto Updates</a></li>
+                        <li><a href="./education.html" class="hover:text-yellow-500 transition-colors">Trading Education</a></li>
+                        <li><a href="./news.html" class="hover:text-yellow-500 transition-colors">Market News</a></li>
+                    </ul>
+                </div>
+                <div>
+                    
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 text-center">
+                <p class="text-slate-600 text-xs">&copy; 2026 Goldenice International. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Article Modal -->
+    <div id="articleModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeArticle()"></div>
+        <div class="relative min-h-screen flex items-center justify-center p-4">
+            <div class="glass-panel w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+                <div class="relative h-64 md:h-96">
+                    <img id="modalImage" src="" alt="" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-transparent to-transparent"></div>
+                    <button onclick="closeArticle()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-yellow-600 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="absolute bottom-0 left-0 p-8">
+                        <span id="modalCategory" class="bg-yellow-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block"></span>
+                        <h2 id="modalTitle" class="text-3xl md:text-4xl font-bold text-white leading-tight"></h2>
+                    </div>
+                </div>
+                <div class="p-8 md:p-12">
+                    <div class="flex items-center gap-4 mb-8 pb-8 border-b border-white/10">
+                        <img id="modalAuthorImage" src="" class="w-12 h-12 rounded-full border-2 border-yellow-600" alt="">
+                        <div>
+                            <div id="modalAuthor" class="text-white font-bold"></div>
+                            <div id="modalDate" class="text-slate-400 text-sm"></div>
+                        </div>
+                        <div class="ml-auto flex gap-4">
+                            <button class="text-slate-400 hover:text-yellow-500 transition-colors"><i class="far fa-bookmark text-xl"></i></button>
+                            <button class="text-slate-400 hover:text-yellow-500 transition-colors"><i class="fas fa-share-alt text-xl"></i></button>
+                        </div>
+                    </div>
+                    <div id="modalBody" class="prose prose-invert prose-lg max-w-none text-slate-300 leading-relaxed">
+                        <!-- Article content injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Blog Data
+        
+
+        // Market Ticker Data
+        const marketData = [
+            { pair: "EUR/USD", price: "1.0875", change: "+0.25%", up: true },
+            { pair: "GBP/USD", price: "1.2634", change: "+0.18%", up: true },
+            { pair: "USD/JPY", price: "145.20", change: "-0.12%", up: false },
+            { pair: "XAU/USD", price: "2,015.40", change: "+1.20%", up: true },
+            { pair: "BTC/USD", price: "42,350", change: "+2.45%", up: true },
+            { pair: "US30", price: "36,850", change: "+0.65%", up: true },
+            { pair: "OIL", price: "74.20", change: "-0.80%", up: false }
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTicker();
+            renderPosts(blogPosts);
+            setupFilters();
+            setupSearch();
+            setupScrollProgress();
+        });
+
+        // Render Market Ticker
+        function renderTicker() {
+            const ticker = document.getElementById('market-ticker');
+            const items = [...marketData, ...marketData]; // Duplicate for seamless loop
+            ticker.innerHTML = items.map(item => `
+                <div class="ticker-item">
+                    <span class="font-bold text-slate-300">${item.pair}</span>
+                    <span class="ml-2 ${item.up ? 'ticker-up' : 'ticker-down'}">
+                        ${item.price} (${item.change})
+                        <i class="fas fa-caret-${item.up ? 'up' : 'down'} ml-1"></i>
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        // Render Blog Posts
+        function renderPosts(posts) {
+            const grid = document.getElementById('blog-grid');
+            grid.innerHTML = posts.map(post => `
+                <article class="blog-card glass-panel rounded-xl overflow-hidden border border-slate-700 cursor-pointer group" onclick="openArticle(${post.id})">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="${post.image}" alt="${post.title}" class="card-image w-full h-full object-cover">
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-slate-900/80 backdrop-blur-sm text-yellow-500 text-xs font-bold px-3 py-1 rounded-full border border-yellow-500/30">
+                                ${post.categoryLabel}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-3 mb-3 text-xs text-slate-500">
+                            <span>${post.date}</span>
+                            <span>•</span>
+                            <span><i class="far fa-clock mr-1"></i>${post.readTime}</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-yellow-500 transition-colors">
+                            ${post.title}
+                        </h3>
+                        <p class="text-slate-400 text-sm line-clamp-2 mb-4">
+                            ${post.excerpt}
+                        </p>
+                        <div class="flex items-center gap-3 pt-4 border-t border-slate-700/50">
+                            <img src="${post.authorImage}" class="w-8 h-8 rounded-full" alt="${post.author}">
+                            <span class="text-sm text-slate-300">${post.author}</span>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // Filter Functionality
+        function setupFilters() {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active state
+                    buttons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Filter posts
+                    const category = btn.dataset.category;
+                    const filtered = category === 'all' 
+                        ? blogPosts 
+                        : blogPosts.filter(p => p.category === category);
+                    renderPosts(filtered);
+                });
+            });
+        }
+
+        // Search Functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = blogPosts.filter(post => 
+                    post.title.toLowerCase().includes(term) || 
+                    post.excerpt.toLowerCase().includes(term) ||
+                    post.categoryLabel.toLowerCase().includes(term)
+                );
+                renderPosts(filtered);
+            });
+        }
+
+        // Scroll Progress
+        function setupScrollProgress() {
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById('progress-bar').style.width = scrolled + "%";
+                
+                // Navbar effect
+                const nav = document.getElementById('navbar');
+                if (winScroll > 50) {
+                    nav.classList.add('bg-[#0B1120]/95', 'shadow-lg');
+                } else {
+                    nav.classList.remove('bg-[#0B1120]/95', 'shadow-lg');
+                }
+            });
+        }
+
+        // Open Article Modal
+        function openArticle(id) {
+            const post = blogPosts.find(p => p.id === id) || blogPosts[0];
+            const modal = document.getElementById('articleModal');
+            const content = document.getElementById('modalContent');
+            
+            // Populate modal
+            document.getElementById('modalImage').src = post.image;
+            document.getElementById('modalCategory').textContent = post.categoryLabel;
+            document.getElementById('modalTitle').textContent = post.title;
+            document.getElementById('modalAuthor').textContent = post.author;
+            document.getElementById('modalAuthorImage').src = post.authorImage;
+            document.getElementById('modalDate').textContent = `${post.date} • ${post.readTime} read`;
+            document.getElementById('modalBody').innerHTML = `
+                <p class="text-xl text-slate-300 mb-6 font-light leading-relaxed">${post.excerpt}</p>
+                <p>${post.content}</p>
+                <p class="mt-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <h3 class="text-2xl font-bold text-white mt-8 mb-4">Key Takeaways</h3>
+                <ul class="list-disc list-inside space-y-2 text-slate-300">
+                    <li>Market volatility expected to increase following central bank announcements</li>
+                    <li>Technical indicators suggest strong support at current levels</li>
+                    <li>Risk management remains crucial in uncertain conditions</li>
+                </ul>
+                <p class="mt-6">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            `;
+            
+            // Show modal
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            // Animate in
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        // Close Article Modal
+        function closeArticle() {
+            const modal = document.getElementById('articleModal');
+            const content = document.getElementById('modalContent');
+            
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        // Load More (Simulation)
+        function loadMore() {
+            const btn = document.getElementById('loadMoreBtn');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Loading...';
+            
+            setTimeout(() => {
+                // Duplicate existing posts with new IDs to simulate more content
+                const newPosts = blogPosts.map(p => ({...p, id: p.id + 100}));
+                blogPosts.push(...newPosts);
+                renderPosts(blogPosts);
+                btn.innerHTML = 'Load More Articles';
+            }, 1500);
+        }
+
+        // Newsletter Subscribe
+        function subscribeNewsletter(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.textContent;
+            
+            btn.innerHTML = '<i class="fas fa-check mr-2"></i>Subscribed!';
+            btn.classList.remove('bg-yellow-600');
+            btn.classList.add('bg-green-600');
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.remove('bg-green-600');
+                btn.classList.add('bg-yellow-600');
+                e.target.reset();
+            }, 3000);
+        }
+
+        // Layout Toggle
+        function changeLayout(type) {
+            const grid = document.getElementById('blog-grid');
+            if (type === 'list') {
+                grid.classList.remove('md:grid-cols-2', 'lg:grid-cols-3');
+                grid.classList.add('grid-cols-1', 'max-w-3xl', 'mx-auto');
+            } else {
+                grid.classList.remove('grid-cols-1', 'max-w-3xl', 'mx-auto');
+                grid.classList.add('md:grid-cols-2', 'lg:grid-cols-3');
+            }
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeArticle();
+        });
+    </script>
+</body>
+</html>

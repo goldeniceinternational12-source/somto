@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Geopolitical Risk Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8941F;
+            --risk-critical: #FF1744;
+            --risk-high: #FF5722;
+            --risk-medium: #FF9800;
+            --risk-low: #4CAF50;
+            --risk-info: #2196F3;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--darker);
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Radar Background */
+        .radar-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            z-index: -1;
+            opacity: 0.05;
+        }
+
+        .radar-circle {
+            position: absolute;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .radar-circle:nth-child(1) { width: 200px; height: 200px; }
+        .radar-circle:nth-child(2) { width: 400px; height: 400px; }
+        .radar-circle:nth-child(3) { width: 600px; height: 600px; }
+        .radar-circle:nth-child(4) { width: 800px; height: 800px; }
+
+        .radar-sweep {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            transform-origin: left center;
+            animation: radarSweep 4s linear infinite;
+        }
+
+        @keyframes radarSweep {
+            from { transform: translate(0, -50%) rotate(0deg); }
+            to { transform: translate(0, -50%) rotate(360deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 23, 68, 0.3);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--risk-critical) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--risk-critical);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--risk-critical);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(90deg, rgba(255, 23, 68, 0.2), rgba(255, 87, 34, 0.2));
+            border-top: 1px solid var(--risk-critical);
+            border-bottom: 1px solid var(--risk-critical);
+            padding: 0.8rem 5%;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: alertPulse 2s infinite;
+        }
+
+        @keyframes alertPulse {
+            0%, 100% { background: linear-gradient(90deg, rgba(255, 23, 68, 0.2), rgba(255, 87, 34, 0.2)); }
+            50% { background: linear-gradient(90deg, rgba(255, 23, 68, 0.3), rgba(255, 87, 34, 0.3)); }
+        }
+
+        .alert-icon {
+            width: 30px;
+            height: 30px;
+            background: var(--risk-critical);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .alert-text {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .alert-text strong {
+            color: var(--risk-critical);
+        }
+
+        .alert-time {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            padding: 10rem 5% 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 23, 68, 0.1);
+            border: 1px solid var(--risk-critical);
+            border-radius: 50px;
+            color: var(--risk-critical);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, var(--risk-critical) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+
+        .risk-meter {
+            background: var(--glass);
+            border: 1px solid rgba(255, 23, 68, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .meter-title {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .meter-bar {
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .meter-fill {
+            height: 100%;
+            width: 75%;
+            background: linear-gradient(90deg, var(--risk-low), var(--risk-medium), var(--risk-high), var(--risk-critical));
+            border-radius: 15px;
+            position: relative;
+            transition: width 0.5s;
+        }
+
+        .meter-marker {
+            position: absolute;
+            top: -5px;
+            width: 4px;
+            height: 40px;
+            background: #fff;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            left: 75%;
+            transition: left 0.5s;
+        }
+
+        .meter-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .current-risk {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .risk-level {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--risk-high);
+        }
+
+        /* Global Risk Map */
+        .map-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 3rem;
+        }
+
+        .map-container {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .world-map {
+            height: 500px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-region {
+            position: absolute;
+            border-radius: 10px;
+            padding: 1rem;
+            min-width: 120px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .map-region:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .region-na { top: 20%; left: 15%; background: rgba(255, 152, 0, 0.2); border: 2px solid var(--risk-medium); }
+        .region-sa { top: 60%; left: 25%; background: rgba(76, 175, 80, 0.2); border: 2px solid var(--risk-low); }
+        .region-eu { top: 15%; left: 45%; background: rgba(255, 87, 34, 0.2); border: 2px solid var(--risk-high); }
+        .region-af { top: 45%; left: 45%; background: rgba(255, 152, 0, 0.2); border: 2px solid var(--risk-medium); }
+        .region-as { top: 25%; left: 65%; background: rgba(255, 23, 68, 0.2); border: 2px solid var(--risk-critical); }
+        .region-oc { top: 65%; left: 75%; background: rgba(76, 175, 80, 0.2); border: 2px solid var(--risk-low); }
+
+        .region-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .region-risk {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .risk-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .map-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+        }
+
+        /* Active Events */
+        .events-section {
+            padding: 4rem 5%;
+            background: var(--dark);
+        }
+
+        .events-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 968px) {
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .events-list {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .event-card {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .event-card:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .event-card.critical { border-left-color: var(--risk-critical); }
+        .event-card.high { border-left-color: var(--risk-high); }
+        .event-card.medium { border-left-color: var(--risk-medium); }
+        .event-card.low { border-left-color: var(--risk-low); }
+
+        .event-severity {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .event-card.critical .event-severity { background: rgba(255, 23, 68, 0.2); color: var(--risk-critical); }
+        .event-card.high .event-severity { background: rgba(255, 87, 34, 0.2); color: var(--risk-high); }
+        .event-card.medium .event-severity { background: rgba(255, 152, 0, 0.2); color: var(--risk-medium); }
+        .event-card.low .event-severity { background: rgba(76, 175, 80, 0.2); color: var(--risk-low); }
+
+        .event-content {
+            flex: 1;
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .event-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .event-time {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .event-desc {
+            color: #aaa;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-impact {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .impact-tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--gold);
+        }
+
+        /* Impact Analysis */
+        .impact-panel {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .impact-title {
+            color: var(--gold);
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .currency-list {
+            list-style: none;
+        }
+
+        .currency-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .currency-item:last-child {
+            border-bottom: none;
+        }
+
+        .currency-pair {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .currency-flag {
+            font-size: 1.5rem;
+        }
+
+        .currency-name {
+            font-weight: 600;
+        }
+
+        .currency-volatility {
+            text-align: right;
+        }
+
+        .volatility-value {
+            font-family: 'Courier New', monospace;
+            color: var(--risk-critical);
+            font-weight: 700;
+        }
+
+        .volatility-bar {
+            width: 100px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 0.3rem;
+            overflow: hidden;
+        }
+
+        .volatility-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--risk-low), var(--risk-critical));
+            border-radius: 3px;
+        }
+
+        /* Risk Categories */
+        .categories-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .category-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--risk-critical), var(--risk-high), var(--risk-medium));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .category-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--risk-critical);
+        }
+
+        .category-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 23, 68, 0.1);
+            border: 2px solid var(--risk-critical);
+        }
+
+        .category-title {
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .category-desc {
+            color: #aaa;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .recent-events {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .recent-title {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .recent-item {
+            font-size: 0.9rem;
+            color: #ccc;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .recent-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Hedging Strategies */
+        .strategies-section {
+            padding: 4rem 5%;
+            background: var(--dark);
+        }
+
+        .strategies-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .strategies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .strategy-card {
+            background: var(--glass);
+            border: 1px solid rgba(0, 200, 83, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .strategy-number {
+            position: absolute;
+            top: -15px;
+            left: 2rem;
+            width: 40px;
+            height: 40px;
+            background: var(--risk-low);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .strategy-title {
+            font-size: 1.2rem;
+            color: var(--risk-low);
+            margin-bottom: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .strategy-desc {
+            color: #aaa;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .strategy-steps {
+            list-style: none;
+        }
+
+        .strategy-steps li {
+            padding: 0.8rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .strategy-steps li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--risk-low);
+            font-weight: bold;
+        }
+
+        /* Historical Analysis */
+        .history-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+            margin-top: 3rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--risk-critical), var(--risk-high), var(--risk-medium), var(--risk-low));
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3.4rem;
+            top: 2rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 4px solid var(--dark);
+        }
+
+        .timeline-item.critical::before { background: var(--risk-critical); box-shadow: 0 0 0 4px var(--risk-critical); }
+        .timeline-item.high::before { background: var(--risk-high); box-shadow: 0 0 0 4px var(--risk-high); }
+        .timeline-item.medium::before { background: var(--risk-medium); box-shadow: 0 0 0 4px var(--risk-medium); }
+
+        .timeline-date {
+            color: var(--gold);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-impact {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-item.critical .timeline-impact { background: rgba(255, 23, 68, 0.2); color: var(--risk-critical); }
+        .timeline-item.high .timeline-impact { background: rgba(255, 87, 34, 0.2); color: var(--risk-high); }
+        .timeline-item.medium .timeline-impact { background: rgba(255, 152, 0, 0.2); color: var(--risk-medium); }
+
+        .timeline-desc {
+            color: #aaa;
+            line-height: 1.8;
+        }
+
+        .timeline-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-stat {
+            text-align: center;
+        }
+
+        .timeline-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            font-family: 'Courier New', monospace;
+        }
+
+        .timeline-stat-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.3rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            background: var(--darker);
+            border-top: 1px solid rgba(255, 23, 68, 0.2);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .disclaimer {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--glass);
+            border: 1px solid var(--risk-critical);
+            border-radius: 15px;
+            padding: 1.5rem;
+            max-width: 350px;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 3000;
+        }
+
+        .notification.active {
+            transform: translateX(0);
+        }
+
+        .notification-title {
+            color: var(--risk-critical);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notification-text {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .notification-time {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="radar-bg">
+        <div class="radar-circle"></div>
+        <div class="radar-circle"></div>
+        <div class="radar-circle"></div>
+        <div class="radar-circle"></div>
+        <div class="radar-sweep"></div>
+    </div>
+
+    <div class="notification" id="notification">
+        <div class="notification-title">🚨 Breaking Alert</div>
+        <div class="notification-text">New sanctions announced affecting RUB pairs. Increased volatility expected.</div>
+        <div class="notification-time">2 minutes ago</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">◆ GOLDENICE INTELLIGENCE</div>
+        <ul class="nav-links">
+            <li><a href="#map">Risk Map</a></li>
+            <li><a href="#events">Events</a></li>
+            <li><a href="#strategies">Strategies</a></li>
+            <li><a href="#history">History</a></li>
+        </ul>
+    </nav>
+
+    <!-- Alert Banner -->
+    <div class="alert-banner">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-text">
+            <strong>ELEVATED RISK:</strong> Ongoing Middle East tensions affecting oil prices and commodity currencies. 
+            <span style="color: #aaa;">Monitor USD/CAD, USD/NOK, and AUD/USD closely.</span>
+        </div>
+        <div class="alert-time">Updated: 14:32 GMT</div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>🛡️</span>
+                <span>GEOPOLITICAL RISK CENTER</span>
+            </div>
+            <h1>Navigate Global Uncertainty</h1>
+            <p>Geopolitical events can trigger rapid currency movements. Goldenice International's risk intelligence helps you anticipate, analyze, and adapt to political and economic shocks.</p>
+            
+            <div class="risk-meter">
+                <div class="meter-title">Current Global Risk Level</div>
+                <div class="meter-bar">
+                    <div class="meter-fill"></div>
+                    <div class="meter-marker"></div>
+                </div>
+                <div class="meter-labels">
+                    <span>Low</span>
+                    <span>Moderate</span>
+                    <span>Elevated</span>
+                    <span>High</span>
+                    <span>Critical</span>
+                </div>
+                <div class="current-risk">
+                    <div class="risk-level">HIGH RISK</div>
+                    <div style="color: #888; font-size: 0.9rem;">Multiple active conflicts and trade disputes</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Risk Map -->
+    <section class="map-section" id="map">
+        <h2 class="section-title">Global Risk Map</h2>
+        <p class="section-subtitle">Real-time geopolitical risk assessment by region</p>
+        
+        <div class="map-container">
+            <div class="world-map">
+                <div class="map-region region-na" onclick="showRegionDetails('na')">
+                    <div class="region-name">North America</div>
+                    <div class="region-risk">
+                        <span class="risk-indicator" style="background: var(--risk-medium);"></span>
+                        Medium Risk
+                    </div>
+                </div>
+                <div class="map-region region-sa" onclick="showRegionDetails('sa')">
+                    <div class="region-name">South America</div>
+                    <div class="region-risk">
+                        <span class="risk-indicator" style="background: var(--risk-low);"></span>
+                        Low Risk
+                    </div>
+                </div>
+                <div class="map-region region-eu" onclick="showRegionDetails('eu')">
+                    <div class="region-name">Europe</div>
+                    <div class="region-risk">
+                        <span class="risk-indicator" style="background: var(--risk-high);"></span>
+                        High Risk
+                    </div>
+                </div>
+                <div class="map-region region-af" onclick="showRegionDetails('af')">
+                    <div class="region-name">Africa</div>
+                    <div class="region-risk">
+                        <span class="risk-indicator" style="background: var(--risk-medium);"></span>
+                        Medium Risk
+                    </div>
+                </div>
+                <div class="map-region region-as" onclick="showRegionDetails('as')">
+                    <div class="region-name">Asia-Pacific</div>
+                    <div class="region-risk">
+                        <span class="risk-indicator" style="background: var(--risk-critical);"></span>
+                        Critical Risk
+                    </div>
+                </div>
+                <div class="map-region region-oc" onclick="showRegionDetails('oc')">
+                    <div class="region-name">Oceania</div>
+                    <div class="region-risk">
+                        <span class="risk-indicator" style="background: var(--risk-low);"></span>
+                        Low Risk
+                    </div>
+                </div>
+            </div>
+            
+            <div class="map-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--risk-critical);"></div>
+                    <span>Critical (Armed Conflict)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--risk-high);"></div>
+                    <span>High (Severe Tensions)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--risk-medium);"></div>
+                    <span>Medium (Trade Disputes)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--risk-low);"></div>
+                    <span>Low (Stable)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Active Events -->
+    <section class="events-section" id="events">
+        <div class="events-container">
+            <h2 class="section-title">Active Geopolitical Events</h2>
+            <p class="section-subtitle">Ongoing situations affecting forex markets</p>
+            
+            <div class="events-grid">
+                <div class="events-list">
+                    <div class="event-card critical" onclick="showEventDetails('ukraine')">
+                        <div class="event-severity">🔴</div>
+                        <div class="event-content">
+                            <div class="event-header">
+                                <div class="event-title">Russia-Ukraine Conflict Escalation</div>
+                                <div class="event-time">Active since Feb 2022</div>
+                            </div>
+                            <div class="event-desc">Intensified fighting in eastern regions. New sanctions package approved by EU targeting Russian energy exports.</div>
+                            <div class="event-impact">
+                                <span class="impact-tag">EUR/USD -1.2%</span>
+                                <span class="impact-tag">RUB -15%</span>
+                                <span class="impact-tag">Natural Gas +8%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card high" onclick="showEventDetails('middleeast')">
+                        <div class="event-severity">🟠</div>
+                        <div class="event-content">
+                            <div class="event-header">
+                                <div class="event-title">Middle East Tensions</div>
+                                <div class="event-time">Escalated 3 days ago</div>
+                            </div>
+                            <div class="event-desc">Regional conflict affecting shipping routes through Red Sea. Insurance costs for maritime trade surge.</div>
+                            <div class="event-impact">
+                                <span class="impact-tag">Oil +4.5%</span>
+                                <span class="impact-tag">USD/CAD +0.8%</span>
+                                <span class="impact-tag">Gold +2.1%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card high" onclick="showEventDetails('taiwan')">
+                        <div class="event-severity">🟠</div>
+                        <div class="event-content">
+                            <div class="event-header">
+                                <div class="event-title">Taiwan Strait Tensions</div>
+                                <div class="event-time">Ongoing military exercises</div>
+                            </div>
+                            <div class="event-desc">Increased military activity around Taiwan. Semiconductor supply chain concerns affecting tech sector.</div>
+                            <div class="event-impact">
+                                <span class="impact-tag">TWD -0.5%</span>
+                                <span class="impact-tag">USD/CNH +0.3%</span>
+                                <span class="impact-tag">Tech stocks -2%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card medium" onclick="showEventDetails('brexit')">
+                        <div class="event-severity">🟡</div>
+                        <div class="event-content">
+                            <div class="event-header">
+                                <div class="event-title">Post-Brexit Trade Disputes</div>
+                                <div class="event-time">New developments weekly</div>
+                            </div>
+                            <div class="event-desc">UK-EU negotiations on Northern Ireland protocol. Threat of trade war affecting sterling confidence.</div>
+                            <div class="event-impact">
+                                <span class="impact-tag">GBP/EUR -0.4%</span>
+                                <span class="impact-tag">FTSE 100 -0.6%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card medium" onclick="showEventDetails('uschina')">
+                        <div class="event-severity">🟡</div>
+                        <div class="event-content">
+                            <div class="event-header">
+                                <div class="event-title">US-China Tech War</div>
+                                <div class="event-time">New restrictions announced</div>
+                            </div>
+                            <div class="event-desc">Additional export controls on semiconductor technology. China announces retaliatory measures.</div>
+                            <div class="event-impact">
+                                <span class="impact-tag">USD/CNH +0.2%</span>
+                                <span class="impact-tag">NASDAQ -1.5%</span>
+                                <span class="impact-tag">Chip stocks -3%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="impact-panel">
+                    <h3 class="impact-title">Most Affected Pairs</h3>
+                    <ul class="currency-list">
+                        <li class="currency-item">
+                            <div class="currency-pair">
+                                <span class="currency-flag">🇷🇺</span>
+                                <div>
+                                    <div class="currency-name">USD/RUB</div>
+                                    <div style="color: #888; font-size: 0.8rem;">Russian Ruble</div>
+                                </div>
+                            </div>
+                            <div class="currency-volatility">
+                                <div class="volatility-value">+45%</div>
+                                <div class="volatility-bar">
+                                    <div class="volatility-fill" style="width: 95%;"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="currency-item">
+                            <div class="currency-pair">
+                                <span class="currency-flag">🇪🇺</span>
+                                <div>
+                                    <div class="currency-name">EUR/USD</div>
+                                    <div style="color: #888; font-size: 0.8rem;">Euro</div>
+                                </div>
+                            </div>
+                            <div class="currency-volatility">
+                                <div class="volatility-value">+12%</div>
+                                <div class="volatility-bar">
+                                    <div class="volatility-fill" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="currency-item">
+                            <div class="currency-pair">
+                                <span class="currency-flag">🇬🇧</span>
+                                <div>
+                                    <div class="currency-name">GBP/USD</div>
+                                    <div style="color: #888; font-size: 0.8rem;">British Pound</div>
+                                </div>
+                            </div>
+                            <div class="currency-volatility">
+                                <div class="volatility-value">+8%</div>
+                                <div class="volatility-bar">
+                                    <div class="volatility-fill" style="width: 45%;"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="currency-item">
+                            <div class="currency-pair">
+                                <span class="currency-flag">🇨🇳</span>
+                                <div>
+                                    <div class="currency-name">USD/CNH</div>
+                                    <div style="color: #888; font-size: 0.8rem;">Offshore Yuan</div>
+                                </div>
+                            </div>
+                            <div class="currency-volatility">
+                                <div class="volatility-value">+15%</div>
+                                <div class="volatility-bar">
+                                    <div class="volatility-fill" style="width: 70%;"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="currency-item">
+                                <div class="currency-pair">
+                                <span class="currency-flag">🇹🇷</span>
+                                <div>
+                                    <div class="currency-name">USD/TRY</div>
+                                    <div style="color: #888; font-size: 0.8rem;">Turkish Lira</div>
+                                </div>
+                            </div>
+                            <div class="currency-volatility">
+                                <div class="volatility-value">+28%</div>
+                                <div class="volatility-bar">
+                                    <div class="volatility-fill" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="currency-item">
+                            <div class="currency-pair">
+                                <span class="currency-flag">🇿🇦</span>
+                                <div>
+                                    <div class="currency-name">USD/ZAR</div>
+                                    <div style="color: #888; font-size: 0.8rem;">South African Rand</div>
+                                </div>
+                            </div>
+                            <div class="currency-volatility">
+                                <div class="volatility-value">+18%</div>
+                                <div class="volatility-bar">
+                                    <div class="volatility-fill" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Risk Categories -->
+    <section class="categories-section">
+        <h2 class="section-title">Risk Categories</h2>
+        <p class="section-subtitle">Understanding different types of geopolitical threats</p>
+        
+        <div class="categories-grid">
+            <div class="category-card">
+                <div class="category-icon">⚔️</div>
+                <h3 class="category-title">Military Conflict</h3>
+                <p class="category-desc">Armed conflicts, territorial disputes, and military tensions that disrupt trade routes, energy supplies, and investor confidence. Often cause immediate flight to safe-haven currencies.</p>
+                <div class="recent-events">
+                    <div class="recent-title">Recent Examples</div>
+                    <div class="recent-item">• Russia-Ukraine War (2022-present)</div>
+                    <div class="recent-item">• Gaza Conflict escalation (2023)</div>
+                    <div class="recent-item">• Armenia-Azerbaijan clashes</div>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">🏛️</div>
+                <h3 class="category-title">Political Instability</h3>
+                <p class="category-desc">Government changes, civil unrest, protests, and political crises that create uncertainty about economic policies and contract enforcement. Affects investor confidence and capital flows.</p>
+                <div class="recent-events">
+                    <div class="recent-title">Recent Examples</div>
+                    <div class="recent-item">• Argentina currency crisis</div>
+                    <div class="recent-item">• Turkey constitutional changes</div>
+                    <div class="recent-item">• Myanmar military coup</div>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">📉</div>
+                <h3 class="category-title">Economic Sanctions</h3>
+                <p class="category-desc">Trade restrictions, financial sanctions, and economic embargoes that limit market access and currency convertibility. Can cause rapid devaluation of affected currencies.</p>
+                <div class="recent-events">
+                    <div class="recent-title">Recent Examples</div>
+                    <div class="recent-item">• Russian SWIFT exclusion</div>
+                    <div class="recent-item">• Iran banking restrictions</div>
+                    <div class="recent-item">• North Korea trade bans</div>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">🌊</div>
+                <h3 class="category-title">Trade Disruptions</h3>
+                <p class="category-desc">Supply chain interruptions, shipping route blockages, and trade route insecurity affecting commodity prices and export-dependent currencies. Often impacts AUD, CAD, and NOK.</p>
+                <div class="recent-events">
+                    <div class="recent-title">Recent Examples</div>
+                    <div class="recent-item">• Red Sea shipping crisis</div>
+                    <div class="recent-item">• Panama Canal drought</div>
+                    <div class="recent-item">• Suez Canal blockage (2021)</div>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">🔌</div>
+                <h3 class="category-title">Energy Security</h3>
+                <p class="category-desc">Oil and gas supply disruptions, pipeline sabotage, and energy export restrictions. Creates volatility in commodity currencies and inflation concerns globally.</p>
+                <div class="recent-events">
+                    <div class="recent-title">Recent Examples</div>
+                    <div class="recent-item">• Nord Stream pipeline damage</div>
+                    <div class="recent-item">• OPEC+ production cuts</div>
+                    <div class="recent-item">• Russian gas supply cuts to EU</div>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">💻</div>
+                <h3 class="category-title">Cyber Warfare</h3>
+                <p class="category-desc">State-sponsored cyber attacks on financial infrastructure, data breaches, and digital espionage threatening payment systems and banking stability.</p>
+                <div class="recent-events">
+                    <div class="recent-title">Recent Examples</div>
+                    <div class="recent-item">• SWIFT system attacks</div>
+                    <div class="recent-item">• Central bank data breaches</div>
+                    <div class="recent-item">• Cryptocurrency exchange hacks</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hedging Strategies -->
+    <section class="strategies-section" id="strategies">
+        <div class="strategies-container">
+            <h2 class="section-title">Risk Management Strategies</h2>
+            <p class="section-subtitle">Protect your portfolio during geopolitical uncertainty</p>
+            
+            <div class="strategies-grid">
+                <div class="strategy-card">
+                    <div class="strategy-number">1</div>
+                    <h3 class="strategy-title">Diversification</h3>
+                    <p class="strategy-desc">Spread risk across multiple currency pairs, asset classes, and geographic regions to reduce exposure to any single geopolitical event.</p>
+                    <ul class="strategy-steps">
+                        <li>Maintain positions in safe-haven currencies (JPY, CHF, USD)</li>
+                        <li>Balance commodity currencies with manufacturing economies</li>
+                        <li>Include uncorrelated assets like gold and bonds</li>
+                        <li>Limit exposure to any single region to 20% maximum</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-card">
+                    <div class="strategy-number">2</div>
+                    <h3 class="strategy-title">Position Sizing</h3>
+                    <p class="strategy-desc">Reduce position sizes during periods of elevated geopolitical risk to preserve capital and maintain trading flexibility.</p>
+                    <ul class="strategy-steps">
+                        <li>Cut position sizes by 50% during high-risk periods</li>
+                        <li>Use maximum 2% risk per trade rule strictly</li>
+                        <li>Increase stop-loss distances to avoid noise</li>
+                        <li>Maintain higher cash reserves for opportunities</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-card">
+                    <div class="strategy-number">3</div>
+                    <h3 class="strategy-title">Safe Haven Rotation</h3>
+                    <p class="strategy-desc">Shift capital to safe-haven currencies and assets when geopolitical tensions rise, protecting portfolio value.</p>
+                    <ul class="strategy-steps">
+                        <li>Increase JPY and CHF allocations during crises</li>
+                        <li>Consider USD strength in global risk-off scenarios</li>
+                        <li>Add gold (XAU/USD) as portfolio insurance</li>
+                        <li>Monitor VIX and gold/silver ratios for signals</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-card">
+                    <div class="strategy-number">4</div>
+                    <h3 class="strategy-title">Event-Driven Hedging</h3>
+                    <p class="strategy-desc">Use options and correlated pairs to hedge specific geopolitical exposures ahead of known risk events.</p>
+                    <ul class="strategy-steps">
+                        <li>Buy protective puts on high-beta currencies</li>
+                        <li>Use inverse correlations (e.g., oil up = CAD up)</li>
+                        <li>Enter hedges 48 hours before major events</li>
+                        <li>Close hedges immediately after event resolution</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-card">
+                    <div class="strategy-number">5</div>
+                    <h3 class="strategy-title">News Monitoring</h3>
+                    <p class="strategy-desc">Stay ahead of market-moving developments with real-time alerts and analysis from Goldenice Intelligence.</p>
+                    <ul class="strategy-steps">
+                        <li>Set alerts for breaking geopolitical news</li>
+                        <li>Monitor economic calendars for event risk</li>
+                        <li>Follow official government statements</li>
+                        <li>Use Goldenice's risk dashboard daily</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-card">
+                    <div class="strategy-number">6</div>
+                    <h3 class="strategy-title">Correlation Awareness</h3>
+                    <p class="strategy-desc">Understand how geopolitical events affect currency correlations and adjust strategies accordingly.</p>
+                    <ul class="strategy-steps">
+                        <li>Track changing correlation matrices weekly</li>
+                        <li>Recognize when safe havens move together</li>
+                        <li>Avoid overexposure to correlated pairs</li>
+                        <li>Exploit correlation breakdowns for alpha</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Historical Analysis -->
+    <section class="history-section" id="history">
+        <h2 class="section-title">Historical Case Studies</h2>
+        <p class="section-subtitle">Lessons from past geopolitical market events</p>
+        
+        <div class="timeline">
+            <div class="timeline-item critical">
+                <div class="timeline-date">February 2022</div>
+                <h3 class="timeline-title">Russia Invades Ukraine</h3>
+                <span class="timeline-impact">Critical Impact</span>
+                <p class="timeline-desc">The largest military conflict in Europe since WWII triggered massive currency volatility. EUR/USD dropped 350 pips in 48 hours, while safe havens JPY and CHF surged. Energy prices spiked, affecting commodity currencies.</p>
+                <div class="timeline-stats">
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">-3.5%</div>
+                        <div class="timeline-stat-label">EUR/USD Drop</div>
+                    </div>
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">+40%</div>
+                        <div class="timeline-stat-label">Natural Gas</div>
+                    </div>
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">+15%</div>
+                        <div class="timeline-stat-label">Gold Rally</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item high">
+                <div class="timeline-date">June 2016</div>
+                <h3 class="timeline-title">Brexit Referendum</h3>
+                <span class="timeline-impact">High Impact</span>
+                <p class="timeline-desc">The surprise vote to leave the EU caused historic GBP volatility. GBP/USD crashed 11% overnight, its largest single-day drop. The event demonstrated how political surprises can overwhelm technical levels.</p>
+                <div class="timeline-stats">
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">-11%</div>
+                        <div class="timeline-stat-label">GBP/USD Drop</div>
+                    </div>
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">-8%</div>
+                        <div class="timeline-stat-label">FTSE 100</div>
+                    </div>
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">$2T</div>
+                        <div class="timeline-stat-label">Global Losses</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item high">
+                <div class="timeline-date">March 2020</div>
+                <h3 class="timeline-title">COVID-19 Pandemic Declaration</h3>
+                <span class="timeline-impact">High Impact</span>
+                <p class="timeline-desc">The WHO pandemic declaration triggered a global dash for cash. USD surged as liquidity crisis fears spread, while emerging market currencies collapsed. Unprecedented central bank coordination eventually stabilized markets.</p>
+                <div class="timeline-stats">
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">+8%</div>
+                        <div class="timeline-stat-label">DXY Index</div>
+                    </div>
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">-25%</div>
+                        <div class="timeline-stat-label">MXN/USD</div>
+                    </div>
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">-35%</div>
+                        <div class="timeline-stat-label">Oil Price</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item medium">
+                <div class="timeline-date">August 2019</div>
+                <h3 class="timeline-title">US-China Trade War Escalation</h3>
+                <span class="timeline-impact">Medium Impact</span>
+                <p class="timeline-desc">Tariff announcements and retaliatory measures created sustained uncertainty. CNY weakened past 7.0 psychological level. Safe havens benefited while trade-exposed currencies (AUD, NZD) underperformed.</p>
+                <div class="timeline-stats">
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">-2.5%</div>
+                        <div class="timeline-stat-label">AUD/USD</div>
+                    </div>
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">+1.8%</div>
+                        <div class="timeline-stat-label">USD/JPY</div>
+                    </div>
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">-12%</div>
+                        <div class="timeline-stat-label">USDCNH</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item critical">
+                <div class="timeline-date">September 2008</div>
+                <h3 class="timeline-title">Lehman Brothers Collapse</h3>
+                <span class="timeline-impact">Systemic Crisis</span>
+                <p class="timeline-desc">The bankruptcy filing triggered global financial panic. Extreme USD volatility as funding markets froze. Central banks intervened with coordinated rate cuts and swap lines to prevent systemic collapse.</p>
+                <div class="timeline-stats">
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">±5%</div>
+                        <div class="timeline-stat-label">Daily Ranges</div>
+                    </div>
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">-20%</div>
+                        <div class="timeline-stat-label">Global Equities</div>
+                    </div>
+                    <div class="timeline-stat">
+                        <div class="timeline-stat-value">$700B</div>
+                        <div class="timeline-stat-label">TARP Bailout</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo" style="margin-bottom: 1rem;">◆ GOLDENICE INTELLIGENCE</div>
+            <p style="color: #aaa; margin-bottom: 1rem;">Geopolitical Risk Monitoring & Analysis</p>
+            <div class="disclaimer">
+                <p>Geopolitical risk assessments are based on available information and analyst judgment. Risk levels can change rapidly. This information is provided for educational purposes and should not be considered as investment advice. Always conduct your own research and consider your risk tolerance before trading.</p>
+                <p style="margin-top: 1rem;">© 2024 Goldenice International. All rights reserved. | Data sources: Multiple open intelligence feeds</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Show notification on load
+        setTimeout(() => {
+            document.getElementById('notification').classList.add('active');
+        }, 2000);
+
+        // Hide notification after 5 seconds
+        setTimeout(() => {
+            document.getElementById('notification').classList.remove('active');
+        }, 7000);
+
+        // Region details
+        function showRegionDetails(region) {
+            const details = {
+                na: 'North America: Medium risk due to trade policy uncertainty and upcoming elections. Monitor USD/CAD and USMCA developments.',
+                sa: 'South America: Generally stable with Argentina being the primary concern. Watch ARS and BRL volatility.',
+                eu: 'Europe: High risk from ongoing Ukraine conflict, energy security concerns, and political fragmentation.',
+                af: 'Africa: Medium risk with regional conflicts in Sahel and Horn of Africa. Monitor ZAR and EGP.',
+                as: 'Asia-Pacific: Critical risk from Taiwan tensions, South China Sea disputes, and North Korea missile tests.',
+                oc: 'Oceania: Low risk region. Australia and New Zealand benefit from safe-haven flows during Asian tensions.'
+            };
+            alert(details[region]);
+        }
+
+        // Event details
+        function showEventDetails(event) {
+            const details = {
+                ukraine: 'Russia-Ukraine Conflict: Monitor EUR, RUB, HUF, PLN. Energy prices critical. Sanctions risk for commodity traders.',
+                middleeast: 'Middle East Tensions: Oil price volatility affects NOK, CAD, MXN. Safe haven demand for JPY, CHF, USD.',
+                taiwan: 'Taiwan Strait: Semiconductor supply chain risk. TWD, CNH volatility. Tech sector correlation breakdowns.',
+                brexit: 'Brexit Disputes: GBP pairs vulnerable. Irish border issue unresolved. Watch EUR/GBP and FTSE correlation.',
+                uschina: 'US-China Tech War: CNH weakness likely. Tech stock correlation with USD/CNH increasing. Watch ASX200.'
+            };
+            alert(details[event]);
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Simulate live updates
+        setInterval(() => {
+            // Flash alert banner
+            const banner = document.querySelector('.alert-banner');
+            banner.style.opacity = '0.8';
+            setTimeout(() => banner.style.opacity = '1', 500);
+        }, 5000);
+    </script>
+</body>
+</html>

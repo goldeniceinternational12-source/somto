@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Premier Forex Trading</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            100: '#F9F1D8',
+                            200: '#F0DEAA',
+                            300: '#E6CB7D',
+                            400: '#D4AF37',
+                            500: '#C5A028',
+                            600: '#B08D1F',
+                            700: '#9A7A18',
+                            800: '#846712',
+                            900: '#6E540E',
+                        },
+                        ice: {
+                            50: '#F0F9FF',
+                            100: '#E0F2FE',
+                            900: '#0C4A6E',
+                        },
+                        dark: {
+                            900: '#0a0a0a',
+                            800: '#121212',
+                            700: '#1a1a1a',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            overflow-x: hidden;
+        }
+        
+        .glass-panel {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #F0DEAA 0%, #D4AF37 50%, #B08D1F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gold-gradient-border {
+            position: relative;
+        }
+        
+        .gold-gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, #F0DEAA, #D4AF37, #B08D1F);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        
+        .chart-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2s ease-out forwards;
+        }
+        
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+        
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background: rgba(212, 175, 55, 0.05);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .ticker {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+        }
+        
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+        
+        .hexagon {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #D4AF37, #F0DEAA);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .price-up { color: #10B981; }
+        .price-down { color: #EF4444; }
+        
+        .candle {
+            transition: all 0.3s ease;
+        }
+        
+        .candle:hover {
+            transform: scaleY(1.1);
+            filter: brightness(1.2);
+        }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3 group cursor-pointer">
+                    <div class="w-10 h-10 bg-gradient-to-br from-gold-400 to-gold-600 rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                        <span class="text-dark-900 font-bold text-xl">G</span>
+                    </div>
+                    <div>
+                        <h1 class="font-serif text-2xl font-bold gold-gradient-text">Goldenice</h1>
+                        <p class="text-xs text-gold-400 tracking-widest uppercase">International</p>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="./market.html" class="nav-link text-sm font-medium hover:text-gold-400 transition-colors">Markets</a>
+                    <a href="./press.html" class="nav-link text-sm font-medium hover:text-gold-400 transition-colors">Press</a>
+                    <a href="./news.html" class="nav-link text-sm font-medium hover:text-gold-400 transition-colors">News</a>
+                    <a href="./kyc.html" class="nav-link text-sm font-medium hover:text-gold-400 transition-colors">kyc</a>
+                    <a href="./trading.html" class="nav-link text-sm font-medium hover:text-gold-400 transition-colors">Trading</a>
+                    <a href="./inves.html" class="nav-link text-sm font-medium hover:text-gold-400 transition-colors">Invest Now</a>
+                    <a href="./education.html" class="nav-link text-sm font-medium hover:text-gold-400 transition-colors">Education</a>
+                    <a href="./about.html" class="nav-link text-sm font-medium hover:text-gold-400 transition-colors">About</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="hidden md:block text-sm font-medium hover:text-gold-400 transition-colors">Login</button>
+                    <button class="px-6 py-2 bg-gradient-to-r from-gold-400 to-gold-600 text-dark-900 font-semibold rounded-full hover:shadow-lg hover:shadow-gold-400/30 transform hover:-translate-y-0.5 transition-all duration-300">
+                     <a href="./index.html"> Open Account</a>               
+                    </button>
+                    <button class="hidden md:block text-sm font-medium hover:text-gold-400 transition-colors">Login</button>
+                    <button class="px-6 py-2 bg-gradient-to-r from-gold-400 to-gold-600 text-dark-900 font-semibold rounded-full hover:shadow-lg hover:shadow-gold-400/30 transform hover:-translate-y-0.5 transition-all duration-300">
+                     <a href="./withdraw.html"> withdrawal</a>               
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Live Ticker -->
+    <div class="ticker-wrap mt-20">
+        <div class="ticker py-3 text-sm font-mono" id="ticker">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-gold-400/10 rounded-full blur-3xl animate-pulse-slow"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-20">
+                <svg viewBox="0 0 800 400" class="w-full h-full">
+                    <path d="M0,200 Q100,100 200,200 T400,200 T600,200 T800,200" fill="none" stroke="#D4AF37" stroke-width="2" class="chart-line"/>
+                    <path d="M0,200 Q100,300 200,200 T400,200 T600,200 T800,200" fill="none" stroke="#60A5FA" stroke-width="2" class="chart-line" style="animation-delay: 0.5s;"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8 animate-slide-up">
+                <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-gold-400/10 border border-gold-400/30 text-gold-300 text-sm">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span>Markets Open • Live Trading</span>
+                </div>
+                
+                <h1 class="font-serif text-5xl md:text-7xl font-bold leading-tight">
+                    Trade the <span class="gold-gradient-text">Golden</span> Standard of 
+                    <span class="text-white">Forex</span>
+                </h1>
+                
+                <p class="text-lg md:text-xl text-gray-400 max-w-lg leading-relaxed">
+                    Experience institutional-grade trading with spreads from 0.0 pips. 
+                    Join 50,000+ traders accessing global markets 24/7.
+                </p>
+                
+                <div class="flex flex-wrap gap-4">
+                    <button class="px-8 py-4 bg-gradient-to-r from-gold-400 to-gold-600 text-dark-900 font-bold rounded-lg hover:shadow-xl hover:shadow-gold-400/40 transform hover:-translate-y-1 transition-all duration-300 flex items-center space-x-2">
+                        <span>Start Trading Now</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                    
+                </div>
+
+                <div class="flex items-center space-x-8 pt-4">
+                    <div>
+                        <p class="text-3xl font-bold text-white">$2.4B+</p>
+                        <p class="text-sm text-gray-500">Daily Volume</p>
+                    </div>
+                    <div class="w-px h-12 bg-gray-800"></div>
+                    <div>
+                        <p class="text-3xl font-bold text-white">150+</p>
+                        <p class="text-sm text-gray-500">Trading Instruments</p>
+                    </div>
+                    <div class="w-px h-12 bg-gray-800"></div>
+                    <div>
+                        <p class="text-3xl font-bold text-white">24/5</p>
+                        <p class="text-sm text-gray-500">Support</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Chart Widget -->
+            <div class="relative animate-float">
+                <div class="glass-panel rounded-2xl p-6 shadow-2xl glow-effect">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-white font-semibold text-lg">EUR/USD</h3>
+                            <p class="text-sm text-gray-400">Euro / US Dollar</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-2xl font-bold text-white" id="hero-price">1.0847</p>
+                            <p class="text-sm price-up flex items-center justify-end">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                                +0.24%
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Canvas Chart -->
+                    <canvas id="heroChart" width="500" height="250" class="w-full rounded-lg bg-dark-800/50"></canvas>
+                    
+                    <div class="grid grid-cols-4 gap-2 mt-4">
+                        <button class="px-3 py-2 text-xs font-medium bg-gold-400/20 text-gold-300 rounded hover:bg-gold-400/30 transition-colors">1H</button>
+                        <button class="px-3 py-2 text-xs font-medium bg-dark-700 text-gray-400 rounded hover:bg-dark-600 transition-colors">4H</button>
+                        <button class="px-3 py-2 text-xs font-medium bg-dark-700 text-gray-400 rounded hover:bg-dark-600 transition-colors">1D</button>
+                        <button class="px-3 py-2 text-xs font-medium bg-dark-700 text-gray-400 rounded hover:bg-dark-600 transition-colors">1W</button>
+                    </div>
+                    
+                    <div class="flex gap-3 mt-4">
+                        <button class="flex-1 py-3 bg-green-500/20 text-green-400 font-semibold rounded-lg border border-green-500/30 hover:bg-green-500/30 transition-colors">BUY</button>
+                        <button class="flex-1 py-3 bg-red-500/20 text-red-400 font-semibold rounded-lg border border-red-500/30 hover:bg-red-500/30 transition-colors">SELL</button>
+                    </div>
+                </div>
+                
+                <!-- Floating Stats Cards -->
+                <div class="absolute -top-6 -right-6 glass-panel rounded-xl p-4 animate-float" style="animation-delay: 1s;">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Profit Today</p>
+                            <p class="text-lg font-bold text-white">+$4,289</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="absolute -bottom-6 -left-6 glass-panel rounded-xl p-4 animate-float" style="animation-delay: 2s;">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-gold-400/20 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Spread</p>
+                            <p class="text-lg font-bold text-gold-400">0.2 pips</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Market Grid -->
+    <section id="markets" class="py-20 bg-dark-800/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="font-serif text-4xl font-bold text-white mb-4">Live Market Prices</h2>
+                <p class="text-gray-400">Real-time spreads and pricing on major currency pairs</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="marketGrid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="trading" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1 space-y-6">
+                    <h2 class="font-serif text-4xl font-bold text-white">Why Trade With <span class="gold-gradient-text">Goldenice</span>?</h2>
+                    <p class="text-gray-400 leading-relaxed">
+                        We combine cutting-edge technology with deep liquidity to provide the ultimate trading experience. 
+                        Our platform is built for speed, reliability, and precision.
+                    </p>
+                    <button class="text-gold-400 font-semibold flex items-center space-x-2 hover:space-x-3 transition-all">
+                        <span>Learn more about our technology</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </button>
+                </div>
+                
+                <div class="lg:col-span-2 grid md:grid-cols-2 gap-6">
+                    <div class="glass-panel rounded-xl p-6 hover:border-gold-400/30 transition-all duration-300 group">
+                        <div class="w-12 h-12 bg-gold-400/10 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Ultra-Fast Execution</h3>
+                        <p class="text-gray-400 text-sm">Average execution speed under 10ms with 99.9% fill rate. No requotes, no rejections.</p>
+                    </div>
+                    
+                    <div class="glass-panel rounded-xl p-6 hover:border-gold-400/30 transition-all duration-300 group">
+                        <div class="w-12 h-12 bg-gold-400/10 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Bank-Grade Security</h3>
+                        <p class="text-gray-400 text-sm">Segregated accounts, SSL encryption, and negative balance protection on all trades.</p>
+                    </div>
+                    
+                    <div class="glass-panel rounded-xl p-6 hover:border-gold-400/30 transition-all duration-300 group">
+                        <div class="w-12 h-12 bg-gold-400/10 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Raw Spreads</h3>
+                        <p class="text-gray-400 text-sm">Access interbank spreads from 0.0 pips on major pairs with low commission.</p>
+                    </div>
+                    
+                    <div class="glass-panel rounded-xl p-6 hover:border-gold-400/30 transition-all duration-300 group">
+                        <div class="w-12 h-12 bg-gold-400/10 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Multi-Platform</h3>
+                        <p class="text-gray-400 text-sm">Trade on MT4, MT5, or our proprietary web platform. Mobile apps for iOS and Android.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Preview -->
+    <section id="platform" class="py-24 bg-gradient-to-b from-dark-900 to-dark-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl font-bold text-white mb-4">Professional Trading Platform</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Advanced charting tools, algorithmic trading capabilities, and deep market analysis at your fingertips.
+                </p>
+            </div>
+            
+            <div class="relative rounded-2xl overflow-hidden glass-panel p-2">
+                <div class="absolute inset-0 bg-gradient-to-r from-gold-400/20 via-transparent to-gold-400/20 opacity-30"></div>
+                <div class="relative bg-dark-900 rounded-xl overflow-hidden">
+                    <!-- Mock Trading Interface -->
+                    <div class="flex h-[600px]">
+                        <!-- Sidebar -->
+                        <div class="w-64 border-r border-gray-800 p-4 hidden md:block">
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between p-2 rounded bg-dark-800">
+                                    <span class="text-sm font-medium text-white">EUR/USD</span>
+                                    <span class="text-xs text-green-400">1.0847</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 rounded hover:bg-dark-800 transition-colors">
+                                    <span class="text-sm font-medium text-gray-400">GBP/USD</span>
+                                    <span class="text-xs text-red-400">1.2632</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 rounded hover:bg-dark-800 transition-colors">
+                                    <span class="text-sm font-medium text-gray-400">USD/JPY</span>
+                                    <span class="text-xs text-green-400">151.45</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 rounded hover:bg-dark-800 transition-colors">
+                                    <span class="text-sm font-medium text-gray-400">XAU/USD</span>
+                                    <span class="text-xs text-green-400">2189.40</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Main Chart Area -->
+                        <div class="flex-1 p-4">
+                            <div class="h-full flex flex-col">
+                                <div class="flex justify-between items-center mb-4">
+                                    <div class="flex space-x-4">
+                                        <button class="text-gold-400 font-medium border-b-2 border-gold-400 pb-1">Chart</button>
+                                        <button class="text-gray-500 hover:text-gray-300 pb-1">Trade</button>
+                                        <button class="text-gray-500 hover:text-gray-300 pb-1">Analysis</button>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="p-2 rounded bg-dark-800 text-gray-400 hover:text-white">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex-1 bg-dark-800/50 rounded-lg relative overflow-hidden" id="platformChartContainer">
+                                    <canvas id="platformChart" class="w-full h-full"></canvas>
+                                    <!-- Trading Tools Overlay -->
+                                    <div class="absolute top-4 right-4 flex flex-col space-y-2">
+                                        <button class="w-10 h-10 bg-dark-700 rounded-lg flex items-center justify-center text-gold-400 hover:bg-dark-600 transition-colors" title="Fibonacci">
+                                            <span class="font-serif italic">fib</span>
+                                        </button>
+                                        <button class="w-10 h-10 bg-dark-700 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-dark-600 transition-colors" title="Trend Line">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17"></path></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Order Panel -->
+                        <div class="w-80 border-l border-gray-800 p-4 hidden lg:block">
+                            <div class="space-y-4">
+                                <div class="flex space-x-2 mb-4">
+                                    <button class="flex-1 py-2 bg-green-500/20 text-green-400 rounded font-semibold border border-green-500/30">Buy</button>
+                                    <button class="flex-1 py-2 bg-red-500/20 text-red-400 rounded font-semibold border border-red-500/30">Sell</button>
+                                </div>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="text-xs text-gray-500 block mb-1">Volume (Lots)</label>
+                                        <input type="number" value="0.01" step="0.01" class="w-full bg-dark-800 border border-gray-700 rounded px-3 py-2 text-white text-sm focus:border-gold-400 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="text-xs text-gray-500 block mb-1">Stop Loss</label>
+                                        <input type="number" placeholder="1.0800" class="w-full bg-dark-800 border border-gray-700 rounded px-3 py-2 text-white text-sm focus:border-gold-400 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="text-xs text-gray-500 block mb-1">Take Profit</label>
+                                        <input type="number" placeholder="1.0900" class="w-full bg-dark-800 border border-gray-700 rounded px-3 py-2 text-white text-sm focus:border-gold-400 focus:outline-none">
+                                    </div>
+                                </div>
+                                <div class="pt-4 border-t border-gray-800">
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="text-gray-500">Margin Required:</span>
+                                        <span class="text-white">$108.47</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-500">Spread:</span>
+                                        <span class="text-gold-400">0.2 pips</span>
+                                    </div>
+                                </div>
+                                <button class="w-full py-3 bg-gold-400 text-dark-900 font-bold rounded-lg hover:bg-gold-300 transition-colors mt-4">
+                                    Place Order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Account Types -->
+    <section class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl font-bold text-white mb-4">Choose Your Account</h2>
+                <p class="text-gray-400">Tailored trading conditions for every level of experience</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Standard -->
+                <div class="glass-panel rounded-2xl p-8 relative overflow-hidden group hover:border-gold-400/30 transition-all duration-300">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gold-400/5 rounded-full blur-2xl transform translate-x-16 -translate-y-16"></div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Standard</h3>
+                    <p class="text-gray-400 text-sm mb-6">Perfect for beginners</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-white">$0</span>
+                        <span class="text-gray-400">/min deposit</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Spreads from 1.0 pips
+                        </li>
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            No commission
+                        </li>
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            1:500 leverage
+                        </li>
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            24/5 support
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 border border-gold-400/50 text-gold-400 rounded-lg font-semibold hover:bg-gold-400/10 transition-colors"><a href="./index.html">Open Account</a></button>
+                </div>
+
+                <!-- Pro -->
+                <div class="glass-panel rounded-2xl p-8 relative overflow-hidden border-gold-400/30 transform scale-105 shadow-2xl shadow-gold-400/10">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-400 to-gold-600"></div>
+                    <div class="absolute top-4 right-4 px-3 py-1 bg-gold-400 text-dark-900 text-xs font-bold rounded-full">POPULAR</div>
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gold-400/10 rounded-full blur-2xl transform translate-x-16 -translate-y-16"></div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Pro</h3>
+                    <p class="text-gray-400 text-sm mb-6">For serious traders</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold gold-gradient-text">$500</span>
+                        <span class="text-gray-400">/min deposit</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Raw spreads 0.0 pips
+                        </li>
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            $3.5 commission/lot
+                        </li>
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            1:500 leverage
+                        </li>
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Dedicated manager
+                        </li>
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Free VPS hosting
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 bg-gradient-to-r from-gold-400 to-gold-600 text-dark-900 font-bold rounded-lg hover:shadow-lg hover:shadow-gold-400/30 transition-all"><a href="./index.html">Open Account</a></button>
+                </div>
+
+                <!-- VIP -->
+                <div class="glass-panel rounded-2xl p-8 relative overflow-hidden group hover:border-gold-400/30 transition-all duration-300">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl transform translate-x-16 -translate-y-16"></div>
+                    <h3 class="text-2xl font-bold text-white mb-2">VIP</h3>
+                    <p class="text-gray-400 text-sm mb-6">Institutional grade</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-white">$10K</span>
+                        <span class="text-gray-400">/min deposit</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Custom spreads
+                        </li>
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Negotiable commission
+                        </li>
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            1:1000 leverage
+                        </li>
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Personal analyst
+                        </li>
+                        <li class="flex items-center text-sm text-gray-300">
+                            <svg class="w-5 h-5 text-gold-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Event invitations
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 border border-gold-400/50 text-gold-400 rounded-lg font-semibold hover:bg-gold-400/10 transition-colors"><a href="./contact.html"> Contact Us</a>       </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-24 bg-dark-800/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="font-serif text-4xl font-bold text-white mb-6">Trusted by Traders Worldwide</h2>
+                    <div class="space-y-6" id="testimonials">
+                        <div class="glass-panel rounded-xl p-6 border-l-4 border-gold-400">
+                            <p class="text-gray-300 italic mb-4">"The execution speed is phenomenal. I've never experienced such tight spreads and instant fills. Goldenice has transformed my scalping strategy."</p>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-dark-900 font-bold">JD</div>
+                                <div>
+                                    <p class="text-white font-semibold">James Davidson</p>
+                                    <p class="text-xs text-gray-500">Professional Trader • London</p>
+                                </div>
+                                <div class="ml-auto flex text-gold-400">
+                                    ★★★★★
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-panel rounded-xl p-6 border-l-4 border-gold-400 opacity-60">
+                            <p class="text-gray-300 italic mb-4">"After trying multiple brokers, Goldenice stands out for their transparency and customer service. The platform stability is unmatched."</p>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">SL</div>
+                                <div>
+                                    <p class="text-white font-semibold">Sarah Lin</p>
+                                    <p class="text-xs text-gray-500">Fund Manager • Singapore</p>
+                                </div>
+                                <div class="ml-auto flex text-gold-400">
+                                    ★★★★★
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="glass-panel rounded-2xl p-8 relative z-10">
+                        <h3 class="text-2xl font-bold text-white mb-6">Market Sentiment</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">EUR/USD</span>
+                                    <span class="text-green-400">72% Buy</span>
+                                </div>
+                                <div class="h-2 bg-dark-700 rounded-full overflow-hidden">
+                                    <div class="h-full w-[72%] bg-gradient-to-r from-green-500 to-green-400 rounded-full"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">GBP/USD</span>
+                                    <span class="text-red-400">58% Sell</span>
+                                </div>
+                                <div class="h-2 bg-dark-700 rounded-full overflow-hidden">
+                                    <div class="h-full w-[58%] bg-gradient-to-r from-red-500 to-red-400 rounded-full ml-auto"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">XAU/USD</span>
+                                    <span class="text-green-400">85% Buy</span>
+                                </div>
+                                <div class="h-2 bg-dark-700 rounded-full overflow-hidden">
+                                    <div class="h-full w-[85%] bg-gradient-to-r from-green-500 to-green-400 rounded-full"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">USD/JPY</span>
+                                    <span class="text-gray-400">50% Neutral</span>
+                                </div>
+                                <div class="h-2 bg-dark-700 rounded-full overflow-hidden">
+                                    <div class="h-full w-[50%] bg-gradient-to-r from-gold-400 to-gold-600 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 p-4 bg-gold-400/10 rounded-lg border border-gold-400/20">
+                            <p class="text-sm text-gold-200 text-center">
+                                <span class="font-semibold">Market Alert:</span> High volatility expected during NYC session due to NFP release.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="absolute -top-4 -right-4 w-24 h-24 bg-gold-400/20 rounded-full blur-xl"></div>
+                    <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-blue-500/20 rounded-full blur-xl"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-gold-400/10 to-transparent"></div>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h2 class="font-serif text-5xl font-bold text-white mb-6">Start Trading in Minutes</h2>
+            <p class="text-xl text-gray-400 mb-8">Join the elite community of traders who demand excellence. 
+            Open your account today and experience the Goldenice difference.</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="px-8 py-4 bg-gradient-to-r from-gold-400 to-gold-600 text-dark-900 font-bold rounded-lg hover:shadow-xl hover:shadow-gold-400/40 transform hover:-translate-y-1 transition-all duration-300">
+                <a href="./index.html">Create Live Account</a>                
+                </button>
+                <button class="px-8 py-4 border-2 border-gold-400/50 text-gold-400 font-bold rounded-lg hover:bg-gold-400/10 transition-all duration-300 flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Watch Platform Tour</span>
+                </button>
+            </div>
+            
+            <div class="mt-8 flex justify-center space-x-6 text-sm text-gray-500">
+                <span class="flex items-center"><svg class="w-4 h-4 mr-1 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Regulated</span>
+                <span class="flex items-center"><svg class="w-4 h-4 mr-1 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Secure</span>
+                <span class="flex items-center"><svg class="w-4 h-4 mr-1 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 24/5 Support</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark-900 border-t border-gray-800 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-br from-gold-400 to-gold-600 rounded flex items-center justify-center">
+                            <span class="text-dark-900 font-bold">G</span>
+                        </div>
+                        <span class="font-serif text-xl font-bold text-white">Goldenice International</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-md">
+                        Goldenice International is a leading online trading provider, offering access to Forex, 
+                        commodities, indices, and cryptocurrency markets. Trade with confidence on a platform 
+                        built for performance.
+                    </p>
+                  
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Trading</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="./stocks.html" class="hover:text-gold-400 transition-colors">Stocks</a></li>
+                        <li><a href="./Commodities.html" class="hover:text-gold-400 transition-colors">Commodities</a></li>
+                        <li><a href="./Indices.html" class="hover:text-gold-400 transition-colors">Indices</a></li>
+                       
+                        <li><a href="./Spreads & Conditions.html" class="hover:text-gold-400 transition-colors">Spreads & Conditions</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="./about.html" class="hover:text-gold-400 transition-colors">About Us</a></li>
+                        <li><a href="./regulations.html" class="hover:text-gold-400 transition-colors">Regulation</a></li>
+                        <li><a href="./carrers.html" class="hover:text-gold-400 transition-colors">Careers</a></li>
+                        <li><a href="./contact.html" class="hover:text-gold-400 transition-colors">Contact</a></li>
+                        <li><a href="./blog.html" class="hover:text-gold-400 transition-colors">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-xs text-gray-500 mb-4 md:mb-0">
+                    © 2026 Goldenice International. All rights reserved. 
+                    <span class="block md:inline mt-2 md:mt-0 md:ml-4">Risk Warning: Trading involves significant risk of loss.</span>
+                </p>
+                <div class="flex space-x-6 text-xs text-gray-500">
+                    <a href="./privacy policy.html" class="hover:text-gray-300">Privacy Policy</a>
+                    <a href="./tos.html" class="hover:text-gray-300">Terms of Service</a>
+                    <a href="./Cookie Policy.html" class="hover:text-gray-300">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Market Data Simulation
+        const pairs = [
+            { name: 'EUR/USD', price: 1.0847, change: 0.24, high: 1.0855, low: 1.0821 },
+            { name: 'GBP/USD', price: 1.2632, change: -0.15, high: 1.2650, low: 1.2610 },
+            { name: 'USD/JPY', price: 151.45, change: 0.32, high: 151.80, low: 151.10 },
+            { name: 'XAU/USD', price: 2189.40, change: 1.25, high: 2195.00, low: 2162.30 },
+            { name: 'USD/CHF', price: 0.9050, change: -0.08, high: 0.9065, low: 0.9030 },
+            { name: 'AUD/USD', price: 0.6540, change: 0.45, high: 0.6555, low: 0.6510 },
+            { name: 'USD/CAD', price: 1.3540, change: -0.12, high: 1.3560, low: 1.3520 },
+            { name: 'NZD/USD', price: 0.5980, change: 0.18, high: 0.5995, low: 0.5960 }
+        ];
+
+        // Initialize Ticker
+        function initTicker() {
+            const ticker = document.getElementById('ticker');
+            const tickerContent = pairs.map(p => `
+                <span class="inline-flex items-center mx-6">
+                    <span class="font-semibold text-gold-400">${p.name}</span>
+                    <span class="ml-2 ${p.change >= 0 ? 'text-green-400' : 'text-red-400'}">
+                        ${p.price.toFixed(p.price > 100 ? 2 : 4)}
+                        <span class="ml-1 text-xs">(${p.change > 0 ? '+' : ''}${p.change}%)</span>
+                    </span>
+                </span>
+            `).join('');
+            ticker.innerHTML = tickerContent + tickerContent; // Duplicate for seamless loop
+        }
+
+        // Initialize Market Grid
+        function initMarketGrid() {
+            const grid = document.getElementById('marketGrid');
+            grid.innerHTML = pairs.map(p => `
+                <div class="glass-panel rounded-xl p-4 hover:border-gold-400/30 transition-all duration-300 cursor-pointer group">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="text-white font-semibold">${p.name}</h4>
+                            <p class="text-xs text-gray-500">Forex</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full ${p.change >= 0 ? 'bg-green-500/20' : 'bg-red-500/20'} flex items-center justify-center">
+                            <svg class="w-4 h-4 ${p.change >= 0 ? 'text-green-400' : 'text-red-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${p.change >= 0 ? 'M5 10l7-7m0 0l7 7m-7-7v18' : 'M19 14l-7 7m0 0l-7-7m7 7V3'}"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-2xl font-bold text-white font-mono" id="price-${p.name.replace('/', '-')}">${p.price.toFixed(p.price > 100 ? 2 : 4)}</p>
+                            <p class="text-xs ${p.change >= 0 ? 'text-green-400' : 'text-red-400'}">
+                                ${p.change > 0 ? '+' : ''}${p.change}%
+                            </p>
+                        </div>
+                        <div class="text-right text-xs text-gray-500">
+                            <p>H: ${p.high}</p>
+                            <p>L: ${p.low}</p>
+                        </div>
+                    </div>
+                    <div class="mt-3 h-1 bg-dark-700 rounded-full overflow-hidden">
+                        <div class="h-full ${p.change >= 0 ? 'bg-green-400' : 'bg-red-400'} rounded-full" style="width: ${Math.abs(p.change) * 20 + 10}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Live Price Updates
+        function updatePrices() {
+            pairs.forEach(p => {
+                const volatility = 0.0002;
+                const change = (Math.random() - 0.5) * volatility * p.price;
+                p.price += change;
+                
+                // Update DOM
+                const priceEl = document.getElementById(`price-${p.name.replace('/', '-')}`);
+                if (priceEl) {
+                    priceEl.textContent = p.price.toFixed(p.price > 100 ? 2 : 4);
+                    priceEl.style.color = change > 0 ? '#10B981' : (change < 0 ? '#EF4444' : '#ffffff');
+                    setTimeout(() => priceEl.style.color = '#ffffff', 300);
+                }
+                
+                // Update hero price occasionally
+                if (p.name === 'EUR/USD' && Math.random() > 0.7) {
+                    document.getElementById('hero-price').textContent = p.price.toFixed(4);
+                }
+            });
+        }
+
+        // Canvas Chart Drawing
+        function drawChart(canvasId, color = '#D4AF37') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Generate random walk data
+            let data = [];
+            let price = 100;
+            for (let i = 0; i < 50; i++) {
+                price += (Math.random() - 0.5) * 2;
+                data.push(price);
+            }
+            
+            // Normalize
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min;
+            
+            // Draw line
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            data.forEach((p, i) => {
+                const x = (i / (data.length - 1)) * width;
+                const y = height - ((p - min) / range) * (height - 40) - 20;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            
+            ctx.stroke();
+            
+            // Add gradient fill
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
+            ctx.closePath();
+            const gradient = ctx.createLinearGradient(0, 0, 0, height);
+            gradient.addColorStop(0, color + '40');
+            gradient.addColorStop(1, color + '00');
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // Draw candles for platform chart
+            if (canvasId === 'platformChart') {
+                ctx.clearRect(0, 0, width, height);
+                const candleWidth = width / 30;
+                
+                for (let i = 0; i < 30; i++) {
+                    const open = 100 + Math.random() * 20;
+                    const close = open + (Math.random() - 0.5) * 10;
+                    const high = Math.max(open, close) + Math.random() * 5;
+                    const low = Math.min(open, close) - Math.random() * 5;
+                    
+                    const x = i * candleWidth + candleWidth / 2;
+                    const yOpen = height - (open - 80) * 3;
+                    const yClose = height - (close - 80) * 3;
+                    const yHigh = height - (high - 80) * 3;
+                    const yLow = height - (low - 80) * 3;
+                    
+                    const isGreen = close > open;
+                    ctx.fillStyle = isGreen ? '#10B981' : '#EF4444';
+                    ctx.strokeStyle = isGreen ? '#10B981' : '#EF4444';
+                    
+                    // Wick
+                    ctx.beginPath();
+                    ctx.moveTo(x, yHigh);
+                    ctx.lineTo(x, yLow);
+                    ctx.stroke();
+                    
+                    // Body
+                    ctx.fillRect(x - candleWidth * 0.3, Math.min(yOpen, yClose), candleWidth * 0.6, Math.abs(yClose - yOpen) || 1);
+                }
+            }
+        }
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-dark-900/95');
+                nav.classList.remove('glass-panel');
+            } else {
+                nav.classList.remove('bg-dark-900/95');
+                nav.classList.add('glass-panel');
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initTicker();
+            initMarketGrid();
+            drawChart('heroChart');
+            drawChart('platformChart');
+            
+            // Start price updates
+            setInterval(updatePrices, 2000);
+            
+            // Redraw charts periodically
+            setInterval(() => drawChart('heroChart'), 5000);
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>External Investor Compliance | Goldenice International</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        
+        :root {
+            --primary: #0F172A;
+            --secondary: #1E293B;
+            --accent: #3B82F6;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #06B6D4;
+            --surface: #FFFFFF;
+            --surface-hover: #F8FAFC;
+            --border: #E2E8F0;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --gold: #D4AF37;
+            --grid-line: rgba(148, 163, 184, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Data Grid Background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-orb {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .glow-orb:nth-child(1) { top: -200px; left: -200px; animation-delay: 0s; }
+        .glow-orb:nth-child(2) { bottom: -200px; right: -200px; animation-delay: -10s; background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%); }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--gold), #AA8C2C);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .brand-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text span {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .alert-counter {
+            background: var(--danger);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            animation: alert-pulse 2s infinite;
+        }
+
+        @keyframes alert-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        }
+
+        /* Main Layout */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Top Bar */
+        .control-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 3rem;
+            background: var(--secondary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.5;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), #AA8C2C);
+            color: var(--primary);
+        }
+
+        /* Stats Overview */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card.danger::before { background: linear-gradient(90deg, var(--danger), transparent); }
+        .stat-card.warning::before { background: linear-gradient(90deg, var(--warning), transparent); }
+        .stat-card.success::before { background: linear-gradient(90deg, var(--success), transparent); }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .stat-card.danger .stat-icon { background: rgba(239, 68, 68, 0.1); }
+        .stat-card.warning .stat-icon { background: rgba(245, 158, 11, 0.1); }
+        .stat-card.success .stat-icon { background: rgba(16, 185, 129, 0.1); }
+
+        .stat-change {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .change-up { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .change-down { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Main Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Panel Styles */
+        .panel {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .panel-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        tr {
+            transition: all 0.3s ease;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .investor-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .investor-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #1D4ED8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .investor-details h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .investor-details span {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .risk-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .risk-critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            animation: risk-pulse 2s infinite;
+        }
+
+        .risk-high {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .risk-medium {
+            background: rgba(6, 182, 212, 0.2);
+            color: var(--info);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .risk-low {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        @keyframes risk-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+        }
+
+        .volume-bar {
+            width: 100px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+
+        .volume-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #60A5FA);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .compliance-score {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .score-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) 85%, rgba(255,255,255,0.1) 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            width: 32px;
+            height: 32px;
+            background: var(--secondary);
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .score-value {
+            position: relative;
+            z-index: 1;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Activity Feed */
+        .activity-list {
+            padding: 1rem;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .activity-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .activity-item.critical { border-left-color: var(--danger); }
+        .activity-item.warning { border-left-color: var(--warning); }
+        .activity-item.info { border-left-color: var(--info); }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-item.critical .activity-icon { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .activity-item.warning .activity-icon { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .activity-item.info .activity-icon { background: rgba(6, 182, 212, 0.1); color: var(--info); }
+
+        .activity-content h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-content p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Compliance Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .metric-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .metric-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .trend-positive { color: var(--success); }
+        .trend-negative { color: var(--danger); }
+
+        /* Chart Container */
+        .chart-container {
+            height: 300px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 100%;
+            gap: 1rem;
+        }
+
+        .chart-bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-bar {
+            width: 100%;
+            background: linear-gradient(180deg, var(--accent), rgba(59, 130, 246, 0.2));
+            border-radius: 6px 6px 0 0;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 20px;
+        }
+
+        .chart-bar:hover {
+            background: linear-gradient(180deg, #60A5FA, rgba(96, 165, 250, 0.2));
+            transform: scaleY(1.05);
+        }
+
+        .chart-bar::before {
+            content: attr(data-value);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: white;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .chart-bar:hover::before {
+            opacity: 1;
+        }
+
+        .chart-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* Filter Tags */
+        .filter-tags {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0 1.5rem 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-tag:hover, .filter-tag.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background: var(--secondary);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-item {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            font-size: 1.125rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .violation-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .violation-item {
+            padding: 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .violation-info h4 {
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+
+        .violation-info p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 2000;
+        }
+
+        .toast {
+            background: var(--secondary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 300px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .toast.success .toast-icon { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .toast.warning .toast-icon { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .toast.error .toast-icon { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .content-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .metrics-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .control-bar { flex-direction: column; }
+            .search-box { max-width: 100%; width: 100%; }
+        }
+
+        /* Loading Animation */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="matrix-bg"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="brand">
+                <div class="brand-icon">📊</div>
+                <div class="brand-text">
+                    <h1>Goldenice International</h1>
+                    <span>External Investor Compliance</span>
+                </div>
+            </div>
+            
+            <div class="system-status">
+                <div class="status-item">
+                    <span class="status-dot"></span>
+                    <span>System Operational</span>
+                </div>
+                <div class="status-item">
+                    <span>Last Update: <span id="lastUpdate">12:11:00 UTC</span></span>
+                </div>
+                <div class="alert-counter" id="alertCount">3</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Control Bar -->
+        <div class="control-bar">
+            <div class="search-box">
+                <input type="text" placeholder="Search investors, entities, or trading IDs..." id="searchInput" onkeyup="searchInvestors()">
+            </div>
+            <div class="control-group">
+                <button class="btn btn-secondary" onclick="refreshData()">
+                    <span>🔄</span> Refresh
+                </button>
+                <button class="btn btn-primary" onclick="generateReport()">
+                    <span>📥</span> Export Report
+                </button>
+                <button class="btn btn-gold" onclick="openAlertSettings()">
+                    <span>⚡</span> Alert Config
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card danger">
+                <div class="stat-header">
+                    <div class="stat-icon">🚨</div>
+                    <span class="stat-change change-down">↑ 12%</span>
+                </div>
+                <div class="stat-value" id="criticalCount">3</div>
+                <div class="stat-label">Critical Violations</div>
+            </div>
+
+            <div class="stat-card warning">
+                <div class="stat-header">
+                    <div class="stat-icon">⚠️</div>
+                    <span class="stat-change change-up">↓ 5%</span>
+                </div>
+                <div class="stat-value">12</div>
+                <div class="stat-label">High Risk Investors</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon">👁️</div>
+                    <span class="stat-change change-up">↑ 8%</span>
+                </div>
+                <div class="stat-value">1,247</div>
+                <div class="stat-label">Under Surveillance</div>
+            </div>
+
+            <div class="stat-card success">
+                <div class="stat-header">
+                    <div class="stat-icon">✅</div>
+                    <span class="stat-change change-up">99.2%</span>
+                </div>
+                <div class="stat-value">98.5%</div>
+                <div class="stat-label">Compliance Rate</div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="content-grid">
+            <!-- Left Column -->
+            <div class="left-column">
+                <!-- Investors Table -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Monitored Investors</h3>
+                        <div class="panel-actions">
+                            <button class="icon-btn" onclick="filterTable()">🔍</button>
+                            <button class="icon-btn" onclick="sortTable()">⇅</button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-tags">
+                        <span class="filter-tag active" onclick="filterByRisk('all')">All</span>
+                        <span class="filter-tag" onclick="filterByRisk('critical')">Critical</span>
+                        <span class="filter-tag" onclick="filterByRisk('high')">High Risk</span>
+                        <span class="filter-tag" onclick="filterByRisk('medium')">Medium</span>
+                        <span class="filter-tag" onclick="filterByRisk('low')">Low Risk</span>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="investorsTable">
+                            <thead>
+                                <tr>
+                                    <th>Investor</th>
+                                    <th>Jurisdiction</th>
+                                    <th>Risk Level</th>
+                                    <th>Trade Volume</th>
+                                    <th>Compliance Score</th>
+                                    <th>Last Activity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Trading Volume Chart -->
+                <div class="panel" style="margin-top: 2rem;">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Suspicious Trading Patterns</h3>
+                        <div class="panel-actions">
+                            <button class="icon-btn">📊</button>
+                            <button class="icon-btn">⚙️</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-bars" id="volumeChart">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <!-- Real-time Activity -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Live Alerts</h3>
+                        <button class="icon-btn" onclick="clearAlerts()">✕</button>
+                    </div>
+                    <div class="activity-list" id="activityList">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Compliance Metrics -->
+                <div class="panel" style="margin-top: 2rem;">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Regulatory Metrics</h3>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div class="metrics-grid" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div class="metric-card">
+                                <div class="metric-value">84</div>
+                                <div class="metric-label">KYC Pending</div>
+                                <div class="metric-trend trend-negative">↑ 12 this week</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">156</div>
+                                <div class="metric-label">AML Checks</div>
+                                <div class="metric-trend trend-positive">↓ 8% cleared</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">23</div>
+                                <div class="metric-label">Sanctions Hits</div>
+                                <div class="metric-trend trend-negative">Requires Review</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="panel" style="margin-top: 2rem;">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Quick Actions</h3>
+                    </div>
+                    <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                        <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="runScreening()">
+                            <span>🔍</span> Run KYC Screening
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%; justify-content: center;" onclick="checkSanctions()">
+                            <span>🚫</span> Check Sanctions List
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%; justify-content: center;" onclick="fileSAR()">
+                            <span>📝</span> File Suspicious Activity
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Investor Detail Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Investor Profile: <span id="modalInvestorName">--</span></h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Investor ID</div>
+                        <div class="detail-value" id="modalInvestorId">--</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Entity Type</div>
+                        <div class="detail-value" id="modalEntityType">--</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Jurisdiction</div>
+                        <div class="detail-value" id="modalJurisdiction">--</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Portfolio Value</div>
+                        <div class="detail-value" id="modalPortfolio">--</div>
+                    </div>
+                </div>
+
+                <h3 style="color: white; margin-bottom: 1rem; font-size: 1.125rem;">Compliance Violations</h3>
+                <div class="violation-list" id="violationList">
+                    <!-- Populated by JS -->
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="escalateCase()">Escalate to Legal</button>
+                    <button class="btn btn-secondary" onclick="requestDocuments()">Request Documents</button>
+                    <button class="btn btn-secondary" style="margin-left: auto; color: var(--danger); border-color: var(--danger);" onclick="freezeAccount()">Freeze Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // Sample Data for External Investors
+        const investors = [
+            {
+                id: 'EXT-2026-001',
+                name: 'Apex Capital Holdings',
+                entity: 'Hedge Fund',
+                jurisdiction: 'Cayman Islands',
+                risk: 'critical',
+                volume: 85,
+                volumeValue: '$45.2M',
+                compliance: 42,
+                lastActivity: '2 mins ago',
+                violations: [
+                    { type: 'Insider Trading Pattern', severity: 'Critical', date: '2026-03-31' },
+                    { type: 'Beneficial Ownership Gap', severity: 'High', date: '2026-03-28' }
+                ]
+            },
+            {
+                id: 'EXT-2026-002',
+                name: 'Horizon Ventures LLC',
+                entity: 'Private Equity',
+                jurisdiction: 'Delaware, USA',
+                risk: 'high',
+                volume: 65,
+                volumeValue: '$28.7M',
+                compliance: 68,
+                lastActivity: '15 mins ago',
+                violations: [
+                    { type: 'Unusual Trading Hours', severity: 'Medium', date: '2026-03-30' }
+                ]
+            },
+            {
+                id: 'EXT-2026-003',
+                name: 'Pacific Rim Investments',
+                entity: 'Family Office',
+                jurisdiction: 'Singapore',
+                risk: 'medium',
+                volume: 45,
+                volumeValue: '$12.3M',
+                compliance: 82,
+                lastActivity: '1 hour ago',
+                violations: []
+            },
+            {
+                id: 'EXT-2026-004',
+                name: 'Nordic Alpha Fund',
+                entity: 'Mutual Fund',
+                jurisdiction: 'Luxembourg',
+                risk: 'low',
+                volume: 30,
+                volumeValue: '$8.9M',
+                compliance: 94,
+                lastActivity: '3 hours ago',
+                violations: []
+            },
+            {
+                id: 'EXT-2026-005',
+                name: 'Emerging Markets Group',
+                entity: 'Sovereign Wealth',
+                jurisdiction: 'UAE',
+                risk: 'high',
+                volume: 78,
+                volumeValue: '$156.8M',
+                compliance: 61,
+                lastActivity: '45 mins ago',
+                violations: [
+                    { type: 'Sanctions List Match', severity: 'High', date: '2026-03-29' },
+                    { type: 'Source of Funds Unclear', severity: 'Medium', date: '2026-03-25' }
+                ]
+            },
+            {
+                id: 'EXT-2026-006',
+                name: 'Quantum Trading Ltd',
+                entity: 'Prop Trading',
+                jurisdiction: 'BVI',
+                risk: 'critical',
+                volume: 92,
+                volumeValue: '$67.4M',
+                compliance: 35,
+                lastActivity: 'Just now',
+                violations: [
+                    { type: 'Market Manipulation', severity: 'Critical', date: '2026-03-31' },
+                    { type: 'Layering Detected', severity: 'Critical', date: '2026-03-31' },
+                    { type: 'KYC Expired', severity: 'High', date: '2026-03-15' }
+                ]
+            }
+        ];
+
+        const activities = [
+            { type: 'critical', icon: '🚨', title: 'Wash Trading Detected', desc: 'Quantum Trading Ltd - Pattern analysis indicates potential wash trading', time: '2 mins ago' },
+            { type: 'warning', icon: '⚠️', title: 'Large Position Alert', desc: 'Emerging Markets Group - Position exceeds reporting threshold', time: '15 mins ago' },
+            { type: 'info', icon: '🔍', title: 'KYC Review Completed', desc: 'Pacific Rim Investments - Documentation verified', time: '1 hour ago' },
+            { type: 'critical', icon: '🚫', title: 'Sanctions Match', desc: 'Potential match with OFAC SDN list - Manual review required', time: '2 hours ago' },
+            { type: 'warning', icon: '📊', title: 'Volume Spike', desc: 'Apex Capital - 300% above 30-day average', time: '3 hours ago' }
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+            renderActivities();
+            renderChart();
+            updateTime();
+            setInterval(updateTime, 1000);
+            setInterval(simulateLiveUpdate, 30000); // Simulate live updates every 30s
+        });
+
+        // Render Functions
+        function renderTable(filter = 'all') {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            const filtered = filter === 'all' ? investors : investors.filter(i => i.risk === filter);
+
+            filtered.forEach(investor => {
+                const row = document.createElement('tr');
+                const riskClass = `risk-${investor.risk}`;
+                const complianceColor = investor.compliance >= 80 ? 'var(--success)' : 
+                                       investor.compliance >= 60 ? 'var(--warning)' : 'var(--danger)';
+                
+                row.innerHTML = `
+                    <td>
+                        <div class="investor-info">
+                            <div class="investor-avatar">${investor.name.charAt(0)}</div>
+                            <div class="investor-details">
+                                <h4>${investor.name}</h4>
+                                <span>${investor.id}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${investor.jurisdiction}</td>
+                    <td><span class="risk-badge ${riskClass}">${investor.risk}</span></td>
+                    <td>
+                        <div class="volume-bar"><div class="volume-fill" style="width: ${investor.volume}%"></div></div>
+                        ${investor.volumeValue}
+                    </td>
+                    <td>
+                        <div class="compliance-score">
+                            <div class="score-circle" style="background: conic-gradient(${complianceColor} ${investor.compliance}%, rgba(255,255,255,0.1) 0)">
+                                <span class="score-value">${investor.compliance}%</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;">${investor.lastActivity}</td>
+                    <td>
+                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="viewDetails('${investor.id}')">Review</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderActivities() {
+            const container = document.getElementById('activityList');
+            activities.forEach(activity => {
+                const div = document.createElement('div');
+                div.className = `activity-item ${activity.type}`;
+                div.innerHTML = `
+                    <div class="activity-icon">${activity.icon}</div>
+                    <div class="activity-content">
+                        <h4>${activity.title}</h4>
+                        <p>${activity.desc}</p>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderChart() {
+            const chart = document.getElementById('volumeChart');
+            const data = [
+                { label: 'Mon', value: 45 },
+                { label: 'Tue', value: 62 },
+                { label: 'Wed', value: 38 },
+                { label: 'Thu', value: 85 },
+                { label: 'Fri', value: 92 },
+                { label: 'Sat', value: 25 },
+                { label: 'Sun', value: 30 }
+            ];
+
+            data.forEach(item => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'chart-bar-wrapper';
+                wrapper.innerHTML = `
+                    <div class="chart-bar" style="height: ${item.value}%" data-value="${item.value}%"></div>
+                    <div class="chart-label">${item.label}</div>
+                `;
+                chart.appendChild(wrapper);
+            });
+        }
+
+        // Interactive Functions
+        function viewDetails(id) {
+            const investor = investors.find(i => i.id === id);
+            if (!investor) return;
+
+            document.getElementById('modalInvestorName').textContent = investor.name;
+            document.getElementById('modalInvestorId').textContent = investor.id;
+            document.getElementById('modalEntityType').textContent = investor.entity;
+            document.getElementById('modalJurisdiction').textContent = investor.jurisdiction;
+            document.getElementById('modalPortfolio').textContent = investor.volumeValue;
+
+            const violationList = document.getElementById('violationList');
+            violationList.innerHTML = '';
+            
+            if (investor.violations.length === 0) {
+                violationList.innerHTML = '<p style="color: var(--text-secondary);">No violations recorded.</p>';
+            } else {
+                investor.violations.forEach(v => {
+                    const div = document.createElement('div');
+                    div.className = 'violation-item';
+                    div.innerHTML = `
+                        <div class="violation-info">
+                            <h4>${v.type}</h4>
+                            <p>Severity: ${v.severity} • ${v.date}</p>
+                        </div>
+                        <span class="risk-badge risk-${v.severity.toLowerCase()}">${v.severity}</span>
+                    `;
+                    violationList.appendChild(div);
+                });
+            }
+
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        function filterByRisk(risk) {
+            document.querySelectorAll('.filter-tag').forEach(tag => tag.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTable(risk);
+        }
+
+        function searchInvestors() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#tableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        function refreshData() {
+            showToast('Refreshing data...', 'Syncing with regulatory databases', 'info');
+            setTimeout(() => {
+                showToast('Update Complete', 'All investor data refreshed', 'success');
+            }, 1500);
+        }
+
+        function generateReport() {
+            showToast('Generating Report', 'Compiling compliance audit...', 'info');
+            setTimeout(() => {
+                showToast('Report Ready', 'SEC Form 17-H downloaded', 'success');
+            }, 2000);
+        }
+
+        function runScreening() {
+            showToast('KYC Screening', 'Batch processing 84 pending investors...', 'info');
+        }
+
+        function checkSanctions() {
+            showToast('Sanctions Check', 'Scanning OFAC, UN, EU lists...', 'info');
+        }
+
+        function fileSAR() {
+            showToast('SAR Filing', 'Opening FinCEN Form 111...', 'info');
+        }
+
+        function escalateCase() {
+            showToast('Escalated', 'Case sent to Legal Department', 'success');
+            closeModal();
+        }
+
+        function requestDocuments() {
+            showToast('Request Sent', 'Document request notification issued', 'success');
+        }
+
+        function freezeAccount() {
+            if (confirm('Are you sure you want to freeze this account? This action requires compliance officer approval.')) {
+                showToast('Account Frozen', 'Trading suspended pending review', 'error');
+                closeModal();
+            }
+        }
+
+        function clearAlerts() {
+            document.getElementById('activityList').innerHTML = '<p style="padding: 2rem; text-align: center; color: var(--text-secondary);">No new alerts</p>';
+            document.getElementById('alertCount').textContent = '0';
+        }
+
+        // Utility Functions
+        function showToast(title, message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = { success: '✓', warning: '⚠', error: '✕', info: 'ℹ' };
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${icons[type]}</div>
+                <div>
+                    <h4 style="color: white; margin-bottom: 0.25rem; font-size: 0.9rem;">${title}</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.8rem;">${message}</p>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toISOString().split('T')[1].split('.')[0] + ' UTC';
+            document.getElementById('lastUpdate').textContent = timeStr;
+        }
+
+        function simulateLiveUpdate() {
+            // Randomly update an investor's last activity
+            const randomInvestor = investors[Math.floor(Math.random() * investors.length)];
+            randomInvestor.lastActivity = 'Just now';
+            renderTable(document.querySelector('.filter-tag.active').textContent.toLowerCase());
+            
+            // Occasionally add new activity
+            if (Math.random() > 0.7) {
+                const newActivity = {
+                    type: Math.random() > 0.5 ? 'warning' : 'info',
+                    icon: Math.random() > 0.5 ? '📊' : '🔍',
+                    title: 'Automated Alert',
+                    desc: `Unusual pattern detected for ${randomInvestor.name}`,
+                    time: 'Just now'
+                };
+                const container = document.getElementById('activityList');
+                const div = document.createElement('div');
+                div.className = `activity-item ${newActivity.type}`;
+                div.innerHTML = `
+                    <div class="activity-icon">${newActivity.icon}</div>
+                    <div class="activity-content">
+                        <h4>${newActivity.title}</h4>
+                        <p>${newActivity.desc}</p>
+                        <div class="activity-time">${newActivity.time}</div>
+                    </div>
+                `;
+                container.insertBefore(div, container.firstChild);
+                
+                const count = parseInt(document.getElementById('alertCount').textContent) + 1;
+                document.getElementById('alertCount').textContent = count;
+            }
+        }
+
+        function openAlertSettings() {
+            showToast('Alert Configuration', 'Opening notification settings...', 'info');
+        }
+
+        function filterTable() {
+            showToast('Filter Applied', 'Advanced filters activated', 'info');
+        }
+
+        function sortTable() {
+            showToast('Sorted', 'Table sorted by risk level', 'info');
+            investors.sort((a, b) => {
+                const riskOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+                return riskOrder[a.risk] - riskOrder[b.risk];
+            });
+            renderTable();
+        }
+
+        // Close modal on outside click
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                refreshData();
+            }
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - Forex Market Structure</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold-primary: #FFD700;
+            --gold-dark: #B8860B;
+            --gold-light: #FFE55C;
+            --ice-blue: #00D4FF;
+            --ice-dark: #0080A0;
+            --deep-navy: #0a0e27;
+            --navy-light: #151b3d;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --border-glow: rgba(255, 215, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f4b 50%, #0f1535 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 215, 0, 0.02) 0%, transparent 50%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-5%, -5%); }
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg, rgba(10, 14, 39, 0.95) 0%, rgba(10, 14, 39, 0.8) 100%);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glow);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--deep-navy);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); }
+        }
+
+        .logo-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--ice-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .market-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--glass-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .clock {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            color: var(--gold-primary);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .hero h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, var(--gold-primary) 50%, var(--ice-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+
+        .glass-card:hover::before {
+            animation: shimmer 0.5s ease-in-out;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 215, 0, 0.1);
+            border-color: var(--border-glow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--gold-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-primary) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* Session Timeline */
+        .timeline-container {
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ice-blue) 0%, var(--gold-primary) 50%, var(--ice-blue) 100%);
+            border-radius: 2px;
+            opacity: 0.3;
+        }
+
+        .sessions-wrapper {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+
+        .session-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+        }
+
+        .session-node:hover {
+            transform: scale(1.1);
+        }
+
+        .session-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--navy-light);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .session-node.active .session-dot {
+            background: var(--gold-primary);
+            border-color: var(--gold-light);
+            box-shadow: 0 0 20px var(--gold-primary);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { box-shadow: 0 0 10px var(--gold-primary); }
+            50% { box-shadow: 0 0 25px var(--gold-primary), 0 0 40px var(--gold-primary); }
+        }
+
+        .session-label {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            transition: color 0.3s ease;
+        }
+
+        .session-node.active .session-label {
+            color: var(--gold-primary);
+        }
+
+        .session-time {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 0.2rem;
+        }
+
+        /* Session Details Panel */
+        .session-details {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border-left: 4px solid var(--gold-primary);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .session-details.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .detail-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--ice-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .detail-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .meta-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+        }
+
+        .pairs-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .pair-tag {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-family: 'Orbitron', monospace;
+            color: var(--gold-primary);
+            transition: all 0.3s ease;
+        }
+
+        .pair-tag:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Currency Pairs Table */
+        .pairs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .pair-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .pair-card:hover {
+            background: rgba(255, 215, 0, 0.05);
+            border-color: rgba(255, 215, 0, 0.3);
+            transform: translateX(5px);
+        }
+
+        .pair-info h4 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 0.3rem;
+        }
+
+        .pair-info span {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .pair-stats {
+            text-align: right;
+        }
+
+        .volatility-bar {
+            width: 60px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.3rem;
+        }
+
+        .volatility-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .volatility-high { background: linear-gradient(90deg, #ff6b6b, #ee5a6f); }
+        .volatility-med { background: linear-gradient(90deg, #feca57, #ff9ff3); }
+        .volatility-low { background: linear-gradient(90deg, #48dbfb, #0abde3); }
+
+        .spread-text {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Overlap Visualizer */
+        .overlap-chart {
+            position: relative;
+            height: 200px;
+            margin-top: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .overlap-session {
+            position: absolute;
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .overlap-session::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .overlap-session:hover::before {
+            left: 100%;
+        }
+
+        .sydney { 
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(0, 212, 255, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.5);
+            top: 20px;
+            left: 0%;
+            width: 25%;
+        }
+
+        .tokyo { 
+            background: linear-gradient(135deg, rgba(255, 0, 128, 0.3), rgba(255, 0, 128, 0.1));
+            border: 1px solid rgba(255, 0, 128, 0.5);
+            top: 20px;
+            left: 20%;
+            width: 25%;
+        }
+
+        .london { 
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            top: 100px;
+            left: 35%;
+            width: 30%;
+        }
+
+        .newyork { 
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 255, 136, 0.1));
+            border: 1px solid rgba(0, 255, 136, 0.5);
+            top: 100px;
+            left: 55%;
+            width: 30%;
+        }
+
+        .overlap-zone {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 215, 0, 0.5);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: var(--gold-primary);
+            font-weight: 600;
+        }
+
+        .zone-london-ny {
+            top: 80px;
+            left: 55%;
+            width: 20%;
+            height: 40px;
+        }
+
+        /* Live Ticker */
+        .ticker-section {
+            margin-top: 3rem;
+        }
+
+        .ticker-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ticker-wrapper {
+            display: flex;
+            animation: ticker 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            padding: 0 2rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ticker-pair {
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            margin-right: 1rem;
+            color: var(--gold-primary);
+        }
+
+        .ticker-rate {
+            font-family: 'Orbitron', monospace;
+            margin-right: 0.5rem;
+        }
+
+        .ticker-change {
+            font-size: 0.9rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .positive { color: #00ff88; background: rgba(0, 255, 136, 0.1); }
+        .negative { color: #ff6b6b; background: rgba(255, 107, 107, 0.1); }
+
+        /* Interactive Elements */
+        .tab-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Market Structure Visualization */
+        .structure-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tree-node {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            min-width: 120px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tree-node::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            width: 2px;
+            height: 20px;
+            background: rgba(255, 215, 0, 0.3);
+            transform: translateX(-50%);
+        }
+
+        .tree-level:last-child .tree-node::after {
+            display: none;
+        }
+
+        .tree-node:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--gold-primary);
+            transform: translateY(-3px);
+        }
+
+        .node-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--gold-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .node-desc {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .disclaimer {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+
+            .sessions-wrapper {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .overlap-session {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--deep-navy);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">G</div>
+                <div class="logo-text">
+                    <h1>GOLDENICE</h1>
+                    <p>International Markets</p>
+                </div>
+            </div>
+            <div class="market-status">
+                <div class="status-indicator"></div>
+                <span style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">Market Open</span>
+                <div class="clock" id="utcClock">00:00:00 UTC</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h2>Forex Market Structure</h2>
+            <p>Master the 24-hour market cycle with real-time session tracking, optimal pair selection, and institutional-grade market analysis.</p>
+        </section>
+
+        <div class="dashboard-grid">
+            <!-- Trading Sessions Card -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">⏰</div>
+                        Global Trading Sessions
+                    </div>
+                    <span style="font-size: 0.8rem; color: var(--ice-blue);" id="currentSession">Detecting...</span>
+                </div>
+
+                <div class="timeline-container">
+                    <div class="timeline-line"></div>
+                    <div class="sessions-wrapper">
+                        <div class="session-node" data-session="sydney" onclick="showSession('sydney')">
+                            <div class="session-dot"></div>
+                            <div class="session-label">Sydney</div>
+                            <div class="session-time">22:00-07:00 GMT</div>
+                        </div>
+                        <div class="session-node" data-session="tokyo" onclick="showSession('tokyo')">
+                            <div class="session-dot"></div>
+                            <div class="session-label">Tokyo</div>
+                            <div class="session-time">00:00-09:00 GMT</div>
+                        </div>
+                        <div class="session-node" data-session="london" onclick="showSession('london')">
+                            <div class="session-dot"></div>
+                            <div class="session-label">London</div>
+                            <div class="session-time">08:00-17:00 GMT</div>
+                        </div>
+                        <div class="session-node" data-session="newyork" onclick="showSession('newyork')">
+                            <div class="session-dot"></div>
+                            <div class="session-label">New York</div>
+                            <div class="session-time">13:00-22:00 GMT</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="session-details" id="sessionDetails">
+                    <div class="detail-title" id="detailTitle">Select a Session</div>
+                    <div class="detail-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Volatility:</span>
+                            <span id="detailVol">--</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Liquidity:</span>
+                            <span id="detailLiq">--</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Best Pairs:</span>
+                        </div>
+                    </div>
+                    <div class="pairs-tags" id="detailPairs">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Session Overlaps Card -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">⚡</div>
+                        Session Overlaps
+                    </div>
+                </div>
+                <div class="overlap-chart">
+                    <div class="overlap-session sydney" onclick="highlightOverlap('sydney')">
+                        Sydney
+                    </div>
+                    <div class="overlap-session tokyo" onclick="highlightOverlap('tokyo')">
+                        Tokyo
+                    </div>
+                    <div class="overlap-session london" onclick="highlightOverlap('london')">
+                        London
+                    </div>
+                    <div class="overlap-session newyork" onclick="highlightOverlap('newyork')">
+                        New York
+                    </div>
+                    <div class="overlap-zone zone-london-ny">
+                        High Volatility
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
+                    <strong style="color: var(--gold-primary);">Pro Tip:</strong> The London-New York overlap (13:00-17:00 GMT) offers the highest liquidity and tightest spreads, ideal for major pairs like EUR/USD and GBP/USD.
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Currency Pairs -->
+            <div class="glass-card" style="grid-column: 1 / -1;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">💱</div>
+                        Major Currency Pairs
+                    </div>
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" onclick="switchTab('majors')">Majors</button>
+                        <button class="tab-btn" onclick="switchTab('crosses')">Crosses</button>
+                        <button class="tab-btn" onclick="switchTab('exotics')">Exotics</button>
+                    </div>
+                </div>
+
+                <div id="majors" class="tab-content active">
+                    <div class="pairs-grid" id="majorsGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div id="crosses" class="tab-content">
+                    <div class="pairs-grid" id="crossesGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div id="exotics" class="tab-content">
+                    <div class="pairs-grid" id="exoticsGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Market Structure -->
+        <div class="glass-card" style="margin-top: 2rem;">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-icon">🏛️</div>
+                    Forex Market Structure Hierarchy
+                </div>
+            </div>
+            <div class="structure-tree">
+                <div class="tree-level">
+                    <div class="tree-node">
+                        <div class="node-title">Interbank Market</div>
+                        <div class="node-desc">Top-tier liquidity providers</div>
+                    </div>
+                </div>
+                <div class="tree-level">
+                    <div class="tree-node">
+                        <div class="node-title">Prime Brokers</div>
+                        <div class="node-desc">Institutional access</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="node-title">ECNs</div>
+                        <div class="node-desc">Electronic networks</div>
+                    </div>
+                </div>
+                <div class="tree-level">
+                    <div class="tree-node">
+                        <div class="node-title">Market Makers</div>
+                        <div class="node-desc">Retail brokers</div>
+                    </div>
+                    <div class="tree-node">
+                        <div class="node-title">Retail Traders</div>
+                        <div class="node-desc">Individual clients</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Ticker -->
+        <section class="ticker-section">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">📊</div>
+                        Live Market Pulse
+                    </div>
+                </div>
+                <div class="ticker-container">
+                    <div class="ticker-wrapper" id="ticker">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="logo" style="justify-content: center; margin-bottom: 1rem; opacity: 0.6;">
+                <div class="logo-icon" style="width: 30px; height: 30px; font-size: 1rem;">G</div>
+                <div class="logo-text">
+                    <h1 style="font-size: 1rem;">GOLDENICE</h1>
+                    <p style="font-size: 0.6rem;">International</p>
+                </div>
+            </div>
+            <p class="disclaimer">
+                Trading foreign exchange on margin carries a high level of risk and may not be suitable for all investors. 
+                The high degree of leverage can work against you as well as for you. Goldenice International provides 
+                educational market structure analysis only. Past performance is not indicative of future results.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Session Data
+        const sessionData = {
+            sydney: {
+                name: "Sydney Session",
+                volatility: "Low to Moderate",
+                liquidity: "Thin (Improving)",
+                bestPairs: ["AUD/USD", "NZD/USD", "AUD/JPY", "NZD/JPY"],
+                description: "The opening act of the forex day. Sets the tone for Asian markets.",
+                gmtStart: 22,
+                gmtEnd: 7
+            },
+            tokyo: {
+                name: "Tokyo Session",
+                volatility: "Moderate",
+                liquidity: "High (Asian)",
+                bestPairs: ["USD/JPY", "EUR/JPY", "GBP/JPY", "AUD/JPY"],
+                description: "Asian powerhouse session. JPY pairs dominate with methodical trends.",
+                gmtStart: 0,
+                gmtEnd: 9
+            },
+            london: {
+                name: "London Session",
+                volatility: "High",
+                liquidity: "Very High",
+                bestPairs: ["EUR/USD", "GBP/USD", "EUR/GBP", "USD/CHF"],
+                description: "The heavyweight champion. 43% of daily volume. Major trend establishment.",
+                gmtStart: 8,
+                gmtEnd: 17
+            },
+            newyork: {
+                name: "New York Session",
+                volatility: "Very High",
+                liquidity: "Peak Global",
+                bestPairs: ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CAD"],
+                description: "Grand finale. US economic data drives volatility. London overlap is prime time.",
+                gmtStart: 13,
+                gmtEnd: 22
+            }
+        };
+
+        // Currency Pairs Data
+        const pairsData = {
+            majors: [
+                { pair: "EUR/USD", name: "Fiber", volatility: 85, spread: 0.1, session: "London/NY" },
+                { pair: "GBP/USD", name: "Cable", volatility: 90, spread: 0.2, session: "London" },
+                { pair: "USD/JPY", name: "Ninja", volatility: 75, spread: 0.1, session: "Tokyo/NY" },
+                { pair: "USD/CHF", name: "Swissy", volatility: 70, spread: 0.2, session: "London" },
+                { pair: "AUD/USD", name: "Aussie", volatility: 65, spread: 0.2, session: "Sydney/Tokyo" },
+                { pair: "USD/CAD", name: "Loonie", volatility: 68, spread: 0.2, session: "NY" },
+                { pair: "NZD/USD", name: "Kiwi", volatility: 60, spread: 0.3, session: "Sydney" }
+            ],
+            crosses: [
+                { pair: "EUR/GBP", name: "Chunnel", volatility: 55, spread: 0.3, session: "London" },
+                { pair: "EUR/JPY", name: "Yuppy", volatility: 80, spread: 0.2, session: "London/Tokyo" },
+                { pair: "GBP/JPY", name: "Geppy", volatility: 95, spread: 0.4, session: "London/Tokyo" },
+                { pair: "AUD/JPY", name: "Ozzy Yen", volatility: 78, spread: 0.3, session: "Tokyo" },
+                { pair: "EUR/CHF", name: "Euro Swiss", volatility: 50, spread: 0.3, session: "London" }
+            ],
+            exotics: [
+                { pair: "USD/TRY", name: "Lira", volatility: 100, spread: 15.0, session: "London" },
+                { pair: "USD/ZAR", name: "Rand", volatility: 95, spread: 8.0, session: "London" },
+                { pair: "USD/MXN", name: "Peso", volatility: 88, spread: 5.0, session: "NY" },
+                { pair: "USD/SGD", name: "Sing", volatility: 45, spread: 2.0, session: "Tokyo" }
+            ]
+        };
+
+        // Clock and Session Detection
+        function updateClock() {
+            const now = new Date();
+            const utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+            const hours = utc.getHours();
+            const minutes = utc.getMinutes();
+            const seconds = utc.getSeconds();
+            
+            document.getElementById('utcClock').textContent = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} UTC`;
+            
+            detectCurrentSession(hours);
+        }
+
+        function detectCurrentSession(gmtHour) {
+            let current = null;
+            let sessionName = "Closed";
+            
+            // Check each session
+            for (const [key, data] of Object.entries(sessionData)) {
+                let start = data.gmtStart;
+                let end = data.gmtEnd;
+                
+                // Handle overnight sessions (Sydney)
+                if (start > end) {
+                    if (gmtHour >= start || gmtHour < end) {
+                        current = key;
+                        sessionName = data.name;
+                    }
+                } else {
+                    if (gmtHour >= start && gmtHour < end) {
+                        current = key;
+                        sessionName = data.name;
+                    }
+                }
+            }
+            
+            document.getElementById('currentSession').textContent = 
+                current ? `Active: ${sessionName}` : 'Market Closed';
+            
+            // Update active node
+            document.querySelectorAll('.session-node').forEach(node => {
+                node.classList.remove('active');
+                if (node.dataset.session === current) {
+                    node.classList.add('active');
+                }
+            });
+            
+            return current;
+        }
+
+        function showSession(sessionKey) {
+            const data = sessionData[sessionKey];
+            const details = document.getElementById('sessionDetails');
+            
+            document.getElementById('detailTitle').textContent = data.name;
+            document.getElementById('detailVol').textContent = data.volatility;
+            document.getElementById('detailLiq').textContent = data.liquidity;
+            
+            const pairsContainer = document.getElementById('detailPairs');
+            pairsContainer.innerHTML = '';
+            data.bestPairs.forEach(pair => {
+                const tag = document.createElement('span');
+                tag.className = 'pair-tag';
+                tag.textContent = pair;
+                pairsContainer.appendChild(tag);
+            });
+            
+            details.classList.add('show');
+            
+            // Highlight in timeline
+            document.querySelectorAll('.session-node').forEach(node => {
+                node.classList.remove('active');
+                if (node.dataset.session === sessionKey) {
+                    node.classList.add('active');
+                }
+            });
+        }
+
+        function highlightOverlap(session) {
+            // Visual feedback for overlap chart
+            document.querySelectorAll('.overlap-session').forEach(el => {
+                el.style.opacity = '0.5';
+            });
+            document.querySelector(`.${session}`).style.opacity = '1';
+            
+            setTimeout(() => {
+                document.querySelectorAll('.overlap-session').forEach(el => {
+                    el.style.opacity = '1';
+                });
+            }, 1000);
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Render Pairs
+        function renderPairs() {
+            ['majors', 'crosses', 'exotics'].forEach(category => {
+                const grid = document.getElementById(`${category}Grid`);
+                grid.innerHTML = '';
+                
+                pairsData[category].forEach(pair => {
+                    const card = document.createElement('div');
+                    card.className = 'pair-card';
+                    
+                    let volClass = pair.volatility > 80 ? 'volatility-high' : 
+                                  pair.volatility > 60 ? 'volatility-med' : 'volatility-low';
+                    
+                    card.innerHTML = `
+                        <div class="pair-info">
+                            <h4>${pair.pair}</h4>
+                            <span>${pair.name} • ${pair.session}</span>
+                        </div>
+                        <div class="pair-stats">
+                            <div class="volatility-bar">
+                                <div class="volatility-fill ${volClass}" style="width: ${pair.volatility}%"></div>
+                            </div>
+                            <div class="spread-text">Spread: ${pair.spread} pips</div>
+                        </div>
+                    `;
+                    
+                    card.onclick = () => {
+                        card.style.transform = 'scale(0.95)';
+                        setTimeout(() => card.style.transform = '', 100);
+                    };
+                    
+                    grid.appendChild(card);
+                });
+            });
+        }
+
+        // Live Ticker Simulation
+        function initTicker() {
+            const ticker = document.getElementById('ticker');
+            const majorPairs = ["EUR/USD", "GBP/USD", "USD/JPY", "AUD/USD", "USD/CAD", "EUR/GBP", "USD/CHF"];
+            const baseRates = { "EUR/USD": 1.0845, "GBP/USD": 1.2632, "USD/JPY": 151.42, "AUD/USD": 0.6543, "USD/CAD": 1.3542, "EUR/GBP": 0.8584, "USD/CHF": 0.9032 };
+            
+            function generateTickerItem() {
+                const pair = majorPairs[Math.floor(Math.random() * majorPairs.length)];
+                const base = baseRates[pair];
+                const change = (Math.random() - 0.5) * 0.01;
+                const newRate = base + change;
+                const percentChange = (change / base) * 100;
+                
+                const item = document.createElement('div');
+                item.className = 'ticker-item';
+                item.innerHTML = `
+                    <span class="ticker-pair">${pair}</span>
+                    <span class="ticker-rate">${newRate.toFixed(4)}</span>
+                    <span class="ticker-change ${percentChange >= 0 ? 'positive' : 'negative'}">
+                        ${percentChange >= 0 ? '+' : ''}${percentChange.toFixed(2)}%
+                    </span>
+                `;
+                return item;
+            }
+            
+            // Initial population
+            for (let i = 0; i < 14; i++) {
+                ticker.appendChild(generateTickerItem());
+            }
+            
+            // Update random item periodically
+            setInterval(() => {
+                const items = ticker.querySelectorAll('.ticker-item');
+                const randomIdx = Math.floor(Math.random() * items.length);
+                const newItem = generateTickerItem();
+                items[randomIdx].replaceWith(newItem);
+            }, 2000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateClock();
+            setInterval(updateClock, 1000);
+            renderPairs();
+            initTicker();
+            
+            // Show London session by default
+            setTimeout(() => showSession('london'), 500);
+        });
+
+        // Add hover effects for tree nodes
+        document.querySelectorAll('.tree-node').forEach(node => {
+            node.addEventListener('mouseenter', function() {
+                this.style.borderColor = 'var(--gold-primary)';
+            });
+            node.addEventListener('mouseleave', function() {
+                this.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            });
+        });
+    </script>
+</body>
+</html>

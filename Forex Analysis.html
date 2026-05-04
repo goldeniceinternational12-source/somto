@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Elite Forex Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;500;700&display=swap');
+
+        :root {
+            --neon-gold: #ffd700;
+            --deep-blue: #0a0f1c;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--deep-blue);
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 215, 0, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 215, 0, 0.05) 1px, transparent 1px);
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            white-space: nowrap;
+        }
+
+        .ticker {
+            display: inline-block;
+            animation: marquee 30s linear infinite;
+        }
+
+        .ticker-item {
+            display: inline-block;
+            padding: 0 2rem;
+            font-size: 0.9rem;
+        }
+
+        @keyframes marquee {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+            color: #000;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-gold::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(45deg);
+            transition: transform 0.5s;
+        }
+
+        .btn-gold:hover::after {
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+
+        .currency-card {
+            transition: all 0.3s ease;
+        }
+        .currency-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+    </style>
+</head>
+<body class="min-h-screen relative selection:bg-yellow-500 selection:text-black">
+
+    <!-- Background Elements -->
+    <div class="fixed inset-0 bg-grid pointer-events-none z-0"></div>
+    <div class="fixed top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-[#0a0f1c]/80 to-[#0a0f1c] pointer-events-none z-0"></div>
+
+    <!-- Ticker Tape -->
+    <div class="fixed top-0 w-full z-50 ticker-wrap backdrop-blur-md">
+        <div class="ticker" id="ticker-content">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-8 w-full z-40 px-6 py-4">
+        <div class="max-w-7xl mx-auto glass-panel rounded-full px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-700 flex items-center justify-center text-black font-bold text-xl shadow-[0_0_15px_rgba(255,215,0,0.5)]">
+                    <i class="fa-solid fa-gem"></i>
+                </div>
+                <span class="font-display font-bold text-2xl tracking-tight text-white">GOLDEN<span class="text-yellow-400">ICE</span></span>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium text-gray-300">
+                <a href="#" class="hover:text-yellow-400 transition-colors">Dashboard</a>
+                <a href="#" class="hover:text-yellow-400 transition-colors">Markets</a>
+                <a href="#" class="hover:text-yellow-400 transition-colors">Portfolio</a>
+                <a href="#" class="hover:text-yellow-400 transition-colors">Insights</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right hidden sm:block">
+                    <div class="text-xs text-gray-400">Account Balance</div>
+                    <div class="font-mono font-bold text-yellow-400">$<span id="header-balance">2,450,390.00</span></div>
+                </div>
+                <button class="btn-gold px-6 py-2 rounded-full text-sm uppercase tracking-wider">
+                    <i class="fa-solid fa-bolt mr-2"></i> Trade Now
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pt-32 pb-12 px-6 max-w-7xl mx-auto">
+        
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
+            <div>
+                <div class="flex items-center gap-2 text-yellow-400 mb-2">
+                    <span class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                    <span class="text-xs font-bold uppercase tracking-widest">Live Market Data</span>
+                </div>
+                <h1 class="font-display text-4xl md:text-6xl font-bold text-white mb-2">Forex <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600">Analysis</span></h1>
+                <p class="text-gray-400 max-w-lg">Real-time sentiment analysis and technical indicators for institutional investors.</p>
+            </div>
+            <div class="flex gap-2 glass-panel p-1 rounded-lg">
+                <button onclick="updateTimeframe('1H')" class="timeframe-btn px-4 py-1.5 rounded-md text-sm font-medium transition-all hover:text-white text-yellow-400 bg-white/10" data-tf="1H">1H</button>
+                <button onclick="updateTimeframe('1D')" class="timeframe-btn px-4 py-1.5 rounded-md text-sm font-medium transition-all hover:text-white text-gray-400" data-tf="1D">1D</button>
+                <button onclick="updateTimeframe('1W')" class="timeframe-btn px-4 py-1.5 rounded-md text-sm font-medium transition-all hover:text-white text-gray-400" data-tf="1W">1W</button>
+                <button onclick="updateTimeframe('1M')" class="timeframe-btn px-4 py-1.5 rounded-md text-sm font-medium transition-all hover:text-white text-gray-400" data-tf="1M">1M</button>
+            </div>
+        </div>
+
+        <!-- Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            
+            <!-- Main Chart Section (Spans 2 cols) -->
+            <div class="lg:col-span-2 glass-panel rounded-2xl p-6 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="fa-solid fa-chart-line text-9xl text-white"></i>
+                </div>
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-display font-bold text-white flex items-center gap-2">
+                            <span id="active-pair">EUR/USD</span>
+                            <span class="text-sm px-2 py-0.5 rounded bg-green-500/20 text-green-400 border border-green-500/30">+0.45%</span>
+                        </h2>
+                        <p class="text-sm text-gray-400 mt-1">Exchange Rate vs US Dollar</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"><i class="fa-solid fa-expand"></i></button>
+                        <button class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"><i class="fa-solid fa-ellipsis"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Chart Container -->
+                <div class="h-[400px] w-full relative">
+                    <canvas id="mainChart"></canvas>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-white/10">
+                    <div>
+                        <div class="text-xs text-gray-500 uppercase">Open</div>
+                        <div class="font-mono text-white font-semibold" id="stat-open">1.0845</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500 uppercase">High</div>
+                        <div class="font-mono text-green-400 font-semibold" id="stat-high">1.0892</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500 uppercase">Low</div>
+                        <div class="font-mono text-red-400 font-semibold" id="stat-low">1.0821</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500 uppercase">Vol</div>
+                        <div class="font-mono text-yellow-400 font-semibold">12.5B</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Side Panel: Sentiment & Signals -->
+            <div class="flex flex-col gap-6">
+                
+                <!-- Sentiment Meter -->
+                <div class="glass-panel rounded-2xl p-6">
+                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-brain text-purple-400"></i> AI Sentiment
+                    </h3>
+                    <div class="relative h-4 bg-gray-700 rounded-full overflow-hidden mb-2">
+                        <div id="sentiment-bar" class="absolute top-0 left-0 h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 w-[65%] transition-all duration-1000"></div>
+                        <div class="absolute top-0 left-0 w-full h-full flex justify-between px-2 items-center text-[10px] font-bold text-black/50 z-10">
+                            <span>SELL</span>
+                            <span>BUY</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">Bearish</span>
+                        <span class="text-green-400 font-bold" id="sentiment-text">Strong Buy (65%)</span>
+                    </div>
+                </div>
+
+                <!-- Signal Feed -->
+                <div class="glass-panel rounded-2xl p-6 flex-1 flex flex-col">
+                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-tower-broadcast text-yellow-400"></i> Live Signals
+                    </h3>
+                    <div class="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar" id="signal-feed">
+                        <!-- Signals injected via JS -->
+                    </div>
+                    <button class="mt-4 w-full py-2 rounded-lg border border-yellow-500/30 text-yellow-400 text-sm hover:bg-yellow-500/10 transition-colors">
+                        View History
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Currency Pairs Grid -->
+        <h3 class="text-xl font-display font-bold text-white mb-4">Major Pairs</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="pairs-grid">
+            <!-- Cards injected via JS -->
+        </div>
+
+        <!-- Investment Calculator -->
+        <div class="mt-12 glass-panel rounded-2xl p-8 border-t-4 border-yellow-500">
+            <div class="flex flex-col md:flex-row gap-12">
+                <div class="md:w-1/3">
+                    <h3 class="text-2xl font-bold text-white mb-2">Profit Calculator</h3>
+                    <p class="text-gray-400 mb-6">Estimate your potential returns based on Goldenice's historical win rate and current volatility.</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs uppercase text-gray-500 mb-1">Investment Amount ($)</label>
+                            <input type="number" id="calc-amount" value="10000" class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-yellow-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase text-gray-500 mb-1">Leverage (x)</label>
+                            <select id="calc-leverage" class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-yellow-500 transition-colors">
+                                <option value="1">1:1 (No Leverage)</option>
+                                <option value="10">1:10</option>
+                                <option value="50" selected>1:50</option>
+                                <option value="100">1:100</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase text-gray-500 mb-1">Expected Price Movement (%)</label>
+                            <input type="range" id="calc-range" min="-5" max="5" step="0.1" value="1.5" class="w-full accent-yellow-500 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                            <div class="text-right text-sm font-mono text-yellow-400 mt-1" id="calc-range-val">+1.5%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-2/3 flex flex-col justify-center items-center relative">
+                    <!-- Result Circle -->
+                    <div class="relative w-64 h-64 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="128" cy="128" r="120" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="none"></circle>
+                            <circle id="profit-circle" cx="128" cy="128" r="120" stroke="#10b981" stroke-width="8" fill="none" stroke-dasharray="754" stroke-dashoffset="200" class="transition-all duration-500"></circle>
+                        </svg>
+                        <div class="absolute text-center">
+                            <div class="text-sm text-gray-400 uppercase tracking-widest mb-1">Projected Profit</div>
+                            <div class="text-4xl font-bold text-white font-display" id="calc-result">$7,500</div>
+                            <div class="text-xs text-green-400 mt-1" id="calc-roi">ROI: 75%</div>
+                        </div>
+                    </div>
+                    <p class="text-center text-xs text-gray-500 mt-4 max-w-md">*Calculations are estimates based on current market spreads and do not guarantee future performance. High leverage increases risk.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-white/10 bg-black/40 backdrop-blur-lg py-12 mt-12">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4 opacity-50">
+                <i class="fa-solid fa-gem text-yellow-500"></i>
+                <span class="font-display font-bold text-xl text-white">GOLDENICE</span>
+            </div>
+            <p class="text-gray-500 text-sm">© 2024 Goldenice International. All rights reserved. <br>Forex trading involves significant risk of loss.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Data & Configuration ---
+        const pairs = [
+            { name: 'EUR/USD', price: 1.0845, change: 0.45, high: 1.0892, low: 1.0821, vol: '12.5B' },
+            { name: 'GBP/USD', price: 1.2630, change: -0.12, high: 1.2655, low: 1.2600, vol: '8.2B' },
+            { name: 'USD/JPY', price: 151.20, change: 0.82, high: 151.45, low: 150.90, vol: '15.1B' },
+            { name: 'AUD/USD', price: 0.6540, change: -0.35, high: 0.6560, low: 0.6520, vol: '5.4B' },
+            { name: 'USD/CAD', price: 1.3560, change: 0.10, high: 1.3580, low: 1.3540, vol: '4.1B' },
+            { name: 'EUR/GBP', price: 0.8590, change: 0.05, high: 0.8600, low: 0.8580, vol: '3.2B' },
+            { name: 'USD/CHF', price: 0.9050, change: -0.20, high: 0.9070, low: 0.9030, vol: '3.8B' },
+            { name: 'NZD/USD', price: 0.5980, change: 0.15, high: 0.6000, low: 0.5960, vol: '2.9B' }
+        ];
+
+        let currentPair = pairs[0];
+        let chartInstance = null;
+        let activeTimeframe = '1H';
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initTicker();
+            renderPairsGrid();
+            initChart();
+            startLiveSimulation();
+            initCalculator();
+            addSignal("System initialized. Monitoring EUR/USD...", "neutral");
+        });
+
+        // --- Ticker Logic ---
+        function initTicker() {
+            const tickerContent = document.getElementById('ticker-content');
+            // Duplicate list for seamless loop
+            const items = [...pairs, ...pairs]; 
+            
+            tickerContent.innerHTML = items.map(p => {
+                const colorClass = p.change >= 0 ? 'text-green-400' : 'text-red-400';
+                const icon = p.change >= 0 ? 'fa-caret-up' : 'fa-caret-down';
+                return `
+                    <div class="ticker-item font-mono">
+                        <span class="text-gray-300 font-bold">${p.name}</span>
+                        <span class="ml-2 ${colorClass}">
+                            ${p.price.toFixed(4)} <i class="fa-solid ${icon}"></i> ${Math.abs(p.change)}%
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // --- Pairs Grid Logic ---
+        function renderPairsGrid() {
+            const grid = document.getElementById('pairs-grid');
+            grid.innerHTML = pairs.map(p => {
+                const isUp = p.change >= 0;
+                const colorClass = isUp ? 'text-green-400' : 'text-red-400';
+                const bgClass = p.name === currentPair.name ? 'border-yellow-500/50 bg-white/10' : 'border-transparent hover:bg-white/5';
+                
+                return `
+                    <div onclick="selectPair('${p.name}')" class="currency-card cursor-pointer glass-panel rounded-xl p-4 border ${bgClass}">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-white">${p.name}</span>
+                            <i class="fa-solid fa-chart-simple text-gray-500 text-xs"></i>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <span class="text-lg font-mono text-white">${p.price.toFixed(4)}</span>
+                            <span class="text-xs font-bold px-2 py-1 rounded bg-white/5 ${colorClass}">
+                                ${isUp ? '+' : ''}${p.change}%
+                            </span>
+                        </div>
+                        <div class="w-full bg-gray-700 h-1 mt-3 rounded-full overflow-hidden">
+                            <div class="h-full ${isUp ? 'bg-green-500' : 'bg-red-500'} w-[${Math.random() * 40 + 30}%]"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectPair(name) {
+            currentPair = pairs.find(p => p.name === name);
+            
+            // Update UI Text
+            document.getElementById('active-pair').innerText = currentPair.name;
+            document.getElementById('stat-open').innerText = (currentPair.price - 0.002).toFixed(4);
+            document.getElementById('stat-high').innerText = currentPair.high.toFixed(4);
+            document.getElementById('stat-low').innerText = currentPair.low.toFixed(4);
+            
+            // Update Grid Selection Visuals
+            renderPairsGrid();
+            
+            // Reset and Update Chart
+            updateChartData();
+            
+            // Add Signal
+            addSignal(`Switched analysis to ${currentPair.name}. Loading volatility index...`, "neutral");
+        }
+
+        // --- Chart.js Logic ---
+        function initChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            
+            // Gradient Fill
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(255, 215, 0, 0.4)');
+            gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+
+            const data = generateChartData(activeTimeframe);
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Price',
+                        data: data.prices,
+                        borderColor: '#ffd700',
+                        backgroundColor: gradient,
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(10, 15, 28, 0.9)',
+                            titleColor: '#fff',
+                            bodyColor: '#ffd700',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false, drawBorder: false },
+                            ticks: { color: '#64748b', maxTicksLimit: 6 }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
+                            ticks: { color: '#64748b' }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+        }
+
+        function generateChartData(tf) {
+            const count = tf === '1H' ? 60 : tf === '1D' ? 24 : 30;
+            const labels = [];
+            const prices = [];
+            let price = currentPair.price;
+            
+            const now = new Date();
+            
+            for (let i = 0; i < count; i++) {
+                // Time labels
+                const d = new Date(now);
+                if(tf === '1H') d.setMinutes(now.getMinutes() - (count - i));
+                else if(tf === '1D') d.setHours(now.getHours() - (count - i));
+                else d.setDate(now.getDate() - (count - i));
+                
+                labels.push(d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+
+                // Random Walk Price
+                const change = (Math.random() - 0.5) * (currentPair.price * 0.002);
+                price += change;
+                prices.push(price);
+            }
+            return { labels, prices };
+        }
+
+        function updateTimeframe(tf) {
+            activeTimeframe = tf;
+            
+            // Update Buttons
+            document.querySelectorAll('.timeframe-btn').forEach(btn => {
+                if(btn.dataset.tf === tf) {
+                    btn.classList.remove('text-gray-400', 'bg-transparent');
+                    btn.classList.add('text-yellow-400', 'bg-white/10');
+                } else {
+                    btn.classList.add('text-gray-400', 'bg-transparent');
+                    btn.classList.remove('text-yellow-400', 'bg-white/10');
+                }
+            });
+
+            updateChartData();
+        }
+
+        function updateChartData() {
+            const data = generateChartData(activeTimeframe);
+            chartInstance.data.labels = data.labels;
+            chartInstance.data.datasets[0].data = data.prices;
+            chartInstance.update();
+        }
+
+        // --- Live Simulation ---
+        function startLiveSimulation() {
+            setInterval(() => {
+                // 1. Update Prices randomly
+                pairs.forEach(p => {
+                    const volatility = 0.0002;
+                    const change = (Math.random() - 0.5) * volatility;
+                    p.price += change;
+                    
+                    // Update change %
+                    p.change = ((p.price - (p.price - change)) / (p.price - change)) * 100 + (p.change * 0.9); // Smoothing
+                });
+
+                // 2. Update Header Balance
+                const balanceEl = document.getElementById('header-balance');
+                let currentBal = parseFloat(balanceEl.innerText.replace(/,/g, ''));
+                currentBal += (Math.random() - 0.4) * 100; // Slight upward trend bias
+                balanceEl.innerText = currentBal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+                // 3. Update Chart if live
+                if(activeTimeframe === '1H') {
+                    const currentData = chartInstance.data.datasets[0].data;
+                    const currentLabels = chartInstance.data.labels;
+                    
+                    // Remove oldest
+                    currentData.shift();
+                    currentLabels.shift();
+                    
+                    // Add newest
+                    currentData.push(currentPair.price);
+                    const now = new Date();
+                    currentLabels.push(now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+                    
+                    chartInstance.update('none'); // 'none' mode for performance
+                }
+
+                // 4. Random Signals
+                if(Math.random() > 0.95) {
+                    generateRandomSignal();
+                }
+
+                // 5. Update Grid UI
+                renderPairsGrid();
+
+            }, 2000);
+        }
+
+        // --- Signal Feed Logic ---
+        function addSignal(msg, type) {
+            const feed = document.getElementById('signal-feed');
+            const div = document.createElement('div');
+            
+            let icon = 'fa-info-circle';
+            let color = 'text-blue-400';
+            let border = 'border-blue-500/30';
+            
+            if(type === 'buy') { icon = 'fa-arrow-trend-up'; color = 'text-green-400'; border = 'border-green-500/30'; }
+            if(type === 'sell') { icon = 'fa-arrow-trend-down'; color = 'text-red-400'; border = 'border-red-500/30'; }
+
+            div.className = `flex items-center gap-3 p-3 rounded-lg bg-white/5 border ${border} animate-pulse-slow`;
+            div.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-black/30 flex items-center justify-center ${color}">
+                    <i class="fa-solid ${icon}"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="text-xs text-gray-400">${new Date().toLocaleTimeString()}</div>
+                    <div class="text-sm text-white font-medium">${msg}</div>
+                </div>
+            `;
+            
+            feed.prepend(div);
+            if(feed.children.length > 10) feed.lastElementChild.remove();
+        }
+
+        function generateRandomSignal() {
+            const actions = ['Bullish Divergence', 'Support Bounce', 'Resistance Test', 'Volume Spike'];
+            const action = actions[Math.floor(Math.random() * actions.length)];
+            const type = Math.random() > 0.5 ? 'buy' : 'sell';
+            const msg = `${currentPair.name}: ${action} detected. ${type === 'buy' ? 'Consider Long' : 'Consider Short'}.`;
+            addSignal(msg, type);
+            
+            // Update Sentiment
+            const bar = document.getElementById('sentiment-bar');
+            const text = document.getElementById('sentiment-text');
+            const val = Math.floor(Math.random() * 40) + 30; // 30-70
+            bar.style.width = `${val}%`;
+            
+            if(val > 55) {
+                text.innerText = `Strong Buy (${val}%)`;
+                text.className = 'text-green-400 font-bold';
+            } else if (val < 45) {
+                text.innerText = `Strong Sell (${val}%)`;
+                text.className = 'text-red-400 font-bold';
+            } else {
+                text.innerText = `Neutral (${val}%)`;
+                text.className = 'text-yellow-400 font-bold';
+            }
+        }
+
+        // --- Calculator Logic ---
+        function initCalculator() {
+            const amountInput = document.getElementById('calc-amount');
+            const leverageInput = document.getElementById('calc-leverage');
+            const rangeInput = document.getElementById('calc-range');
+            const rangeVal = document.getElementById('calc-range-val');
+            
+            const updateCalc = () => {
+                const amount = parseFloat(amountInput.value) || 0;
+                const leverage = parseFloat(leverageInput.value);
+                const percent = parseFloat(rangeInput.value);
+                
+                rangeVal.innerText = (percent > 0 ? '+' : '') + percent + '%';
+                rangeVal.className = `text-right text-sm font-mono mt-1 ${percent >= 0 ? 'text-green-400' : 'text-red-400'}`;
+
+                const totalPosition = amount * leverage;
+                const profit = totalPosition * (percent / 100);
+                
+                const resultEl = document.getElementById('calc-result');
+                const roiEl = document.getElementById('calc-roi');
+                const circle = document.getElementById('profit-circle');
+                
+                resultEl.innerText = (profit >= 0 ? '+' : '-') + '$' + Math.abs(profit).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                resultEl.className = `text-4xl font-bold font-display ${profit >= 0 ? 'text-green-400' : 'text-red-400'}`;
+                
+                const roi = (profit / amount) * 100;
+                roiEl.innerText = `ROI: ${roi.toFixed(2)}%`;
+                roiEl.className = `text-xs mt-1 ${profit >= 0 ? 'text-green-400' : 'text-red-400'}`;
+
+                // Update Circle Stroke
+                // Circumference = 2 * PI * 120 ≈ 754
+                const maxOffset = 754;
+                // Map -5% to 5% to offset. 
+                // 0% = full offset (hidden). 5% = no offset (full).
+                // Actually for profit, let's just show a portion.
+                const percentage = Math.min(Math.abs(roi) / 100, 1); // Cap at 100% visual
+                const offset = maxOffset - (percentage * maxOffset);
+                circle.style.strokeDashoffset = offset;
+                circle.style.stroke = profit >= 0 ? '#10b981' : '#ef4444';
+            };
+
+            amountInput.addEventListener('input', updateCalc);
+            leverageInput.addEventListener('change', updateCalc);
+            rangeInput.addEventListener('input', updateCalc);
+            
+            updateCalc(); // Init
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Global Indices Trading</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#FACC15',
+                            500: '#EAB308', // Primary Gold
+                            600: '#CA8A04',
+                        },
+                        midnight: {
+                            800: '#0F172A',
+                            900: '#020617', // Deep Background
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #020617;
+            color: #e2e8f0;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #eab308; 
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(to right, #eab308, #facc15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.15);
+        }
+
+        /* Animation for Live Indicator */
+        @keyframes pulse-dot {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+        .live-dot {
+            animation: pulse-dot 2s infinite;
+        }
+
+        /* Ticker Animation */
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background-color: #0f172a;
+            border-bottom: 1px solid #1e293b;
+            white-space: nowrap;
+        }
+        .ticker {
+            display: inline-block;
+            padding-left: 100%;
+            animation: ticker 40s linear infinite;
+        }
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-gold-500 selection:text-midnight-900">
+
+    <!-- Top Ticker -->
+    <div class="ticker-wrap">
+        <div class="ticker text-xs font-mono py-2 text-slate-400" id="globalTicker">
+            <!-- JS Populated -->
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-gradient-to-br from-gold-400 to-yellow-700 flex items-center justify-center text-midnight-900 font-bold text-lg shadow-lg shadow-yellow-900/20">G</div>
+                    <span class="font-serif text-xl font-bold text-white tracking-tight">Goldenice <span class="text-gold-500">International</span></span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gold-400 transition-colors">Markets</a>
+                        <a href="#" class="text-gold-400 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-gold-500">Indices</a>
+                        <a href="#" class="text-slate-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Forex</a>
+                        <a href="#" class="text-slate-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Commodities</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="text-slate-300 hover:text-white text-sm font-medium">Login</button>
+                    <button class="bg-gold-600 hover:bg-gold-500 text-midnight-900 px-4 py-2 rounded text-sm font-bold transition-all shadow-lg shadow-yellow-900/20">Start Trading</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Header Section -->
+        <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-2 text-gold-500 text-sm font-bold uppercase tracking-wider mb-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500 live-dot"></span> Market Open
+                </div>
+                <h1 class="text-4xl md:text-5xl font-serif font-bold text-white mb-2">Global <span class="gold-gradient-text">Indices</span></h1>
+                <p class="text-slate-400 max-w-2xl">Trade the world's major stock markets with leverage up to 1:200. Speculate on the overall performance of economies without owning individual stocks.</p>
+            </div>
+            <div class="flex gap-2">
+                <button class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-sm transition-colors"><i class="fa-solid fa-filter mr-2"></i>Filter</button>
+                <button class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-sm transition-colors"><i class="fa-solid fa-star mr-2"></i>Favorites</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left Column: Indices List (1/3 width on large screens) -->
+            <div class="lg:col-span-1 space-y-4 h-[600px] overflow-y-auto pr-2" id="indicesList">
+                <!-- List Items Generated by JS -->
+            </div>
+
+            <!-- Right Column: Chart & Details (2/3 width) -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Chart Card -->
+                <div class="glass-panel rounded-xl p-1 border border-slate-700 shadow-2xl relative overflow-hidden">
+                    <!-- Chart Header -->
+                    <div class="p-4 flex justify-between items-center border-b border-slate-800 bg-slate-900/50">
+                        <div class="flex items-center gap-4">
+                            <div id="activeIcon" class="w-10 h-10 rounded bg-slate-800 flex items-center justify-center text-xl">🇺🇸</div>
+                            <div>
+                                <h2 id="activeName" class="text-xl font-bold text-white">US 500</h2>
+                                <p class="text-xs text-slate-400">Standard & Poor's 500 Index</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div id="activePrice" class="text-2xl font-mono font-bold text-white">4,450.20</div>
+                            <div id="activeChange" class="text-sm font-mono text-green-400 flex items-center justify-end gap-1">
+                                <i class="fa-solid fa-caret-up"></i> 0.45%
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Container -->
+                    <div class="h-[350px] w-full bg-slate-900 relative cursor-crosshair" id="chartContainer">
+                        <canvas id="marketChart"></canvas>
+                        
+                        <!-- Timeframe Controls -->
+                        <div class="absolute bottom-4 left-4 flex gap-2 bg-slate-800/80 p-1 rounded backdrop-blur-sm">
+                            <button class="px-3 py-1 text-xs rounded hover:bg-slate-700 text-slate-400 transition-colors" onclick="setTimeframe('1m')">1m</button>
+                            <button class="px-3 py-1 text-xs rounded bg-gold-600 text-midnight-900 font-bold shadow-lg" onclick="setTimeframe('5m')">5m</button>
+                            <button class="px-3 py-1 text-xs rounded hover:bg-slate-700 text-slate-400 transition-colors" onclick="setTimeframe('15m')">15m</button>
+                            <button class="px-3 py-1 text-xs rounded hover:bg-slate-700 text-slate-400 transition-colors" onclick="setTimeframe('1h')">1H</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trading Tools Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Trading Calculator -->
+                    <div class="glass-panel p-6 rounded-xl border border-slate-700">
+                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-calculator text-gold-500"></i> P&L Calculator
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Index</label>
+                                <select id="calcIndex" class="w-full bg-slate-800 border border-slate-600 rounded p-2 text-white text-sm focus:border-gold-500 focus:outline-none">
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Entry Price</label>
+                                    <input type="number" id="calcEntry" class="w-full bg-slate-800 border border-slate-600 rounded p-2 text-white text-sm focus:border-gold-500 focus:outline-none" value="4450.20">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Exit Price</label>
+                                    <input type="number" id="calcExit" class="w-full bg-slate-800 border border-slate-600 rounded p-2 text-white text-sm focus:border-gold-500 focus:outline-none" value="4500.00">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Lot Size (Volume)</label>
+                                <input type="range" id="calcVolume" min="0.1" max="10" step="0.1" value="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-gold-500">
+                                <div class="flex justify-between text-xs text-slate-500 mt-1">
+                                    <span>0.1</span>
+                                    <span id="volumeDisplay" class="text-gold-400 font-bold">1.0 Lot</span>
+                                    <span>10</span>
+                                </div>
+                            </div>
+                            <div class="pt-4 border-t border-slate-700">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-slate-400">Estimated Profit/Loss:</span>
+                                    <span id="calcResult" class="text-xl font-mono font-bold text-green-400">+$4,980.00</span>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-2 text-right">*Excluding commissions & swaps</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Market Info / Specs -->
+                    <div class="glass-panel p-6 rounded-xl border border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-circle-info text-gold-500"></i> Market Specifications
+                            </h3>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between border-b border-slate-800 pb-2">
+                                    <span class="text-slate-400">Leverage</span>
+                                    <span class="text-white font-mono">Up to 1:200</span>
+                                </div>
+                                <div class="flex justify-between border-b border-slate-800 pb-2">
+                                    <span class="text-slate-400">Spread</span>
+                                    <span class="text-white font-mono">From 0.5 pts</span>
+                                </div>
+                                <div class="flex justify-between border-b border-slate-800 pb-2">
+                                    <span class="text-slate-400">Margin Requirement</span>
+                                    <span class="text-white font-mono">0.5%</span>
+                                </div>
+                                <div class="flex justify-between border-b border-slate-800 pb-2">
+                                    <span class="text-slate-400">Trading Hours</span>
+                                    <span class="text-white font-mono">Mon-Fri 00:00-24:00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="w-full mt-4 py-3 bg-slate-800 hover:bg-slate-700 text-gold-400 border border-gold-600/30 rounded font-bold transition-all hover:border-gold-500">
+                            Download Product Sheet (PDF)
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-800 mt-12 bg-midnight-900 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+            <p>&copy; 2024 Goldenice International. Risk Warning: Trading CFDs carries a high risk of losing capital.</p>
+        </div>
+    </footer>
+
+    <!-- Application Logic -->
+    <script>
+        // --- Data Model ---
+        const indicesData = [
+            { id: 'us500', name: 'US 500', fullName: 'S&P 500', icon: '🇺🇸', price: 4450.20, change: 0.45, volatility: 0.8 },
+            { id: 'nas100', name: 'US Tech 100', fullName: 'NASDAQ 100', icon: '🇺🇸', price: 15230.50, change: 0.72, volatility: 1.2 },
+            { id: 'dj30', name: 'US 30', fullName: 'Dow Jones', icon: '🇺🇸', price: 34500.10, change: -0.15, volatility: 0.6 },
+            { id: 'de40', name: 'Germany 40', fullName: 'DAX 40', icon: '🇩🇪', price: 15780.30, change: 0.30, volatility: 0.9 },
+            { id: 'uk100', name: 'UK 100', fullName: 'FTSE 100', icon: '🇬🇧', price: 7680.50, change: -0.22, volatility: 0.5 },
+            { id: 'jp225', name: 'Japan 225', fullName: 'Nikkei 225', icon: '🇯🇵', price: 33240.00, change: 1.10, volatility: 1.5 },
+            { id: 'au200', name: 'Australia 200', fullName: 'ASX 200', icon: '🇦🇺', price: 7280.40, change: 0.05, volatility: 0.4 },
+            { id: 'fr40', name: 'France 40', fullName: 'CAC 40', icon: '🇫🇷', price: 7320.10, change: 0.18, volatility: 0.7 }
+        ];
+
+        let activeIndexId = 'us500';
+        let chartInstance = null;
+        let priceUpdateInterval = null;
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initTicker();
+            renderIndicesList();
+            initCalculator();
+            selectIndex('us500'); // Load default
+            
+            // Global Price Updater (Simulates live market)
+            setInterval(() => {
+                updateMarketPrices();
+            }, 2000);
+        });
+
+        // --- Ticker Logic ---
+        function initTicker() {
+            const tickerEl = document.getElementById('globalTicker');
+            let content = '';
+            indicesData.forEach(idx => {
+                content += `<span class="mx-4"><span class="text-slate-300 font-bold">${idx.name}</span> <span class="text-gold-500">${idx.price.toFixed(2)}</span> <span class="${idx.change >= 0 ? 'text-green-500' : 'text-red-500'}">(${idx.change > 0 ? '+' : ''}${idx.change}%)</span></span>`;
+            });
+            tickerEl.innerHTML = content + content; // Duplicate for smooth loop
+        }
+
+        // --- Indices List Rendering ---
+        function renderIndicesList() {
+            const container = document.getElementById('indicesList');
+            container.innerHTML = '';
+
+            indicesData.forEach(index => {
+                const el = document.createElement('div');
+                el.className = `p-4 rounded-lg cursor-pointer transition-all border border-transparent hover:bg-slate-800 flex justify-between items-center group ${index.id === activeIndexId ? 'bg-slate-800 border-l-4 border-l-gold-500 border-slate-700' : ''}`;
+                el.onclick = () => selectIndex(index.id);
+                el.id = `row-${index.id}`;
+
+                const changeColor = index.change >= 0 ? 'text-green-400' : 'text-red-400';
+                const arrow = index.change >= 0 ? 'fa-caret-up' : 'fa-caret-down';
+
+                el.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">${index.icon}</span>
+                        <div>
+                            <div class="font-bold text-white group-hover:text-gold-400 transition-colors">${index.name}</div>
+                            <div class="text-xs text-slate-500">${index.fullName}</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-mono font-bold text-white price-display" data-id="${index.id}">${index.price.toFixed(2)}</div>
+                        <div class="text-xs ${changeColor} font-mono change-display" data-id="${index.id}">
+                            <i class="fa-solid ${arrow}"></i> ${Math.abs(index.change)}%
+                        </div>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        // --- Selection Logic ---
+        function selectIndex(id) {
+            activeIndexId = id;
+            const index = indicesData.find(i => i.id === id);
+            
+            // Update UI Highlights
+            document.querySelectorAll('#indicesList > div').forEach(div => {
+                div.className = div.className.replace('bg-slate-800 border-l-4 border-l-gold-500 border-slate-700', '').replace('border-transparent', '');
+                div.classList.add('border-transparent');
+                if(div.id === `row-${id}`) {
+                    div.classList.remove('border-transparent');
+                    div.classList.add('bg-slate-800', 'border-l-4', 'border-l-gold-500', 'border-slate-700');
+                }
+            });
+
+            // Update Chart Header
+            document.getElementById('activeIcon').innerText = index.icon;
+            document.getElementById('activeName').innerText = index.name;
+            document.getElementById('activePrice').innerText = index.price.toFixed(2);
+            
+            const changeEl = document.getElementById('activeChange');
+            const isPos = index.change >= 0;
+            changeEl.className = `text-sm font-mono flex items-center justify-end gap-1 ${isPos ? 'text-green-400' : 'text-red-400'}`;
+            changeEl.innerHTML = `<i class="fa-solid ${isPos ? 'fa-caret-up' : 'fa-caret-down'}"></i> ${Math.abs(index.change)}%`;
+
+            // Update Calculator Dropdown
+            document.getElementById('calcIndex').value = id;
+            document.getElementById('calcEntry').value = index.price.toFixed(2);
+
+            // Initialize/Reset Chart
+            initChart(index);
+        }
+
+        // --- Live Price Simulation ---
+        function updateMarketPrices() {
+            indicesData.forEach(index => {
+                // Random walk
+                const move = (Math.random() - 0.5) * index.volatility;
+                index.price += move;
+                
+                // Update DOM elements
+                const priceEls = document.querySelectorAll(`.price-display[data-id="${index.id}"]`);
+                priceEls.forEach(el => {
+                    el.innerText = index.price.toFixed(2);
+                    // Flash effect
+                    el.style.color = move > 0 ? '#4ade80' : '#f87171';
+                    setTimeout(() => el.style.color = 'white', 300);
+                });
+
+                // If this is the active index, update the main chart header and chart data
+                if (index.id === activeIndexId) {
+                    document.getElementById('activePrice').innerText = index.price.toFixed(2);
+                    updateChartData(index.price);
+                }
+            });
+        }
+
+        // --- Canvas Charting Engine ---
+        let canvas, ctx, chartDataPoints = [], maxPoints = 60;
+
+        function initChart(index) {
+            canvas = document.getElementById('marketChart');
+            ctx = canvas.getContext('2d');
+            
+            // Resize canvas
+            const container = document.getElementById('chartContainer');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+
+            // Generate initial history
+            chartDataPoints = [];
+            let currentP = index.price;
+            for(let i=0; i<maxPoints; i++) {
+                currentP = currentP - (Math.random() - 0.5) * index.volatility * 2; 
+                chartDataPoints.push(currentP);
+            }
+            // Ensure last point matches current
+            chartDataPoints[maxPoints-1] = index.price;
+
+            drawChart();
+        }
+
+        function updateChartData(newPrice) {
+            chartDataPoints.shift();
+            chartDataPoints.push(newPrice);
+            drawChart();
+        }
+
+        function drawChart() {
+            if(!ctx) return;
+            const w = canvas.width;
+            const h = canvas.height;
+            
+            ctx.clearRect(0, 0, w, h);
+
+            // Find min/max for scaling
+            const min = Math.min(...chartDataPoints) * 0.999;
+            const max = Math.max(...chartDataPoints) * 1.001;
+            const range = max - min;
+
+            // Draw Grid
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            for(let i=1; i<5; i++) {
+                let y = (h/5) * i;
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+            }
+            ctx.stroke();
+
+            // Draw Line
+            ctx.beginPath();
+            ctx.strokeStyle = '#eab308'; // Gold
+            ctx.lineWidth = 3;
+            ctx.lineJoin = 'round';
+
+            chartDataPoints.forEach((p, i) => {
+                const x = (i / (maxPoints - 1)) * w;
+                const y = h - ((p - min) / range) * h;
+                if (i===0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // Fill Gradient Area
+            ctx.lineTo(w, h);
+            ctx.lineTo(0, h);
+            ctx.fillStyle = 'rgba(234, 179, 8, 0.1)';
+            ctx.fill();
+
+            // Draw Cursor/Last Point Dot
+            const lastY = h - ((chartDataPoints[maxPoints-1] - min) / range) * h;
+            ctx.beginPath();
+            ctx.arc(w, lastY, 5, 0, Math.PI*2);
+            ctx.fillStyle = '#fff';
+            ctx.fill();
+            
+            // Glow around dot
+            ctx.beginPath();
+            ctx.arc(w, lastY, 15, 0, Math.PI*2);
+            ctx.fillStyle = 'rgba(234, 179, 8, 0.3)';
+            ctx.fill();
+        }
+
+        function setTimeframe(tf) {
+            // Visual feedback only for this demo
+            const btns = document.querySelectorAll('#chartContainer button');
+            btns.forEach(b => {
+                b.className = "px-3 py-1 text-xs rounded hover:bg-slate-700 text-slate-400 transition-colors";
+            });
+            event.target.className = "px-3 py-1 text-xs rounded bg-gold-600 text-midnight-900 font-bold shadow-lg";
+            
+            // Regenerate data to simulate history change
+            const index = indicesData.find(i => i.id === activeIndexId);
+            initChart(index);
+        }
+
+        // --- Calculator Logic ---
+        function initCalculator() {
+            const select = document.getElementById('calcIndex');
+            indicesData.forEach(idx => {
+                const opt = document.createElement('option');
+                opt.value = idx.id;
+                opt.innerText = idx.name;
+                select.appendChild(opt);
+            });
+
+            // Inputs
+            const inputs = ['calcEntry', 'calcExit', 'calcVolume'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', calculatePnl);
+            });
+            document.getElementById('calcIndex').addEventListener('change', (e) => {
+                const idx = indicesData.find(i => i.id === e.target.value);
+                document.getElementById('calcEntry').value = idx.price.toFixed(2);
+                calculatePnl();
+            });
+
+            calculatePnl(); // Initial run
+        }
+
+        function calculatePnl() {
+            const entry = parseFloat(document.getElementById('calcEntry').value);
+            const exit = parseFloat(document.getElementById('calcExit').value);
+            const volume = parseFloat(document.getElementById('calcVolume').value);
+            
+            document.getElementById('volumeDisplay').innerText = volume.toFixed(1) + " Lot";
+
+            // Simplified PnL Logic for Indices (Approximate)
+            // Assuming 1 lot = $1 per point (simplified for demo)
+            const diff = exit - entry;
+            const pnl = diff * volume * 100; // Multiplier for effect
+
+            const resultEl = document.getElementById('calcResult');
+            resultEl.innerText = (pnl >= 0 ? '+' : '-') + '$' + Math.abs(pnl).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            resultEl.className = `text-xl font-mono font-bold ${pnl >= 0 ? 'text-green-400' : 'text-red-400'}`;
+        }
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            if(activeIndexId) {
+                const index = indicesData.find(i => i.id === activeIndexId);
+                initChart(index);
+            }
+        });
+
+    </script>
+</body>
+</html>

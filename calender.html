@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Forex Economic Calendar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8941F;
+            --impact-high: #FF1744;
+            --impact-medium: #FF9800;
+            --impact-low: #4CAF50;
+            --impact-none: #9E9E9E;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--darker);
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .calendar-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 23, 68, 0.05) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Clock Animation */
+        .clock-bg {
+            position: fixed;
+            top: 50%;
+            right: 5%;
+            transform: translateY(-50%);
+            width: 300px;
+            height: 300px;
+            z-index: -1;
+            opacity: 0.05;
+        }
+
+        .clock-face {
+            width: 100%;
+            height: 100%;
+            border: 4px solid var(--gold);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .clock-hand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            background: var(--gold);
+            transform-origin: bottom center;
+            border-radius: 2px;
+        }
+
+        .hour-hand {
+            width: 6px;
+            height: 80px;
+            margin-left: -3px;
+            margin-top: -80px;
+            animation: rotate 12s linear infinite;
+        }
+
+        .minute-hand {
+            width: 4px;
+            height: 120px;
+            margin-left: -2px;
+            margin-top: -120px;
+            animation: rotate 1s linear infinite;
+        }
+
+        .second-hand {
+            width: 2px;
+            height: 140px;
+            margin-left: -1px;
+            margin-top: -140px;
+            background: var(--impact-high);
+            animation: rotate 0.5s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 5% 4rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold);
+            border-radius: 50px;
+            color: var(--gold);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+
+        .time-display {
+            display: flex;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .time-box {
+            text-align: center;
+        }
+
+        .time-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            font-family: 'Courier New', monospace;
+        }
+
+        .time-label {
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            padding: 2rem 5%;
+            background: var(--dark);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .filter-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-select, .filter-input {
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .impact-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .impact-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 2px solid;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .impact-btn.high {
+            border-color: var(--impact-high);
+            color: var(--impact-high);
+        }
+
+        .impact-btn.high.active, .impact-btn.high:hover {
+            background: var(--impact-high);
+            color: #fff;
+        }
+
+        .impact-btn.medium {
+            border-color: var(--impact-medium);
+            color: var(--impact-medium);
+        }
+
+        .impact-btn.medium.active, .impact-btn.medium:hover {
+            background: var(--impact-medium);
+            color: #fff;
+        }
+
+        .impact-btn.low {
+            border-color: var(--impact-low);
+            color: var(--impact-low);
+        }
+
+        .impact-btn.low.active, .impact-btn.low:hover {
+            background: var(--impact-low);
+            color: #fff;
+        }
+
+        .reset-btn {
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .reset-btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        /* Calendar Section */
+        .calendar-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .date-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-arrow {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        .nav-arrow:hover {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--dark);
+        }
+
+        .current-date {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--gold);
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.3rem;
+            border-radius: 8px;
+        }
+
+        .view-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .view-btn.active, .view-btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        /* Event Table */
+        .events-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .events-table th {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            padding: 1.2rem;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .events-table td {
+            padding: 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+
+        .events-table tr:hover {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .events-table tr.next-event {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 4px solid var(--gold);
+        }
+
+        .time-cell {
+            font-family: 'Courier New', monospace;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .countdown {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 0.3rem;
+        }
+
+        .currency-flag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .flag-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .event-name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .event-detail {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 0.3rem;
+        }
+
+        .impact-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .impact-high {
+            background: rgba(255, 23, 68, 0.2);
+            color: var(--impact-high);
+            border: 1px solid var(--impact-high);
+        }
+
+        .impact-medium {
+            background: rgba(255, 152, 0, 0.2);
+            color: var(--impact-medium);
+            border: 1px solid var(--impact-medium);
+        }
+
+        .impact-low {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--impact-low);
+            border: 1px solid var(--impact-low);
+        }
+
+        .actual-value {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .forecast-value {
+            font-family: 'Courier New', monospace;
+            color: #888;
+        }
+
+        .previous-value {
+            font-family: 'Courier New', monospace;
+            color: #666;
+        }
+
+        .trend-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.85rem;
+        }
+
+        .trend-up {
+            color: var(--impact-low);
+        }
+
+        .trend-down {
+            color: var(--impact-high);
+        }
+
+        /* Detail Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--dark);
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--gold);
+        }
+
+        .modal-subtitle {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 600px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .detail-label {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .description-text {
+            color: #aaa;
+            line-height: 1.8;
+            margin: 1.5rem 0;
+        }
+
+        .affected-pairs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .pair-tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--gold);
+        }
+
+        /* Weekly View */
+        .weekly-view {
+            display: none;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+        }
+
+        .weekly-view.active {
+            display: grid;
+        }
+
+        @media (max-width: 968px) {
+            .weekly-view {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .day-column {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            padding: 1rem;
+            min-height: 400px;
+        }
+
+        .day-header {
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .day-name {
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .day-date {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .day-event {
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .day-event:hover {
+            transform: translateX(5px);
+        }
+
+        .day-event.high { border-left-color: var(--impact-high); }
+        .day-event.medium { border-left-color: var(--impact-medium); }
+        .day-event.low { border-left-color: var(--impact-low); }
+
+        .day-event-time {
+            font-size: 0.75rem;
+            color: #888;
+            font-family: 'Courier New', monospace;
+        }
+
+        .day-event-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 4rem 5%;
+            background: var(--dark);
+        }
+
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid var(--gold);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            font-family: 'Courier New', monospace;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Education Section */
+        .education-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .edu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .edu-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s;
+        }
+
+        .edu-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+        }
+
+        .edu-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .edu-title {
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .edu-text {
+            color: #aaa;
+            line-height: 1.8;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            background: var(--darker);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+        }
+
+        .disclaimer {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid var(--gold);
+            padding: 1rem;
+            border-radius: 10px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 3000;
+            font-size: 0.9rem;
+            max-width: 250px;
+        }
+
+        .tooltip.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar-bg"></div>
+    <div class="clock-bg">
+        <div class="clock-face">
+            <div class="clock-hand hour-hand"></div>
+            <div class="clock-hand minute-hand"></div>
+            <div class="clock-hand second-hand"></div>
+        </div>
+    </div>
+    <div class="tooltip" id="tooltip"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">◆ GOLDENICE CALENDAR</div>
+        <ul class="nav-links">
+            <li><a href="#calendar">Calendar</a></li>
+            <li><a href="#stats">Impact</a></li>
+            <li><a href="#education">Learn</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>📅</span>
+                <span>LIVE ECONOMIC CALENDAR</span>
+            </div>
+            <h1>Forex Economic Calendar</h1>
+            <p>Track high-impact economic events that move markets. Plan your trades around central bank decisions, employment reports, and GDP releases with Goldenice International's real-time calendar.</p>
+            
+            <div class="time-display">
+                <div class="time-box">
+                    <div class="time-value" id="gmtTime">12:45:30</div>
+                    <div class="time-label">GMT (UTC+0)</div>
+                </div>
+                <div class="time-box">
+                    <div class="time-value" id="estTime">07:45:30</div>
+                    <div class="time-label">New York (EST)</div>
+                </div>
+                <div class="time-box">
+                    <div class="time-value" id="londonTime">12:45:30</div>
+                    <div class="time-label">London (GMT)</div>
+                </div>
+                <div class="time-box">
+                    <div class="time-value" id="tokyoTime">21:45:30</div>
+                    <div class="time-label">Tokyo (JST)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="filter-container">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Date Range</label>
+                    <input type="date" class="filter-input" id="dateFilter" value="2024-12-20">
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Currency</label>
+                    <select class="filter-select" id="currencyFilter">
+                        <option value="all">All Currencies</option>
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="AUD">AUD - Australian Dollar</option>
+                        <option value="CAD">CAD - Canadian Dollar</option>
+                        <option value="CHF">CHF - Swiss Franc</option>
+                        <option value="NZD">NZD - New Zealand Dollar</option>
+                        <option value="CNY">CNY - Chinese Yuan</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Impact Level</label>
+                    <div class="impact-filters">
+                        <button class="impact-btn high active" onclick="toggleImpact('high')">High</button>
+                        <button class="impact-btn medium active" onclick="toggleImpact('medium')">Medium</button>
+                        <button class="impact-btn low active" onclick="toggleImpact('low')">Low</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Category</label>
+                    <select class="filter-select" id="categoryFilter">
+                        <option value="all">All Categories</option>
+                        <option value="employment">Employment</option>
+                        <option value="inflation">Inflation</option>
+                        <option value="gdp">GDP</option>
+                        <option value="central_bank">Central Banks</option>
+                        <option value="retail">Retail Sales</option>
+                        <option value="manufacturing">Manufacturing</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <button class="reset-btn" onclick="resetFilters()">Reset Filters</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section class="calendar-section" id="calendar">
+        <div class="calendar-header">
+            <div class="date-nav">
+                <button class="nav-arrow" onclick="changeDate(-1)">←</button>
+                <div class="current-date" id="currentDate">Friday, December 20, 2024</div>
+                <button class="nav-arrow" onclick="changeDate(1)">→</button>
+            </div>
+            <div class="view-toggle">
+                <button class="view-btn active" onclick="switchView('list')">List View</button>
+                <button class="view-btn" onclick="switchView('week')">Week View</button>
+            </div>
+        </div>
+
+        <!-- List View -->
+        <div class="list-view active" id="listView">
+            <table class="events-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Currency</th>
+                        <th>Event</th>
+                        <th>Impact</th>
+                        <th>Actual</th>
+                        <th>Forecast</th>
+                        <th>Previous</th>
+                    </tr>
+                </thead>
+                <tbody id="eventsTableBody">
+                    <!-- Events populated by JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Week View -->
+        <div class="weekly-view" id="weekView">
+            <!-- Populated by JS -->
+        </div>
+    </section>
+
+    <!-- Detail Modal -->
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-header">
+                <div class="modal-icon" id="modalIcon">📊</div>
+                <div>
+                    <div class="modal-title" id="modalTitle">Event Title</div>
+                    <div class="modal-subtitle" id="modalSubtitle">Currency • Time</div>
+                </div>
+            </div>
+            
+            <div class="detail-grid">
+                <div class="detail-box">
+                    <div class="detail-label">Impact Level</div>
+                    <div class="detail-value" id="modalImpact">High</div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-label">Volatility Expected</div>
+                    <div class="detail-value" id="modalVolatility">±50 pips</div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-label">Forecast</div>
+                    <div class="detail-value" id="modalForecast">180K</div>
+                </div>
+                <div class="detail-box">
+                    <div class="detail-label">Previous</div>
+                    <div class="detail-value" id="modalPrevious">175K</div>
+                </div>
+            </div>
+            
+            <p class="description-text" id="modalDescription">
+                This economic indicator measures the change in the number of employed people during the previous month. Job creation is an important leading indicator of consumer spending, which accounts for a majority of overall economic activity.
+            </p>
+            
+            <div>
+                <div class="detail-label">Most Affected Pairs</div>
+                <div class="affected-pairs" id="modalPairs">
+                    <span class="pair-tag">EUR/USD</span>
+                    <span class="pair-tag">GBP/USD</span>
+                    <span class="pair-tag">USD/JPY</span>
+                    <span class="pair-tag">XAU/USD</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <section class="stats-section" id="stats">
+        <div class="stats-container">
+            <h2 class="section-title">This Week's Impact Analysis</h2>
+            <p class="section-subtitle">High-impact events scheduled for the trading week</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🔴</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">High Impact Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🟠</div>
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">Medium Impact Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🟢</div>
+                    <div class="stat-value">45</div>
+                    <div class="stat-label">Low Impact Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Central Bank Meetings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💼</div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Employment Reports</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">GDP Releases</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section class="education-section" id="education">
+        <h2 class="section-title">Understanding Economic Indicators</h2>
+        <p class="section-subtitle">Master the fundamentals of forex economic events</p>
+        
+        <div class="edu-grid">
+            <div class="edu-card">
+                <div class="edu-number">01</div>
+                <h4 class="edu-title">Employment Data</h4>
+                <p class="edu-text">Non-Farm Payrolls (NFP) and unemployment rates are the most market-moving indicators. Released monthly, they signal economic health and influence central bank policy decisions.</p>
+            </div>
+            <div class="edu-card">
+                <div class="edu-number">02</div>
+                <h4 class="edu-title">Inflation Metrics</h4>
+                <p class="edu-text">Consumer Price Index (CPI) and Producer Price Index (PPI) measure inflation. Higher inflation typically leads to currency appreciation as central banks raise interest rates.</p>
+            </div>
+            <div class="edu-card">
+                <div class="edu-number">03</div>
+                <h4 class="edu-title">Central Bank Decisions</h4>
+                <p class="edu-text">Interest rate decisions, policy statements, and press conferences from Fed, ECB, BOE, and BOJ create significant volatility. Watch for forward guidance changes.</p>
+            </div>
+            <div class="edu-card">
+                <div class="edu-number">04</div>
+                <h4 class="edu-title">GDP Growth</h4>
+                <p class="edu-text">Gross Domestic Product measures economic output. Quarterly releases show economic expansion or contraction, directly affecting currency strength and investor confidence.</p>
+            </div>
+            <div class="edu-card">
+                <div class="edu-number">05</div>
+                <h4 class="edu-title">Manufacturing Data</h4>
+                <p class="edu-text">PMI (Purchasing Managers' Index) indicates manufacturing sector health. Values above 50 suggest expansion, below 50 indicates contraction. Leading indicator of economic trends.</p>
+            </div>
+            <div class="edu-card">
+                <div class="edu-number">06</div>
+                <h4 class="edu-title">Retail Sales</h4>
+                <p class="edu-text">Consumer spending drives economic growth. Strong retail sales data boosts currency value as it signals economic confidence and potential inflationary pressures.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo" style="margin-bottom: 1rem;">◆ GOLDENICE CALENDAR</div>
+            <p style="color: #aaa; margin-bottom: 1rem;">Professional Economic Calendar for Forex Traders</p>
+            <div class="disclaimer">
+                <p>All times are displayed in GMT (UTC+0). Economic calendar events are subject to change without notice. Actual values may differ from forecasts. Trading economic news involves significant risk due to increased volatility. Always use stop-loss orders and manage position sizes appropriately.</p>
+                <p style="margin-top: 1rem;">© 2026 Goldenice International. Data provided by multiple sources for informational purposes only.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample Economic Events Data
+        const economicEvents = [
+            {
+                id: 1,
+                time: "08:30",
+                currency: "USD",
+                flag: "🇺🇸",
+                name: "Non-Farm Payrolls",
+                detail: "Employment Change",
+                impact: "high",
+                actual: "210K",
+                forecast: "180K",
+                previous: "175K",
+                trend: "up",
+                description: "The Non-Farm Payrolls report measures the change in the number of employed people during the previous month, excluding the farming industry. It is a leading indicator of consumer spending and economic health.",
+                volatility: "±80-150 pips",
+                pairs: ["EUR/USD", "GBP/USD", "USD/JPY", "XAU/USD", "USD/CHF"],
+                category: "employment"
+            },
+            {
+                id: 2,
+                time: "08:30",
+                currency: "USD",
+                flag: "🇺🇸",
+                name: "Unemployment Rate",
+                detail: "November data",
+                impact: "high",
+                actual: "3.7%",
+                forecast: "3.9%",
+                previous: "4.0%",
+                trend: "down",
+                description: "The Unemployment Rate measures the percentage of the total workforce that is unemployed and actively seeking employment during the previous month.",
+                volatility: "±30-50 pips",
+                pairs: ["EUR/USD", "GBP/USD", "USD/JPY"],
+                category: "employment"
+            },
+            {
+                id: 3,
+                time: "10:00",
+                currency: "EUR",
+                flag: "🇪🇺",
+                name: "ECB Interest Rate Decision",
+                detail: "Main Refinancing Rate",
+                impact: "high",
+                actual: "4.50%",
+                forecast: "4.50%",
+                previous: "4.50%",
+                trend: "neutral",
+                description: "The European Central Bank's interest rate decision affects borrowing costs throughout the Eurozone. The accompanying statement and press conference provide forward guidance.",
+                volatility: "±60-100 pips",
+                pairs: ["EUR/USD", "EUR/GBP", "EUR/JPY", "EUR/CHF"],
+                category: "central_bank"
+            },
+            {
+                id: 4,
+                time: "13:30",
+                currency: "CAD",
+                flag: "🇨🇦",
+                name: "Employment Change",
+                detail: "Net change in employment",
+                impact: "medium",
+                actual: "+25.0K",
+                forecast: "+15.0K",
+                previous: "+10.0K",
+                trend: "up",
+                description: "The Employment Change measures the change in the number of employed people in Canada. It is a leading indicator of consumer spending and economic growth.",
+                volatility: "±40-70 pips",
+                pairs: ["USD/CAD", "CAD/JPY", "EUR/CAD"],
+                category: "employment"
+            },
+            {
+                id: 5,
+                time: "15:00",
+                currency: "USD",
+                flag: "🇺🇸",
+                name: "ISM Manufacturing PMI",
+                detail: "Manufacturing index",
+                impact: "medium",
+                actual: "49.5",
+                forecast: "48.0",
+                previous: "47.4",
+                trend: "up",
+                description: "The Manufacturing Purchasing Managers' Index (PMI) measures the activity level of purchasing managers in the manufacturing sector. A reading above 50 indicates expansion.",
+                volatility: "±30-50 pips",
+                pairs: ["EUR/USD", "USD/JPY", "XAU/USD"],
+                category: "manufacturing"
+            },
+            {
+                id: 6,
+                time: "07:00",
+                currency: "GBP",
+                flag: "🇬🇧",
+                name: "GDP m/m",
+                detail: "Monthly GDP estimate",
+                impact: "medium",
+                actual: "0.1%",
+                forecast: "0.0%",
+                previous: "-0.1%",
+                trend: "up",
+                description: "Monthly Gross Domestic Product measures the change in the total value of all goods and services produced in the UK. It is the broadest measure of economic activity.",
+                volatility: "±40-60 pips",
+                pairs: ["GBP/USD", "EUR/GBP", "GBP/JPY"],
+                category: "gdp"
+            },
+            {
+                id: 7,
+                time: "09:00",
+                currency: "EUR",
+                flag: "🇪🇺",
+                name: "CPI y/y",
+                detail: "Consumer Price Index",
+                impact: "high",
+                actual: "2.4%",
+                forecast: "2.5%",
+                previous: "2.9%",
+                trend: "down",
+                description: "The Consumer Price Index measures the change in the price of goods and services from the perspective of the consumer. It is the primary measure of inflation.",
+                volatility: "±50-80 pips",
+                pairs: ["EUR/USD", "EUR/GBP", "EUR/JPY"],
+                category: "inflation"
+            },
+            {
+                id: 8,
+                time: "21:30",
+                currency: "AUD",
+                flag: "🇦🇺",
+                name: "Employment Change",
+                detail: "Monthly employment data",
+                impact: "medium",
+                actual: "+45.0K",
+                forecast: "+25.0K",
+                previous: "+15.0K",
+                trend: "up",
+                description: "The Employment Change measures the change in the number of employed people in Australia. It is a key indicator of labor market health.",
+                volatility: "±40-60 pips",
+                pairs: ["AUD/USD", "EUR/AUD", "GBP/AUD", "AUD/JPY"],
+                category: "employment"
+            },
+            {
+                id: 9,
+                time: "13:30",
+                currency: "USD",
+                flag: "🇺🇸",
+                name: "CPI m/m",
+                detail: "Monthly inflation data",
+                impact: "high",
+                actual: "0.1%",
+                forecast: "0.2%",
+                previous: "0.4%",
+                trend: "down",
+                description: "The Consumer Price Index Excluding Food and Energy measures the change in the price of goods and services, excluding food and energy, from the perspective of the consumer.",
+                volatility: "±60-100 pips",
+                pairs: ["EUR/USD", "GBP/USD", "USD/JPY", "XAU/USD"],
+                category: "inflation"
+            },
+            {
+                id: 10,
+                time: "15:30",
+                currency: "USD",
+                flag: "🇺🇸",
+                name: "Crude Oil Inventories",
+                detail: "Weekly stock change",
+                impact: "low",
+                actual: "-2.5M",
+                forecast: "-1.8M",
+                previous: "+3.2M",
+                trend: "down",
+                description: "The Crude Oil Inventories measures the change in the number of barrels of crude oil held in inventory by commercial firms during the past week.",
+                volatility: "±20-40 pips (oil currencies)",
+                pairs: ["USD/CAD", "USD/NOK", "USD/RUB"],
+                category: "retail"
+            },
+            {
+                id: 11,
+                time: "10:30",
+                currency: "CHF",
+                flag: "🇨🇭",
+                name: "SNB Interest Rate Decision",
+                detail: "Policy rate",
+                impact: "high",
+                actual: "1.75%",
+                forecast: "1.75%",
+                previous: "1.75%",
+                trend: "neutral",
+                description: "The Swiss National Bank's interest rate decision influences borrowing costs in Switzerland. The SNB is known for active currency market intervention.",
+                volatility: "±40-70 pips",
+                pairs: ["USD/CHF", "EUR/CHF", "GBP/CHF", "CHF/JPY"],
+                category: "central_bank"
+            },
+            {
+                id: 12,
+                time: "01:30",
+                currency: "CNY",
+                flag: "🇨🇳",
+                name: "Manufacturing PMI",
+                detail: "Official NBS data",
+                impact: "medium",
+                actual: "50.7",
+                forecast: "50.1",
+                previous: "50.3",
+                trend: "up",
+                description: "The Manufacturing Purchasing Managers' Index (PMI) measures the activity level of purchasing managers in the manufacturing sector. Critical for global growth sentiment.",
+                volatility: "±30-50 pips (AUD, NZD sensitive)",
+                pairs: ["AUD/USD", "NZD/USD", "USD/CNH"],
+                category: "manufacturing"
+            }
+        ];
+
+        // Initialize Clock
+        function updateClock() {
+            const now = new Date();
+            
+            const gmt = now.toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: false });
+            document.getElementById('gmtTime').textContent = gmt;
+            
+            const est = now.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false });
+            document.getElementById('estTime').textContent = est;
+            
+            const london = now.toLocaleTimeString('en-US', { timeZone: 'Europe/London', hour12: false });
+            document.getElementById('londonTime').textContent = london;
+            
+            const tokyo = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Tokyo', hour12: false });
+            document.getElementById('tokyoTime').textContent = tokyo;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Render Events Table
+        function renderEvents() {
+            const tbody = document.getElementById('eventsTableBody');
+            const currencyFilter = document.getElementById('currencyFilter').value;
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            
+            // Get active impact filters
+            const activeImpacts = [];
+            document.querySelectorAll('.impact-btn.active').forEach(btn => {
+                activeImpacts.push(btn.classList[1]);
+            });
+            
+            const filteredEvents = economicEvents.filter(event => {
+                const currencyMatch = currencyFilter === 'all' || event.currency === currencyFilter;
+                const categoryMatch = categoryFilter === 'all' || event.category === categoryFilter;
+                const impactMatch = activeImpacts.includes(event.impact);
+                return currencyMatch && categoryMatch && impactMatch;
+            });
+            
+            // Sort by time
+            filteredEvents.sort((a, b) => a.time.localeCompare(b.time));
+            
+            tbody.innerHTML = filteredEvents.map(event => {
+                const trendIcon = event.trend === 'up' ? '↑' : event.trend === 'down' ? '↓' : '→';
+                const trendClass = event.trend === 'up' ? 'trend-up' : event.trend === 'down' ? 'trend-down' : '';
+                
+                return `
+                    <tr onclick="openModal(${event.id})" style="cursor: pointer;">
+                        <td class="time-cell">
+                            ${event.time}
+                            <div class="countdown">in ${Math.floor(Math.random() * 4 + 1)}h ${Math.floor(Math.random() * 59)}m</div>
+                        </td>
+                        <td>
+                            <div class="currency-flag">
+                                <span class="flag-icon">${event.flag}</span>
+                                <span>${event.currency}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="event-name">${event.name}</div>
+                            <div class="event-detail">${event.detail}</div>
+                        </td>
+                        <td>
+                            <span class="impact-badge impact-${event.impact}">${event.impact}</span>
+                        </td>
+                        <td class="actual-value">
+                            <span class="trend-indicator ${trendClass}">${trendIcon} ${event.actual}</span>
+                        </td>
+                        <td class="forecast-value">${event.forecast}</td>
+                        <td class="previous-value">${event.previous}</td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Highlight next event
+            const rows = tbody.querySelectorAll('tr');
+            if (rows.length > 0) {
+                rows[0].classList.add('next-event');
+            }
+        }
+
+        // Render Week View
+        function renderWeekView() {
+            const weekView = document.getElementById('weekView');
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            const dates = ['Dec 16', 'Dec 17', 'Dec 18', 'Dec 19', 'Dec 20', 'Dec 21', 'Dec 22'];
+            
+            weekView.innerHTML = days.map((day, index) => {
+                const dayEvents = economicEvents.filter((_, i) => i % 7 === index);
+                
+                return `
+                    <div class="day-column">
+                        <div class="day-header">
+                            <div class="day-name">${day}</div>
+                            <div class="day-date">${dates[index]}</div>
+                        </div>
+                        ${dayEvents.map(event => `
+                            <div class="day-event ${event.impact}" onclick="openModal(${event.id})">
+                                <div class="day-event-time">${event.time} ${event.flag}</div>
+                                <div class="day-event-name">${event.name}</div>
+                            </div>
+                        `).join('') || '<div style="color: #666; text-align: center; padding: 2rem 0;">No major events</div>'}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Filter Functions
+        function toggleImpact(impact) {
+            const btn = document.querySelector(`.impact-btn.${impact}`);
+            btn.classList.toggle('active');
+            renderEvents();
+        }
+
+        function resetFilters() {
+            document.getElementById('currencyFilter').value = 'all';
+            document.getElementById('categoryFilter').value = 'all';
+            document.querySelectorAll('.impact-btn').forEach(btn => btn.classList.add('active'));
+            renderEvents();
+        }
+
+        // View Switching
+        function switchView(view) {
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (view === 'list') {
+                document.getElementById('listView').classList.add('active');
+                document.getElementById('weekView').classList.remove('active');
+            } else {
+                document.getElementById('listView').classList.remove('active');
+                document.getElementById('weekView').classList.add('active');
+                renderWeekView();
+            }
+        }
+
+        // Date Navigation
+        function changeDate(direction) {
+            const currentDateEl = document.getElementById('currentDate');
+            const dates = [
+                'Wednesday, December 18, 2024',
+                'Thursday, December 19, 2024',
+                'Friday, December 20, 2024',
+                'Monday, December 23, 2024',
+                'Tuesday, December 24, 2024'
+            ];
+            const currentIndex = dates.indexOf(currentDateEl.textContent);
+            const newIndex = Math.max(0, Math.min(dates.length - 1, currentIndex + direction));
+            currentDateEl.textContent = dates[newIndex];
+            
+            // Re-render with slight randomization to simulate different days
+            renderEvents();
+        }
+
+        // Modal Functions
+        function openModal(eventId) {
+            const event = economicEvents.find(e => e.id === eventId);
+            if (!event) return;
+            
+            document.getElementById('modalTitle').textContent = event.name;
+            document.getElementById('modalSubtitle').textContent = `${event.flag} ${event.currency} • ${event.time} GMT`;
+            document.getElementById('modalImpact').textContent = event.impact.charAt(0).toUpperCase() + event.impact.slice(1);
+            document.getElementById('modalImpact').style.color = `var(--impact-${event.impact})`;
+            document.getElementById('modalVolatility').textContent = event.volatility;
+            document.getElementById('modalForecast').textContent = event.forecast;
+            document.getElementById('modalPrevious').textContent = event.previous;
+            document.getElementById('modalDescription').textContent = event.description;
+            
+            const pairsContainer = document.getElementById('modalPairs');
+            pairsContainer.innerHTML = event.pairs.map(pair => `<span class="pair-tag">${pair}</span>`).join('');
+            
+            document.getElementById('eventModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('eventModal').classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('eventModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Filter change listeners
+        document.getElementById('currencyFilter').addEventListener('change', renderEvents);
+        document.getElementById('categoryFilter').addEventListener('change', renderEvents);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderEvents();
+            
+            // Simulate live updates
+            setInterval(() => {
+                // Randomly update an actual value
+                const randomEvent = economicEvents[Math.floor(Math.random() * economicEvents.length)];
+                if (Math.random() > 0.7) {
+                    renderEvents();
+                }
+            }, 5000);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

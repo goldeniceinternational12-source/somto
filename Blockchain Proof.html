@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoldenIce International | Admin Blockchain Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.9.0/ethers.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            overflow-x: hidden;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Animated gradient background */
+        .gradient-bg {
+            background: linear-gradient(-45deg, #0a0a0a, #1a1a2e, #16213e, #0f3460);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glass morphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        /* Gold accent */
+        .text-gold {
+            color: #ffd700;
+        }
+        
+        .border-gold {
+            border-color: #ffd700;
+        }
+        
+        .bg-gold {
+            background-color: #ffd700;
+        }
+
+        .shadow-gold {
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Ice effect */
+        .ice-glow {
+            box-shadow: 0 0 30px rgba(100, 200, 255, 0.2), inset 0 0 30px rgba(100, 200, 255, 0.1);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .float-anim {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out forwards;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffd700;
+        }
+
+        /* Hexagon pattern */
+        .hex-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill-opacity='0.03' fill='%23ffffff'/%3E%3C/svg%3E");
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(255, 215, 0, 0.1);
+            border-top: 3px solid #ffd700;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Status indicators */
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .status-connected { background-color: #10b981; box-shadow: 0 0 10px #10b981; }
+        .status-disconnected { background-color: #ef4444; }
+        .status-pending { background-color: #f59e0b; animation: pulse 2s infinite; }
+
+        /* Button hover effects */
+        .btn-hover {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-hover:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-hover:hover:before {
+            left: 100%;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .toast.show { transform: translateX(0); }
+        .toast-success { background: rgba(16, 185, 129, 0.9); border: 1px solid #10b981; }
+        .toast-error { background: rgba(239, 68, 68, 0.9); border: 1px solid #ef4444; }
+        .toast-info { background: rgba(59, 130, 246, 0.9); border: 1px solid #3b82f6; }
+
+        /* Blockchain visualizer */
+        .blockchain-node {
+            width: 12px;
+            height: 12px;
+            background: #ffd700;
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0.6;
+        }
+
+        .blockchain-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #ffd700, transparent);
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body class="gradient-bg text-white min-h-screen hex-pattern">
+
+    <!-- Blockchain Background Animation -->
+    <div id="blockchain-bg" class="fixed inset-0 pointer-events-none overflow-hidden"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-strong border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center shadow-gold">
+                        <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="font-display text-xl font-bold tracking-wider text-gold">GOLDENICE</h1>
+                        <p class="text-xs text-gray-400 tracking-widest">INTERNATIONAL</p>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-6">
+                    <div class="flex items-center space-x-2 text-sm text-gray-300">
+                        <span class="status-dot" id="network-status"></span>
+                        <span id="network-name">Disconnected</span>
+                    </div>
+                    <button id="connect-btn" class="btn-hover px-6 py-2.5 bg-gold text-black font-semibold rounded-lg shadow-gold">
+                        Connect Wallet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+        
+        <!-- Hero Section -->
+        <div class="text-center mb-16 slide-in">
+            <div class="inline-flex items-center px-4 py-2 rounded-full glass border-gold/30 mb-6">
+                <span class="w-2 h-2 bg-gold rounded-full mr-2 animate-pulse"></span>
+                <span class="text-sm text-gold font-medium">Blockchain Admin Verification</span>
+            </div>
+            <h2 class="font-display text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                Proof of <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200">Admin</span> Authority
+            </h2>
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                Secure, decentralized authentication system for GoldenIce International administrative operations. 
+                Verify your identity through cryptographic signature proofs.
+            </p>
+        </div>
+
+        <!-- Connection Status Card -->
+        <div id="connection-card" class="max-w-2xl mx-auto glass rounded-2xl p-8 mb-12 slide-in" style="animation-delay: 0.2s">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Connection Status
+                </h3>
+                <span id="connection-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-red-500/20 text-red-400 border border-red-500/30">
+                    Not Connected
+                </span>
+            </div>
+
+            <div class="space-y-4">
+                <div class="flex justify-between items-center p-4 rounded-lg bg-black/30 border border-white/5">
+                    <span class="text-gray-400">Wallet Address</span>
+                    <span id="wallet-address" class="font-mono text-sm text-gray-500">—</span>
+                </div>
+                <div class="flex justify-between items-center p-4 rounded-lg bg-black/30 border border-white/5">
+                    <span class="text-gray-400">Network</span>
+                    <span id="network-display" class="text-sm text-gray-500">—</span>
+                </div>
+                <div class="flex justify-between items-center p-4 rounded-lg bg-black/30 border border-white/5">
+                    <span class="text-gray-400">Balance</span>
+                    <span id="balance-display" class="text-sm text-gray-500">—</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Verification Section -->
+        <div id="admin-section" class="max-w-2xl mx-auto glass rounded-2xl p-8 mb-12 opacity-50 pointer-events-none transition-all duration-500 slide-in" style="animation-delay: 0.4s">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.131A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.2-2.85.577-4.147l.156-.465"/>
+                    </svg>
+                    Admin Verification
+                </h3>
+                <span id="admin-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-700 text-gray-400 border border-gray-600">
+                    Unverified
+                </span>
+            </div>
+
+            <div class="space-y-6">
+                <p class="text-gray-400 text-sm">
+                    To prove admin authority, sign a unique message with your wallet. This creates a cryptographic proof without exposing private keys.
+                </p>
+
+                <div class="p-4 rounded-lg bg-black/40 border border-gold/20">
+                    <label class="block text-xs text-gold mb-2 uppercase tracking-wider">Message to Sign</label>
+                    <div id="message-to-sign" class="font-mono text-sm text-gray-300 break-all">
+                        GoldenIce_Admin_Auth_[timestamp]_[nonce]
+                    </div>
+                </div>
+
+                <button id="sign-btn" class="w-full btn-hover py-4 bg-gradient-to-r from-yellow-600 to-yellow-400 text-black font-bold rounded-lg shadow-gold disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span id="sign-btn-text">Sign Message to Prove Admin Status</span>
+                    <div id="sign-spinner" class="spinner hidden mx-auto"></div>
+                </button>
+
+                <div id="signature-result" class="hidden p-4 rounded-lg bg-green-900/20 border border-green-500/30">
+                    <label class="block text-xs text-green-400 mb-2 uppercase tracking-wider">Signature Proof</label>
+                    <div id="signature-value" class="font-mono text-xs text-green-300 break-all mb-2"></div>
+                    <div class="flex items-center text-xs text-green-400">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        Verified on Blockchain
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard (Hidden until verified) -->
+        <div id="admin-dashboard" class="hidden max-w-6xl mx-auto slide-in">
+            <div class="glass-strong rounded-2xl p-8 ice-glow">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h3 class="text-2xl font-display font-bold text-gold mb-1">Admin Control Center</h3>
+                        <p class="text-gray-400 text-sm">Authorized administrative operations</p>
+                    </div>
+                    <div class="flex items-center space-x-2 px-4 py-2 rounded-full bg-green-900/30 border border-green-500/30">
+                        <span class="status-dot status-connected"></span>
+                        <span class="text-sm text-green-400 font-medium">Admin Verified</span>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div class="glass rounded-xl p-6 border-l-4 border-gold">
+                        <div class="text-3xl font-bold text-white mb-1" id="admin-tx-count">0</div>
+                        <div class="text-sm text-gray-400">Admin Transactions</div>
+                    </div>
+                    <div class="glass rounded-xl p-6 border-l-4 border-blue-500">
+                        <div class="text-3xl font-bold text-white mb-1" id="last-action">—</div>
+                        <div class="text-sm text-gray-400">Last Action</div>
+                    </div>
+                    <div class="glass rounded-xl p-6 border-l-4 border-purple-500">
+                        <div class="text-3xl font-bold text-white mb-1" id="contract-status">Active</div>
+                        <div class="text-sm text-gray-400">Contract Status</div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <button onclick="simulateAdminAction('Pause Contract')" class="btn-hover p-4 rounded-lg bg-red-900/20 border border-red-500/30 text-red-400 hover:bg-red-900/30 text-left">
+                        <div class="font-semibold mb-1">Emergency Pause</div>
+                        <div class="text-xs opacity-70">Halt all contract operations</div>
+                    </button>
+                    <button onclick="simulateAdminAction('Withdraw Funds')" class="btn-hover p-4 rounded-lg bg-yellow-900/20 border border-yellow-500/30 text-yellow-400 hover:bg-yellow-900/30 text-left">
+                        <div class="font-semibold mb-1">Treasury Withdraw</div>
+                        <div class="text-xs opacity-70">Transfer funds to admin wallet</div>
+                    </button>
+                    <button onclick="simulateAdminAction('Update Oracle')" class="btn-hover p-4 rounded-lg bg-blue-900/20 border border-blue-500/30 text-blue-400 hover:bg-blue-900/30 text-left">
+                        <div class="font-semibold mb-1">Update Price Oracle</div>
+                        <div class="text-xs opacity-70">Refresh external data feeds</div>
+                    </button>
+                    <button onclick="simulateAdminAction('Mint Tokens')" class="btn-hover p-4 rounded-lg bg-purple-900/20 border border-purple-500/30 text-purple-400 hover:bg-purple-900/30 text-left">
+                        <div class="font-semibold mb-1">Mint Governance Tokens</div>
+                        <div class="text-xs opacity-70">Create new admin tokens</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Log -->
+        <div class="max-w-2xl mx-auto mt-12 glass rounded-2xl p-6 slide-in" style="animation-delay: 0.6s">
+            <h4 class="text-lg font-semibold mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                Verification Log
+            </h4>
+            <div id="activity-log" class="space-y-2 max-h-64 overflow-y-auto font-mono text-xs">
+                <div class="text-gray-500 italic">No activity recorded...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        // State Management
+        const state = {
+            connected: false,
+            address: null,
+            chainId: null,
+            provider: null,
+            signer: null,
+            isAdmin: false,
+            signature: null,
+            message: null
+        };
+
+        // DOM Elements
+        const connectBtn = document.getElementById('connect-btn');
+        const signBtn = document.getElementById('sign-btn');
+        const adminSection = document.getElementById('admin-section');
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const connectionCard = document.getElementById('connection-card');
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initBlockchainBackground();
+            checkExistingConnection();
+            generateNewMessage();
+        });
+
+        // Generate unique message for signing
+        function generateNewMessage() {
+            const timestamp = Date.now();
+            const nonce = Math.random().toString(36).substring(2, 15);
+            state.message = `GoldenIce_Admin_Auth_${timestamp}_${nonce}`;
+            document.getElementById('message-to-sign').textContent = state.message;
+        }
+
+        // Check if wallet was previously connected
+        async function checkExistingConnection() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                    if (accounts.length > 0) {
+                        await connectWallet();
+                    }
+                } catch (error) {
+                    console.log('No existing connection');
+                }
+            }
+        }
+
+        // Connect Wallet
+        connectBtn.addEventListener('click', async () => {
+            if (!window.ethereum) {
+                showToast('Please install MetaMask or Web3 wallet', 'error');
+                return;
+            }
+
+            try {
+                connectBtn.disabled = true;
+                connectBtn.innerHTML = '<div class="spinner mx-auto"></div>';
+                
+                await connectWallet();
+                
+                showToast('Wallet connected successfully', 'success');
+            } catch (error) {
+                showToast(error.message, 'error');
+                connectBtn.innerHTML = 'Connect Wallet';
+                connectBtn.disabled = false;
+            }
+        });
+
+        async function connectWallet() {
+            // Request account access
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            
+            // Initialize ethers provider
+            state.provider = new ethers.BrowserProvider(window.ethereum);
+            state.signer = await state.provider.getSigner();
+            state.address = await state.signer.getAddress();
+            state.chainId = await state.provider.getNetwork().then(n => n.chainId.toString());
+            
+            // Update UI
+            updateConnectionUI();
+            enableAdminSection();
+            
+            // Listen for changes
+            window.ethereum.on('accountsChanged', handleAccountsChanged);
+            window.ethereum.on('chainChanged', () => window.location.reload());
+        }
+
+        function updateConnectionUI() {
+            state.connected = true;
+            
+            // Update button
+            connectBtn.innerHTML = `
+                <span class="flex items-center">
+                    <span class="w-2 h-2 bg-black rounded-full mr-2 animate-pulse"></span>
+                    ${state.address.slice(0, 6)}...${state.address.slice(-4)}
+                </span>
+            `;
+            connectBtn.classList.remove('bg-gold', 'text-black');
+            connectBtn.classList.add('bg-green-600', 'text-white', 'border', 'border-green-400');
+            
+            // Update connection card
+            document.getElementById('connection-badge').className = 
+                'px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-400 border border-green-500/30';
+            document.getElementById('connection-badge').textContent = 'Connected';
+            
+            document.getElementById('wallet-address').textContent = state.address;
+            document.getElementById('wallet-address').className = 'font-mono text-sm text-gold';
+            
+            const networkNames = {
+                '1': 'Ethereum Mainnet',
+                '5': 'Goerli Testnet',
+                '11155111': 'Sepolia Testnet',
+                '137': 'Polygon Mainnet',
+                '80001': 'Mumbai Testnet',
+                '56': 'BSC Mainnet',
+                '97': 'BSC Testnet'
+            };
+            
+            document.getElementById('network-display').textContent = 
+                networkNames[state.chainId] || `Chain ID: ${state.chainId}`;
+            document.getElementById('network-display').className = 'text-sm text-blue-400';
+            
+            // Update network status in nav
+            document.getElementById('network-status').className = 'status-dot status-connected';
+            document.getElementById('network-name').textContent = 'Connected';
+            document.getElementById('network-name').className = 'text-sm text-green-400';
+            
+            // Get balance
+            state.provider.getBalance(state.address).then(balance => {
+                const ethBalance = ethers.formatEther(balance);
+                document.getElementById('balance-display').textContent = 
+                    `${parseFloat(ethBalance).toFixed(4)} ETH`;
+                document.getElementById('balance-display').className = 'text-sm text-gold';
+            });
+            
+            logActivity(`Wallet connected: ${state.address.slice(0, 12)}...`);
+        }
+
+        function enableAdminSection() {
+            adminSection.classList.remove('opacity-50', 'pointer-events-none');
+            adminSection.classList.add('ice-glow');
+        }
+
+        function handleAccountsChanged(accounts) {
+            if (accounts.length === 0) {
+                // Disconnected
+                window.location.reload();
+            } else {
+                state.address = accounts[0];
+                updateConnectionUI();
+                resetAdminStatus();
+            }
+        }
+
+        // Sign Message
+        signBtn.addEventListener('click', async () => {
+            if (!state.signer) return;
+            
+            try {
+                signBtn.disabled = true;
+                document.getElementById('sign-btn-text').classList.add('hidden');
+                document.getElementById('sign-spinner').classList.remove('hidden');
+                
+                // Sign the message
+                const signature = await state.signer.signMessage(state.message);
+                state.signature = signature;
+                
+                // Verify signature (in production, this would check against smart contract)
+                const recoveredAddress = ethers.verifyMessage(state.message, signature);
+                const isValid = recoveredAddress.toLowerCase() === state.address.toLowerCase();
+                
+                if (isValid) {
+                    // Simulate admin check (in production, check smart contract roles)
+                    await verifyAdminStatus(recoveredAddress);
+                }
+                
+            } catch (error) {
+                showToast(error.message, 'error');
+                signBtn.disabled = false;
+                document.getElementById('sign-btn-text').classList.remove('hidden');
+                document.getElementById('sign-spinner').classList.add('hidden');
+            }
+        });
+
+        async function verifyAdminStatus(address) {
+            // Simulate network delay for realism
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // In production, you would call your smart contract here:
+            // const contract = new ethers.Contract(contractAddress, abi, state.provider);
+            // const isAdmin = await contract.hasRole(ADMIN_ROLE, address);
+            
+            // For demo, we'll simulate admin verification (random for testing)
+            const isAdmin = true; // Set to true for demo purposes
+            
+            if (isAdmin) {
+                state.isAdmin = true;
+                
+                // Update UI
+                document.getElementById('admin-badge').className = 
+                    'px-3 py-1 rounded-full text-xs font-semibold bg-gold text-black border border-gold';
+                document.getElementById('admin-badge').textContent = 'Verified Admin';
+                
+                document.getElementById('signature-value').textContent = state.signature;
+                document.getElementById('signature-result').classList.remove('hidden');
+                
+                signBtn.innerHTML = `
+                    <span class="flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Admin Verified
+                    </span>
+                `;
+                signBtn.classList.add('bg-green-600', 'text-white');
+                signBtn.classList.remove('from-yellow-600', 'to-yellow-400', 'text-black');
+                
+                // Show dashboard
+                setTimeout(() => {
+                    adminDashboard.classList.remove('hidden');
+                    adminDashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 500);
+                
+                logActivity(`Admin verified: Signature ${state.signature.slice(0, 20)}...`);
+                showToast('Admin authority verified successfully', 'success');
+            } else {
+                showToast('Address is not authorized as admin', 'error');
+                signBtn.disabled = false;
+                document.getElementById('sign-btn-text').classList.remove('hidden');
+                document.getElementById('sign-spinner').classList.add('hidden');
+            }
+        }
+
+        function resetAdminStatus() {
+            state.isAdmin = false;
+            state.signature = null;
+            generateNewMessage();
+            
+            document.getElementById('admin-badge').className = 
+                'px-3 py-1 rounded-full text-xs font-semibold bg-gray-700 text-gray-400 border border-gray-600';
+            document.getElementById('admin-badge').textContent = 'Unverified';
+            
+            document.getElementById('signature-result').classList.add('hidden');
+            signBtn.disabled = false;
+            signBtn.innerHTML = '<span id="sign-btn-text">Sign Message to Prove Admin Status</span><div id="sign-spinner" class="spinner hidden mx-auto"></div>';
+            signBtn.classList.remove('bg-green-600', 'text-white');
+            signBtn.classList.add('from-yellow-600', 'to-yellow-400', 'text-black');
+            
+            adminDashboard.classList.add('hidden');
+        }
+
+        // Simulate Admin Actions
+        function simulateAdminAction(actionName) {
+            if (!state.isAdmin) {
+                showToast('Admin verification required', 'error');
+                return;
+            }
+            
+            // Simulate transaction
+            const txHash = '0x' + Array(64).fill(0).map(() => 
+                Math.floor(Math.random() * 16).toString(16)
+            ).join('');
+            
+            document.getElementById('last-action').textContent = actionName;
+            document.getElementById('admin-tx-count').textContent = 
+                parseInt(document.getElementById('admin-tx-count').textContent) + 1;
+            
+            logActivity(`TX: ${actionName} | Hash: ${txHash.slice(0, 20)}...`);
+            showToast(`${actionName} transaction submitted`, 'success');
+        }
+
+        // Activity Log
+        function logActivity(message) {
+            const log = document.getElementById('activity-log');
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'p-2 rounded bg-black/20 border-l-2 border-gold text-gray-300';
+            entry.innerHTML = `<span class="text-gold">[${time}]</span> ${message}`;
+            
+            if (log.children[0]?.classList.contains('italic')) {
+                log.innerHTML = '';
+            }
+            
+            log.insertBefore(entry, log.firstChild);
+        }
+
+        // Toast Notifications
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            
+            document.getElementById('toast-container').appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Blockchain Background Animation
+        function initBlockchainBackground() {
+            const container = document.getElementById('blockchain-bg');
+            const nodeCount = 20;
+            
+            for (let i = 0; i < nodeCount; i++) {
+                createNode(container);
+            }
+        }
+
+        function createNode(container) {
+            const node = document.createElement('div');
+            node.className = 'blockchain-node';
+            node.style.left = Math.random() * 100 + '%';
+            node.style.top = Math.random() * 100 + '%';
+            node.style.animationDelay = Math.random() * 5 + 's';
+            container.appendChild(node);
+            
+            // Create connections
+            setInterval(() => {
+                if (Math.random() > 0.7) {
+                    createConnection(node, container);
+                }
+            }, 2000);
+        }
+
+        function createConnection(fromNode, container) {
+            const line = document.createElement('div');
+            line.className = 'blockchain-line';
+            
+            const rect = fromNode.getBoundingClientRect();
+            const length = 100 + Math.random() * 200;
+            const angle = Math.random() * 360;
+            
+            line.style.width = length + 'px';
+            line.style.left = rect.left + 'px';
+            line.style.top = rect.top + 'px';
+            line.style.transform = `rotate(${angle}deg)`;
+            line.style.transformOrigin = '0 50%';
+            
+            container.appendChild(line);
+            
+            setTimeout(() => line.remove(), 3000);
+        }
+
+        // Add floating animation to certain elements
+        document.querySelectorAll('.glass').forEach((el, i) => {
+            el.style.animationDelay = `${i * 0.1}s`;
+        });
+    </script>
+</body>
+</html>

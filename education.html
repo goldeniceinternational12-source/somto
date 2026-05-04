@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - Forex Investment Education</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-dark: #B8860B;
+            --gold-light: #FFD700;
+            --ice-blue: #4FC3F7;
+            --dark-bg: #0a0a0a;
+            --card-bg: #111;
+            --text-primary: #f0f0f0;
+            --text-secondary: #888;
+            --success-green: #4CAF50;
+            --accent-gradient: linear-gradient(135deg, var(--gold-primary), var(--ice-blue));
+            --border-color: rgba(212, 175, 55, 0.2);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        .market-ticker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.5rem 0;
+            z-index: 1001;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .ticker-content {
+            display: inline-block;
+            animation: ticker 30s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: inline-block;
+            padding: 0 2rem;
+            color: var(--gold-primary);
+            font-size: 0.9rem;
+        }
+
+        .ticker-item span {
+            color: var(--success-green);
+            margin-left: 0.5rem;
+        }
+
+        .ticker-item.down span {
+            color: #ff4444;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--gold-primary);
+            padding: 1rem 0;
+            position: sticky;
+            top: 35px;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+            font-size: 1.8rem;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo-text {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-primary);
+        }
+
+        .btn-open-account {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: #000;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-open-account:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+            color: #000;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            color: var(--gold-primary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero h1 span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: #000;
+            padding: 1.2rem 2.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--gold-primary);
+            padding: 1.2rem 2.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: 2px solid var(--gold-primary);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 4rem;
+            animation: fadeInUp 0.8s ease 0.8s both;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            display: block;
+        }
+
+        .hero-stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Why Forex Section */
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--gold-primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold-primary);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .benefit-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .benefit-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(79, 195, 247, 0.2));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .benefit-card h3 {
+            color: var(--text-primary);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .benefit-highlight {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 20px;
+            color: var(--gold-primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Market Opportunity */
+        .market-section {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(79, 195, 247, 0.05));
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .market-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .market-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .market-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .market-features {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .market-features li {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .market-features li::before {
+            content: '✓';
+            color: var(--success-green);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .market-visual {
+            position: relative;
+        }
+
+        .trading-interface {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        .interface-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .pair-selector {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .pair-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pair-btn.active {
+            background: var(--gold-primary);
+            color: #000;
+            border-color: var(--gold-primary);
+        }
+
+        .chart-container {
+            height: 300px;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.1), transparent);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300'%3E%3Cpath d='M0,250 Q100,200 200,220 T400,180 T600,150 T800,100 T1000,50' fill='none' stroke='%23D4AF37' stroke-width='3'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+            animation: chartMove 20s linear infinite;
+        }
+
+        @keyframes chartMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .trade-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-buy, .btn-sell {
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-buy {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .btn-sell {
+            background: #ff4444;
+            color: white;
+        }
+
+        .btn-buy:hover, .btn-sell:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Why Goldenice */
+        .why-section {
+            background: var(--card-bg);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 3rem;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: #000;
+            padding: 1.5rem;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .comparison-table td {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .check-icon {
+            color: var(--success-green);
+            font-size: 1.2rem;
+        }
+
+        .x-icon {
+            color: #ff4444;
+            font-size: 1.2rem;
+        }
+
+        .highlight-cell {
+            color: var(--gold-primary);
+            font-weight: 600;
+        }
+
+        /* Calculator Section */
+        .calculator-section {
+            background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(26,26,46,0.8));
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .calculator-box {
+            background: var(--card-bg);
+            border: 2px solid var(--gold-primary);
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+
+        .calculator-box h3 {
+            color: var(--gold-primary);
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .result-box {
+            background: rgba(0,0,0,0.5);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+        }
+
+        .result-value {
+            color: var(--gold-primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .result-value.positive {
+            color: var(--success-green);
+        }
+
+        .education-sidebar h3 {
+            color: var(--gold-primary);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .education-sidebar p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .tip-box {
+            background: rgba(79, 195, 247, 0.1);
+            border-left: 4px solid var(--ice-blue);
+            padding: 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin-top: 2rem;
+        }
+
+        .tip-box h4 {
+            color: var(--ice-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Testimonials */
+        .testimonials-section {
+            background: var(--dark-bg);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            font-size: 4rem;
+            color: var(--gold-primary);
+            opacity: 0.2;
+            font-family: serif;
+        }
+
+        .testimonial-text {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--ice-blue));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .author-info h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .author-info span {
+            color: var(--gold-primary);
+            font-size: 0.85rem;
+        }
+
+        /* Getting Started */
+        .steps-section {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(79, 195, 247, 0.05));
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 0;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: var(--card-bg);
+            border: 3px solid var(--gold-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            margin: 0 auto 1.5rem;
+            position: relative;
+            box-shadow: 0 0 0 10px var(--dark-bg);
+        }
+
+        .step h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .step p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background: var(--card-bg);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: var(--gold-primary);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .faq-icon {
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 1.5rem;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .faq-answer p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(79, 195, 247, 0.1));
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-section p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.95);
+            border-top: 2px solid var(--gold-primary);
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-column h4 {
+            color: var(--gold-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--gold-primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .risk-warning {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            color: #ff8888;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .market-content, .calculator-container {
+                grid-template-columns: 1fr;
+            }
+            .steps-container {
+                flex-direction: column;
+            }
+            .steps-container::before {
+                display: none;
+            }
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero-stats { flex-direction: column; gap: 2rem; }
+            .nav-links { display: none; }
+            .footer-content { grid-template-columns: 1fr; }
+            .comparison-table { font-size: 0.85rem; }
+            .comparison-table th, .comparison-table td { padding: 1rem; }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Market Ticker -->
+    <div class="market-ticker">
+        <div class="ticker-content">
+            <span class="ticker-item">EUR/USD <span>▲ 1.0845</span></span>
+            <span class="ticker-item">GBP/USD <span>▲ 1.2678</span></span>
+            <span class="ticker-item down">USD/JPY <span>▼ 149.32</span></span>
+            <span class="ticker-item">AUD/USD <span>▲ 0.6543</span></span>
+            <span class="ticker-item">USD/CAD <span>▲ 1.3542</span></span>
+            <span class="ticker-item down">EUR/GBP <span>▼ 0.8554</span></span>
+            <span class="ticker-item">XAU/USD <span>▲ 2,045.80</span></span>
+            <span class="ticker-item">BTC/USD <span>▲ 67,432.00</span></span>
+            <span class="ticker-item">EUR/USD <span>▲ 1.0845</span></span>
+            <span class="ticker-item">GBP/USD <span>▲ 1.2678</span></span>
+            <span class="ticker-item down">USD/JPY <span>▼ 149.32</span></span>
+            <span class="ticker-item">AUD/USD <span>▲ 0.6543</span></span>
+        </div>
+    </div>
+
+    <div class="bg-animation"></div>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">G</div>
+                <div class="logo-text">GOLDENICE INTERNATIONAL</div>
+            </div>
+            <nav class="nav-links">
+                <a href="#why-forex">Why Forex</a>
+                <a href="#market">Markets</a>
+                <a href="#why-us">Why Us</a>
+                <a href="#calculator">Calculator</a>
+                <a href="#faq">FAQ</a>
+                <a href="./index.html" class="btn-open-account">Open Account</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>🏆</span> Voted #1 Forex Broker 2024
+            </div>
+            <h1>Unlock Global Markets with <span>Goldenice International</span></h1>
+            <p class="hero-subtitle">
+                Discover why over 500,000 investors worldwide choose forex trading as their pathway to financial growth. Trade 24/5 on the world's most liquid market with spreads from 0.0 pips.
+            </p>
+            <div class="hero-cta">
+                <a href="#" class="btn-primary">
+                    <span>🚀</span> Start Trading Now
+                </a>
+                <a href="#" class="btn-secondary">
+                    <span>📚</span> Free Demo Account
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-number">$7.5T</span>
+                    <span class="hero-stat-label">Daily Volume</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">24/5</span>
+                    <span class="hero-stat-label">Market Access</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">1:500</span>
+                    <span class="hero-stat-label">Leverage</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">0.0</span>
+                    <span class="hero-stat-label">Spreads From</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Forex Section -->
+    <section class="section" id="why-forex">
+        <div class="section-header">
+            <h2>Why Invest in Forex?</h2>
+            <p>The foreign exchange market offers unique advantages that make it the preferred choice for smart investors worldwide</p>
+        </div>
+        <div class="benefits-grid">
+            <div class="benefit-card fade-in">
+                <div class="benefit-icon">💧</div>
+                <h3>Unmatched Liquidity</h3>
+                <p>With over $7.5 trillion traded daily, forex is the most liquid market in the world. Enter and exit positions instantly at your desired price without worrying about market manipulation or gaps.</p>
+                <span class="benefit-highlight">Trade sizes up to $50M+ executed seamlessly</span>
+            </div>
+            <div class="benefit-card fade-in">
+                <div class="benefit-icon">⏰</div>
+                <h3>24-Hour Market Access</h3>
+                <p>Unlike stock markets, forex operates 24 hours a day, 5 days a week. Trade when it suits your schedule—whether you're an early bird or night owl, opportunities never sleep.</p>
+                <span class="benefit-highlight">Sydney → Tokyo → London → New York</span>
+            </div>
+            <div class="benefit-card fade-in">
+                <div class="benefit-icon">⚖️</div>
+                <h3>Low Transaction Costs</h3>
+                <p>Forex trading typically involves lower costs than other markets. With Goldenice, enjoy spreads starting from 0.0 pips on major pairs and zero commission on standard accounts.</p>
+                <span class="benefit-highlight">Keep more of your profits</span>
+            </div>
+            <div class="benefit-card fade-in">
+                <div class="benefit-icon">📈</div>
+                <h3>Profit in Any Direction</h3>
+                <p>Unlike traditional investing, forex allows you to profit from both rising AND falling markets. Go long or short with equal ease and capitalize on global economic trends.</p>
+                <span class="benefit-highlight">Bull or bear, opportunity awaits</span>
+            </div>
+            <div class="benefit-card fade-in">
+                <div class="benefit-icon">🎯</div>
+                <h3>Strategic Leverage</h3>
+                <p>Control large positions with a relatively small capital outlay. Our flexible leverage up to 1:500 amplifies your trading power while maintaining responsible risk management.</p>
+                <span class="benefit-highlight">$1,000 controls $500,000 position</span>
+            </div>
+            <div class="benefit-card fade-in">
+                <div class="benefit-icon">🛡️</div>
+                <h3>Portfolio Diversification</h3>
+                <p>Forex provides excellent diversification for traditional investment portfolios. Currency movements often have low correlation with stocks and bonds, reducing overall risk.</p>
+                <span class="benefit-highlight">Balance your investment strategy</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Opportunity -->
+    <section class="section market-section" id="market">
+        <div class="market-content">
+            <div class="market-text">
+                <h2>Trade the World's Largest Financial Market</h2>
+                <p>The foreign exchange market dwarfs all other financial markets combined. With Goldenice International, you gain direct access to this dynamic marketplace with institutional-grade execution.</p>
+                <p>Whether you're seeking short-term trading opportunities or long-term currency diversification, our platform provides the tools, technology, and support you need to succeed.</p>
+                
+                <ul class="market-features">
+                    <li>Access to 80+ currency pairs including majors, minors, and exotics</li>
+                    <li>Trade gold, silver, oil, and cryptocurrencies alongside forex</li>
+                    <li>Advanced charting with 50+ technical indicators</li>
+                    <li>Automated trading capabilities with EA support</li>
+                    <li>Real-time economic calendar and market analysis</li>
+                    <li>Mobile trading apps for iOS and Android</li>
+                </ul>
+            </div>
+            <div class="market-visual">
+                <div class="trading-interface">
+                    <div class="interface-header">
+                        <div class="pair-selector">
+                            <button class="pair-btn active">EUR/USD</button>
+                            <button class="pair-btn">GBP/USD</button>
+                            <button class="pair-btn">USD/JPY</button>
+                        </div>
+                        <span style="color: var(--success-green); font-weight: 700;">▲ 1.08452</span>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-line"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                        <span>Spread: 0.1 pips</span>
+                        <span>Margin: $200</span>
+                        <span>Pip value: $10</span>
+                    </div>
+                    <div class="trade-buttons">
+                        <button class="btn-buy">BUY</button>
+                        <button class="btn-sell">SELL</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Goldenice -->
+    <section class="section why-section" id="why-us">
+        <div class="section-header">
+            <h2>Why Choose Goldenice International?</h2>
+            <p>Experience the difference of trading with an award-winning broker committed to your success</p>
+        </div>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Goldenice International</th>
+                    <th>Traditional Brokers</th>
+                    <th>Other Online Brokers</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Minimum Deposit</td>
+                    <td class="highlight-cell">$100</td>
+                    <td>$10,000+</td>
+                    <td>$500</td>
+                </tr>
+                <tr>
+                    <td>Spreads (EUR/USD)</td>
+                    <td class="highlight-cell">From 0.0 pips</td>
+                    <td>1.5+ pips</td>
+                    <td>1.0+ pips</td>
+                </tr>
+                <tr>
+                    <td>Execution Speed</td>
+                    <td class="highlight-cell">&lt; 10ms</td>
+                    <td>Seconds</td>
+                    <td>100-500ms</td>
+                </tr>
+                <tr>
+                    <td>Leverage</td>
+                    <td class="highlight-cell">Up to 1:500</td>
+                    <td>1:50</td>
+                    <td>Up to 1:200</td>
+                </tr>
+                <tr>
+                    <td>24/7 Support</td>
+                    <td class="check-icon">✓</td>
+                    <td class="x-icon">✗</td>
+                    <td class="check-icon">✓</td>
+                </tr>
+                <tr>
+                    <td>Negative Balance Protection</td>
+                    <td class="check-icon">✓</td>
+                    <td class="x-icon">✗</td>
+                    <td class="x-icon">✗</td>
+                </tr>
+                <tr>
+                    <td>Free Education & Signals</td>
+                    <td class="check-icon">✓</td>
+                    <td class="x-icon">✗</td>
+                    <td class="x-icon">✗</td>
+                </tr>
+                <tr>
+                    <td>Islamic/Swap-Free Accounts</td>
+                    <td class="check-icon">✓</td>
+                    <td class="x-icon">✗</td>
+                    <td class="check-icon">✓</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Profit Calculator -->
+    <section class="section calculator-section" id="calculator">
+        <div class="calculator-container">
+            <div class="calculator-box">
+                <h3>💰 Profit Potential Calculator</h3>
+                <div class="input-group">
+                    <label>Initial Investment ($)</label>
+                    <input type="number" id="investment" value="10000" oninput="calculateProfit()">
+                </div>
+                <div class="input-group">
+                    <label>Monthly Return Target (%)</label>
+                    <select id="returnRate" onchange="calculateProfit()">
+                        <option value="2">Conservative (2%)</option>
+                        <option value="5" selected>Moderate (5%)</option>
+                        <option value="10">Aggressive (10%)</option>
+                        <option value="15">High Risk (15%)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Time Period (Years)</label>
+                    <input type="range" id="years" min="1" max="10" value="3" oninput="updateYearLabel(); calculateProfit()">
+                    <div style="text-align: center; color: var(--gold-primary); margin-top: 0.5rem;" id="yearLabel">3 Years</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-item">
+                        <span class="result-label">Initial Capital</span>
+                        <span class="result-value" id="initialResult">$10,000</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Profit</span>
+                        <span class="result-value positive" id="profitResult">$18,144</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Balance</span>
+                        <span class="result-value positive" id="finalResult">$28,144</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Return on Investment</span>
+                        <span class="result-value positive" id="roiResult">181.4%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="education-sidebar">
+                <h3>The Power of Compound Growth</h3>
+                <p>Forex trading offers the potential for compound growth that can significantly accelerate your wealth building compared to traditional savings accounts or even stock market investments.</p>
+                <p>With consistent returns and proper risk management, even modest monthly gains can compound into substantial profits over time.</p>
+                
+                <div class="tip-box">
+                    <h4>💡 Pro Tip</h4>
+                    <p>Successful forex traders focus on consistent, sustainable gains rather than home runs. A 5% monthly return compounds to 80% annually—far exceeding traditional investment vehicles.</p>
+                </div>
+
+                <button class="btn-primary" style="margin-top: 2rem; width: 100%;">
+                <a href="./inves.html">Start Your Journey</a>              
+                </button>
+            </div>
+        </div>
+    </section>
+
+   
+        
+
+    <!-- Getting Started Steps -->
+    <section class="section steps-section">
+        <div class="section-header">
+            <h2>Start Trading in 4 Simple Steps</h2>
+            <p>Your journey to financial markets begins here</p>
+        </div>
+        <div class="steps-container">
+            <div class="step fade-in">
+                <div class="step-number">1</div>
+                <h3>Register</h3>
+                <p>Complete our simple online application in under 5 minutes. Verify your identity securely.</p>
+            </div>
+            <div class="step fade-in">
+                <div class="step-number">2</div>
+                <h3>Fund</h3>
+                <p>Deposit via bank transfer, card, or e-wallet. Minimum deposit just $100 to start.</p>
+            </div>
+            <div class="step fade-in">
+                <div class="step-number">3</div>
+                <h3>Learn</h3>
+                <p>Access our free education center, webinars, and $50,000 demo account to practice.</p>
+            </div>
+            <div class="step fade-in">
+                <div class="step-number">4</div>
+                <h3>Trade</h3>
+                <p>Execute your first trade on our award-winning platform. 24/5 support available.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section faq-section" id="faq">
+        <div class="section-header">
+            <h2>Frequently Asked Questions</h2>
+            <p>Everything you need to know about investing with Goldenice</p>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Is forex trading suitable for beginners?</span>
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Absolutely. While forex trading requires education and practice, Goldenice provides comprehensive resources for beginners including video tutorials, webinars, ebooks, and a free $50,000 demo account. Our 24/5 support team is always available to guide you. We recommend starting with our education center and practicing on demo before trading live capital.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How much money do I need to start?</span>
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>You can start trading with Goldenice with as little as $100. However, we recommend starting with $1,000-$5,000 to properly implement risk management strategies. Remember, never invest more than you can afford to lose, and consider starting with our free demo account to practice your strategies.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>What are the risks involved?</span>
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Forex trading involves significant risk, including the possible loss of all invested capital. Leverage amplifies both gains and losses. However, Goldenice provides risk management tools including stop-loss orders, negative balance protection, and educational resources to help you trade responsibly. We strongly recommend reviewing our Risk Disclosure Statement before trading.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I withdraw my profits?</span>
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Withdrawing your profits is simple and fast. Log into your client portal, select 'Withdraw Funds,' choose your preferred method (bank wire, card, or e-wallet), and submit your request. Most withdrawals are processed within 24 hours. For security, withdrawals must return to the same source as your original deposit.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Is Goldenice International regulated?</span>
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, Goldenice International is fully regulated by [Regulatory Authority] and adheres to strict financial standards including client fund segregation, regular audits, and compliance with international anti-money laundering regulations. Your funds are held in segregated accounts with tier-1 banks for maximum security.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Begin Your Trading Journey Today</h2>
+        <p>Join over 500,000 investors worldwide who trust Goldenice International for their forex trading needs. Your financial future starts with a single click.</p>
+        <div class="hero-cta">
+            <a href="#" class="btn-primary">
+                <span>🚀</span><a href="./inves.html">Open Live Account</a>     
+            </a>
+           
+        </div>
+        <div class="trust-badges">
+            <div class="trust-badge">
+                <span>🔒</span> SSL Secured
+            </div>
+            <div class="trust-badge">
+                <span>⚖️</span> Regulated Broker
+            </div>
+            <div class="trust-badge">
+                <span>🏆</span> Award Winning
+            </div>
+            <div class="trust-badge">
+                <span>💬</span> 24/5 Support
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <div class="logo-icon">G</div>
+                    <div class="logo-text">GOLDENICE INTERNATIONAL</div>
+                </div>
+                <p>Empowering investors worldwide with cutting-edge trading technology, institutional-grade execution, and unparalleled customer support since 2025.</p>
+                <div class="risk-warning">
+                    <strong>Risk Warning:</strong> Trading foreign exchange on margin carries a high level of risk and may not be suitable for all investors. The high degree of leverage can work against you as well as for you. Before deciding to trade foreign exchange, you should carefully consider your investment objectives, level of experience, and risk appetite.
+                </div>
+            </div>
+            <div class="footer-column">
+                
+            </div>
+            <div class="footer-column">
+                <h4>Education</h4>
+                <ul>
+                    <li><a href="#">Trading Academy</a></li>
+                    <li><a href="./Webinars.html">Webinars</a></li>
+                    <li><a href="./marketana.html">Market Analysis</a></li>
+                    <li><a href="./calender.html">Economic Calendar</a></li>
+                    <li><a href="./Trading Glossary.html">Trading Glossary</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="./about.html">About Us</a></li>
+                    <li><a href="./regulations.html">Regulation</a></li>
+                    <li><a href="./carrers.html">Careers</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="./Partners.html">Partners</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Goldenice International. All rights reserved. | <a href="./privacy policy.html" style="color: var(--text-secondary);">Privacy Policy</a> | <a href="./tos.html" style="color: var(--text-secondary);">Terms of Service</a> | <a href="./Cookie Policy.html" style="color: var(--text-secondary);">Cookie Policy</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem;">Goldenice International is authorized and regulated by [Goldenice International]. Registered Address: [Address]. Company Number: [07040856276].</p>
+        </div>
+    </footer>
+
+    <script>
+        // Profit Calculator
+        function calculateProfit() {
+            const investment = parseFloat(document.getElementById('investment').value) || 0;
+            const returnRate = parseFloat(document.getElementById('returnRate').value) || 0;
+            const years = parseInt(document.getElementById('years').value) || 1;
+
+            // Compound interest calculation: A = P(1 + r)^n
+            // Monthly compounding
+            const monthlyRate = returnRate / 100;
+            const months = years * 12;
+            const finalBalance = investment * Math.pow((1 + monthlyRate), months);
+            const totalProfit = finalBalance - investment;
+            const roi = ((finalBalance - investment) / investment) * 100;
+
+            document.getElementById('initialResult').textContent = '$' + investment.toLocaleString();
+            document.getElementById('profitResult').textContent = '$' + Math.round(totalProfit).toLocaleString();
+            document.getElementById('finalResult').textContent = '$' + Math.round(finalBalance).toLocaleString();
+            document.getElementById('roiResult').textContent = roi.toFixed(1) + '%';
+        }
+
+        function updateYearLabel() {
+            const years = document.getElementById('years').value;
+            document.getElementById('yearLabel').textContent = years + ' Years';
+        }
+
+        // FAQ Toggle
+        function toggleFaq(element) {
+            const item = element.parentElement;
+            const allItems = document.querySelectorAll('.faq-item');
+            
+            allItems.forEach(faq => {
+                if (faq !== item) {
+                    faq.classList.remove('active');
+                }
+            });
+            
+            item.classList.toggle('active');
+        }
+
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Initialize calculator
+        calculateProfit();
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Trading interface simulation
+        document.querySelectorAll('.pair-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.pair-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Animate stats on load
+        window.addEventListener('load', () => {
+            const stats = document.querySelectorAll('.hero-stat-number');
+            stats.forEach((stat, index) => {
+                setTimeout(() => {
+                    stat.style.animation = 'pulse 0.5s ease';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>

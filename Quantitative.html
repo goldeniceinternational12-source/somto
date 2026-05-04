@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Quantitative Trading Division</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --ice-blue: #00D9FF;
+            --deep-navy: #0A0E27;
+            --panel-bg: rgba(16, 20, 40, 0.8);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0A0E27 0%, #1a1f3a 50%, #0f1429 100%);
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Gold Gradient Text */
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #F4E4BC 50%, #AA8C2C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Glassmorphism Panels */
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 12px 40px rgba(212, 175, 55, 0.1);
+        }
+
+        /* Animated Grid Background */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Ticker Animation */
+        .ticker-wrap {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .ticker {
+            display: inline-block;
+            animation: ticker 30s linear infinite;
+        }
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Pulse Animation for Live Indicator */
+        .pulse-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0E27;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #D4AF37, #AA8C2C);
+            border-radius: 4px;
+        }
+
+        /* Trading Button Effects */
+        .trade-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .trade-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .trade-btn:hover::before {
+            left: 100%;
+        }
+
+        .metric-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
+        }
+
+        /* CRT Scanline Effect */
+        .scanlines::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative">
+    <!-- Background Grid -->
+    <div class="fixed inset-0 grid-bg opacity-30 pointer-events-none"></div>
+    
+    <!-- Navigation -->
+    <nav class="relative z-50 border-b border-yellow-600/20 bg-slate-900/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-lg shadow-yellow-500/20">
+                        <svg class="w-6 h-6 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gold-gradient tracking-wider">GOLDENICE</h1>
+                        <p class="text-xs text-cyan-400 mono tracking-widest">INT'L QUANTITATIVE</p>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#dashboard" class="text-sm text-gray-300 hover:text-yellow-400 transition-colors">Dashboard</a>
+                    <a href="#analytics" class="text-sm text-gray-300 hover:text-yellow-400 transition-colors">Analytics</a>
+                    <a href="#strategies" class="text-sm text-gray-300 hover:text-yellow-400 transition-colors">Strategies</a>
+                    <a href="#risk" class="text-sm text-gray-300 hover:text-yellow-400 transition-colors">Risk Mgmt</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/30">
+                        <div class="w-2 h-2 rounded-full bg-green-400 pulse-dot"></div>
+                        <span class="text-xs text-green-400 mono">SYSTEM ONLINE</span>
+                    </div>
+                    <button class="px-4 py-2 rounded-lg bg-gradient-to-r from-yellow-600 to-yellow-500 text-slate-900 font-semibold text-sm hover:shadow-lg hover:shadow-yellow-500/25 transition-all">
+                 <a href="./login.html">Trader Login</a>       
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Live Ticker -->
+    <div class="bg-slate-950 border-b border-yellow-600/10 overflow-hidden">
+        <div class="ticker-wrap py-2">
+            <div class="ticker mono text-sm">
+                <span class="mx-4 text-green-400">EUR/USD <span class="text-white">1.0842</span> <span class="text-xs">▲0.12%</span></span>
+                <span class="mx-4 text-red-400">GBP/USD <span class="text-white">1.2631</span> <span class="text-xs">▼0.05%</span></span>
+                <span class="mx-4 text-green-400">USD/JPY <span class="text-white">149.82</span> <span class="text-xs">▲0.23%</span></span>
+                <span class="mx-4 text-green-400">AUD/USD <span class="text-white">0.6524</span> <span class="text-xs">▲0.08%</span></span>
+                <span class="mx-4 text-red-400">USD/CAD <span class="text-white">1.3512</span> <span class="text-xs">▼0.15%</span></span>
+                <span class="mx-4 text-green-400">EUR/USD <span class="text-white">1.0842</span> <span class="text-xs">▲0.12%</span></span>
+                <span class="mx-4 text-red-400">GBP/USD <span class="text-white">1.2631</span> <span class="text-xs">▼0.05%</span></span>
+                <span class="mx-4 text-green-400">USD/JPY <span class="text-white">149.82</span> <span class="text-xs">▲0.23%</span></span>
+                <span class="mx-4 text-green-400">AUD/USD <span class="text-white">0.6524</span> <span class="text-xs">▲0.08%</span></span>
+                <span class="mx-4 text-red-400">USD/CAD <span class="text-white">1.3512</span> <span class="text-xs">▼0.15%</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Header Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="glass-panel rounded-xl p-6 metric-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-gray-400 text-xs uppercase tracking-wider">Total AUM</p>
+                        <h3 class="text-2xl font-bold text-white mt-1 mono">$<span id="aum-value">847.2</span>M</h3>
+                    </div>
+                    <div class="p-2 rounded-lg bg-yellow-500/10">
+                        <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="text-green-400 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                        +12.4%
+                    </span>
+                    <span class="text-gray-500 ml-2">vs last month</span>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-xl p-6 metric-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-gray-400 text-xs uppercase tracking-wider">Today's P&L</p>
+                        <h3 class="text-2xl font-bold text-green-400 mt-1 mono">+$<span id="pnl-value">1.24</span>M</h3>
+                    </div>
+                    <div class="p-2 rounded-lg bg-green-500/10">
+                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="text-green-400">Sharpe: 2.34</span>
+                    <span class="text-gray-500 ml-2">Daily vol: 0.8%</span>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-xl p-6 metric-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-gray-400 text-xs uppercase tracking-wider">Active Positions</p>
+                        <h3 class="text-2xl font-bold text-white mt-1 mono" id="positions-count">24</h3>
+                    </div>
+                    <div class="p-2 rounded-lg bg-cyan-500/10">
+                        <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="text-cyan-400">Long: 16</span>
+                    <span class="text-red-400 ml-3">Short: 8</span>
+                    <span class="text-gray-500 ml-auto">Net: $42M</span>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-xl p-6 metric-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-gray-400 text-xs uppercase tracking-wider">Latency</p>
+                        <h3 class="text-2xl font-bold text-white mt-1 mono"><span id="latency-value">0.8</span>ms</h3>
+                    </div>
+                    <div class="p-2 rounded-lg bg-purple-500/10">
+                        <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="text-green-400">Co-location: LD4</span>
+                    <span class="text-gray-500 ml-2">Uptime: 99.99%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Main Price Chart -->
+            <div class="lg:col-span-2 glass-panel rounded-xl p-6 scanlines relative">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">EUR/USD Price Action</h3>
+                        <p class="text-sm text-gray-400 mono">Real-time tick data • 1ms resolution</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 rounded bg-yellow-500/20 text-yellow-400 text-xs border border-yellow-500/30 hover:bg-yellow-500/30 transition">1M</button>
+                        <button class="px-3 py-1 rounded bg-slate-700/50 text-gray-400 text-xs border border-slate-600 hover:bg-slate-600 transition">5M</button>
+                        <button class="px-3 py-1 rounded bg-slate-700/50 text-gray-400 text-xs border border-slate-600 hover:bg-slate-600 transition">1H</button>
+                        <button class="px-3 py-1 rounded bg-slate-700/50 text-gray-400 text-xs border border-slate-600 hover:bg-slate-600 transition">1D</button>
+                    </div>
+                </div>
+                <div class="relative h-96">
+                    <canvas id="priceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Order Book & Depth -->
+            <div class="glass-panel rounded-xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4">Order Book Depth</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between text-xs text-gray-400 mb-2">
+                        <span>Price</span>
+                        <span>Size</span>
+                        <span>Total</span>
+                    </div>
+                    <div class="space-y-1" id="order-book-asks">
+                        <!-- Asks (Red) -->
+                    </div>
+                    <div class="py-2 text-center border-y border-gray-700">
+                        <span class="text-xl font-bold text-white mono" id="mid-price">1.0842</span>
+                        <span class="text-xs text-green-400 ml-2">▲ 0.0012</span>
+                    </div>
+                    <div class="space-y-1" id="order-book-bids">
+                        <!-- Bids (Green) -->
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-6 border-t border-gray-700">
+                    <h4 class="text-sm font-semibold text-gray-300 mb-3">Recent Trades</h4>
+                    <div class="space-y-2 max-h-40 overflow-y-auto" id="recent-trades">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategy Performance & Risk Metrics -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Strategy Performance -->
+            <div class="glass-panel rounded-xl p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-white">Strategy Performance</h3>
+                    <select class="bg-slate-800 border border-slate-600 rounded px-3 py-1 text-sm text-gray-300 focus:border-yellow-500 outline-none">
+                        <option>Last 30 Days</option>
+                        <option>Last Quarter</option>
+                        <option>YTD</option>
+                    </select>
+                </div>
+                <div class="h-64">
+                    <canvas id="strategyChart"></canvas>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mt-6">
+                    <div class="text-center p-3 rounded-lg bg-slate-800/50">
+                        <p class="text-xs text-gray-400">Alpha</p>
+                        <p class="text-lg font-bold text-green-400 mono">+8.4%</p>
+                    </div>
+                    <div class="text-center p-3 rounded-lg bg-slate-800/50">
+                        <p class="text-xs text-gray-400">Beta</p>
+                        <p class="text-lg font-bold text-yellow-400 mono">0.32</p>
+                    </div>
+                    <div class="text-center p-3 rounded-lg bg-slate-800/50">
+                        <p class="text-xs text-gray-400">Max DD</p>
+                        <p class="text-lg font-bold text-red-400 mono">-2.1%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Management Matrix -->
+            <div class="glass-panel rounded-xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-6">Risk Management Matrix</h3>
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm text-gray-300">VaR (95%)</span>
+                            <span class="text-sm font-bold text-yellow-400 mono">$2.4M</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-yellow-600 to-yellow-400 h-2 rounded-full" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm text-gray-300">Expected Shortfall</span>
+                            <span class="text-sm font-bold text-orange-400 mono">$3.8M</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-orange-600 to-orange-400 h-2 rounded-full" style="width: 62%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm text-gray-300">Leverage Ratio</span>
+                            <span class="text-sm font-bold text-cyan-400 mono">4.2x</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-cyan-600 to-cyan-400 h-2 rounded-full" style="width: 70%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm text-gray-300">Margin Utilization</span>
+                            <span class="text-sm font-bold text-green-400 mono">68%</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-green-600 to-green-400 h-2 rounded-full" style="width: 68%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 p-4 rounded-lg bg-slate-800/50 border border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400">Risk Status</p>
+                            <p class="text-sm font-semibold text-green-400">WITHIN LIMITS</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-full border-4 border-green-500/30 flex items-center justify-center">
+                            <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Algorithmic Strategies Table -->
+        <div class="glass-panel rounded-xl p-6 mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-semibold text-white">Active Algorithmic Strategies</h3>
+                <button class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-medium transition-colors flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
+                    Deploy Strategy
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-xs text-gray-400 uppercase tracking-wider border-b border-slate-700">
+                            <th class="pb-3">Strategy ID</th>
+                            <th class="pb-3">Type</th>
+                            <th class="pb-3">Pair</th>
+                            <th class="pb-3">Position</th>
+                            <th class="pb-3">P&L (24h)</th>
+                            <th class="pb-3">Sharpe</th>
+                            <th class="pb-3">Status</th>
+                            <th class="pb-3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm" id="strategies-table">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Quick Trade Panel -->
+        <div class="glass-panel rounded-xl p-6">
+            <h3 class="text-lg font-semibold text-white mb-6">Quick Execution</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-2">Instrument</label>
+                    <select class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-yellow-500 outline-none">
+                        <option>EUR/USD</option>
+                        <option>GBP/USD</option>
+                        <option>USD/JPY</option>
+                        <option>AUD/USD</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-2">Order Type</label>
+                    <select class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-yellow-500 outline-none">
+                        <option>Market</option>
+                        <option>Limit</option>
+                        <option>Stop</option>
+                        <option>IOC</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-2">Quantity (Lots)</label>
+                    <input type="number" value="10" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-white focus:border-yellow-500 outline-none mono">
+                </div>
+                <div class="flex space-x-3">
+                    <button onclick="executeTrade('buy')" class="trade-btn flex-1 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-bold py-2 px-4 rounded-lg shadow-lg shadow-green-500/25">
+                        BUY
+                    </button>
+                    <button onclick="executeTrade('sell')" class="trade-btn flex-1 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-bold py-2 px-4 rounded-lg shadow-lg shadow-red-500/25">
+                        SELL
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-yellow-600/20 bg-slate-900/80 backdrop-blur-md mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-3 mb-4 md:mb-0">
+                    <div class="w-8 h-8 rounded bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <span class="text-gold-gradient font-bold">Goldenice International</span>
+                </div>
+               
+                <div class="mt-4 md:mt-0 text-xs text-gray-500 mono">
+                    Server Time: <span id="server-time">2024-01-15 14:32:18.042</span> UTC
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Charts
+        const ctxPrice = document.getElementById('priceChart').getContext('2d');
+        const ctxStrategy = document.getElementById('strategyChart').getContext('2d');
+
+        // Price Chart Configuration
+        const priceData = [];
+        const labels = [];
+        let basePrice = 1.0842;
+        
+        for (let i = 0; i < 100; i++) {
+            labels.push(i);
+            basePrice += (Math.random() - 0.5) * 0.001;
+            priceData.push(basePrice);
+        }
+
+        const priceChart = new Chart(ctxPrice, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'EUR/USD',
+                    data: priceData,
+                    borderColor: '#D4AF37',
+                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(10, 14, 39, 0.9)',
+                        titleColor: '#D4AF37',
+                        bodyColor: '#fff',
+                        borderColor: '#D4AF37',
+                        borderWidth: 1,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y.toFixed(5);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        display: false
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#64748b',
+                            callback: function(value) {
+                                return value.toFixed(4);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Strategy Performance Chart
+        const strategyChart = new Chart(ctxStrategy, {
+            type: 'bar',
+            data: {
+                labels: ['Mean Rev', 'Momentum', 'Arbitrage', 'ML Alpha', 'HFT Scalp'],
+                datasets: [{
+                    label: 'Returns %',
+                    data: [12.4, 8.7, 15.2, 22.1, 6.8],
+                    backgroundColor: [
+                        'rgba(212, 175, 55, 0.8)',
+                        'rgba(0, 217, 255, 0.8)',
+                        'rgba(212, 175, 55, 0.6)',
+                        'rgba(0, 217, 255, 0.6)',
+                        'rgba(212, 175, 55, 0.4)'
+                    ],
+                    borderColor: [
+                        '#D4AF37',
+                        '#00D9FF',
+                        '#D4AF37',
+                        '#00D9FF',
+                        '#D4AF37'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#64748b',
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#64748b' }
+                    }
+                }
+            }
+        });
+
+        // Populate Order Book
+        function populateOrderBook() {
+            const asksContainer = document.getElementById('order-book-asks');
+            const bidsContainer = document.getElementById('order-book-bids');
+            const midPrice = 1.0842;
+            
+            asksContainer.innerHTML = '';
+            bidsContainer.innerHTML = '';
+            
+            // Generate asks (sell orders) - higher prices
+            for (let i = 5; i >= 1; i--) {
+                const price = (midPrice + i * 0.0001).toFixed(4);
+                const size = (Math.random() * 5 + 1).toFixed(2);
+                const total = (price * size).toFixed(2);
+                const width = Math.random() * 100;
+                
+                asksContainer.innerHTML += `
+                    <div class="flex justify-between text-xs py-1 relative">
+                        <div class="absolute right-0 top-0 bottom-0 bg-red-500/10" style="width: ${width}%"></div>
+                        <span class="text-red-400 mono relative z-10">${price}</span>
+                        <span class="text-gray-300 mono relative z-10">${size}</span>
+                        <span class="text-gray-500 mono relative z-10">${total}</span>
+                    </div>
+                `;
+            }
+            
+            // Generate bids (buy orders) - lower prices
+            for (let i = 1; i <= 5; i++) {
+                const price = (midPrice - i * 0.0001).toFixed(4);
+                const size = (Math.random() * 5 + 1).toFixed(2);
+                const total = (price * size).toFixed(2);
+                const width = Math.random() * 100;
+                
+                bidsContainer.innerHTML += `
+                    <div class="flex justify-between text-xs py-1 relative">
+                        <div class="absolute right-0 top-0 bottom-0 bg-green-500/10" style="width: ${width}%"></div>
+                        <span class="text-green-400 mono relative z-10">${price}</span>
+                        <span class="text-gray-300 mono relative z-10">${size}</span>
+                        <span class="text-gray-500 mono relative z-10">${total}</span>
+                    </div>
+                `;
+            }
+        }
+
+        // Populate Recent Trades
+        function populateTrades() {
+            const container = document.getElementById('recent-trades');
+            const types = ['Buy', 'Sell'];
+            const sizes = ['0.5M', '1.2M', '2.0M', '0.8M', '1.5M'];
+            
+            container.innerHTML = '';
+            for (let i = 0; i < 10; i++) {
+                const type = types[Math.floor(Math.random() * types.length)];
+                const price = (1.0840 + Math.random() * 0.001).toFixed(4);
+                const size = sizes[Math.floor(Math.random() * sizes.length)];
+                const time = new Date();
+                time.setSeconds(time.getSeconds() - i * 3);
+                const timeStr = time.toTimeString().split(' ')[0];
+                
+                container.innerHTML += `
+                    <div class="flex justify-between items-center text-xs py-1 border-b border-slate-800/50">
+                        <span class="text-gray-500 mono">${timeStr}</span>
+                        <span class="${type === 'Buy' ? 'text-green-400' : 'text-red-400'}">${type}</span>
+                        <span class="text-gray-300 mono">${price}</span>
+                        <span class="text-gray-400 mono">${size}</span>
+                    </div>
+                `;
+            }
+        }
+
+        // Populate Strategies Table
+        const strategies = [
+            { id: 'STRAT-001', type: 'Mean Reversion', pair: 'EUR/USD', pos: '+$12.4M', pnl: '+$284K', sharpe: '2.34', status: 'Active' },
+            { id: 'STRAT-002', type: 'Momentum', pair: 'GBP/USD', pos: '-$8.2M', pnl: '+$156K', sharpe: '1.89', status: 'Active' },
+            { id: 'STRAT-003', type: 'Arbitrage', pair: 'USD/JPY', pos: '+$22.1M', pnl: '+$412K', sharpe: '3.12', status: 'Active' },
+            { id: 'STRAT-004', type: 'ML Alpha', pair: 'AUD/USD', pos: '+$5.8M', pnl: '-$42K', sharpe: '1.45', status: 'Monitoring' },
+            { id: 'STRAT-005', type: 'HFT Scalp', pair: 'EUR/GBP', pos: '+$3.2M', pnl: '+$89K', sharpe: '4.56', status: 'Active' }
+        ];
+
+        function populateStrategies() {
+            const tbody = document.getElementById('strategies-table');
+            tbody.innerHTML = '';
+            
+            strategies.forEach(strat => {
+                const pnlClass = strat.pnl.includes('+') ? 'text-green-400' : 'text-red-400';
+                const statusClass = strat.status === 'Active' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400';
+                
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
+                        <td class="py-3 mono text-cyan-400">${strat.id}</td>
+                        <td class="py-3 text-gray-300">${strat.type}</td>
+                        <td class="py-3 mono text-white">${strat.pair}</td>
+                        <td class="py-3 mono ${strat.pos.includes('+') ? 'text-green-400' : 'text-red-400'}">${strat.pos}</td>
+                        <td class="py-3 mono ${pnlClass}">${strat.pnl}</td>
+                        <td class="py-3 mono text-yellow-400">${strat.sharpe}</td>
+                        <td class="py-3">
+                            <span class="px-2 py-1 rounded text-xs ${statusClass}">${strat.status}</span>
+                        </td>
+                        <td class="py-3">
+                            <button class="text-cyan-400 hover:text-cyan-300 text-xs underline">Details</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Real-time Updates
+        function updateMetrics() {
+            // Update AUM with slight fluctuation
+            const aumBase = 847.2;
+            const aumFluctuation = (Math.random() - 0.5) * 0.5;
+            document.getElementById('aum-value').textContent = (aumBase + aumFluctuation).toFixed(1);
+            
+            // Update P&L
+            const pnlBase = 1.24;
+            const pnlFluctuation = (Math.random() - 0.5) * 0.05;
+            document.getElementById('pnl-value').textContent = (pnlBase + pnlFluctuation).toFixed(2);
+            
+            // Update Latency
+            const latency = (0.5 + Math.random() * 0.6).toFixed(1);
+            document.getElementById('latency-value').textContent = latency;
+            
+            // Update Server Time
+            const now = new Date();
+            document.getElementById('server-time').textContent = 
+                now.toISOString().replace('T', ' ').split('.')[0] + '.' + 
+                String(now.getMilliseconds()).padStart(3, '0');
+            
+            // Update Price Chart with new data point
+            if (Math.random() > 0.7) {
+                const newPrice = priceData[priceData.length - 1] + (Math.random() - 0.5) * 0.0005;
+                priceData.shift();
+                priceData.push(newPrice);
+                priceChart.update('none');
+                
+                // Update mid price display
+                document.getElementById('mid-price').textContent = newPrice.toFixed(4);
+            }
+        }
+
+        // Trade Execution Simulation
+        function executeTrade(type) {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            
+            btn.textContent = 'Executing...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.textContent = 'Filled!';
+                btn.classList.add(type === 'buy' ? 'bg-green-700' : 'bg-red-700');
+                
+                // Add to recent trades
+                const container = document.getElementById('recent-trades');
+                const price = document.getElementById('mid-price').textContent;
+                const newTrade = document.createElement('div');
+                newTrade.className = 'flex justify-between items-center text-xs py-1 border-b border-slate-800/50 animate-pulse';
+                newTrade.innerHTML = `
+                    <span class="text-gray-500 mono">${new Date().toTimeString().split(' ')[0]}</span>
+                    <span class="${type === 'buy' ? 'text-green-400' : 'text-red-400'} font-bold">${type.toUpperCase()}</span>
+                    <span class="text-gray-300 mono">${price}</span>
+                    <span class="text-gray-400 mono">10.0M</span>
+                `;
+                container.insertBefore(newTrade, container.firstChild);
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                    btn.classList.remove(type === 'buy' ? 'bg-green-700' : 'bg-red-700');
+                    newTrade.classList.remove('animate-pulse');
+                }, 1000);
+            }, 800);
+        }
+
+        // Initialize
+        populateOrderBook();
+        populateTrades();
+        populateStrategies();
+        
+        // Start real-time updates
+        setInterval(updateMetrics, 1000);
+        setInterval(populateOrderBook, 3000);
+        setInterval(populateTrades, 5000);
+
+        // Add subtle parallax effect to cards
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.metric-card');
+            const x = (window.innerWidth - e.pageX) / 50;
+            const y = (window.innerHeight - e.pageY) / 50;
+            
+            cards.forEach((card, index) => {
+                const speed = (index + 1) * 0.5;
+                card.style.transform = `translateX(${x * speed}px) translateY(${y * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

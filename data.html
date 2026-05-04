@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - Investor Relations</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --ice-blue: #E0F7FA;
+            --deep-blue: #1A237E;
+            --dark-bg: #0F1419;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0AEC0;
+            --border-color: rgba(212, 175, 55, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(26, 35, 126, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+            animation: bgPulse 15s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(15, 20, 25, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-light) 50%, var(--gold-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 5% 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--gold-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .hero-text .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 300;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
+            border-color: var(--gold-primary);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid var(--gold-primary);
+            opacity: 0.3;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+
+        .floating-circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 40%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .floating-circle:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            bottom: 20%;
+            left: 30%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--gold-primary);
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Financial Performance Grid */
+        .financial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .financial-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .financial-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-dark));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .financial-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .financial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .metric-large {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .positive {
+            background: rgba(72, 187, 120, 0.2);
+            color: #48BB78;
+        }
+
+        .negative {
+            background: rgba(245, 101, 101, 0.2);
+            color: #F56565;
+        }
+
+        /* Charts Section */
+        .charts-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .chart-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--gold-primary);
+            color: var(--dark-bg);
+            border-color: var(--gold-primary);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Business Segments */
+        .segments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .segment-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .segment-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .segment-card:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .segment-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold-primary);
+        }
+
+        .segment-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .segment-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .segment-revenue {
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+            font-weight: 700;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--gold-primary), transparent);
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.05);
+            border-color: var(--gold-primary);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
+        }
+
+        .timeline-date {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold-primary);
+            color: var(--dark-bg);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            border: 4px solid var(--dark-bg);
+            z-index: 10;
+        }
+
+        /* Stock Ticker */
+        .stock-ticker {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(10px);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .ticker-item {
+            text-align: center;
+        }
+
+        .ticker-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .ticker-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid var(--border-color);
+            padding: 4rem 5%;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .footer-section p, .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            line-height: 2;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--gold-primary);
+        }
+
+        .disclaimer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item, .timeline-item:nth-child(even) {
+                flex-direction: column;
+                align-items: flex-start;
+                padding-left: 60px;
+            }
+
+            .timeline-content {
+                width: 100%;
+            }
+
+            .timeline-date, .timeline-dot {
+                left: 20px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .stock-ticker {
+                flex-direction: column;
+            }
+        }
+
+        /* Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-circle {
+            width: 80px;
+            height: 80px;
+            border: 3px solid transparent;
+            border-top-color: var(--gold-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Scroll Progress */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-light));
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-circle"></div>
+    </div>
+
+    <!-- Scroll Progress -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Background Animation -->
+    <div class="bg-animation"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="logo">Goldenice International</div>
+        <ul class="nav-links">
+            <li><a href="./overview.html">Overview</a></li>
+            <li><a href="#financials">Financials</a></li>
+            <li><a href="#segments">Segments</a></li>
+            <li><a href="#performance">Performance</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="overview">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Investor Relations</h1>
+                <p class="subtitle">Driving value through innovation and sustainable growth across global markets</p>
+                
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <span class="stat-value" id="marketCap">$2.4B</span>
+                        <span class="stat-label">Market Cap</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="revenue">$890M</span>
+                        <span class="stat-label">Annual Revenue</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="growth">+24%</span>
+                        <span class="stat-label">YoY Growth</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="floating-elements">
+                    <div class="floating-circle"></div>
+                    <div class="floating-circle"></div>
+                    <div class="floating-circle"></div>
+                </div>
+                <div style="text-align: center; z-index: 10;">
+                    <div style="font-size: 8rem; margin-bottom: 1rem;">🏢</div>
+                    <p style="color: var(--gold-primary); font-size: 1.2rem; font-weight: 600;">Global Excellence</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stock Ticker -->
+    <section>
+        <div class="stock-ticker">
+            <div class="ticker-item">
+                <div class="ticker-label">Stock Price</div>
+                <div class="ticker-value" id="stockPrice">$48.32</div>
+            </div>
+            <div class="ticker-item">
+                <div class="ticker-label">Change</div>
+                <div class="ticker-value" style="color: #48BB78;">+2.4%</div>
+            </div>
+            <div class="ticker-item">
+                <div class="ticker-label">Volume</div>
+                <div class="ticker-value">2.4M</div>
+            </div>
+            <div class="ticker-item">
+                <div class="ticker-label">P/E Ratio</div>
+                <div class="ticker-value">18.5</div>
+            </div>
+            <div class="ticker-item">
+                <div class="ticker-label">Dividend Yield</div>
+                <div class="ticker-value">3.2%</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Financial Highlights -->
+    <section id="financials">
+        <div class="section-header">
+            <h2>Financial Highlights</h2>
+            <p>Fiscal Year 2024 performance overview and key financial metrics</p>
+        </div>
+
+        <div class="financial-grid">
+            <div class="financial-card">
+                <div class="card-header">
+                    <span class="card-title">Total Revenue</span>
+                    <div class="card-icon">💰</div>
+                </div>
+                <div class="metric-large">$890.5M</div>
+                <span class="metric-change positive">
+                    <span>↑</span> 24.3% YoY
+                </span>
+                <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    Driven by strong performance in Asian markets and new product lines
+                </p>
+            </div>
+
+            <div class="financial-card">
+                <div class="card-header">
+                    <span class="card-title">Net Income</span>
+                    <div class="card-icon">📈</div>
+                </div>
+                <div class="metric-large">$142.8M</div>
+                <span class="metric-change positive">
+                    <span>↑</span> 18.7% YoY
+                </span>
+                <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    Improved operational efficiency and margin expansion
+                </p>
+            </div>
+
+            <div class="financial-card">
+                <div class="card-header">
+                    <span class="card-title">EBITDA</span>
+                    <div class="card-icon">⚡</div>
+                </div>
+                <div class="metric-large">$215.4M</div>
+                <span class="metric-change positive">
+                    <span>↑</span> 21.2% YoY
+                </span>
+                <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    Strong cash generation supporting strategic investments
+                </p>
+            </div>
+
+            <div class="financial-card">
+                <div class="card-header">
+                    <span class="card-title">Gross Margin</span>
+                    <div class="card-icon">🎯</div>
+                </div>
+                <div class="metric-large">42.8%</div>
+                <span class="metric-change positive">
+                    <span>↑</span> 2.1pp YoY
+                </span>
+                <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    Premium product mix and supply chain optimization
+                </p>
+            </div>
+
+            <div class="financial-card">
+                <div class="card-header">
+                    <span class="card-title">Total Assets</span>
+                    <div class="card-icon">🏛️</div>
+                </div>
+                <div class="metric-large">$1.85B</div>
+                <span class="metric-change positive">
+                    <span>↑</span> 15.6% YoY
+                </span>
+                <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    Strategic acquisitions and capacity expansion
+                </p>
+            </div>
+
+            <div class="financial-card">
+                <div class="card-header">
+                    <span class="card-title">Free Cash Flow</span>
+                    <div class="card-icon">💎</div>
+                </div>
+                <div class="metric-large">$98.2M</div>
+                <span class="metric-change negative">
+                    <span>↓</span> 5.2% YoY
+                </span>
+                <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    Increased CAPEX for future growth initiatives
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section id="performance">
+        <div class="section-header">
+            <h2>Performance Analytics</h2>
+            <p>Revenue trends and regional distribution analysis</p>
+        </div>
+
+        <div class="charts-container">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Revenue Growth (5 Years)</h3>
+                    <div class="chart-filters">
+                        <button class="filter-btn active" onclick="updateChart('revenue', 'annual')">Annual</button>
+                        <button class="filter-btn" onclick="updateChart('revenue', 'quarterly')">Quarterly</button>
+                    </div>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Revenue by Region</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="regionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-card" style="margin-top: 2rem;">
+            <div class="chart-header">
+                <h3 class="chart-title">Stock Performance vs Market Index</h3>
+                <div class="chart-filters">
+                    <button class="filter-btn active" onclick="updateStockChart('1Y')">1Y</button>
+                    <button class="filter-btn" onclick="updateStockChart('YTD')">YTD</button>
+                    <button class="filter-btn" onclick="updateStockChart('6M')">6M</button>
+                </div>
+            </div>
+            <div class="chart-wrapper" style="height: 400px;">
+                <canvas id="stockChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Business Segments -->
+    <section id="segments">
+        <div class="section-header">
+            <h2>Business Segments</h2>
+            <p>Diversified portfolio driving sustainable growth</p>
+        </div>
+
+        <div class="segments-grid">
+            <div class="segment-card" onclick="showSegmentDetail('jewelry')">
+                <div class="segment-icon">💎</div>
+                <div class="segment-name">Luxury Jewelry</div>
+                <div class="segment-revenue">$445M</div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                    50% of total revenue
+                </p>
+            </div>
+
+            <div class="segment-card" onclick="showSegmentDetail('gold')">
+                <div class="segment-icon">🥇</div>
+                <div class="segment-name">Gold Trading</div>
+                <div class="segment-revenue">$267M</div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                    30% of total revenue
+                </p>
+            </div>
+
+            <div class="segment-card" onclick="showSegmentDetail('tech')">
+                <div class="segment-icon">🔧</div>
+                <div class="segment-name">Equipment</div>
+                <div class="segment-revenue">$178M</div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                    20% of total revenue
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <section>
+        <div class="section-header">
+            <h2>Key Milestones</h2>
+            <p>Our journey of growth and innovation</p>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">2024</div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 style="color: var(--gold-primary); margin-bottom: 1rem;">Asian Market Expansion</h3>
+                    <p style="color: var(--text-secondary);">Launched operations in 5 new Asian markets, increasing regional revenue by 45%</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">2023</div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 style="color: var(--gold-primary); margin-bottom: 1rem;">Sustainability Initiative</h3>
+                    <p style="color: var(--text-secondary);">Achieved carbon neutrality in manufacturing operations and launched recycled gold product line</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">2022</div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 style="color: var(--gold-primary); margin-bottom: 1rem;">IPO Launch</h3>
+                    <p style="color: var(--text-secondary);">Successfully listed on major stock exchanges, raising $500M for expansion</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">2019</div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 style="color: var(--gold-primary); margin-bottom: 1rem;">Founded</h3>
+                    <p style="color: var(--text-secondary);">Goldenice International established with vision to revolutionize precious metals trading</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Goldenice International</h3>
+                <p>Leading global precious metals and luxury goods conglomerate, committed to sustainable growth and investor value creation.</p>
+                <div style="margin-top: 2rem;">
+                    <p>📍 Port-Harcourt</p>
+                    <p>📍 Rivers State</p>
+                    <p>📍 Nigeria</p>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Investor Resources</h3>
+                <a href="./Annual reports.html">Annual Reports</a><br>
+                <a href="./SEC Filings.html">SEC Filings</a><br>
+                <a href="./Press Releases.html">Press Releases</a><br>
+                <a href="./Webcasts.html">Webcasts</a><br>
+                <a href="./help center.html">FAQ</a>
+            </div>
+
+            <div class="footer-section">
+                <h3>Contact IR</h3>
+                <a href="mailto:ir@goldenice.com">ir@goldenice.com</a><br>
+                <a href="tel:+971-4-555-0123">+971 4 555 0123</a><br>
+                <a href="#">Subscribe to Alerts</a><br>
+                <a href="#">Request Information</a>
+            </div>
+
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <a href="#">LinkedIn</a><br>
+                <a href="#">Twitter</a><br>
+                <a href="#">YouTube</a><br>
+                <a href="#">Instagram</a>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <p>© 2024 Goldenice International. All rights reserved. | Forward-looking statements involve risks and uncertainties. Past performance does not guarantee future results.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Remove loader when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+                initAnimations();
+            }, 1000);
+        });
+
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // GSAP Animations
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Hero animations
+            gsap.to('.hero-text h1', {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: 'power3.out'
+            });
+
+            gsap.to('.hero-text .subtitle', {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                delay: 0.2,
+                ease: 'power3.out'
+            });
+
+            gsap.to('.stat-card', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                delay: 0.4,
+                ease: 'power3.out'
+            });
+
+            // Scroll animations
+            gsap.utils.toArray('.financial-card').forEach((card, i) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                    },
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.8,
+                    delay: i * 0.1,
+                    ease: 'power3.out'
+                });
+            });
+
+            gsap.utils.toArray('.segment-card').forEach((card, i) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                    },
+                    opacity: 0,
+                    scale: 0.8,
+                    duration: 0.8,
+                    delay: i * 0.15,
+                    ease: 'back.out(1.7)'
+                });
+            });
+
+            gsap.utils.toArray('.timeline-item').forEach((item, i) => {
+                gsap.from(item, {
+                    scrollTrigger: {
+                        trigger: item,
+                        start: 'top 85%',
+                    },
+                    opacity: 0,
+                    x: i % 2 === 0 ? -50 : 50,
+                    duration: 1,
+                    ease: 'power3.out'
+                });
+            });
+        }
+
+        // Chart.js Configurations
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: '#A0AEC0', font: { family: 'Inter' } }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(212, 175, 55, 0.1)' },
+                    ticks: { color: '#A0AEC0' }
+                },
+                y: {
+                    grid: { color: 'rgba(212, 175, 55, 0.1)' },
+                    ticks: { color: '#A0AEC0' }
+                }
+            }
+        };
+
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: 'Revenue ($M)',
+                    data: [520, 615, 720, 890, 890.5],
+                    borderColor: '#D4AF37',
+                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#D4AF37',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                ...chartOptions,
+                plugins: {
+                    ...chartOptions.plugins,
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 20, 25, 0.9)',
+                        titleColor: '#D4AF37',
+                        bodyColor: '#fff',
+                        borderColor: '#D4AF37',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return '$' + context.parsed.y + ' Million';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Region Chart
+        const regionCtx = document.getElementById('regionChart').getContext('2d');
+        const regionChart = new Chart(regionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Asia Pacific', 'Middle East', 'Europe', 'Americas'],
+                datasets: [{
+                    data: [45, 25, 20, 10],
+                    backgroundColor: [
+                        '#D4AF37',
+                        '#AA8C2C',
+                        '#F4E4BC',
+                        '#1A237E'
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { 
+                            color: '#A0AEC0', 
+                            font: { family: 'Inter', size: 11 },
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 20, 25, 0.9)',
+                        titleColor: '#D4AF37',
+                        bodyColor: '#fff',
+                        borderColor: '#D4AF37',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Stock Chart
+        const stockCtx = document.getElementById('stockChart').getContext('2d');
+        const stockChart = new Chart(stockCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Goldenice (GICE)',
+                    data: [42, 44, 43, 45, 47, 46, 48, 50, 49, 47, 48, 48.32],
+                    borderColor: '#D4AF37',
+                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Market Index',
+                    data: [100, 102, 101, 103, 105, 104, 106, 108, 107, 105, 106, 107],
+                    borderColor: '#A0AEC0',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    tension: 0.4
+                }]
+            },
+            options: chartOptions
+        });
+
+        // Interactive Functions
+        function updateChart(type, period) {
+            // Update active button
+            event.target.parentElement.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update chart data (simulation)
+            if (type === 'revenue') {
+                if (period === 'quarterly') {
+                    revenueChart.data.labels = ['Q1', 'Q2', 'Q3', 'Q4'];
+                    revenueChart.data.datasets[0].data = [210, 225, 240, 215.5];
+                } else {
+                    revenueChart.data.labels = ['2020', '2021', '2022', '2023', '2024'];
+                    revenueChart.data.datasets[0].data = [520, 615, 720, 716, 890.5];
+                }
+                revenueChart.update();
+            }
+        }
+
+        function updateStockChart(period) {
+            event.target.parentElement.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Simulate different time periods
+            const data = {
+                '1Y': [42, 44, 43, 45, 47, 46, 48, 50, 49, 47, 48, 48.32],
+                'YTD': [45, 47, 46, 48, 50, 49, 47, 48, 48.32],
+                '6M': [46, 48, 50, 49, 47, 48]
+            };
+            
+            const labels = {
+                '1Y': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                'YTD': ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                '6M': ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            };
+
+            stockChart.data.labels = labels[period];
+            stockChart.data.datasets[0].data = data[period];
+            stockChart.update();
+        }
+
+        function showSegmentDetail(segment) {
+            const details = {
+                jewelry: 'Luxury Jewelry Division: High-end custom jewelry manufacturing and retail, with flagship stores in Dubai, Singapore, and London. 15% profit margin.',
+                gold: 'Gold Trading Division: Wholesale precious metals trading, vault services, and digital gold platform. 8% profit margin.',
+                tech: 'Equipment Division: Restaurant and hospitality equipment supply, packaging solutions. 12% profit margin.'
+            };
+            
+            // Create modal or alert with segment details
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                backdrop-filter: blur(5px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #1a1a2e 0%, #0f1419 100%);
+                    border: 1px solid #D4AF37;
+                    border-radius: 20px;
+                    padding: 3rem;
+                    max-width: 500px;
+                    text-align: center;
+                    box-shadow: 0 25px 50px rgba(212, 175, 55, 0.3);
+                ">
+                    <h3 style="color: #D4AF37; font-family: Playfair Display; font-size: 1.8rem; margin-bottom: 1rem;">
+                        ${segment.charAt(0).toUpperCase() + segment.slice(1)} Division
+                    </h3>
+                    <p style="color: #A0AEC0; line-height: 1.8; margin-bottom: 2rem;">
+                        ${details[segment]}
+                    </p>
+                    <button onclick="this.closest('.modal').remove()" style="
+                        background: linear-gradient(135deg, #D4AF37, #AA8C2C);
+                        color: #0f1419;
+                        border: none;
+                        padding: 1rem 2rem;
+                        border-radius: 30px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: transform 0.3s ease;
+                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        Close
+                    </button>
+                </div>
+            `;
+            
+            modal.classList.add('modal');
+            document.body.appendChild(modal);
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                navbar.style.background = 'rgba(15, 20, 25, 0.95)';
+                navbar.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+            } else {
+                navbar.style.background = 'rgba(15, 20, 25, 0.8)';
+                navbar.style.boxShadow = 'none';
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Counter animation for stats
+        function animateValue(id, start, end, duration, suffix = '') {
+            const obj = document.getElementById(id);
+            const range = end - start;
+            const minTimer = 50;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            stepTime = Math.max(stepTime, minTimer);
+            let startTime = new Date().getTime();
+            let endTime = startTime + duration;
+            let timer;
+          
+            function run() {
+                let now = new Date().getTime();
+                let remaining = Math.max((endTime - now) / duration, 0);
+                let value = Math.round(end - (remaining * range));
+                obj.innerHTML = value + suffix;
+                if (value == end) {
+                    clearInterval(timer);
+                }
+            }
+            
+            timer = setInterval(run, stepTime);
+            run();
+        }
+
+        // Trigger counter animations when in view
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateValue('marketCap', 0, 2.4, 2000, 'B');
+                    animateValue('revenue', 0, 890, 2000, 'M');
+                    // Keep percentage static as it has special formatting
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelector('.hero-stats') && observer.observe(document.querySelector('.hero-stats'));
+
+        // Live stock price simulation
+        setInterval(() => {
+            const stockPrice = document.getElementById('stockPrice');
+            if (stockPrice) {
+                const current = parseFloat(stockPrice.textContent.replace('$', ''));
+                const change = (Math.random() - 0.5) * 0.1;
+                const newPrice = (current + change).toFixed(2);
+                stockPrice.textContent = '$' + newPrice;
+                stockPrice.style.color = change > 0 ? '#48BB78' : '#F56565';
+                setTimeout(() => {
+                    stockPrice.style.color = '#D4AF37';
+                }, 500);
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

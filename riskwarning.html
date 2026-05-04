@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - Forex Trading Risk Warning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-dark: #B8860B;
+            --gold-light: #FFD700;
+            --ice-blue: #E0F7FA;
+            --dark-bg: #0a0a0a;
+            --card-bg: #111;
+            --text-primary: #f0f0f0;
+            --text-secondary: #888;
+            --danger-red: #ff4444;
+            --warning-orange: #ff8800;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--gold-primary);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .emergency-badge {
+            background: var(--danger-red);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+            font-size: 0.9rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--gold-primary), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .risk-meter {
+            margin-top: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 68, 68, 0.1);
+            border: 2px solid var(--danger-red);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+        }
+
+        .risk-meter span {
+            color: var(--danger-red);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Accordion Sections */
+        .risk-section {
+            margin-bottom: 2rem;
+            background: var(--card-bg);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .risk-section:hover {
+            border-color: var(--gold-primary);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+        }
+
+        .section-header {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1), transparent);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.2), transparent);
+        }
+
+        .section-header h2 {
+            color: var(--gold-primary);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        .toggle-icon {
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+            transition: transform 0.3s ease;
+        }
+
+        .risk-section.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            padding: 0 2rem;
+        }
+
+        .risk-section.active .section-content {
+            max-height: 1000px;
+            padding: 0 2rem 2rem 2rem;
+        }
+
+        .section-content p, .section-content li {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .section-content ul {
+            margin-left: 2rem;
+        }
+
+        .section-content strong {
+            color: var(--gold-light);
+        }
+
+        .highlight-box {
+            background: rgba(255, 68, 68, 0.1);
+            border-left: 4px solid var(--danger-red);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 136, 0, 0.1);
+            border-left: 4px solid var(--warning-orange);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .info-card h3 {
+            color: var(--gold-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Interactive Stats */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0, 0, 0, 0.3));
+            border: 1px solid var(--gold-primary);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--danger-red);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Calculator Section */
+        .calculator-section {
+            background: var(--card-bg);
+            border: 2px solid var(--gold-primary);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .calculator-section h2 {
+            color: var(--gold-primary);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--gold-light);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--gold-dark);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .calc-result {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--gold-primary);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+        }
+
+        .result-value {
+            color: var(--gold-primary);
+            font-weight: 700;
+        }
+
+        .result-value.negative {
+            color: var(--danger-red);
+        }
+
+        /* Checklist */
+        .checklist-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .checklist-container h2 {
+            color: var(--gold-primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checklist-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateX(5px);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--gold-primary);
+            cursor: pointer;
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            flex: 1;
+            color: var(--text-secondary);
+        }
+
+        .checklist-item.checked label {
+            color: var(--gold-primary);
+            text-decoration: line-through;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 2px solid var(--gold-primary);
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            color: var(--gold-primary);
+            margin-bottom: 1rem;
+        }
+
+        .disclaimer {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold-light);
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 2px solid var(--gold-primary);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            padding: 2rem;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--danger-red);
+        }
+
+        .modal h3 {
+            color: var(--danger-red);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .modal p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .calc-grid { grid-template-columns: 1fr; }
+            .header-content { flex-direction: column; gap: 1rem; }
+            .section-header h2 { font-size: 1.1rem; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">G</div>
+                <div class="logo-text">GOLDENICE INTERNATIONAL</div>
+            </div>
+            <div class="emergency-badge">⚠️ HIGH RISK INVESTMENT</div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Forex Trading Risk Warning</h1>
+        <p>Foreign Exchange trading carries a high level of risk and may not be suitable for all investors. Please read carefully before opening an account.</p>
+        <div class="risk-meter">
+            <span>⚠️ RISK LEVEL: EXTREME</span>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Risk Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <span class="stat-number" id="stat1">73%</span>
+                <span class="stat-label">Retail Investors Lose Money</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="stat2">1:500</span>
+                <span class="stat-label">Maximum Leverage Offered</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="stat3">24/5</span>
+                <span class="stat-label">Market Volatility Hours</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="stat4">100%</span>
+                <span class="stat-label">Potential Capital Loss</span>
+            </div>
+        </div>
+
+        <!-- Risk Sections -->
+        <div class="risk-section active" id="section1">
+            <div class="section-header" onclick="toggleSection('section1')">
+                <h2><span class="section-icon">⚠️</span> General Risk Disclosure</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="highlight-box">
+                    <strong>WARNING:</strong> Trading foreign exchange on margin carries a HIGH LEVEL OF RISK, and may not be suitable for all investors. Before deciding to trade foreign exchange, you should carefully consider your investment objectives, level of experience, and risk appetite. There is a possibility that you may sustain a loss of some or all of your initial investment and therefore you should not invest money that you cannot afford to lose.
+                </div>
+                <p>Goldenice International provides this Risk Warning to ensure you understand the nature of forex trading and the risks involved. This document does not disclose all risks associated with trading foreign exchange and derivatives. We strongly recommend seeking independent financial advice before opening an account.</p>
+                <p>By trading with Goldenice International, you acknowledge that:</p>
+                <ul>
+                    <li>You have read and understood this Risk Warning</li>
+                    <li>You are aware that you may lose your entire initial margin deposit</li>
+                    <li>You understand that past performance is not indicative of future results</li>
+                    <li>You are trading at your own risk and discretion</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="risk-section" id="section2">
+            <div class="section-header" onclick="toggleSection('section2')">
+                <h2><span class="section-icon">📉</span> Leverage and Margin Risks</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <p>Goldenice International offers leveraged trading, which means you can control a large position with a relatively small amount of capital. While leverage can amplify profits, it equally amplifies losses.</p>
+                
+                <div class="warning-box">
+                    <strong>Example of Leverage Risk:</strong> With 1:100 leverage, a 1% market movement against your position results in a 100% loss of your margin. A 2% movement could result in losses exceeding your initial deposit.
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>Margin Calls</h3>
+                        <p>You must maintain sufficient margin at all times. If your account equity falls below the required margin level, Goldenice International may close your positions without prior notice to prevent further losses.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Negative Balance</h3>
+                        <p>Due to extreme market volatility, losses may exceed your account balance. You may be liable for additional payments to cover deficit balances.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Stop-Out Level</h3>
+                        <p>Positions will be automatically liquidated when margin level reaches 20% or below to protect against further losses.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="risk-section" id="section3">
+            <div class="section-header" onclick="toggleSection('section3')">
+                <h2><span class="section-icon">💱</span> Market and Liquidity Risks</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <p>The foreign exchange market is affected by numerous factors including economic indicators, geopolitical events, central bank decisions, and market sentiment. These factors can cause rapid and substantial price movements.</p>
+                
+                <ul>
+                    <li><strong>Volatility Risk:</strong> Currency prices can change dramatically during news releases, economic announcements, or unexpected global events.</li>
+                    <li><strong>Gapping Risk:</strong> Markets may "gap" (jump from one price to another without trading at intermediate levels), causing stop-loss orders to execute at worse-than-expected prices.</li>
+                    <li><strong>Liquidity Risk:</strong> During certain market conditions (weekends, holidays, major news events), liquidity may dry up, resulting in wider spreads and slippage.</li>
+                    <li><strong>Weekend Risk:</strong> Positions held over weekends are subject to significant price gaps when markets reopen.</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>Important:</strong> Goldenice International is your sole counterparty for all trades. We act as market maker and may not always offer best execution prices available in the broader market.
+                </div>
+            </div>
+        </div>
+
+        <div class="risk-section" id="section4">
+            <div class="section-header" onclick="toggleSection('section4')">
+                <h2><span class="section-icon">🔒</span> Technical and Operational Risks</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <p>Trading via electronic platforms involves inherent technological risks that are beyond Goldenice International's control.</p>
+                
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>System Failures</h3>
+                        <p>Hardware failures, software bugs, or connectivity issues may prevent order execution or cause delays.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Cyber Security</h3>
+                        <p>While we implement security measures, unauthorized access to accounts or data breaches remain potential risks.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Latency Issues</h3>
+                        <p>Internet connection delays may result in price differences between when you place an order and when it executes.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Platform Errors</h3>
+                        <p>Price feed errors or platform malfunctions may result in incorrect order execution or display.</p>
+                    </div>
+                </div>
+
+                <p>Goldenice International reserves the right to cancel or adjust trades that result from technical errors, price feed issues, or "obvious errors" as defined in our Terms of Business.</p>
+            </div>
+        </div>
+
+        <div class="risk-section" id="section5">
+            <div class="section-header" onclick="toggleSection('section5')">
+                <h2><span class="section-icon">⚖️</span> Legal and Regulatory Risks</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <p>Goldenice International operates under regulatory frameworks that may affect your trading activities:</p>
+                
+                <ul>
+                    <li><strong>Regulatory Changes:</strong> Changes in financial regulations may impact leverage limits, margin requirements, or trading conditions without prior notice.</li>
+                    <li><strong>Tax Obligations:</strong> You are solely responsible for reporting and paying taxes on trading profits in your jurisdiction.</li>
+                    <li><strong>Fund Segregation:</strong> While client funds are segregated, this does not guarantee complete protection in the event of insolvency.</li>
+                    <li><strong>Jurisdiction:</strong> Trading with Goldenice International is subject to the laws of [Jurisdiction], which may differ from your local consumer protection laws.</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>Conflict of Interest:</strong> Goldenice International may act as principal (counterparty) to your trades, creating a potential conflict of interest. We may also match your orders with other clients or hedge exposures in the underlying market.
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Calculator -->
+        <div class="calculator-section">
+            <h2>💰 Risk Calculator</h2>
+            <div class="calc-grid">
+                <div>
+                    <div class="input-group">
+                        <label>Account Balance ($)</label>
+                        <input type="number" id="accountBalance" value="10000" oninput="calculateRisk()">
+                    </div>
+                    <div class="input-group">
+                        <label>Risk Per Trade (%)</label>
+                        <input type="number" id="riskPercent" value="2" max="100" oninput="calculateRisk()">
+                    </div>
+                    <div class="input-group">
+                        <label>Leverage (1:)</label>
+                        <select id="leverage" onchange="calculateRisk()">
+                            <option value="50">1:50</option>
+                            <option value="100" selected>1:100</option>
+                            <option value="200">1:200</option>
+                            <option value="500">1:500</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Stop Loss (pips)</label>
+                        <input type="number" id="stopLoss" value="50" oninput="calculateRisk()">
+                    </div>
+                </div>
+                <div>
+                    <div class="calc-result">
+                        <div class="result-row">
+                            <span class="result-label">Maximum Risk Amount:</span>
+                            <span class="result-value" id="riskAmount">$200.00</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Position Size (Lots):</span>
+                            <span class="result-value" id="positionSize">0.04</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Margin Required:</span>
+                            <span class="result-value" id="marginRequired">$400.00</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Potential Loss:</span>
+                            <span class="result-value negative" id="potentialLoss">$200.00</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Account Exposure:</span>
+                            <span class="result-value negative" id="accountExposure">2.00%</span>
+                        </div>
+                    </div>
+                    <div class="warning-box" style="margin-top: 1rem;">
+                        <strong>Note:</strong> This calculator provides estimates only. Actual results may vary due to spreads, slippage, and market volatility.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Understanding Checklist -->
+        <div class="checklist-container">
+            <h2>✓ Risk Awareness Checklist</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+                Please confirm your understanding of the following risks before proceeding:
+            </p>
+            
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox" id="check1">
+                <label for="check1">I understand that I can lose all of my invested capital and may owe additional funds</label>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox" id="check2">
+                <label for="check2">I understand that leverage amplifies both gains and losses</label>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox" id="check3">
+                <label for="check3">I understand that past performance does not guarantee future results</label>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox" id="check4">
+                <label for="check4">I understand that stop-loss orders may not limit losses in volatile markets</label>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox" id="check5">
+                <label for="check5">I understand that Goldenice International acts as counterparty to my trades</label>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <input type="checkbox" id="check6">
+                <label for="check6">I have read and understood all risk disclosures provided by Goldenice International</label>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <p style="text-align: center; margin-top: 0.5rem; color: var(--text-secondary);">
+                Completion: <span id="progressText">0%</span>
+            </p>
+
+            <button class="btn-primary" style="margin-top: 2rem;" onclick="checkCompletion()">
+            <a href="./home.html"> Confirm Understanding & Proceed</a>             
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="warningModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3>⚠️ Incomplete Risk Acknowledgment</h3>
+            <p>Please review and acknowledge all risk items in the checklist before proceeding. It is important that you fully understand the risks involved in forex trading.</p>
+            <p>If you do not understand any of these risks, we recommend consulting with an independent financial advisor.</p>
+            <button class="btn-primary" onclick="closeModal()">Return to Checklist</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">GOLDENICE INTERNATIONAL</div>
+            <p class="disclaimer">
+                Goldenice International is a registered financial services provider. Trading foreign exchange and derivatives carries a high level of risk and may not be suitable for all investors. The high degree of leverage can work against you as well as for you. Before deciding to trade, you should carefully consider your investment objectives, level of experience, and risk appetite. There is a possibility that you could sustain a loss of some or all of your initial investment and therefore you should not invest money that you cannot afford to lose. You should be aware of all the risks associated with foreign exchange trading and seek advice from an independent financial advisor if you have any doubts.
+            </p>
+            <div class="footer-links">
+                <a href="./Client Agreement.html">Client Agreement</a>
+                <a href="./privacy policy.html">Privacy Policy</a>
+                <a href="./Complaints Procedure.html">Complaints Procedure</a>
+                <a href="./Contact Support.html">Contact Support</a>
+            </div>
+            <div class="copyright">
+                © 2026 Goldenice International. <br>
+                Registered Address: [Nigeria] | Risk Warning Version 2.1 | Last Updated: March 2026
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Accordion functionality
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const allSections = document.querySelectorAll('.risk-section');
+            
+            allSections.forEach(sec => {
+                if (sec.id !== sectionId) {
+                    sec.classList.remove('active');
+                }
+            });
+            
+            section.classList.toggle('active');
+        }
+
+        // Risk Calculator
+        function calculateRisk() {
+            const balance = parseFloat(document.getElementById('accountBalance').value) || 0;
+            const riskPercent = parseFloat(document.getElementById('riskPercent').value) || 0;
+            const leverage = parseInt(document.getElementById('leverage').value) || 100;
+            const stopLoss = parseInt(document.getElementById('stopLoss').value) || 50;
+
+            const riskAmount = balance * (riskPercent / 100);
+            const pipValue = 10; // Standard lot pip value
+            const positionSize = riskAmount / (stopLoss * pipValue);
+            const marginRequired = (positionSize * 100000) / leverage;
+            
+            document.getElementById('riskAmount').textContent = '$' + riskAmount.toFixed(2);
+            document.getElementById('positionSize').textContent = positionSize.toFixed(2);
+            document.getElementById('marginRequired').textContent = '$' + marginRequired.toFixed(2);
+            document.getElementById('potentialLoss').textContent = '$' + riskAmount.toFixed(2);
+            document.getElementById('accountExposure').textContent = riskPercent.toFixed(2) + '%';
+        }
+
+        // Checklist functionality
+        function toggleCheck(item) {
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            item.classList.toggle('checked', checkbox.checked);
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+            const checked = document.querySelectorAll('.checklist-item input[type="checkbox"]:checked');
+            const percent = Math.round((checked.length / checkboxes.length) * 100);
+            
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressText').textContent = percent + '%';
+        }
+
+        function checkCompletion() {
+            const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            
+            if (!allChecked) {
+                document.getElementById('warningModal').style.display = 'flex';
+            } else {
+                alert('Thank you for acknowledging the risks. You may proceed with account opening.');
+                // Redirect or enable next step
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('warningModal').style.display = 'none';
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('warningModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Animate statistics on load
+        window.addEventListener('load', () => {
+            const stats = ['73%', '1:500', '24/5', '100%'];
+            const statElements = ['stat1', 'stat2', 'stat3', 'stat4'];
+            
+            statElements.forEach((id, index) => {
+                setTimeout(() => {
+                    document.getElementById(id).style.animation = 'pulse 0.5s ease';
+                }, index * 200);
+            });
+        });
+
+        // Initialize calculator
+        calculateRisk();
+    </script>
+</body>
+</html>

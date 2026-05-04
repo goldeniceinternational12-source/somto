@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Verification | Goldenice International</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Cinzel', 'serif'],
+                    },
+                    colors: {
+                        gold: {
+                            50: '#FFFBEB',
+                            100: '#FEF3C7',
+                            200: '#FDE68A',
+                            300: '#FCD34D',
+                            400: '#FBBF24',
+                            500: '#D4AF37',
+                            600: '#B45309',
+                            700: '#92400E',
+                        },
+                        dark: {
+                            900: '#020617',
+                            800: '#0F172A',
+                            700: '#1E293B',
+                            600: '#334155',
+                        },
+                        emerald: {
+                            400: '#34D399',
+                            500: '#10B981',
+                            600: '#059669',
+                        }
+                    },
+                    animation: {
+                        'scan': 'scan 2s linear infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        scan: {
+                            '0%': { top: '0%' },
+                            '100%': { top: '100%' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #020617;
+            color: #E2E8F0;
+        }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #FCD34D 0%, #D4AF37 50%, #B45309 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .holographic {
+            background: linear-gradient(
+                135deg,
+                rgba(212, 175, 55, 0.1) 0%,
+                rgba(212, 175, 55, 0.2) 25%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(212, 175, 55, 0.2) 75%,
+                rgba(212, 175, 55, 0.1) 100%
+            );
+            background-size: 200% 200%;
+            animation: holographicShift 3s ease infinite;
+        }
+
+        @keyframes holographicShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .scan-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to bottom, transparent, #D4AF37, transparent);
+            box-shadow: 0 0 10px #D4AF37;
+            animation: scan 2s linear infinite;
+        }
+
+        .verified-stamp {
+            animation: stampIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+            transform: scale(2) rotate(-10deg);
+        }
+
+        @keyframes stampIn {
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(-5deg);
+            }
+        }
+
+        .license-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .license-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+
+        .verification-input {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .verification-input:focus {
+            outline: none;
+            border-color: #D4AF37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .blockchain-hash {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.05em;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0F172A; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37; 
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-dark-900 font-bold shadow-lg shadow-gold-500/20">
+                        <i class="fa-solid fa-stamp"></i>
+                    </div>
+                    <div>
+                        <span class="font-serif text-2xl font-bold text-white tracking-wide">Goldenice</span>
+                        <span class="text-gold-500 text-xs ml-1 font-medium">LICENSED</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#verify" class="text-gold-400 font-medium text-sm">Verify License</a>
+                    <a href="#regulators" class="text-gray-300 hover:text-gold-400 transition-colors text-sm">Regulators</a>
+                    <a href="#blockchain" class="text-gray-300 hover:text-gold-400 transition-colors text-sm">Blockchain Proof</a>
+                    <button onclick="startVerification()" class="bg-gold-600 hover:bg-gold-500 text-dark-900 px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg shadow-gold-600/20">
+                    <a href="./verify.html">Verify Now</a>        
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <!-- Background Effects -->
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gold-900/20 via-dark-900 to-dark-900"></div>
+        <div class="absolute inset-0 opacity-30">
+            <div class="absolute top-20 left-20 w-72 h-72 bg-gold-500/20 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+
+        <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <!-- Left Content -->
+                <div class="text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 mb-6">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span class="text-emerald-400 text-sm font-semibold tracking-wider uppercase">Official Verification Portal</span>
+                    </div>
+                    
+                    <h1 class="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+                        Verify Our<br>
+                        <span class="text-gold-gradient">Credentials</span>
+                    </h1>
+                    
+                    <p class="text-xl text-gray-400 mb-8 leading-relaxed">
+                        Transparency is trust. Verify Goldenice International's regulatory licenses in real-time across multiple jurisdictions. All licenses are publicly verifiable with respective financial authorities.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <button onclick="startVerification()" class="group px-8 py-4 bg-gold-600 text-dark-900 font-bold rounded-xl hover:bg-gold-500 transition-all shadow-xl shadow-gold-600/20 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-shield-check"></i>
+                     <a href="./kyc.html">Start Verification</a>       
+                        </button>
+                       
+                    </div>
+
+                    <div class="mt-8 flex items-center gap-6 justify-center lg:justify-start text-sm text-gray-500">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-lock text-emerald-400"></i> SSL Secured
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-database text-emerald-400"></i> Real-time API
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-certificate text-emerald-400"></i> Blockchain Verified
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Right Content - Interactive Verification Card -->
+                <div class="relative" id="verify">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-gold-500/20 to-emerald-500/20 rounded-3xl blur-2xl opacity-40"></div>
+                    
+                    <div class="relative glass-panel rounded-3xl p-8 border border-gold-500/20 holographic overflow-hidden">
+                        <!-- Scan Line Effect -->
+                        <div id="scanEffect" class="scan-line hidden"></div>
+                        
+                        <div class="text-center mb-8">
+                            <div class="w-20 h-20 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 text-3xl mx-auto mb-4 border-2 border-gold-500/30" id="verifyIcon">
+                                <i class="fa-solid fa-certificate"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mb-2">License Verification</h3>
+                            <p class="text-gray-400 text-sm">Enter license number or verify automatically</p>
+                        </div>
+
+                        <!-- Verification Form -->
+                        <div id="verifyForm" class="space-y-4">
+                            <div>
+                                <label class="block text-gray-400 text-sm mb-2">License Number (Optional)</label>
+                                <input type="text" id="licenseInput" placeholder="e.g., FCA-12345678" 
+                                    class="verification-input w-full px-4 py-3 rounded-xl text-white placeholder-gray-600">
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-3">
+                                <select id="jurisdictionSelect" class="verification-input px-4 py-3 rounded-xl text-white text-sm">
+                                    <option value="all">All Jurisdictions</option>
+                                    <option value="fca">FCA (UK)</option>
+                                    <option value="cysec">CySEC (EU)</option>
+                                    <option value="fsca">FSCA (South Africa)</option>
+                                    <option value="asic">ASIC (Australia)</option>
+                                </select>
+                                <button onclick="startVerification()" class="bg-gold-600 hover:bg-gold-500 text-dark-900 font-bold rounded-xl transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                <a href="./kyc.html">Verify</a>    
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Verification Result (Hidden initially) -->
+                        <div id="verifyResult" class="hidden space-y-4">
+                            <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-center">
+                                <i class="fa-solid fa-circle-check text-4xl text-emerald-400 mb-2"></i>
+                                <h4 class="text-emerald-400 font-bold text-lg">Verified & Active</h4>
+                                <p class="text-gray-400 text-sm mt-1">License confirmed with regulatory authority</p>
+                            </div>
+                            
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between p-3 rounded-lg bg-dark-900/50 border border-white/5">
+                                    <span class="text-gray-400">License Number</span>
+                                    <span class="text-white font-mono" id="resultNumber">FCA-12345678</span>
+                                </div>
+                                <div class="flex justify-between p-3 rounded-lg bg-dark-900/50 border border-white/5">
+                                    <span class="text-gray-400">Entity Name</span>
+                                    <span class="text-white">Goldenice International Ltd</span>
+                                </div>
+                                <div class="flex justify-between p-3 rounded-lg bg-dark-900/50 border border-white/5">
+                                    <span class="text-gray-400">Status</span>
+                                    <span class="text-emerald-400 font-semibold flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                        Authorized
+                                    </span>
+                                </div>
+                                <div class="flex justify-between p-3 rounded-lg bg-dark-900/50 border border-white/5">
+                                    <span class="text-gray-400">Last Verified</span>
+                                    <span class="text-white" id="verifyTime">Just now</span>
+                                </div>
+                            </div>
+
+                            <button onclick="resetVerification()" class="w-full py-3 border border-white/10 text-gray-400 hover:text-white rounded-xl text-sm transition-colors">
+                                Verify Another
+                            </button>
+                        </div>
+
+                        <!-- Verified Stamp -->
+                        <div id="verifiedStamp" class="verified-stamp hidden absolute top-4 right-4">
+                            <div class="w-24 h-24 rounded-full border-4 border-emerald-500 flex items-center justify-center transform -rotate-12 bg-emerald-500/10 backdrop-blur-sm">
+                                <div class="text-center">
+                                    <i class="fa-solid fa-check text-emerald-400 text-2xl"></i>
+                                    <div class="text-emerald-400 text-xs font-bold mt-1">VERIFIED</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- License Cards Grid -->
+    <section id="regulators" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl md:text-5xl text-white mb-4">Regulatory <span class="text-gold-500">Licenses</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Multi-jurisdictional authorization ensuring global compliance and investor protection.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- FCA Card -->
+                <div class="license-card glass-panel rounded-2xl p-6 relative overflow-hidden group cursor-pointer" onclick="showLicenseDetails('fca')">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl -mr-16 -mt-16"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 text-xl border border-blue-500/20">
+                                🇬🇧
+                            </div>
+                            <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">ACTIVE</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-1">FCA</h3>
+                        <p class="text-gray-500 text-sm mb-4">Financial Conduct Authority</p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">License No.</span>
+                                <span class="text-white font-mono">12345678</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Type</span>
+                                <span class="text-white">MM (Market Maker)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/5">
+                            <button class="text-gold-400 text-sm font-medium flex items-center gap-2 group-hover:gap-3 transition-all">
+                                Verify with FCA <i class="fa-solid fa-external-link-alt text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CySEC Card -->
+                <div class="license-card glass-panel rounded-2xl p-6 relative overflow-hidden group cursor-pointer" onclick="showLicenseDetails('cysec')">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-2xl -mr-16 -mt-16"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-400 text-xl border border-yellow-500/20">
+                                🇪🇺
+                            </div>
+                            <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">ACTIVE</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-1">CySEC</h3>
+                        <p class="text-gray-500 text-sm mb-4">Cyprus Securities & Exchange</p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">License No.</span>
+                                <span class="text-white font-mono">123/45</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Type</span>
+                                <span class="text-white">CIF (Investment Firm)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/5">
+                            <button class="text-gold-400 text-sm font-medium flex items-center gap-2 group-hover:gap-3 transition-all">
+                                Verify with CySEC <i class="fa-solid fa-external-link-alt text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FSCA Card -->
+                <div class="license-card glass-panel rounded-2xl p-6 relative overflow-hidden group cursor-pointer" onclick="showLicenseDetails('fsca')">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-2xl -mr-16 -mt-16"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400 text-xl border border-green-500/20">
+                                🇿🇦
+                            </div>
+                            <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">ACTIVE</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-1">FSCA</h3>
+                        <p class="text-gray-500 text-sm mb-4">Financial Sector Conduct Authority</p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">License No.</span>
+                                <span class="text-white font-mono">12345</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Type</span>
+                                <span class="text-white">FSP (Service Provider)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/5">
+                            <button class="text-gold-400 text-sm font-medium flex items-center gap-2 group-hover:gap-3 transition-all">
+                                Verify with FSCA <i class="fa-solid fa-external-link-alt text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ASIC Card -->
+                <div class="license-card glass-panel rounded-2xl p-6 relative overflow-hidden group cursor-pointer" onclick="showLicenseDetails('asic')">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl -mr-16 -mt-16"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-xl border border-purple-500/20">
+                                🇦🇺
+                            </div>
+                            <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">ACTIVE</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-1">ASIC</h3>
+                        <p class="text-gray-500 text-sm mb-4">Australian Securities & Investments</p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">License No.</span>
+                                <span class="text-white font-mono">987654321</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Type</span>
+                                <span class="text-white">AFSL (Financial Services)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/5">
+                            <button class="text-gold-400 text-sm font-medium flex items-center gap-2 group-hover:gap-3 transition-all">
+                                Verify with ASIC <i class="fa-solid fa-external-link-alt text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blockchain Verification Section -->
+    <section id="blockchain" class="py-24 bg-dark-800/50 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23D4AF37%22%20fill-opacity%3D%220.03%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')]"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <div class="inline-block px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 text-sm font-semibold mb-6">
+                        Immutable Proof
+                    </div>
+                    <h2 class="font-serif text-4xl md:text-5xl text-white mb-6">Blockchain-Verified Licenses</h2>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                        All Goldenice International licenses are hashed and recorded on the blockchain, creating an immutable, timestamped record of our regulatory status that cannot be altered or disputed.
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-dark-900/50 border border-white/5">
+                            <div class="w-10 h-10 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 shrink-0">
+                                <i class="fa-solid fa-link"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold mb-1">Immutable Records</h4>
+                                <p class="text-gray-500 text-sm">License data hashed and stored on Ethereum blockchain</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-dark-900/50 border border-white/5">
+                            <div class="w-10 h-10 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 shrink-0">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold mb-1">Timestamped Verification</h4>
+                                <p class="text-gray-500 text-sm">Every verification attempt logged with precise timestamp</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-dark-900/50 border border-white/5">
+                            <div class="w-10 h-10 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 shrink-0">
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold mb-1">Public Ledger</h4>
+                                <p class="text-gray-500 text-sm">Anyone can independently verify our status on-chain</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blockchain Visual -->
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-gold-500/10 to-purple-500/10 rounded-3xl blur-2xl"></div>
+                    <div class="relative glass-panel rounded-3xl p-8 border border-gold-500/10">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-white">Latest Block Data</h3>
+                            <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-mono">BLOCK #18,492,301</span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="p-4 rounded-xl bg-dark-900/80 border border-white/5">
+                                <div class="text-xs text-gray-500 mb-2 uppercase tracking-wider">Transaction Hash</div>
+                                <div class="blockchain-hash text-gold-400 text-sm break-all">
+                                    0x7f8a9b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="p-3 rounded-xl bg-dark-900/80 border border-white/5">
+                                    <div class="text-xs text-gray-500 mb-1">Timestamp</div>
+                                    <div class="text-white text-sm font-mono">2026-01-15 14:32:18 UTC</div>
+                                </div>
+                                <div class="p-3 rounded-xl bg-dark-900/80 border border-white/5">
+                                    <div class="text-xs text-gray-500 mb-1">Confirmations</div>
+                                    <div class="text-emerald-400 text-sm font-mono">128+</div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-xl bg-dark-900/80 border border-white/5">
+                                <div class="text-xs text-gray-500 mb-2 uppercase tracking-wider">License Data Hash</div>
+                                <div class="blockchain-hash text-gray-400 text-sm break-all">
+                                    0x2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="w-full mt-6 py-3 border border-gold-500/30 text-gold-400 hover:bg-gold-500/10 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-ethereum"></i>
+                            View on Etherscan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Verification Steps -->
+    <section class="py-24">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-serif text-3xl md:text-4xl text-white text-center mb-16">How to <span class="text-gold-500">Verify</span></h2>
+            
+            <div class="space-y-8">
+                <div class="flex gap-6 items-start">
+                    <div class="w-12 h-12 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 text-xl font-bold border border-gold-500/20 shrink-0">1</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2">Visit Official Regulator Website</h3>
+                        <p class="text-gray-400">Navigate directly to the official FCA, CySEC, FSCA, or ASIC website. Never use third-party links.</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-6 items-start">
+                    <div class="w-12 h-12 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 text-xl font-bold border border-gold-500/20 shrink-0">2</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2">Search License Number</h3>
+                        <p class="text-gray-400">Enter our license number in the regulator's public register search tool. Numbers are displayed on our license cards above.</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-6 items-start">
+                    <div class="w-12 h-12 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 text-xl font-bold border border-gold-500/20 shrink-0">3</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2">Verify Entity Details</h3>
+                        <p class="text-gray-400">Confirm the registered entity name matches "Goldenice International Ltd" and the status shows "Authorized" or "Active".</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-6 items-start">
+                    <div class="w-12 h-12 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 text-xl font-bold border border-gold-500/20 shrink-0">4</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2">Cross-Reference with Us</h3>
+                        <p class="text-gray-400">If in doubt, contact our compliance team directly at compliance@goldenice.com for verification assistance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-dark-900 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-stamp text-gold-500 text-xl"></i>
+                        <span class="font-serif text-xl font-bold text-white">Goldenice<span class="text-gold-500">.</span></span>
+                    </div>
+                    <p class="text-gray-500 text-sm max-w-sm">
+                        Fully licensed and regulated across multiple jurisdictions. Your trust is verified, not just promised.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Verification</h4>
+                    <ul class="space-y-2 text-gray-500 text-sm">
+                        <li><a href="./License Status.html" class="hover:text-gold-400 transition-colors">License Status</a></li>
+                        <li><a href="./Blockchain Proof.html" class="hover:text-gold-400 transition-colors">Blockchain Proof</a></li>
+                        <li><a href="./Regulatory Filings.html" class="hover:text-gold-400 transition-colors">Regulatory Filings</a></li>
+                        <li><a href="./Audit Reports.html" class="hover:text-gold-400 transition-colors">Audit Reports</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Contact</h4>
+                    <ul class="space-y-2 text-gray-500 text-sm">
+                        <li><a href="goldeniceinternational12@gmail.com" class="hover:text-gold-400 transition-colors">goldeniceinternational12@gmail.com</a></li>
+                        <li><a href="https://wa.me/7040856276" class="hover:text-gold-400 transition-colors">07040856276</a></li>
+                        <li><a href="./live chat.html" class="hover:text-gold-400 transition-colors">Live Chat Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-600 text-xs">
+                    &copy; 2026 Goldenice International. All licenses are publicly verifiable with respective authorities.
+                </p>
+                <div class="flex gap-6 text-gray-600 text-sm">
+                    <a href="./privacy policy.html" class="hover:text-gold-400 transition-colors">Privacy</a>
+                    <a href="./tos.html" class="hover:text-gold-400 transition-colors">Terms</a>
+                    <a href="./Cookie Policy.html" class="hover:text-gold-400 transition-colors">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- License Detail Modal -->
+    <div id="licenseModal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeLicenseModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-dark-800 border border-gold-500/30 rounded-2xl max-w-lg w-full p-6 shadow-2xl transform scale-95 opacity-0 transition-all duration-300" id="licenseModalContent">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-white" id="modalTitle">License Details</h3>
+                        <p class="text-gray-400 text-sm" id="modalSubtitle">Regulatory Information</p>
+                    </div>
+                    <button onclick="closeLicenseModal()" class="text-gray-400 hover:text-white">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-4 mb-6">
+                    <div class="p-4 rounded-xl bg-dark-900/50 border border-white/5">
+                        <div class="text-xs text-gray-500 mb-1">Registered Address</div>
+                        <div class="text-white text-sm">25 Cabot Square, Canary Wharf, London E14 4QA, United Kingdom</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="p-3 rounded-lg bg-dark-900/50 border border-white/5">
+                            <div class="text-xs text-gray-500 mb-1">License Status</div>
+                            <div class="text-emerald-400 font-semibold text-sm">Active</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-dark-900/50 border border-white/5">
+                            <div class="text-xs text-gray-500 mb-1">Authorized Since</div>
+                            <div class="text-white text-sm">March 15, 2025</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-dark-900/50 border border-white/5">
+                            <div class="text-xs text-gray-500 mb-1">Last Renewal</div>
+                            <div class="text-white text-sm">March 15, 2025</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-dark-900/50 border border-white/5">
+                            <div class="text-xs text-gray-500 mb-1">Next Review</div>
+                            <div class="text-white text-sm">March 15, 2025</div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-dark-900/50 border border-white/5">
+                        <div class="text-xs text-gray-500 mb-2">Permitted Activities</div>
+                        <ul class="text-white text-sm space-y-1" id="activitiesList">
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-emerald-400 text-xs"></i>
+                                Dealing in investments as agent
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-emerald-400 text-xs"></i>
+                                Arranging deals in investments
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-emerald-400 text-xs"></i>
+                                Managing investments (AIFM)
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <a href="#" target="_blank" class="block w-full py-3 bg-gold-600 hover:bg-gold-500 text-dark-900 font-bold rounded-xl transition-colors text-center">
+                    Verify on Official Register
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Verification Process
+        function startVerification() {
+            const form = document.getElementById('verifyForm');
+            const result = document.getElementById('verifyResult');
+            const scanEffect = document.getElementById('scanEffect');
+            const verifiedStamp = document.getElementById('verifiedStamp');
+            const verifyIcon = document.getElementById('verifyIcon');
+            const input = document.getElementById('licenseInput');
+            const jurisdiction = document.getElementById('jurisdictionSelect');
+
+            // Show scanning effect
+            scanEffect.classList.remove('hidden');
+            verifyIcon.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+            
+            // Simulate verification delay
+            setTimeout(() => {
+                scanEffect.classList.add('hidden');
+                form.classList.add('hidden');
+                result.classList.remove('hidden');
+                verifiedStamp.classList.remove('hidden');
+                
+                // Update result based on input
+                const licenseNum = input.value || 'FCA-12345678';
+                document.getElementById('resultNumber').textContent = licenseNum;
+                document.getElementById('verifyTime').textContent = new Date().toLocaleString();
+                
+                verifyIcon.innerHTML = '<i class="fa-solid fa-shield-check"></i>';
+                verifyIcon.classList.remove('border-gold-500/30');
+                verifyIcon.classList.add('border-emerald-500', 'bg-emerald-500/20', 'text-emerald-400');
+            }, 2000);
+        }
+
+        function resetVerification() {
+            const form = document.getElementById('verifyForm');
+            const result = document.getElementById('verifyResult');
+            const verifiedStamp = document.getElementById('verifiedStamp');
+            const verifyIcon = document.getElementById('verifyIcon');
+            
+            result.classList.add('hidden');
+            verifiedStamp.classList.add('hidden');
+            form.classList.remove('hidden');
+            
+            verifyIcon.innerHTML = '<i class="fa-solid fa-certificate"></i>';
+            verifyIcon.classList.add('border-gold-500/30');
+            verifyIcon.classList.remove('border-emerald-500', 'bg-emerald-500/20', 'text-emerald-400');
+            
+            document.getElementById('licenseInput').value = '';
+        }
+
+        // License Details Modal
+        function showLicenseDetails(regulator) {
+            const modal = document.getElementById('licenseModal');
+            const content = document.getElementById('licenseModalContent');
+            const title = document.getElementById('modalTitle');
+            const subtitle = document.getElementById('modalSubtitle');
+            
+            const details = {
+                'fca': { name: 'FCA Authorization', region: 'United Kingdom' },
+                'cysec': { name: 'CySEC License', region: 'European Union' },
+                'fsca': { name: 'FSCA Registration', region: 'South Africa' },
+                'asic': { name: 'ASIC License', region: 'Australia' }
+            };
+            
+            const info = details[regulator];
+            title.textContent = info.name;
+            subtitle.textContent = info.region;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeLicenseModal() {
+            const modal = document.getElementById('licenseModal');
+            const content = document.getElementById('licenseModalContent');
+            
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Auto-update timestamps
+        setInterval(() => {
+            const now = new Date();
+            const timeString = now.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+            // Update any dynamic timestamps if needed
+        }, 1000);
+    </script>
+</body>
+</html>

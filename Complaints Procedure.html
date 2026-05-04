@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - Complaints Procedure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-dark: #B8860B;
+            --gold-light: #FFD700;
+            --ice-blue: #4FC3F7;
+            --dark-bg: #0a0a0a;
+            --card-bg: #111;
+            --text-primary: #f0f0f0;
+            --text-secondary: #888;
+            --success-green: #4CAF50;
+            --warning-orange: #ff9800;
+            --danger-red: #f44336;
+            --border-color: rgba(212, 175, 55, 0.2);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: rotate 25s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--gold-primary);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .support-badge {
+            background: rgba(79, 195, 247, 0.1);
+            color: var(--ice-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--ice-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--gold-primary), var(--ice-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero > p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .commitment-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(79, 195, 247, 0.1);
+            border: 1px solid var(--ice-blue);
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            margin-top: 1rem;
+        }
+
+        .commitment-icon {
+            font-size: 2.5rem;
+        }
+
+        .commitment-text {
+            text-align: left;
+        }
+
+        .commitment-text h3 {
+            color: var(--ice-blue);
+            margin-bottom: 0.3rem;
+        }
+
+        .commitment-text p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Navigation */
+        .sticky-nav {
+            background: rgba(17, 17, 17, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 82px;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .nav-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-item {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            white-space: nowrap;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--gold-primary);
+            border-color: var(--gold-primary);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Section Styling */
+        .section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 150px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .section-title h2 {
+            color: var(--gold-primary);
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+        }
+
+        .section-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--gold-primary), var(--ice-blue));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--card-bg);
+            border: 3px solid var(--gold-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px var(--card-bg);
+        }
+
+        .timeline-item.active::before {
+            background: var(--gold-primary);
+            animation: pulse 2s infinite;
+        }
+
+        .timeline-item h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .timeline-item p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-meta {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold-primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Complaint Form */
+        .form-container {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(79, 195, 247, 0.05));
+            border: 2px solid var(--gold-primary);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h2 {
+            color: var(--gold-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: var(--text-secondary);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .input-group label span {
+            color: var(--danger-red);
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .input-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--gold-primary);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .file-upload-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: #000;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Status Tracker */
+        .tracker-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .tracker-input {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tracker-input input {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .tracker-input button {
+            background: var(--ice-blue);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tracker-result {
+            display: none;
+            background: rgba(79, 195, 247, 0.1);
+            border: 1px solid var(--ice-blue);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .tracker-result.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-investigating {
+            background: rgba(255, 152, 0, 0.2);
+            color: var(--warning-orange);
+        }
+
+        .status-resolved {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success-green);
+        }
+
+        .status-escalated {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--danger-red);
+        }
+
+        /* Info Boxes */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .info-card:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-5px);
+        }
+
+        .info-card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(79, 195, 247, 0.2));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* FAQ Section */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: var(--gold-primary);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .faq-icon {
+            color: var(--gold-primary);
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 1.5rem;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .faq-answer p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Contact Section */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .contact-card:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-5px);
+        }
+
+        .contact-icon-large {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(79, 195, 247, 0.2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            border: 2px solid var(--gold-primary);
+        }
+
+        .contact-card h3 {
+            color: var(--gold-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .contact-detail {
+            color: var(--ice-blue);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Ombudsman Section */
+        .ombudsman-section {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(79, 195, 247, 0.05));
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 3rem;
+        }
+
+        .ombudsman-section h2 {
+            color: var(--gold-primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .ombudsman-section > p {
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .ombudsman-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .ombudsman-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+
+        .ombudsman-card h4 {
+            color: var(--ice-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .ombudsman-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .ombudsman-link {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.95);
+            border-top: 2px solid var(--gold-primary);
+            padding: 4rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            color: var(--gold-primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold-primary);
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 2px solid var(--gold-primary);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            padding: 2.5rem;
+            text-align: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal h3 {
+            color: var(--gold-primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .modal p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .reference-number {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1.2rem;
+            color: var(--gold-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--gold-primary);
+            border-left: 4px solid var(--success-green);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none;
+            z-index: 3000;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .tracker-input { flex-direction: column; }
+            .timeline { padding-left: 2rem; }
+            .section-content { padding: 1.5rem; }
+            .form-container { padding: 1.5rem; }
+        }
+
+        /* Print styles */
+        @media print {
+            .bg-animation, header, .sticky-nav, .form-container, .tracker-container, footer {
+                display: none;
+            }
+            body { background: white; color: black; }
+            .section-content { border: 1px solid #ccc; break-inside: avoid; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">G</div>
+                <div class="logo-text">GOLDENICE INTERNATIONAL</div>
+            </div>
+            <div class="support-badge">
+                <span>🎧</span><a href="https://wa.me/07040856276">24/5 Complaint Support</a>       
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Complaints Procedure</h1>
+        <p>We are committed to providing exceptional service. If you are dissatisfied with any aspect of our services, we have established fair and transparent procedures to address your concerns promptly and effectively.</p>
+        
+        <div class="commitment-box">
+            <div class="commitment-icon">📋</div>
+            <div class="commitment-text">
+                <h3>Our Commitment to You</h3>
+                <p>We aim to resolve all complaints within 30 business days. 95% of cases are resolved at Stage 1.</p>
+            </div>
+        </div>
+    </section>
+
+    <nav class="sticky-nav">
+        <div class="nav-content">
+            <a href="#process" class="nav-item active">Our Process</a>
+            <a href="#submit" class="nav-item">Submit Complaint</a>
+            <a href="#track" class="nav-item">Track Status</a>
+            <a href="#timeframes" class="nav-item">Timeframes</a>
+            <a href="#ombudsman" class="nav-item">Ombudsman</a>
+            <a href="#faq" class="nav-item">FAQ</a>
+            <a href="#contact" class="nav-item">Contact</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Our Process Section -->
+        <section class="section" id="process">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <div class="section-title">
+                    <h2>Our Three-Stage Process</h2>
+                    <p>Transparent, fair, and efficient resolution pathway</p>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="timeline">
+                    <div class="timeline-item active">
+                        <h3>Stage 1: Frontline Resolution</h3>
+                        <p>Your complaint is immediately acknowledged and assigned to a dedicated Customer Support Representative. We aim to resolve straightforward issues within 1-3 business days through our support team.</p>
+                        <span class="timeline-meta">⏱️ 1-3 Business Days | 📧 goldeniceinternational12@gmail.com</span>
+                    </div>
+                    <div class="timeline-item">
+                        <h3>Stage 2: Formal Investigation</h3>
+                        <p>If your complaint requires deeper investigation, it is escalated to our Compliance Department. A thorough review of your account, trading history, and relevant communications is conducted by senior compliance officers.</p>
+                        <span class="timeline-meta">⏱️ 5-15 Business Days | 🔍 Compliance Review</span>
+                    </div>
+                    <div class="timeline-item">
+                        <h3>Stage 3: Final Determination</h3>
+                        <p>Our Head of Compliance provides a written final response with detailed findings and resolution. If you remain dissatisfied, you may escalate to the Financial Ombudsman Service.</p>
+                        <span class="timeline-meta">⏱️ 15-30 Business Days | 📜 Final Response</span>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-card-icon">⚡</div>
+                        <h3>Acknowledgment</h3>
+                        <p>Within 24 hours of receiving your complaint, we send confirmation with a unique reference number.</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-icon">🔍</div>
+                        <h3>Investigation</h3>
+                        <p>Impartial review by trained professionals who were not involved in the original issue.</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-icon">💬</div>
+                        <h3>Communication</h3>
+                        <p>Regular updates every 5 business days during the investigation process.</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-icon">✓</div>
+                        <h3>Resolution</h3>
+                        <p>Clear explanation of findings, corrective actions, and any compensation if applicable.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Submit Complaint Section -->
+        <section class="section" id="submit">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <div class="section-title">
+                    <h2>Submit a Complaint</h2>
+                    <p>Complete the form below to formally register your complaint</p>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Complaint Submission Form</h2>
+                    <p>All fields marked with * are required. Please provide as much detail as possible to help us investigate efficiently.</p>
+                </div>
+
+                <form id="complaintForm" onsubmit="submitComplaint(event)">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>First Name <span>*</span></label>
+                            <input type="text" id="firstName" required placeholder="Enter your first name">
+                        </div>
+                        <div class="input-group">
+                            <label>Last Name <span>*</span></label>
+                            <input type="text" id="lastName" required placeholder="Enter your last name">
+                        </div>
+                        <div class="input-group">
+                            <label>Email Address <span>*</span></label>
+                            <input type="email" id="email" required placeholder="your@email.com">
+                        </div>
+                        <div class="input-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="phone" placeholder="+234 999-888-333-22">
+                        </div>
+                        <div class="input-group">
+                            <label>Account Number <span>*</span></label>
+                            <input type="text" id="wallet address" required placeholder="-XXXXXXXXXXXXXXXXXXXXXXXXX">
+                        </div>
+                        <div class="input-group">
+                            <label>Complaint Category <span>*</span></label>
+                            <select id="category" required>
+                                <option value="">Select category...</option>
+                                <option value="platform">Trading Platform Issue</option>
+                                <option value="execution">Trade Execution</option>
+                                <option value="funds">Deposit/Withdrawal</option>
+                                <option value="fees">Fees or Charges</option>
+                                <option value="service">Customer Service</option>
+                                <option value="account">Account Management</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Subject <span>*</span></label>
+                            <input type="text" id="subject" required placeholder="Brief summary of your complaint">
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Detailed Description <span>*</span></label>
+                            <textarea id="description" required placeholder="Please describe your complaint in detail, including:
+- Date and time of the incident
+- Order numbers or ticket IDs (if applicable)
+- Steps you have already taken
+- What resolution you are seeking"></textarea>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Supporting Documents</label>
+                            <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                                <div class="file-upload-icon">📎</div>
+                                <p>Click to upload screenshots, statements, or other evidence</p>
+                                <p style="font-size: 0.85rem; color: var(--text-secondary);">Max file size: 10MB (PDF, JPG, PNG)</p>
+                            </div>
+                            <input type="file" id="fileInput" hidden multiple accept=".pdf,.jpg,.jpeg,.png">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit"><a href="https://wa.me/07040856276">Submit Complaint</a>         </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Track Status Section -->
+        <section class="section" id="track">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <div class="section-title">
+                    <h2>Track Your Complaint</h2>
+                    <p>Check the status of your submitted complaint in real-time</p>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="tracker-container">
+                    <h3 style="color: var(--gold-primary); margin-bottom: 1rem;">Complaint Status Tracker</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Enter your complaint reference number to view current status and updates.</p>
+                    
+                    <div class="tracker-input">
+                        <input type="text" id="trackingNumber" placeholder="Enter reference number (e.g., COMP-2024-001234)">
+                        <button onclick="trackComplaint()">Track Status</button>
+                    </div>
+
+                    <div class="tracker-result" id="trackerResult">
+                        <span class="status-badge status-investigating" id="statusBadge">Under Investigation</span>
+                        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Complaint #<span id="displayNumber">COMP-2024-001234</span></h4>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">Submitted: <span id="submitDate">March 20, 2024</span></p>
+                        
+                        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 10px; margin-top: 1rem;">
+                            <h5 style="color: var(--gold-primary); margin-bottom: 0.5rem;">Latest Update</h5>
+                            <p style="color: var(--text-secondary); margin: 0;" id="latestUpdate">Your complaint has been assigned to Senior Compliance Officer Sarah Mitchell. Initial review of trading records is in progress. Expected completion by March 27, 2024.</p>
+                        </div>
+
+                        <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                            <button class="btn-submit" style="margin: 0; padding: 0.8rem 1.5rem; font-size: 0.9rem;" onclick="showToast('Additional information requested via email')">Request Update</button>
+                            <button class="btn-submit" style="margin: 0; padding: 0.8rem 1.5rem; font-size: 0.9rem; background: transparent; color: var(--gold-primary); border: 2px solid var(--gold-primary);" onclick="showToast('Case notes downloaded')">Download History</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeframes Section -->
+        <section class="section" id="timeframes">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <div class="section-title">
+                    <h2>Resolution Timeframes</h2>
+                    <p>Our commitment to timely resolution</p>
+                </div>
+            </div>
+            <div class="section-content">
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">We are committed to resolving complaints as quickly as possible. Our target timeframes are as follows:</p>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-card-icon">📧</div>
+                        <h3>Acknowledgment</h3>
+                        <p>Within 24 hours of receipt</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-icon">⚡</div>
+                        <h3>Simple Complaints</h3>
+                        <p>Resolved within 3 business days</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-icon">🔍</div>
+                        <h3>Complex Complaints</h3>
+                        <p>Resolved within 15 business days</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-icon">📜</div>
+                        <h3>Final Response</h3>
+                        <p>Within 30 business days maximum</p>
+                    </div>
+                </div>
+
+                <div class="warning-box" style="background: rgba(255, 152, 0, 0.1); border-left: 4px solid var(--warning-orange); padding: 1.5rem; margin-top: 2rem; border-radius: 0 10px 10px 0;">
+                    <h4 style="color: var(--warning-orange); margin-bottom: 0.5rem;">⏱️ Extended Timeframes</h4>
+                    <p style="color: var(--text-secondary); margin: 0;">In exceptional circumstances requiring extensive investigation, we may extend the timeframe up to 60 business days. You will be notified in writing with reasons for the extension and expected resolution date.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ombudsman Section -->
+        <section class="section" id="ombudsman">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <div class="section-title">
+                    <h2>External Dispute Resolution</h2>
+                    <p>If you remain dissatisfied after our final response</p>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="ombudsman-section">
+                    <h2>Financial Ombudsman Service</h2>
+                    <p>If you are not satisfied with our final response, or if 30 business days have passed since you submitted your complaint without receiving a final response, you have the right to refer your complaint to the Financial Ombudsman Service (FOS) free of charge.</p>
+
+                    <div class="ombudsman-grid">
+                        <div class="ombudsman-card">
+                            <h4>📍 Address</h4>
+                            <p>Port-Harcourt<br>Rivers State<br>Nigeria</p>
+                        </div>
+                        <div class="ombudsman-card">
+                            <h4>📞 Phone</h4>
+                            <p>07065151245 (Free)<br>07040856276</p>
+                            <a href="#" class="ombudsman-link">Call FOS →</a>
+                        </div>
+                        <div class="ombudsman-card">
+                            <h4>📧 Email</h4>
+                            <p>goldeniceinternational12@gmail.com</p>
+                            <a href="#" class="ombudsman-link">Email FOS →</a>
+                        </div>
+                        
+                    </div>
+
+                    <div class="warning-box" style="background: rgba(244, 67, 54, 0.1); border-left: 4px solid var(--danger-red); padding: 1.5rem; margin-top: 2rem; border-radius: 0 10px 10px 0;">
+                        <h4 style="color: var(--danger-red); margin-bottom: 0.5rem;">⚠️ Important Time Limit</h4>
+                        <p style="color: var(--text-secondary); margin: 0;">You must refer your complaint to the FOS within <strong>six months</strong> of receiving our final response letter. Complaints referred after this time may not be accepted unless there are exceptional circumstances.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="section" id="faq">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <div class="section-title">
+                    <h2>Frequently Asked Questions</h2>
+                    <p>Common questions about our complaints process</p>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>What qualifies as a complaint?</span>
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>A complaint is any expression of dissatisfaction, whether oral or written, about the provision of, or failure to provide, a financial service. This includes issues with our trading platform, trade execution, account management, customer service, fees, or any other aspect of our business relationship.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Is there a cost to submit a complaint?</span>
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>No. Submitting a complaint to Goldenice International is completely free of charge. Furthermore, if you escalate to the Financial Ombudsman Service, their service is also free for consumers. You do not need to hire a lawyer or pay any fees to have your complaint heard.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Can I complain on behalf of someone else?</span>
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, but you must provide written authorization from the account holder. This can be a signed letter or power of attorney document. We may also require identity verification for both you and the account holder to protect against unauthorized access.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>What information should I include in my complaint?</span>
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>To help us investigate efficiently, please include: (1) Your full name and account number, (2) Clear description of the issue with dates and times, (3) Any relevant order numbers or ticket IDs, (4) Screenshots or supporting documents if applicable, (5) What resolution you are seeking, and (6) Your preferred contact method.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>What if I'm not satisfied with the resolution?</span>
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>If you disagree with our final response, you have the right to escalate to the Financial Ombudsman Service within six months. The Ombudsman provides an independent assessment and their decision is binding on us (if you accept it). Alternatively, you may seek legal advice or pursue court proceedings, though this may incur costs.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Will my complaint affect my account or trading?</span>
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Absolutely not. Submitting a complaint will never negatively impact your account status, trading conditions, or relationship with Goldenice. We view complaints as valuable feedback that helps us improve our services. All complaints are handled confidentially and professionally.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="section" id="contact">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <div class="section-title">
+                    <h2>Contact Our Complaints Team</h2>
+                    <p>Multiple ways to reach our dedicated complaints handling team</p>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <div class="contact-icon-large">📧</div>
+                        <h3>Email</h3>
+                        <p>Primary channel for formal complaints</p>
+                        <div class="contact-detail">goldeniceinternational12@gmail.com</div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon-large">📞</div>
+                        <h3>Phone</h3>
+                        <p>Speak directly with a complaints officer</p>
+                        <div class="contact-detail">07040856276<br>07065151245</div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon-large">✉️</div>
+                        <h3>Mail</h3>
+                        <p>Written complaints by post</p>
+                        <div class="contact-detail">Complaints Department<br>Goldenice International Tower<br>Financial District, [Port-Harcourt, Nigeria]</div>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: rgba(79, 195, 247, 0.1); border-left: 4px solid var(--ice-blue); padding: 1.5rem; margin-top: 2rem; border-radius: 0 10px 10px 0;">
+                    <h4 style="color: var(--ice-blue); margin-bottom: 0.5rem;">📅 Office Hours</h4>
+                    <p style="color: var(--text-secondary); margin: 0;">Our Complaints Department operates Monday to Friday, 9:00 AM to 6:00 PM GMT. Complaints received outside these hours are logged the next business day. For urgent trading issues, please contact our 24/5 trading support team.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">✅</div>

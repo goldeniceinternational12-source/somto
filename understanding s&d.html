@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Supply & Demand in Forex Trading</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8941F;
+            --demand: #00C853;
+            --supply: #FF1744;
+            --equilibrium: #2196F3;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--darker);
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .edu-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 200, 83, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 23, 68, 0.05) 0%, transparent 50%);
+            animation: bgPulse 10s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 5% 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 200, 83, 0.1);
+            border: 1px solid var(--demand);
+            border-radius: 50px;
+            color: var(--demand);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .hero-visual {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 400px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .balance-scale {
+            width: 300px;
+            height: 200px;
+            position: relative;
+        }
+
+        .scale-beam {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--supply), var(--gold), var(--demand));
+            border-radius: 2px;
+            transform-origin: center;
+            animation: balance 4s ease-in-out infinite;
+        }
+
+        @keyframes balance {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .scale-pan {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 3px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .scale-pan.left {
+            left: 10%;
+            top: 60%;
+            border-color: var(--supply);
+            color: var(--supply);
+        }
+
+        .scale-pan.right {
+            right: 10%;
+            top: 60%;
+            border-color: var(--demand);
+            color: var(--demand);
+        }
+
+        .scale-center {
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 60px;
+            background: var(--gold);
+            border-radius: 10px;
+        }
+
+        /* Concept Cards */
+        .concepts-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .concept-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+        }
+
+        .concept-card.demand {
+            border-color: rgba(0, 200, 83, 0.3);
+        }
+
+        .concept-card.demand:hover {
+            border-color: var(--demand);
+            box-shadow: 0 20px 40px rgba(0, 200, 83, 0.1);
+        }
+
+        .concept-card.supply {
+            border-color: rgba(255, 23, 68, 0.3);
+        }
+
+        .concept-card.supply:hover {
+            border-color: var(--supply);
+            box-shadow: 0 20px 40px rgba(255, 23, 68, 0.1);
+        }
+
+        .concept-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .concept-card.demand .concept-icon {
+            background: rgba(0, 200, 83, 0.1);
+            border: 2px solid var(--demand);
+            color: var(--demand);
+        }
+
+        .concept-card.supply .concept-icon {
+            background: rgba(255, 23, 68, 0.1);
+            border: 2px solid var(--supply);
+            color: var(--supply);
+        }
+
+        .concept-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .concept-card.demand .concept-title {
+            color: var(--demand);
+        }
+
+        .concept-card.supply .concept-title {
+            color: var(--supply);
+        }
+
+        .concept-desc {
+            color: #aaa;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .concept-points {
+            list-style: none;
+        }
+
+        .concept-points li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #ccc;
+        }
+
+        .concept-points li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .concept-card.demand .concept-points li::before {
+            color: var(--demand);
+        }
+
+        .concept-card.supply .concept-points li::before {
+            color: var(--supply);
+        }
+
+        /* Interactive Simulator */
+        .simulator-section {
+            padding: 4rem 5%;
+            background: var(--dark);
+        }
+
+        .simulator-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .simulator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        @media (max-width: 968px) {
+            .simulator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-area {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .forex-chart {
+            height: 400px;
+            position: relative;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        #supplyDemandChart {
+            width: 100%;
+            height: 100%;
+        }
+
+        .zone-labels {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .zone-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .zone-badge.demand {
+            background: rgba(0, 200, 83, 0.2);
+            color: var(--demand);
+            border: 1px solid var(--demand);
+        }
+
+        .zone-badge.supply {
+            background: rgba(255, 23, 68, 0.2);
+            color: var(--supply);
+            border: 1px solid var(--supply);
+        }
+
+        .controls-area {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .control-panel {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .slider-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .slider-value {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--gold);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .slider.demand-slider::-webkit-slider-thumb {
+            background: var(--demand);
+            box-shadow: 0 0 10px rgba(0, 200, 83, 0.5);
+        }
+
+        .slider.supply-slider::-webkit-slider-thumb {
+            background: var(--supply);
+            box-shadow: 0 0 10px rgba(255, 23, 68, 0.5);
+        }
+
+        .scenario-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .scenario-btn {
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .scenario-btn:hover, .scenario-btn.active {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .price-display {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .price-label {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            font-family: 'Courier New', monospace;
+        }
+
+        .price-direction {
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        /* Real Examples */
+        .examples-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .examples-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .example-tab {
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50px;
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .example-tab.active, .example-tab:hover {
+            background: var(--gold);
+            color: var(--dark);
+            border-color: var(--gold);
+        }
+
+        .example-content {
+            display: none;
+        }
+
+        .example-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .example-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+
+        .example-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .example-pair {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .example-flag {
+            font-size: 3rem;
+        }
+
+        .example-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .example-rate {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            color: var(--gold);
+        }
+
+        .example-chart {
+            height: 300px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .zone-marker {
+            position: absolute;
+            left: 20%;
+            right: 20%;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .zone-marker.demand {
+            bottom: 20%;
+            background: rgba(0, 200, 83, 0.2);
+            border: 2px dashed var(--demand);
+            color: var(--demand);
+        }
+
+        .zone-marker.supply {
+            top: 20%;
+            background: rgba(255, 23, 68, 0.2);
+            border: 2px dashed var(--supply);
+            color: var(--supply);
+        }
+
+        .price-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gold);
+            transition: top 1s ease-out;
+        }
+
+        .example-analysis {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .example-analysis {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .analysis-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+
+        .analysis-title {
+            color: var(--gold);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .analysis-text {
+            color: #aaa;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            padding: 4rem 5%;
+            background: var(--dark);
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+
+        .quiz-question {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #fff;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--demand);
+            background: rgba(0, 200, 83, 0.1);
+        }
+
+        .quiz-option.wrong {
+            border-color: var(--supply);
+            background: rgba(255, 23, 68, 0.1);
+        }
+
+        .option-letter {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .quiz-option.correct .option-letter {
+            background: var(--demand);
+            color: #fff;
+        }
+
+        .quiz-option.wrong .option-letter {
+            background: var(--supply);
+            color: #fff;
+        }
+
+        .quiz-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            display: none;
+        }
+
+        .quiz-result.show {
+            display: block;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-result.correct {
+            background: rgba(0, 200, 83, 0.1);
+            border: 1px solid var(--demand);
+        }
+
+        .quiz-result.wrong {
+            background: rgba(255, 23, 68, 0.1);
+            border: 1px solid var(--supply);
+        }
+
+        /* Key Takeaways */
+        .takeaways-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .takeaways-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .takeaway-card {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .takeaway-number {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 8rem;
+            font-weight: 700;
+            color: rgba(212, 175, 55, 0.1);
+            line-height: 1;
+        }
+
+        .takeaway-title {
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .takeaway-text {
+            color: #aaa;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            background: var(--darker);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .disclaimer {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid var(--gold);
+            padding: 1rem;
+            border-radius: 10px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 2000;
+            font-size: 0.9rem;
+            max-width: 250px;
+        }
+
+        .tooltip.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="edu-bg"></div>
+    <div class="tooltip" id="tooltip"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">◆ GOLDENICE ACADEMY</div>
+        <ul class="nav-links">
+            <li><a href="#concepts">Concepts</a></li>
+            <li><a href="#simulator">Simulator</a></li>
+            <li><a href="#examples">Examples</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>📚</span>
+                <span>EDUCATION CENTER</span>
+            </div>
+            <h1>Supply & Demand in Forex</h1>
+            <p>Master the fundamental forces that drive currency prices. Understanding supply and demand is essential for every successful forex trader at Goldenice International.</p>
+        </div>
+        <div class="hero-visual">
+            <div class="balance-scale">
+                <div class="scale-center"></div>
+                <div class="scale-beam"></div>
+                <div class="scale-pan left">📉</div>
+                <div class="scale-pan right">📈</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Concepts -->
+    <section class="concepts-section" id="concepts">
+        <h2 class="section-title">Core Concepts</h2>
+        <p class="section-subtitle">The two fundamental forces that determine currency prices in the forex market</p>
+        
+        <div class="concepts-grid">
+            <div class="concept-card demand">
+                <div class="concept-icon">📈</div>
+                <h3 class="concept-title">Demand (Buyers)</h3>
+                <p class="concept-desc">Demand represents the desire and ability of market participants to buy a currency. When demand increases, prices rise as buyers compete for limited supply.</p>
+                <ul class="concept-points">
+                    <li>Strong economic data increases demand</li>
+                    <li>Higher interest rates attract foreign investment</li>
+                    <li>Political stability boosts currency confidence</li>
+                    <li>Demand zones act as support levels</li>
+                    <li>More buyers than sellers = price increases</li>
+                </ul>
+            </div>
+
+            <div class="concept-card supply">
+                <div class="concept-icon">📉</div>
+                <h3 class="concept-title">Supply (Sellers)</h3>
+                <p class="concept-desc">Supply represents the amount of currency available in the market. When supply increases, prices fall as sellers compete for limited buyers.</p>
+                <ul class="concept-points">
+                    <li>Weak economic data increases selling pressure</li>
+                    <li>Lower interest rates reduce currency appeal</li>
+                    <li>Political uncertainty triggers capital flight</li>
+                    <li>Supply zones act as resistance levels</li>
+                    <li>More sellers than buyers = price decreases</li>
+                </ul>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-icon" style="background: rgba(33, 150, 243, 0.1); border-color: var(--equilibrium); color: var(--equilibrium);">⚖️</div>
+                <h3 class="concept-title" style="color: var(--equilibrium);">Equilibrium</h3>
+                <p class="concept-desc">Equilibrium occurs when supply equals demand, resulting in price stability. This balance point constantly shifts as market conditions change.</p>
+                <ul class="concept-points" style="--point-color: var(--equilibrium);">
+                    <li>Price finds balance at intersection of S&D</li>
+                    <li>Equilibrium shifts with new information</li>
+                    <li>Breaks from equilibrium create trends</li>
+                    <li>Markets constantly seek new balance</li>
+                    <li>Traders profit from equilibrium shifts</li>
+                </ul>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-icon" style="background: rgba(212, 175, 55, 0.1); border-color: var(--gold); color: var(--gold);">🎯</div>
+                <h3 class="concept-title" style="color: var(--gold);">Trading Application</h3>
+                <p class="concept-desc">Successful traders identify supply and demand zones to predict price movements and enter high-probability trades.</p>
+                <ul class="concept-points" style="--point-color: var(--gold);">
+                    <li>Buy at demand zones (support)</li>
+                    <li>Sell at supply zones (resistance)</li>
+                    <li>Identify zones using price history</li>
+                    <li>Wait for confirmation before entry</li>
+                    <li>Manage risk with stop losses</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Simulator -->
+    <section class="simulator-section" id="simulator">
+        <div class="simulator-container">
+            <h2 class="section-title">Interactive Simulator</h2>
+            <p class="section-subtitle">Adjust supply and demand levels to see how they affect currency prices in real-time</p>
+            
+            <div class="simulator-grid">
+                <div class="chart-area">
+                    <h3 class="chart-title">EUR/USD Price Action</h3>
+                    <div class="forex-chart">
+                        <canvas id="supplyDemandChart"></canvas>
+                        <div class="zone-labels">
+                            <span class="zone-badge supply" id="supplyLabel">Supply Zone: Strong</span>
+                            <span class="zone-badge demand" id="demandLabel">Demand Zone: Moderate</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls-area">
+                    <div class="control-panel">
+                        <h4 class="panel-title">⚙️ Market Forces</h4>
+                        
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Demand Strength (Buyers)</span>
+                                <span class="slider-value" id="demandValue">70%</span>
+                            </div>
+                            <input type="range" class="slider demand-slider" id="demandSlider" min="0" max="100" value="70" oninput="updateSimulation()">
+                        </div>
+
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Supply Strength (Sellers)</span>
+                                <span class="slider-value" id="supplyValue">40%</span>
+                            </div>
+                            <input type="range" class="slider supply-slider" id="supplySlider" min="0" max="100" value="40" oninput="updateSimulation()">
+                        </div>
+
+                        <div class="scenario-buttons">
+                            <button class="scenario-btn" onclick="setScenario('bullish')">🐂 Bullish</button>
+                            <button class="scenario-btn" onclick="setScenario('bearish')">🐻 Bearish</button>
+                            <button class="scenario-btn" onclick="setScenario('ranging')">↔️ Ranging</button>
+                            <button class="scenario-btn active" onclick="setScenario('balanced')">⚖️ Balanced</button>
+                        </div>
+                    </div>
+
+                    <div class="price-display">
+                        <div class="price-label">Current EUR/USD Price</div>
+                        <div class="price-value" id="simulatedPrice">1.0850</div>
+                        <div class="price-direction" id="priceDirection" style="color: var(--demand);">↗️ Strong Upward Pressure</div>
+                    </div>
+
+                    <div class="control-panel">
+                        <h4 class="panel-title">📊 Market Analysis</h4>
+                        <div id="marketAnalysis" style="color: #aaa; line-height: 1.8;">
+                            <strong style="color: var(--demand);">Demand exceeds supply</strong> by 30 percentage points. This creates upward pressure on EUR/USD as buyers compete for limited available euros. Price is likely to rise until equilibrium is restored.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real Examples -->
+    <section class="examples-section" id="examples">
+        <h2 class="section-title">Real Market Examples</h2>
+        <p class="section-subtitle">Analyze how supply and demand played out in actual forex market scenarios</p>
+        
+        <div class="examples-tabs">
+            <button class="example-tab active" onclick="switchExample('nfp')">🇺🇸 NFP Release</button>
+            <button class="example-tab" onclick="switchExample('brexit')">🇬🇧 Brexit Vote</button>
+            <button class="example-tab" onclick="switchExample('intervention')">🇯🇵 BOJ Intervention</button>
+            <button class="example-tab" onclick="switchExample('carry')">💰 Carry Trade</button>
+        </div>
+
+        <div class="example-content active" id="example-nfp">
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-pair">
+                        <span class="example-flag">🇪🇺🇺🇸</span>
+                        <div>
+                            <div class="example-name">EUR/USD - NFP Release</div>
+                            <div style="color: #888; font-size: 0.9rem;">Non-Farm Payrolls Impact</div>
+                        </div>
+                    </div>
+                    <div class="example-rate">1.0720 → 1.0650</div>
+                </div>
+                
+                <div class="example-chart">
+                    <div class="zone-marker supply">📉 Supply Zone: Strong USD Data</div>
+                    <div class="price-line" style="top: 30%;"></div>
+                </div>
+
+                <div class="example-analysis">
+                    <div class="analysis-box">
+                        <h4 class="analysis-title">📉 What Happened</h4>
+                        <p class="analysis-text">US Non-Farm Payrolls came in significantly higher than expected (350K vs 180K forecast). This strong economic data increased demand for USD as investors anticipated higher interest rates from the Federal Reserve.</p>
+                    </div>
+                    <div class="analysis-box">
+                        <h4 class="analysis-title">🎯 Trading Lesson</h4>
+                        <p class="analysis-text">Strong economic data creates supply pressure on the currency pair (EUR) and demand pressure on the quoted currency (USD). The equilibrium shifted rapidly, causing a 70-pip drop in 15 minutes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-content" id="example-brexit">
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-pair">
+                        <span class="example-flag">🇬🇧🇪🇺</span>
+                        <div>
+                            <div class="example-name">GBP/EUR - Brexit Referendum</div>
+                            <div style="color: #888; font-size: 0.9rem;">Political Uncertainty Impact</div>
+                        </div>
+                    </div>
+                    <div class="example-rate">1.4400 → 1.3200</div>
+                </div>
+                
+                <div class="example-chart">
+                    <div class="zone-marker supply" style="top: 10%;">📉 Massive Supply: Capital Flight</div>
+                    <div class="price-line" style="top: 20%;"></div>
+                </div>
+
+                <div class="example-analysis">
+                    <div class="analysis-box">
+                        <h4 class="analysis-title">📉 What Happened</h4>
+                        <p class="analysis-text">The Brexit vote result triggered massive selling of GBP as investors feared economic uncertainty. Supply of pounds flooded the market while demand collapsed, causing an 8% drop in hours.</p>
+                    </div>
+                    <div class="analysis-box">
+                        <h4 class="analysis-title">🎯 Trading Lesson</h4>
+                        <p class="analysis-text">Political events can create extreme supply/demand imbalances. The "flight to safety" saw capital leave GBP for EUR and USD, demonstrating how quickly equilibrium can shift on uncertainty.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-content" id="example-intervention">
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-pair">
+                        <span class="example-flag">🇺🇸🇯🇵</span>
+                        <div>
+                            <div class="example-name">USD/JPY - BOJ Intervention</div>
+                            <div style="color: #888; font-size: 0.9rem;">Central Bank Action</div>
+                        </div>
+                    </div>
+                    <div class="example-rate">151.50 → 145.00</div>
+                </div>
+                
+                <div class="example-chart">
+                    <div class="zone-marker supply" style="left: 60%; right: 10%;">📉 Artificial Supply: BOJ Selling USD</div>
+                    <div class="price-line" style="top: 40%;"></div>
+                </div>
+
+                <div class="example-analysis">
+                    <div class="analysis-box">
+                        <h4 class="analysis-title">📉 What Happened</h4>
+                        <p class="analysis-text">The Bank of Japan intervened to strengthen the yen by selling USD reserves. This artificial increase in USD supply (and JPY demand) overwhelmed natural market forces, causing a 650-pip reversal.</p>
+                    </div>
+                    <div class="analysis-box">
+                        <h4 class="analysis-title">🎯 Trading Lesson</h4>
+                        <p class="analysis-text">Central banks can temporarily override natural supply/demand. However, if the intervention fights the fundamental trend, the effect may be short-lived. Traders should watch for intervention zones.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-content" id="example-carry">
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-pair">
+                        <span class="example-flag">🇦🇺🇯🇵</span>
+                        <div>
+                            <div class="example-name">AUD/JPY - Carry Trade Flows</div>
+                            <div style="color: #888; font-size: 0.9rem;">Interest Rate Differential</div>
+                        </div>
+                    </div>
+                    <div class="example-rate">95.00 → 102.50</div>
+                </div>
+                
+                <div class="example-chart">
+                    <div class="zone-marker demand" style="bottom: 20%;">📈 Sustained Demand: Rate Arbitrage</div>
+                    <div class="price-line" style="top: 25%;"></div>
+                </div>
+
+                <div class="example-analysis">
+                    <div class="analysis-box">
+                        <h4 class="analysis-title">📈 What Happened</h4>
+                        <p class="analysis-text">Australia's 4.5% interest rate vs Japan's 0.1% created persistent demand for AUD. Traders borrowed cheap JPY to buy high-yielding AUD, creating sustained upward pressure over months.</p>
+                    </div>
+                    <div class="analysis-box">
+                        <h4 class="analysis-title">🎯 Trading Lesson</h4>
+                        <p class="analysis-text">Interest rate differentials create long-term supply/demand imbalances. These "carry trades" can persist for years but unwind rapidly when rate expectations change. Watch central bank policy shifts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Knowledge Quiz -->
+    <section class="quiz-section" id="quiz">
+        <div class="quiz-container">
+            <h2 class="section-title">Test Your Knowledge</h2>
+            <p class="section-subtitle">Verify your understanding of supply and demand concepts</p>
+            
+            <div class="quiz-card">
+                <div class="quiz-question" id="quizQuestion">
+                    What happens to a currency's price when demand increases while supply remains constant?
+                </div>
+                
+                <div class="quiz-options" id="quizOptions">
+                    <div class="quiz-option" onclick="checkAnswer(this, 'A')">
+                        <div class="option-letter">A</div>
+                        <div>The price increases as buyers compete for limited supply</div>
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(this, 'B')">
+                        <div class="option-letter">B</div>
+                        <div>The price decreases due to oversupply in the market</div>
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(this, 'C')">
+                        <div class="option-letter">C</div>
+                        <div>The price remains unchanged at equilibrium</div>
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(this, 'D')">
+                        <div class="option-letter">D</div>
+                        <div>The price becomes volatile and unpredictable</div>
+                    </div>
+                </div>
+
+                <div class="quiz-result correct" id="quizResult">
+                    <strong style="color: var(--demand);">✓ Correct!</strong> When demand increases with constant supply, buyers must bid higher prices to secure the limited available currency, causing the price to rise.
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="scenario-btn" onclick="nextQuestion()" style="padding: 1rem 2rem;">Next Question →</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Takeaways -->
+    <section class="takeaways-section">
+        <h2 class="section-title">Key Takeaways</h2>
+        <p class="section-subtitle">Essential principles every Goldenice International trader should remember</p>
+        
+        <div class="takeaways-grid">
+            <div class="takeaway-card">
+                <div class="takeaway-number">01</div>
+                <h4 class="takeaway-title">Price is Determined by Balance</h4>
+                <p class="takeaway-text">Currency prices move to balance supply and demand. When buyers exceed sellers, prices rise. When sellers exceed buyers, prices fall.</p>
+            </div>
+            
+            <div class="takeaway-card">
+                <div class="takeaway-number">02</div>
+                <h4 class="takeaway-title">Zones Repeat Historically</h4>
+                <p class="takeaway-text">Previous supply and demand zones often act as future support and resistance. Mark these levels on your charts for high-probability setups.</p>
+            </div>
+            
+            <div class="takeaway-card">
+                <div class="takeaway-number">03</div>
+                <h4 class="takeaway-title">News Shifts Equilibrium</h4>
+                <p class="takeaway-text">Economic releases, central bank decisions, and geopolitical events rapidly shift supply/demand balance. Stay informed with Goldenice's economic calendar.</p>
+            </div>
+            
+            <div class="takeaway-card">
+                <div class="takeaway-number">04</div>
+                <h4 class="takeaway-title">Patience Pays Off</h4>
+                <p class="takeaway-text">Wait for price to reach key supply or demand zones before entering. The best trades occur at extremes, not in the middle of ranges.</p>
+            </div>
+            
+            <div class="takeaway-card">
+                <div class="takeaway-number">05</div>
+                <h4 class="takeaway-title">Risk Management is Essential</h4>
+                <p class="takeaway-text">Even the best supply/demand analysis can fail. Always use stop losses and position sizing to protect your capital at Goldenice International.</p>
+            </div>
+            
+            <div class="takeaway-card">
+                <div class="takeaway-number">06</div>
+                <h4 class="takeaway-title">Practice on Demo First</h4>
+                <p class="takeaway-text">Use your Goldenice demo account to practice identifying supply and demand zones before risking real capital in live markets.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo" style="margin-bottom: 1rem;">◆ GOLDENICE ACADEMY</div>
+            <p style="color: #aaa; margin-bottom: 1rem;">Empowering Traders Through Education</p>
+            <div class="disclaimer">
+                <p>This educational material is provided by Goldenice International to help clients understand fundamental market concepts. Trading forex involves significant risk of loss. Past performance is not indicative of future results. Please ensure you fully understand the risks before trading.</p>
+                <p style="margin-top: 1rem;">© 2026 Goldenice International. All rights reserved. | Trade Responsibly</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Quiz Data
+        const quizQuestions = [
+            {
+                question: "What happens to a currency's price when demand increases while supply remains constant?",
+                options: [
+                    "The price increases as buyers compete for limited supply",
+                    "The price decreases due to oversupply in the market",
+                    "The price remains unchanged at equilibrium",
+                    "The price becomes volatile and unpredictable"
+                ],
+                correct: 0,
+                explanation: "When demand increases with constant supply, buyers must bid higher prices to secure the limited available currency, causing the price to rise."
+            },
+            {
+                question: "In forex trading, a 'demand zone' typically acts as what type of price level?",
+                options: [
+                    "A resistance level where selling pressure is expected",
+                    "A support level where buying interest is concentrated",
+                    "A neutral area with no significant price action",
+                    "A breakout point for trend continuation"
+                ],
+                correct: 1,
+                explanation: "Demand zones are areas where buyers previously entered the market aggressively, creating support. Price often bounces up when it returns to these levels."
+            },
+            {
+                question: "Which economic event would most likely INCREASE demand for a currency?",
+                options: [
+                    "Central bank raising interest rates",
+                    "Rising unemployment figures",
+                    "Political instability and protests",
+                    "Declining GDP growth"
+                ],
+                correct: 0,
+                explanation: "Higher interest rates attract foreign investment seeking better returns, increasing demand for the currency. This is why traders closely watch central bank decisions."
+            },
+            {
+                question: "What happens during a 'breakout' from a supply zone?",
+                options: [
+                    "Price reverses sharply downward",
+                    "Price consolidates in a tight range",
+                    "Price moves above resistance with strong momentum",
+                    "Trading volume decreases significantly"
+                ],
+                correct: 2,
+                explanation: "A breakout above a supply (resistance) zone indicates that demand has overwhelmed supply. This often leads to continued upward movement as stops are triggered."
+            }
+        ];
+
+        let currentQuestion = 0;
+
+        // Initialize Simulator Chart
+        function initSimulatorChart() {
+            const canvas = document.getElementById('supplyDemandChart');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            drawSimulation(ctx, canvas.width, canvas.height, 70, 40);
+        }
+
+        function drawSimulation(ctx, width, height, demand, supply) {
+            ctx.clearRect(0, 0, width, height);
+            
+            const padding = 40;
+            const chartWidth = width - padding * 2;
+            const chartHeight = height - padding * 2;
+            
+            // Generate price data based on S&D
+            const dataPoints = 50;
+            const data = [];
+            let price = 1.0800;
+            const imbalance = (demand - supply) / 100;
+            
+            for (let i = 0; i < dataPoints; i++) {
+                const trend = imbalance * 0.001;
+                const noise = (Math.random() - 0.5) * 0.0005;
+                price += trend + noise;
+                data.push(price);
+            }
+            
+            const minPrice = Math.min(...data);
+            const maxPrice = Math.max(...data);
+            const range = maxPrice - minPrice;
+            
+            // Draw demand zone
+            const demandY = padding + chartHeight - ((data[10] - minPrice) / range * chartHeight);
+            ctx.fillStyle = 'rgba(0, 200, 83, 0.1)';
+            ctx.fillRect(padding, demandY - 30, chartWidth * 0.3, 60);
+            ctx.strokeStyle = 'rgba(0, 200, 83, 0.5)';
+            ctx.setLineDash([5, 5]);
+            ctx.strokeRect(padding, demandY - 30, chartWidth * 0.3, 60);
+            
+            // Draw supply zone
+            const supplyY = padding + chartHeight - ((data[35] - minPrice) / range * chartHeight);
+            ctx.fillStyle = 'rgba(255, 23, 68, 0.1)';
+            ctx.fillRect(padding + chartWidth * 0.6, supplyY - 30, chartWidth * 0.3, 60);
+            ctx.strokeStyle = 'rgba(255, 23, 68, 0.5)';
+            ctx.strokeRect(padding + chartWidth * 0.6, supplyY - 30, chartWidth * 0.3, 60);
+            
+            ctx.setLineDash([]);
+            
+            // Draw price line
+            ctx.beginPath();
+            ctx.strokeStyle = '#D4AF37';
+            ctx.lineWidth = 3;
+            
+            data.forEach((p, i) => {
+                const x = padding + (i / (dataPoints - 1)) * chartWidth;
+                const y = padding + chartHeight - ((p - minPrice) / range * chartHeight);
+                
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            
+            ctx.stroke();
+            
+            // Draw current price dot
+            const lastX = padding + chartWidth;
+            const lastY = padding + chartHeight - ((data[data.length - 1] - minPrice) / range * chartHeight);
+            
+            ctx.beginPath();
+            ctx.arc(lastX, lastY, 8, 0, Math.PI * 2);
+            ctx.fillStyle = '#D4AF37';
+            ctx.fill();
+            
+            // Price labels
+            ctx.fillStyle = '#888';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(maxPrice.toFixed(4), padding - 10, padding);
+            ctx.fillText(minPrice.toFixed(4), padding - 10, height - padding);
+        }
+
+        // Update Simulation
+        function updateSimulation() {
+            const demand = parseInt(document.getElementById('demandSlider').value);
+            const supply = parseInt(document.getElementById('supplySlider').value);
+            
+            document.getElementById('demandValue').textContent = demand + '%';
+            document.getElementById('supplyValue').textContent = supply + '%';
+            
+            // Calculate price
+            const imbalance = demand - supply;
+            const basePrice = 1.0800;
+            const newPrice = basePrice + (imbalance * 0.0001);
+            
+            document.getElementById('simulatedPrice').textContent = newPrice.toFixed(4);
+            
+            // Update direction text
+            const directionEl = document.getElementById('priceDirection');
+            if (imbalance > 20) {
+                directionEl.textContent = '↗️ Strong Upward Pressure';
+                directionEl.style.color = 'var(--demand)';
+            } else if (imbalance > 5) {
+                directionEl.textContent = '↗️ Moderate Upward Pressure';
+                directionEl.style.color = 'var(--demand)';
+            } else if (imbalance > -5) {
+                directionEl.textContent = '➡️ Near Equilibrium';
+                directionEl.style.color = 'var(--equilibrium)';
+            } else if (imbalance > -20) {
+                directionEl.textContent = '↘️ Moderate Downward Pressure';
+                directionEl.style.color = 'var(--supply)';
+            } else {
+                directionEl.textContent = '↘️ Strong Downward Pressure';
+                directionEl.style.color = 'var(--supply)';
+            }
+            
+            // Update analysis
+            const analysisEl = document.getElementById('marketAnalysis');
+            if (imbalance > 0) {
+                analysisEl.innerHTML = `<strong style="color: var(--demand);">Demand exceeds supply</strong> by ${imbalance} percentage points. This creates upward pressure on EUR/USD as buyers compete for limited available euros. Price is likely to rise until equilibrium is restored.`;
+            } else if (imbalance < 0) {
+                analysisEl.innerHTML = `<strong style="color: var(--supply);">Supply exceeds demand</strong> by ${Math.abs(imbalance)} percentage points. This creates downward pressure on EUR/USD as sellers compete for limited buyers. Price is likely to fall until equilibrium is restored.`;
+            } else {
+                analysisEl.innerHTML = `<strong style="color: var(--equilibrium);">Supply equals demand.</strong> The market is in equilibrium. Without new information or events, price is likely to remain stable or move sideways in a tight range.`;
+            }
+            
+            // Redraw chart
+            const canvas = document.getElementById('supplyDemandChart');
+            const ctx = canvas.getContext('2d');
+            drawSimulation(ctx, canvas.width, canvas.height, demand, supply);
+        }
+
+        // Set Scenario
+        function setScenario(type) {
+            document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const demandSlider = document.getElementById('demandSlider');
+            const supplySlider = document.getElementById('supplySlider');
+            
+            switch(type) {
+                case 'bullish':
+                    demandSlider.value = 85;
+                    supplySlider.value = 25;
+                    break;
+                case 'bearish':
+                    demandSlider.value = 25;
+                    supplySlider.value = 85;
+                    break;
+                case 'ranging':
+                    demandSlider.value = 52;
+                    supplySlider.value = 48;
+                    break;
+                case 'balanced':
+                    demandSlider.value = 70;
+                    supplySlider.value = 40;
+                    break;
+            }
+            
+            updateSimulation();
+        }
+
+        // Switch Example
+        function switchExample(id) {
+            document.querySelectorAll('.example-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.example-content').forEach(content => content.classList.remove('active'));
+            document.getElementById('example-' + id).classList.add('active');
+        }
+
+        // Quiz Functions
+        function checkAnswer(element, letter) {
+            const correct = letter === 'A';
+            const resultDiv = document.getElementById('quizResult');
+            
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+                opt.style.pointerEvents = 'none';
+            });
+            
+            if (correct) {
+                element.classList.add('correct');
+                resultDiv.className = 'quiz-result correct show';
+                resultDiv.innerHTML = `<strong style="color: var(--demand);">✓ Correct!</strong> ${quizQuestions[currentQuestion].explanation}`;
+            } else {
+                element.classList.add('wrong');
+                document.querySelector('.quiz-option:first-child').classList.add('correct');
+                resultDiv.className = 'quiz-result wrong show';
+                resultDiv.innerHTML = `<strong style="color: var(--supply);">✗ Incorrect.</strong> The correct answer is A. ${quizQuestions[currentQuestion].explanation}`;
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion = (currentQuestion + 1) % quizQuestions.length;
+            const q = quizQuestions[currentQuestion];
+            
+            document.getElementById('quizQuestion').textContent = q.question;
+            
+            const optionsDiv = document.getElementById('quizOptions');
+            optionsDiv.innerHTML = q.options.map((opt, i) => `
+                <div class="quiz-option" onclick="checkAnswer(this, '${String.fromCharCode(65 + i)}')">
+                    <div class="option-letter">${String.fromCharCode(65 + i)}</div>
+                    <div>${opt}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('quizResult').classList.remove('show');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initSimulatorChart();
+            updateSimulation();
+            
+            window.addEventListener('resize', initSimulatorChart);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

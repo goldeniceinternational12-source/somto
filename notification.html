@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Investor Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        
+        /* Animations */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateY(-10px); height: 0; margin: 0; padding: 0; }
+        }
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+        }
+        
+        .notification-item { animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .notification-item.removing { animation: fadeOut 0.4s forwards; }
+        
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #f59e0b;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #f59e0b;
+        }
+        
+        /* Chart Tooltip */
+        #chartjs-tooltip {
+            opacity: 0;
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 4px;
+            pointer-events: none;
+            transform: translate(-50%, 0);
+            transition: all .1s ease;
+        }
+    </style>
+</head>
+<body class="h-screen overflow-hidden flex text-sm">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col hidden md:flex z-20">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+            <div class="w-8 h-8 bg-gradient-to-br from-yellow-400 to-amber-600 rounded-lg flex items-center justify-center mr-3 shadow-lg shadow-amber-900/20">
+                <i class="fa-solid fa-cube text-slate-900"></i>
+            </div>
+            <span class="font-bold text-lg tracking-tight text-white">GOLDENICE</span>
+        </div>
+
+        <nav class="flex-1 py-6 px-3 space-y-1">
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all bg-slate-800 text-white">
+                <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+                <span class="font-medium">Portfolio</span>
+            </button>
+            <button onclick="switchTab('notifications')" id="nav-notifications" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+                <div class="relative w-5 flex justify-center">
+                    <i class="fa-solid fa-bell"></i>
+                    <span id="notif-badge" class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-slate-900 hidden"></span>
+                </div>
+                <span class="font-medium">Notifications</span>
+                <span id="notif-count" class="ml-auto bg-slate-800 text-xs py-0.5 px-2 rounded-full text-slate-400 hidden">0</span>
+            </button>
+            <button onclick="switchTab('assets')" id="nav-assets" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+                <i class="fa-solid fa-layer-group w-5 text-center"></i>
+                <span class="font-medium">My Assets</span>
+            </button>
+            <button onclick="switchTab('settings')" id="nav-settings" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
+                <i class="fa-solid fa-sliders w-5 text-center"></i>
+                <span class="font-medium">Alert Settings</span>
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-slate-800">
+            <div class="flex items-center gap-3">
+                <img src="https://ui-avatars.com/api/?name=John+Doe&background=random" class="w-10 h-10 rounded-full border border-slate-700">
+                <div>
+                    <div class="font-medium text-white">John Doe</div>
+                    <div class="text-xs text-slate-500">Premium Investor</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col min-w-0 bg-slate-950 relative">
+        
+        <!-- Mobile Header -->
+        <header class="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 md:hidden">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-cube text-slate-900"></i>
+                </div>
+                <span class="font-bold text-white">GOLDENICE</span>
+            </div>
+            <button class="text-slate-400 hover:text-white">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </header>
+
+        <!-- Top Bar -->
+        <div class="h-16 border-b border-slate-800 flex items-center justify-between px-8 bg-slate-900/50 backdrop-blur-sm z-10">
+            <div>
+                <h1 class="text-xl font-bold text-white" id="page-title">Portfolio Overview</h1>
+                <p class="text-xs text-slate-400">Last updated: <span id="last-updated">Just now</span></p>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="simulateDay()" class="hidden sm:flex items-center gap-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 px-4 py-2 rounded-lg border border-amber-500/30 transition-all text-xs font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-forward"></i> Simulate Next Day
+                </button>
+                <button class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white relative">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-slate-800"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Content Scroll Area -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
+            
+            <!-- DASHBOARD VIEW -->
+            <div id="view-dashboard" class="space-y-6 max-w-6xl mx-auto">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-panel p-5 rounded-xl border-l-4 border-amber-500">
+                        <div class="text-slate-400 text-xs uppercase font-bold mb-1">Total Balance</div>
+                        <div class="text-2xl font-bold text-white" id="total-balance">$124,592.00</div>
+                        <div class="text-xs text-emerald-400 mt-2 flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-trend-up"></i> +2.4% ($2,920) today
+                        </div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl border-l-4 border-blue-500">
+                        <div class="text-slate-400 text-xs uppercase font-bold mb-1">Active Investments</div>
+                        <div class="text-2xl font-bold text-white">8 Assets</div>
+                        <div class="text-xs text-slate-400 mt-2">Across 3 sectors</div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl border-l-4 border-purple-500">
+                        <div class="text-slate-400 text-xs uppercase font-bold mb-1">Next Dividend</div>
+                        <div class="text-2xl font-bold text-white">$450.00</div>
+                        <div class="text-xs text-slate-400 mt-2">Expected in 2 days</div>
+                    </div>
+                </div>
+
+                <!-- Main Chart Section -->
+                <div class="glass-panel p-6 rounded-xl">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-white">Performance History</h3>
+                        <div class="flex gap-2">
+                            <button class="px-3 py-1 text-xs rounded bg-slate-800 text-slate-300 hover:text-white">1W</button>
+                            <button class="px-3 py-1 text-xs rounded bg-amber-500/20 text-amber-500 border border-amber-500/30">1M</button>
+                            <button class="px-3 py-1 text-xs rounded bg-slate-800 text-slate-300 hover:text-white">1Y</button>
+                        </div>
+                    </div>
+                    <div class="h-64 w-full relative">
+                        <canvas id="portfolioChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Preview -->
+                <div class="glass-panel rounded-xl overflow-hidden">
+                    <div class="p-4 border-b border-slate-800 flex justify-between items-center">
+                        <h3 class="font-bold text-white">Recent Notifications</h3>
+                        <button onclick="switchTab('notifications')" class="text-xs text-amber-500 hover:text-amber-400">View All</button>
+                    </div>
+                    <div id="recent-notifications-list" class="divide-y divide-slate-800">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOTIFICATIONS VIEW -->
+            <div id="view-notifications" class="hidden max-w-4xl mx-auto h-full flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex gap-2 bg-slate-800 p-1 rounded-lg">
+                        <button onclick="filterNotifs('all')" class="px-4 py-1.5 rounded-md text-xs font-medium bg-slate-700 text-white shadow-sm">All</button>
+                        <button onclick="filterNotifs('alert')" class="px-4 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white">Alerts</button>
+                        <button onclick="filterNotifs('dividend')" class="px-4 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white">Dividends</button>
+                    </div>
+                    <button onclick="markAllRead()" class="text-xs text-slate-400 hover:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-check-double"></i> Mark all read
+                    </button>
+                </div>
+
+                <div id="notifications-container" class="space-y-3 pb-20">
+                    <!-- Notifications injected here -->
+                </div>
+            </div>
+
+            <!-- ASSETS VIEW -->
+            <div id="view-assets" class="hidden max-w-5xl mx-auto">
+                <div class="glass-panel rounded-xl overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-800 text-xs uppercase text-slate-400">
+                            <tr>
+                                <th class="px-6 py-3">Asset</th>
+                                <th class="px-6 py-3">Holdings</th>
+                                <th class="px-6 py-3">Price</th>
+                                <th class="px-6 py-3">Value</th>
+                                <th class="px-6 py-3 text-right">Change (24h)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800" id="assets-table-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SETTINGS VIEW -->
+            <div id="view-settings" class="hidden max-w-2xl mx-auto">
+                <div class="glass-panel p-6 rounded-xl space-y-8">
+                    
+                    <!-- Frequency -->
+                    <div>
+                        <h3 class="text-white font-bold mb-4 flex items-center gap-2">
+                            <i class="fa-regular fa-clock text-amber-500"></i> Notification Frequency
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="freq" class="peer sr-only" checked>
+                                <div class="p-4 rounded-lg bg-slate-800 border border-slate-700 peer-checked:border-amber-500 peer-checked:bg-amber-500/10 transition-all hover:bg-slate-750">
+                                    <div class="font-bold text-white mb-1">Real-time</div>
+                                    <div class="text-xs text-slate-400">Get alerts instantly</div>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="freq" class="peer sr-only">
+                                <div class="p-4 rounded-lg bg-slate-800 border border-slate-700 peer-checked:border-amber-500 peer-checked:bg-amber-500/10 transition-all hover:bg-slate-750">
+                                    <div class="font-bold text-white mb-1">Daily Digest</div>
+                                    <div class="text-xs text-slate-400">Summary at market close</div>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="freq" class="peer sr-only">
+                                <div class="p-4 rounded-lg bg-slate-800 border border-slate-700 peer-checked:border-amber-500 peer-checked:bg-amber-500/10 transition-all hover:bg-slate-750">
+                                    <div class="font-bold text-white mb-1">Weekly</div>
+                                    <div class="text-xs text-slate-400">Friday summary only</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Toggles -->
+                    <div class="space-y-4">
+                        <h3 class="text-white font-bold mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-filter text-amber-500"></i> Alert Types
+                        </h3>
+                        
+                        <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+                            <div>
+                                <div class="font-medium text-white">Price Thresholds</div>
+                                <div class="text-xs text-slate-400">Notify when assets hit target prices</div>
+                            </div>
+                            <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" name="toggle" id="toggle-price" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 right-0 border-amber-500" checked/>
+                                <label for="toggle-price" class="toggle-label block overflow-hidden h-5 rounded-full bg-amber-500 cursor-pointer"></label>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+                            <div>
+                                <div class="font-medium text-white">Dividend Announcements</div>
+                                <div class="text-xs text-slate-400">Updates on payout dates and yields</div>
+                            </div>
+                            <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                                <input type="checkbox" name="toggle" id="toggle-div" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 right-0 border-amber-500" checked/>
+                                <label for="toggle-div" class="toggle-label block overflow-hidden h-5 rounded-full bg-amber-500 cursor-pointer"></label>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+                            <div>
+                                <div class="font-medium text-white">Market News</div>
+                                <div class="text-xs text-slate-400">Breaking news affecting your portfolio</div>
+                            </div>
+                            <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                                <input type="checkbox" name="toggle" id="toggle-news" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 right-0 border-amber-500" checked/>
+                                <label for="toggle-news" class="toggle-label block overflow-hidden h-5 rounded-full bg-amber-500 cursor-pointer"></label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4 border-t border-slate-800">
+                        <button class="w-full bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-3 rounded-lg transition-colors shadow-lg shadow-amber-500/20">
+                            Save Preferences
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        // --- State Management ---
+        const state = {
+            currentTab: 'dashboard',
+            notifications: [
+                { id: 1, type: 'dividend', title: 'Dividend Credited', message: 'You received $120.50 from AAPL (Apple Inc.)', time: '2 mins ago', read: false, icon: 'fa-money-bill-wave', color: 'text-emerald-400' },
+                { id: 2, type: 'alert', title: 'Price Alert: TSLA', message: 'TSLA has dropped 5% since market open.', time: '1 hour ago', read: false, icon: 'fa-bell', color: 'text-rose-400' },
+                { id: 3, type: 'news', title: 'Market Update', message: 'Federal Reserve announces interest rate stability.', time: '3 hours ago', read: true, icon: 'fa-newspaper', color: 'text-blue-400' }
+            ],
+            assets: [
+                { symbol: 'AAPL', name: 'Apple Inc.', shares: 50, price: 175.50, change: 1.2 },
+                { symbol: 'TSLA', name: 'Tesla, Inc.', shares: 20, price: 172.30, change: -4.5 },
+                { symbol: 'NVDA', name: 'NVIDIA Corp', shares: 10, price: 890.10, change: 2.1 },
+                { symbol: 'AMZN', name: 'Amazon.com', shares: 15, price: 180.20, change: 0.5 },
+                { symbol: 'BTC', name: 'Bitcoin', shares: 0.5, price: 67250.00, change: -1.2 }
+            ],
+            chartData: []
+        };
+
+        // --- Navigation Logic ---
+        function switchTab(tabName) {
+            // Update Nav UI
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-slate-800', 'text-white');
+                el.classList.add('text-slate-400');
+            });
+            const activeNav = document.getElementById(`nav-${tabName}`);
+            if(activeNav) {
+                activeNav.classList.add('bg-slate-800', 'text-white');
+                activeNav.classList.remove('text-slate-400');
+            }
+
+            // Hide all views
+            ['dashboard', 'notifications', 'assets', 'settings'].forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+            });
+
+            // Show target view
+            document.getElementById(`view-${tabName}`).classList.remove('hidden');
+            
+            // Update Title
+            const titles = {
+                'dashboard': 'Portfolio Overview',
+                'notifications': 'Notification Center',
+                'assets': 'My Assets',
+                'settings': 'Notification Settings'
+            };
+            document.getElementById('page-title').innerText = titles[tabName];
+
+            // Specific Init Logic
+            if (tabName === 'notifications') {
+                renderNotifications();
+                updateBadge(0); // Clear badge when viewing
+            } else if (tabName === 'assets') {
+                renderAssets();
+            } else if (tabName === 'dashboard') {
+                renderRecentNotifications();
+                drawChart();
+            }
+
+            state.currentTab = tabName;
+        }
+
+        // --- Notification System ---
+        function renderNotifications(filter = 'all') {
+            const container = document.getElementById('notifications-container');
+            container.innerHTML = '';
+
+            const filtered = state.notifications.filter(n => filter === 'all' || n.type === filter);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-20 text-slate-500">
+                        <i class="fa-regular fa-folder-open text-4xl mb-4 opacity-50"></i>
+                        <p>No notifications found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(n => {
+                const el = document.createElement('div');
+                el.className = `notification-item glass-panel p-4 rounded-lg flex gap-4 items-start border-l-4 ${n.read ? 'border-slate-700 opacity-70' : 'border-amber-500'} hover:bg-slate-800 transition-colors group`;
+                el.innerHTML = `
+                    <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center flex-shrink-0 border border-slate-700">
+                        <i class="fa-solid ${n.icon} ${n.color}"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-white text-sm">${n.title}</h4>
+                            <span class="text-xs text-slate-500">${n.time}</span>
+                        </div>
+                        <p class="text-slate-400 text-sm mt-1">${n.message}</p>
+                    </div>
+                    <button onclick="deleteNotification(${n.id})" class="text-slate-600 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        function renderRecentNotifications() {
+            const container = document.getElementById('recent-notifications-list');
+            container.innerHTML = '';
+            state.notifications.slice(0, 3).forEach(n => {
+                const div = document.createElement('div');
+                div.className = 'p-4 flex items-center gap-3 hover:bg-slate-800/50 transition-colors';
+                div.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs">
+                        <i class="fa-solid ${n.icon} ${n.color}"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-white truncate">${n.title}</div>
+                        <div class="text-xs text-slate-500 truncate">${n.message}</div>
+                    </div>
+                    <div class="text-xs text-slate-600">${n.time}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function addNotification(type) {
+            const templates = {
+                dividend: { title: 'Dividend Credited', msg: `Quarterly payout received for ${state.assets[Math.floor(Math.random()*state.assets.length)].symbol}`, icon: 'fa-money-bill-wave', color: 'text-emerald-400' },
+                alert: { title: 'Market Alert', msg: 'Significant volatility detected in Crypto markets.', icon: 'fa-chart-line', color: 'text-rose-400' },
+                news: { title: 'Daily Summary Ready', msg: 'Your daily portfolio performance report is ready to view.', icon: 'fa-file-invoice', color: 'text-blue-400' }
+            };
+
+            const t = templates[type];
+            const newNotif = {
+                id: Date.now(),
+                type: type,
+                title: t.title,
+                message: t.msg,
+                time: 'Just now',
+                read: false,
+                icon: t.icon,
+                color: t.color
+            };
+
+            state.notifications.unshift(newNotif);
+            
+            // Update UI
+            const unreadCount = state.notifications.filter(n => !n.read).length;
+            updateBadge(unreadCount);
+            
+            if (state.currentTab === 'notifications') renderNotifications();
+            if (state.currentTab === 'dashboard') renderRecentNotifications();
+
+            showToast(`New Notification: ${t.title}`);
+        }
+
+        function deleteNotification(id) {
+            const el = event.target.closest('.notification-item');
+            el.classList.add('removing');
+            setTimeout(() => {
+                state.notifications = state.notifications.filter(n => n.id !== id);
+                renderNotifications();
+            }, 400);
+        }
+
+        function markAllRead() {
+            state.notifications.forEach(n => n.read = true);
+            renderNotifications();
+            updateBadge(0);
+            showToast('All notifications marked as read');
+        }
+
+        function filterNotifs(type) {
+            renderNotifications(type);
+        }
+
+        function updateBadge(count) {
+            const badge = document.getElementById('notif-badge');
+            const countEl = document.getElementById('notif-count');
+            
+            if (count > 0) {
+                badge.classList.remove('hidden');
+                countEl.classList.remove('hidden');
+                countEl.innerText = count;
+            } else {
+                badge.classList.add('hidden');
+                countEl.classList.add('hidden');
+            }
+        }
+
+        // --- Assets Logic ---
+        function renderAssets() {
+            const tbody = document.getElementById('assets-table-body');
+            tbody.innerHTML = '';
+            
+            state.assets.forEach(asset => {
+                const value = asset.shares * asset.price;
+                const changeColor = asset.change >= 0 ? 'text-emerald-400' : 'text-rose-400';
+                const changeIcon = asset.change >= 0 ? 'fa-caret-up' : 'fa-caret-down';
+                
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-800/30 transition-colors';
+                tr.innerHTML = `
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-300">
+                                ${asset.symbol[0]}
+                            </div>
+                            <div>
+                                <div class="font-bold text-white">${asset.symbol}</div>
+                                <div class="text-xs text-slate-500">${asset.name}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-slate-300">${asset.shares}</td>
+                    <td class="px-6 py-4 font-mono text-slate-300">$${asset.price.toFixed(2)}</td>
+                    <td class="px-6 py-4 font-mono text-white font-bold">$${value.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="px-6 py-4 text-right ${changeColor} font-medium">
+                        <i class="fa-solid ${changeIcon} mr-1"></i>${Math.abs(asset.change)}%
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- Charting (Canvas) ---
+        function initChart() {
+            // Generate initial random data
+            let price = 120000;
+            for(let i=0; i<50; i++) {
+                price = price + (Math.random() - 0.5) * 2000;
+                state.chartData.push(price);
+            }
+            drawChart();
+        }
+
+        function drawChart() {
+            const canvas = document.getElementById('portfolioChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const parent = canvas.parentElement;
+            
+            canvas.width = parent.clientWidth;
+            canvas.height = parent.clientHeight;
+
+            const w = canvas.width;
+            const h = canvas.height;
+            const data = state.chartData;
+
+            // Clear
+            ctx.clearRect(0, 0, w, h);
+
+            // Gradient Fill
+            const gradient = ctx.createLinearGradient(0, 0, 0, h);
+            gradient.addColorStop(0, 'rgba(245, 158, 11, 0.2)'); // Amber
+            gradient.addColorStop(1, 'rgba(245, 158, 11, 0)');
+
+            // Calculate points
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min;
+            const step = w / (data.length - 1);
+
+            ctx.beginPath();
+            data.forEach((p, i) => {
+                const x = i * step;
+                const y = h - ((p - min) / range) * (h - 40) - 20; // Padding
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Fill
+            ctx.lineTo(w, h);
+            ctx.lineTo(0, h);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+        }
+
+        // --- Simulation Logic ---
+        function simulateDay() {
+            // 1. Update Prices
+            state.assets.forEach(asset => {
+                const move = (Math.random() - 0.5) * 10; // Random price move
+                asset.price += move;
+                asset.change = (Math.random() * 5) * (Math.random() > 0.5 ? 1 : -1);
+            });
+
+            // 2. Update Chart Data
+            let lastPrice = state.chartData[state.chartData.length - 1];
+            lastPrice += (Math.random() - 0.5) * 3000;
+            state.chartData.push(lastPrice);
+            if (state.chartData.length > 50) state.chartData.shift();
+
+            // 3. Update Total Balance (Visual only)
+            const currentBal = parseFloat(document.getElementById('total-balance').innerText.replace(/[^0-9.-]+/g,""));
+            const newBal = currentBal + (Math.random() * 1000 - 200);
+            document.getElementById('total-balance').innerText = '$' + newBal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+            // 4. Generate Random Notification
+            const types = ['dividend', 'alert', 'news'];
+            const randomType = types[Math.floor(Math.random() * types.length)];
+            addNotification(randomType);
+
+            // 5. Refresh UI
+            if (state.currentTab === 'dashboard') {
+                drawChart();
+                renderRecentNotifications();
+            } else if (state.currentTab === 'assets') {
+                renderAssets();
+            }
+
+            // 6. Toast
+            showToast('Market simulation updated for next day');
+        }
+
+        // --- Toast System ---
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-lg shadow-xl flex items-center gap-3 min-w-[250px] transform transition-all duration-300 translate-y-10 opacity-0 pointer-events-auto';
+            toast.innerHTML = `
+                <i class="fa-solid fa-circle-info text-amber-500"></i>
+                <span class="text-sm font-medium">${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Animate in
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+            });
+
+            // Remove
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // --- Initialization ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            renderRecentNotifications();
+            updateBadge(state.notifications.filter(n => !n.read).length);
+            
+            // Resize chart on window resize
+            window.addEventListener('resize', drawChart);
+        });
+
+    </script>
+</body>
+</html>

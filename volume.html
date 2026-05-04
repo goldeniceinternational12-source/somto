@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Trading Volumes Analytics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8941F;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --success: #00C853;
+            --danger: #FF1744;
+            --info: #2196F3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--darker);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Dynamic Background */
+        .volume-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(33, 150, 243, 0.05) 0%, transparent 50%);
+        }
+
+        .ticker-tape {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid var(--gold);
+            padding: 0.5rem 0;
+            z-index: 100;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .ticker-content {
+            display: inline-block;
+            animation: ticker 30s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: inline-block;
+            padding: 0 2rem;
+            color: var(--gold);
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .ticker-item span {
+            color: #fff;
+            margin-left: 0.5rem;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 5% 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #aaa;
+            margin-bottom: 3rem;
+        }
+
+        /* Live Volume Ticker */
+        .live-ticker {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .live-ticker::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .ticker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .pulse {
+            width: 10px;
+            height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .volume-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .volume-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .volume-label {
+            color: #aaa;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .volume-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            font-family: 'Courier New', monospace;
+        }
+
+        .volume-change {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .positive { color: var(--success); }
+        .negative { color: var(--danger); }
+
+        /* Volume Stats Grid */
+        .stats-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 3rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-title {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stat-desc {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .mini-chart {
+            margin-top: 1.5rem;
+            height: 60px;
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--gold-dark), var(--gold));
+            border-radius: 2px;
+            transition: height 0.3s;
+            opacity: 0.8;
+        }
+
+        .bar:hover {
+            opacity: 1;
+        }
+
+        /* Main Volume Chart */
+        .chart-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .chart-container {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            color: var(--gold);
+        }
+
+        .time-selector {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem;
+            border-radius: 10px;
+        }
+
+        .time-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .time-btn.active, .time-btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        #volumeChart {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Instrument Breakdown */
+        .instruments-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .instruments-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        @media (max-width: 968px) {
+            .instruments-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .instrument-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .instrument-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .instrument-title {
+            font-size: 1.3rem;
+            color: var(--gold);
+        }
+
+        .instrument-list {
+            list-style: none;
+        }
+
+        .instrument-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .instrument-item:hover {
+            background: rgba(212, 175, 55, 0.05);
+            margin: 0 -1rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            border-radius: 10px;
+        }
+
+        .instrument-item:last-child {
+            border-bottom: none;
+        }
+
+        .instrument-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .instrument-flag {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .instrument-name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .instrument-pair {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .instrument-volume {
+            text-align: right;
+        }
+
+        .volume-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--gold);
+            font-family: 'Courier New', monospace;
+        }
+
+        .volume-bar {
+            width: 100px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .volume-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+            border-radius: 2px;
+            transition: width 1s ease-out;
+        }
+
+        /* Regional Volumes */
+        .regions-section {
+            padding: 4rem 5%;
+            background: var(--dark);
+        }
+
+        .regions-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .regions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .region-card {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .region-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .region-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .region-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+        }
+
+        .region-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .region-name {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .region-volume {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .region-growth {
+            color: var(--success);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .region-sessions {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .session {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        /* Hourly Heatmap */
+        .heatmap-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .heatmap-container {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(24, 1fr);
+            gap: 2px;
+            margin-top: 2rem;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.2);
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .heatmap-labels {
+            display: grid;
+            grid-template-columns: repeat(24, 1fr);
+            gap: 2px;
+            margin-top: 0.5rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .heatmap-legend {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .legend-gradient {
+            width: 200px;
+            height: 10px;
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 1));
+            border-radius: 5px;
+        }
+
+        /* Comparison Tool */
+        .comparison-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .comparison-container {
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .comparison-controls {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .control-group label {
+            display: block;
+            color: #aaa;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .control-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .comparison-result {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .comparison-metric {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+
+        .metric-label {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            background: var(--darker);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .disclaimer {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid var(--gold);
+            padding: 1rem;
+            border-radius: 10px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 2000;
+            font-size: 0.9rem;
+            max-width: 250px;
+        }
+
+        .tooltip.active {
+            opacity: 1;
+        }
+
+        .tooltip-title {
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .tooltip-value {
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .volume-display {
+                grid-template-columns: 1fr;
+            }
+            
+            .heatmap-grid {
+                grid-template-columns: repeat(12, 1fr);
+            }
+            
+            .heatmap-labels {
+                grid-template-columns: repeat(12, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="volume-bg"></div>
+    <div class="tooltip" id="tooltip"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">◆ GOLDENICE INTERNATIONAL</div>
+        <ul class="nav-links">
+            <li><a href="./live volume.html">Live Volumes</a></li>
+            <li><a href="#stats">Statistics</a></li>
+            <li><a href="#instruments">Instruments</a></li>
+            <li><a href="#regions">Regions</a></li>
+            <li><a href="#analytics">Analytics</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="live">
+        <div class="hero-content">
+            <h1>Trading Volume Analytics</h1>
+            <p class="hero-subtitle">Real-time insights into global forex market activity and liquidity flows</p>
+            
+            <!-- Live Volume Ticker -->
+            <div class="live-ticker">
+                <div class="ticker-header">
+                    <div class="live-indicator">
+                        <div class="pulse"></div>
+                        <span>LIVE MARKET DATA</span>
+                    </div>
+                    <div style="color: #888; font-size: 0.9rem;">Updated: <span id="lastUpdate">Just now</span></div>
+                </div>
+                <div class="volume-display">
+                    <div class="volume-item">
+                        <div class="volume-label">Today's Volume</div>
+                        <div class="volume-value" id="todayVolume">$42.8B</div>
+                        <div class="volume-change positive">▲ 12.4% vs yesterday</div>
+                    </div>
+                    <div class="volume-item">
+                        <div class="volume-label">Monthly Volume</div>
+                        <div class="volume-value" id="monthVolume">$892.3B</div>
+                        <div class="volume-change positive">▲ 8.7% vs last month</div>
+                    </div>
+                    <div class="volume-item">
+                        <div class="volume-label">Yearly Volume</div>
+                        <div class="volume-value" id="yearVolume">$10.4T</div>
+                        <div class="volume-change positive">▲ 23.1% vs last year</div>
+                    </div>
+                    <div class="volume-item">
+                        <div class="volume-label">Active Orders</div>
+                        <div class="volume-value" id="activeOrders">2,847</div>
+                        <div class="volume-change positive">▲ 5.2% vs avg</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Volume Statistics -->
+    <section class="stats-section" id="stats">
+        <h2 class="section-title">Volume Metrics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Average Daily Volume</div>
+                    <div class="stat-icon">📊</div>
+                </div>
+                <div class="stat-value">$38.5B</div>
+                <div class="stat-desc">30-day rolling average across all instruments</div>
+                <div class="mini-chart" id="chart1"></div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Peak Daily Volume</div>
+                    <div class="stat-icon">🏔️</div>
+                </div>
+                <div class="stat-value">$67.2B</div>
+                <div class="stat-desc">Record high on March 15, 2024 (FOMC decision)</div>
+                <div class="mini-chart" id="chart2"></div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Volume per Client</div>
+                    <div class="stat-icon">👤</div>
+                </div>
+                <div class="stat-value">$1.2M</div>
+                <div class="stat-desc">Average monthly volume per active client</div>
+                <div class="mini-chart" id="chart3"></div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Institutional vs Retail</div>
+                    <div class="stat-icon">🏢</div>
+                </div>
+                <div class="stat-value">72/28</div>
+                <div class="stat-desc">Institutional volume dominance ratio</div>
+                <div class="mini-chart" id="chart4"></div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Liquidity Depth</div>
+                    <div class="stat-icon">💧</div>
+                </div>
+                <div class="stat-value">$450M</div>
+                <div class="stat-desc">Average depth at top of book (EUR/USD)</div>
+                <div class="mini-chart" id="chart5"></div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Execution Speed</div>
+                    <div class="stat-icon">⚡</div>
+                </div>
+                <div class="stat-value">12ms</div>
+                <div class="stat-desc">Average order execution latency</div>
+                <div class="mini-chart" id="chart6"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Volume Chart -->
+    <section class="chart-section">
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3 class="chart-title">Volume Trends</h3>
+                <div class="time-selector">
+                    <button class="time-btn" onclick="updateChart('1D')">1D</button>
+                    <button class="time-btn" onclick="updateChart('1W')">1W</button>
+                    <button class="time-btn active" onclick="updateChart('1M')">1M</button>
+                    <button class="time-btn" onclick="updateChart('1Y')">1Y</button>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="volumeChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instrument Breakdown -->
+    <section class="instruments-section" id="instruments">
+        <h2 class="section-title">Volume by Instrument</h2>
+        <div class="instruments-grid">
+            <div class="instrument-card">
+                <div class="instrument-header">
+                    <h3 class="instrument-title">Top Currency Pairs</h3>
+                    <span style="color: #888; font-size: 0.9rem;">Daily Volume</span>
+                </div>
+                <ul class="instrument-list">
+                    <li class="instrument-item">
+                        <div class="instrument-info">
+                            <div class="instrument-flag">🇪🇺🇺🇸</div>
+                            <div>
+                                <div class="instrument-name">EUR/USD</div>
+                                <div class="instrument-pair">Euro / US Dollar</div>
+                            </div>
+                        </div>
+                        <div class="instrument-volume">
+                            <div class="volume-number">$18.4B</div>
+                            <div class="volume-bar">
+                                <div class="volume-fill" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="instrument-item">
+                        <div class="instrument-info">
+                            <div class="instrument-flag">🇬🇧🇺🇸</div>
+                            <div>
+                                <div class="instrument-name">GBP/USD</div>
+                                <div class="instrument-pair">British Pound / US Dollar</div>
+                            </div>
+                        </div>
+                        <div class="instrument-volume">
+                            <div class="volume-number">$12.7B</div>
+                            <div class="volume-bar">
+                                <div class="volume-fill" style="width: 69%;"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="instrument-item">
+                        <div class="instrument-info">
+                            <div class="instrument-flag">🇺🇸🇯🇵</div>
+                            <div>
+                                <div class="instrument-name">USD/JPY</div>
+                                <div class="instrument-pair">US Dollar / Japanese Yen</div>
+                            </div>
+                        </div>
+                        <div class="instrument-volume">
+                            <div class="volume-number">$9.2B</div>
+                            <div class="volume-bar">
+                                <div class="volume-fill" style="width: 50%;"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="instrument-item">
+                        <div class="instrument-info">
+                            <div class="instrument-flag">🇺🇸🇨🇭</div>
+                            <div>
+                                <div class="instrument-name">USD/CHF</div>
+                                <div class="instrument-pair">US Dollar / Swiss Franc</div>
+                            </div>
+                        </div>
+                        <div class="instrument-volume">
+                            <div class="volume-number">$4.8B</div>
+                            <div class="volume-bar">
+                                <div class="volume-fill" style="width: 26%;"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="instrument-item">
+                        <div class="instrument-info">
+                            <div class="instrument-flag">🇦🇺🇺🇸</div>
+                            <div>
+                                <div class="instrument-name">AUD/USD</div>
+                                <div class="instrument-pair">Australian Dollar / US Dollar</div>
+                            </div>
+                        </div>
+                        <div class="instrument-volume">
+                            <div class="volume-number">$3.9B</div>
+                            <div class="volume-bar">
+                                <div class="volume-fill" style="width: 21%;"></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="instrument-card">
+                <div class="instrument-header">
+                    <h3 class="instrument-title">CFDs & Commodities</h3>
+                    <span style="color: #888; font-size: 0.9rem;">Daily Volume</span>
+                </div>
+                <ul class="instrument-list">
+                    <li class="instrument-item">
+                        <div class="instrument-info">
+                            <div class="instrument-flag">🥇</div>
+                            <div>
+                                <div class="instrument-name">XAU/USD</div>
+                                <div class="instrument-pair">Spot Gold</div>
+                            </div>
+                        </div>
+                        <div class="instrument-volume">
+                            <div class="volume-number">$8.7B</div>
+                            <div class="volume-bar">
+                                <div class="volume-fill" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="instrument-item">
+                        <div class="instrument-info">
+                            <div class="instrument-flag">🥈</div>
+                            <div>
+                                <div class="instrument-name">XAG/USD</div>
+                                <div class="instrument-pair">Spot Silver</div>
+                            </div>
+                        </div>
+                        <div class="instrument-volume">
+                            <div class="volume-number">$3.2B</div>
+                            <div class="volume-bar">
+                                <div class="volume-fill" style="width: 31%;"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="instrument-item">
+                        <div class="instrument-info">
+                            <div class="instrument-flag">🛢️</div>
+                            <div>
+                                <div class="instrument-name">USOIL</div>
+                                <div class="instrument-pair">Crude Oil WTI</div>
+                            </div>
+                        </div>
+                        <div class="instrument-volume">
+                            <div class="volume-number">$2.8B</div>
+                            <div class="volume-bar">
+                                <div class="volume-fill" style="width: 27%;"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="instrument-item">
+                        <div class="instrument-info">
+                            <div class="instrument-flag">📈</div>
+                            <div>
+                                <div class="instrument-name">US30</div>
+                                <div class="instrument-pair">Dow Jones Index</div>
+                            </div>
+                        </div>
+                        <div class="instrument-volume">
+                            <div class="volume-number">$1.9B</div>
+                            <div class="volume-bar">
+                                <div class="volume-fill" style="width: 19%;"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="instrument-item">
+                        <div class="instrument-info">
+                            <div class="instrument-flag">💹</div>
+                            <div>
+                                <div class="instrument-name">BTC/USD</div>
+                                <div class="instrument-pair">Bitcoin</div>
+                            </div>
+                        </div>
+                        <div class="instrument-volume">
+                            <div class="volume-number">$1.4B</div>
+                            <div class="volume-bar">
+                                <div class="volume-fill" style="width: 14%;"></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Regional Volumes -->
+    <section class="regions-section" id="regions">
+        <div class="regions-container">
+            <h2 class="section-title">Trading Volume by Region</h2>
+            <div class="regions-grid">
+                <div class="region-card">
+                    <div class="region-icon">🌍</div>
+                    <div class="region-name">Europe (London)</div>
+                    <div class="region-volume">$342B</div>
+                    <div class="region-growth">▲ 15.3% YoY</div>
+                    <div class="region-sessions">
+                        <div class="session">
+                            <span>London Session</span>
+                            <span style="color: var(--gold);">42% of volume</span>
+                        </div>
+                        <div class="session">
+                            <span>Peak Hours</span>
+                            <span>08:00 - 12:00 GMT</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="region-card">
+                    <div class="region-icon">🌎</div>
+                    <div class="region-name">North America (NY)</div>
+                    <div class="region-volume">$298B</div>
+                    <div class="region-growth">▲ 11.8% YoY</div>
+                    <div class="region-sessions">
+                        <div class="session">
+                            <span>New York Session</span>
+                            <span style="color: var(--gold);">38% of volume</span>
+                        </div>
+                        <div class="session">
+                            <span>Peak Hours</span>
+                            <span>13:00 - 17:00 GMT</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="region-card">
+                    <div class="region-icon">🌏</div>
+                    <div class="region-name">Asia Pacific</div>
+                    <div class="region-volume">$187B</div>
+                    <div class="region-growth">▲ 28.4% YoY</div>
+                    <div class="region-sessions">
+                        <div class="session">
+                            <span>Tokyo/Sydney</span>
+                            <span style="color: var(--gold);">20% of volume</span>
+                        </div>
+                        <div class="session">
+                            <span>Peak Hours</span>
+                            <span>00:00 - 06:00 GMT</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="region-card">
+                    <div class="region-icon">🌐</div>
+                    <div class="region-name">Emerging Markets</div>
+                    <div class="region-volume">$65B</div>
+                    <div class="region-growth">▲ 45.2% YoY</div>
+                    <div class="region-sessions">
+                        <div class="session">
+                            <span>Dubai/Singapore</span>
+                            <span style="color: var(--gold);">Growing rapidly</span>
+                        </div>
+                        <div class="session">
+                            <span>Peak Hours</span>
+                            <span>04:00 - 10:00 GMT</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hourly Heatmap -->
+    <section class="heatmap-section" id="analytics">
+        <div class="heatmap-container">
+            <h3 class="chart-title">Volume Heatmap (24H UTC)</h3>
+            <p style="color: #888; margin-bottom: 1rem;">Average trading volume intensity by hour (darker = higher volume)</p>
+            <div class="heatmap-grid" id="heatmapGrid"></div>
+            <div class="heatmap-labels" id="heatmapLabels"></div>
+            <div class="heatmap-legend">
+                <span>Low</span>
+                <div class="legend-gradient"></div>
+                <span>High</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Volume Comparison Tool -->
+    <section class="comparison-section">
+        <div class="comparison-container">
+            <h3 class="chart-title">Volume Comparison Tool</h3>
+            <div class="comparison-controls">
+                <div class="control-group">
+                    <label>Instrument 1</label>
+                    <select id="instrument1" onchange="updateComparison()">
+                        <option value="eurusd">EUR/USD</option>
+                        <option value="gbpusd">GBP/USD</option>
+                        <option value="usdjpy">USD/JPY</option>
+                        <option value="xauusd">XAU/USD</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Instrument 2</label>
+                    <select id="instrument2" onchange="updateComparison()">
+                        <option value="gbpusd">GBP/USD</option>
+                        <option value="eurusd" selected>EUR/USD</option>
+                        <option value="usdjpy">USD/JPY</option>
+                        <option value="xauusd">XAU/USD</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Time Period</label>
+                    <select id="comparePeriod" onchange="updateComparison()">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly" selected>Monthly</option>
+                    </select>
+                </div>
+            </div>
+            <div class="comparison-result" id="comparisonResult">
+                <div class="comparison-metric">
+                    <div class="metric-label">Instrument 1 Volume</div>
+                    <div class="metric-value" id="vol1">$552B</div>
+                </div>
+                <div class="comparison-metric">
+                    <div class="metric-label">Instrument 2 Volume</div>
+                    <div class="metric-value" id="vol2">$381B</div>
+                </div>
+                <div class="comparison-metric">
+                    <div class="metric-label">Volume Difference</div>
+                    <div class="metric-value" id="diff">$171B</div>
+                </div>
+                <div class="comparison-metric">
+                    <div class="metric-label">Ratio</div>
+                    <div class="metric-value" id="ratio">1.45:1</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo" style="margin-bottom: 1rem;">◆ GOLDENICE INTERNATIONAL</div>
+            <p style="color: #aaa; margin-bottom: 1rem;">Global Forex Trading Volumes & Analytics</p>
+            <div class="disclaimer">
+                <p>Trading volume data represents executed trades across all Goldenice International platforms. Volumes are reported in notional USD equivalents. Past trading volumes do not indicate future performance or liquidity conditions. Data is provided for informational purposes only and should not be considered as investment advice.</p>
+                <p style="margin-top: 1rem;">© 2024 Goldenice International. All rights reserved. | Data delayed by 15 minutes</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Ticker Tape -->
+    <div class="ticker-tape">
+        <div class="ticker-content" id="tickerContent">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <script>
+        // Volume Data
+        const volumeData = {
+            '1D': [28.5, 32.1, 35.8, 31.2, 38.5, 42.3, 39.7, 45.2, 48.1, 44.5, 41.2, 38.9, 42.8, 46.2, 43.5, 40.1, 37.8, 41.5, 44.2, 39.8, 36.5, 33.2, 30.8, 29.5],
+            '1W': [185.2, 192.4, 178.6, 201.3, 215.8, 198.4, 205.6],
+            '1M': [892.3, 845.6, 912.4, 878.9, 934.2, 967.5, 923.1, 945.8, 889.4, 912.6, 956.3, 978.4, 934.7, 967.2, 989.5, 912.8, 945.3, 978.6, 956.4, 989.7, 967.3, 945.9, 912.5, 989.8, 967.4, 945.0, 978.3, 956.7, 989.9, 967.5],
+            '1Y': [8.2, 8.5, 8.9, 9.1, 9.4, 9.8, 10.1, 10.4, 10.2, 10.5, 10.8, 10.4]
+        };
+
+        const instrumentVolumes = {
+            eurusd: { daily: 18.4, weekly: 128.8, monthly: 552.4 },
+            gbpusd: { daily: 12.7, weekly: 88.9, monthly: 381.0 },
+            usdjpy: { daily: 9.2, weekly: 64.4, monthly: 276.0 },
+            xauusd: { daily: 8.7, weekly: 60.9, monthly: 261.0 }
+        };
+
+        // Initialize Mini Charts
+        function initMiniCharts() {
+            const charts = ['chart1', 'chart2', 'chart3', 'chart4', 'chart5', 'chart6'];
+            charts.forEach((id, index) => {
+                const container = document.getElementById(id);
+                const data = Array.from({length: 20}, () => Math.random() * 60 + 40);
+                data.forEach((height, i) => {
+                    const bar = document.createElement('div');
+                    bar.className = 'bar';
+                    bar.style.height = height + '%';
+                    bar.style.animationDelay = (i * 0.05) + 's';
+                    container.appendChild(bar);
+                });
+            });
+        }
+
+        // Main Chart
+        function drawChart(period = '1M') {
+            const canvas = document.getElementById('volumeChart');
+            const ctx = canvas.getContext('2d');
+            const data = volumeData[period];
+            
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = 60;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const maxValue = Math.max(...data) * 1.1;
+            const minValue = Math.min(...data) * 0.9;
+            const chartWidth = width - padding * 2;
+            const chartHeight = height - padding * 2;
+            
+            // Grid
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding + (chartHeight / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(width - padding, y);
+                ctx.stroke();
+                
+                ctx.fillStyle = '#888';
+                ctx.font = '12px monospace';
+                ctx.textAlign = 'right';
+                const value = maxValue - ((maxValue - minValue) / 5) * i;
+                ctx.fillText('$' + value.toFixed(1) + 'B', padding - 10, y + 4);
+            }
+            
+            // Line
+            ctx.beginPath();
+            ctx.strokeStyle = '#D4AF37';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            const points = [];
+            data.forEach((value, index) => {
+                const x = padding + (chartWidth / (data.length - 1)) * index;
+                const y = padding + chartHeight - ((value - minValue) / (maxValue - minValue)) * chartHeight;
+                points.push({x, y, value});
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    const prev = points[index - 1];
+                    const cp1x = prev.x + (x - prev.x) / 2;
+                    const cp1y = prev.y;
+                    const cp2x = prev.x + (x - prev.x) / 2;
+                    const cp2y = y;
+                    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // Fill
+            ctx.lineTo(points[points.length - 1].x, height - padding);
+            ctx.lineTo(padding, height - padding);
+            ctx.closePath();
+            const gradient = ctx.createLinearGradient(0, padding, 0, height - padding);
+            gradient.addColorStop(0, 'rgba(212, 175, 55, 0.3)');
+            gradient.addColorStop(1, 'rgba(212, 175, 55, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // Points
+            points.forEach((point, index) => {
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = '#0a0a0a';
+                ctx.fill();
+                ctx.strokeStyle = '#D4AF37';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+            
+            // X Labels
+            const labels = period === '1D' ? Array.from({length: 24}, (_, i) => i + ':00') :
+                          period === '1W' ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] :
+                          period === '1M' ? Array.from({length: 30}, (_, i) => (i + 1) + '') :
+                          ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            ctx.fillStyle = '#888';
+            ctx.font = '11px sans-serif';
+            ctx.textAlign = 'center';
+            const step = Math.ceil(points.length / 8);
+            points.forEach((point, index) => {
+                if (index % step === 0) {
+                    ctx.fillText(labels[index] || '', point.x, height - padding + 20);
+                }
+            });
+            
+            // Tooltip
+            canvas.onmousemove = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                
+                let found = false;
+                points.forEach(point => {
+                    if (!found && Math.abs(mouseX - point.x) < 20) {
+                        showTooltip(e.clientX, e.clientY, 'Volume: $' + point.value.toFixed(1) + 'B');
+                        found = true;
+                    }
+                });
+                if (!found) hideTooltip();
+            };
+            
+            canvas.onmouseleave = hideTooltip;
+        }
+
+        // Heatmap
+        function initHeatmap() {
+            const grid = document.getElementById('heatmapGrid');
+            const labels = document.getElementById('heatmapLabels');
+            const hours = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
+            
+            // Generate volume intensity data (higher during London/NY overlap)
+            const intensity = hours.map((_, i) => {
+                if (i >= 8 && i <= 11) return 0.9 + Math.random() * 0.1; // London open
+                if (i >= 13 && i <= 16) return 0.95 + Math.random() * 0.05; // NY open + overlap
+                if (i >= 0 && i <= 6) return 0.2 + Math.random() * 0.2; // Asian session
+                return 0.4 + Math.random() * 0.3; // Other times
+            });
+            
+            intensity.forEach((val, i) => {
+                const cell = document.createElement('div');
+                cell.className = 'heatmap-cell';
+                cell.style.background = `rgba(212, 175, 55, ${val})`;
+                cell.dataset.hour = hours[i];
+                cell.dataset.volume = (val * 50).toFixed(1);
+                
+                cell.addEventListener('mouseenter', (e) => {
+                    showTooltip(e.clientX, e.clientY, `${hours[i]}:00 UTC<br>Volume: $${(val * 50).toFixed(1)}B`);
+                });
+                cell.addEventListener('mouseleave', hideTooltip);
+                
+                grid.appendChild(cell);
+                
+                const label = document.createElement('div');
+                label.textContent = hours[i];
+                labels.appendChild(label);
+            });
+        }
+
+        // Comparison Tool
+        function updateComparison() {
+            const inst1 = document.getElementById('instrument1').value;
+            const inst2 = document.getElementById('instrument2').value;
+            const period = document.getElementById('comparePeriod').value;
+            
+            const vol1 = instrumentVolumes[inst1][period];
+            const vol2 = instrumentVolumes[inst2][period];
+            
+            document.getElementById('vol1').textContent = '$' + vol1 + 'B';
+            document.getElementById('vol2').textContent = '$' + vol2 + 'B';
+            document.getElementById('diff').textContent = '$' + Math.abs(vol1 - vol2).toFixed(1) + 'B';
+            document.getElementById('ratio').textContent = (vol1 / vol2).toFixed(2) + ':1';
+        }
+
+        // Ticker Tape
+        function initTicker() {
+            const pairs = [
+                {pair: 'EUR/USD', vol: '$18.4B', change: '+0.45%'},
+                {pair: 'GBP/USD', vol: '$12.7B', change: '+0.23%'},
+                {pair: 'USD/JPY', vol: '$9.2B', change: '-0.12%'},
+                {pair: 'XAU/USD', vol: '$8.7B', change: '+1.24%'},
+                {pair: 'USD/CHF', vol: '$4.8B', change: '-0.08%'},
+                {pair: 'AUD/USD', vol: '$3.9B', change: '+0.67%'},
+                {pair: 'US30', vol: '$1.9B', change: '+0.89%'},
+                {pair: 'BTC/USD', vol: '$1.4B', change: '+2.34%'}
+            ];
+            
+            const content = document.getElementById('tickerContent');
+            const tickerHTML = pairs.map(p => `
+                <div class="ticker-item">
+                    <strong>${p.pair}</strong>
+                    <span>Vol: ${p.vol}</span>
+                    <span style="color: ${p.change.includes('+') ? 'var(--success)' : 'var(--danger)'}">${p.change}</span>
+                </div>
+            `).join('');
+            
+            content.innerHTML = tickerHTML + tickerHTML; // Duplicate for seamless loop
+        }
+
+        // Live Volume Updates
+        function simulateLiveUpdates() {
+            const todayVol = document.getElementById('todayVolume');
+            const activeOrders = document.getElementById('activeOrders');
+            const lastUpdate = document.getElementById('lastUpdate');
+            
+            setInterval(() => {
+                const current = parseFloat(todayVol.textContent.replace(/[$B]/g, ''));
+                const change = (Math.random() - 0.5) * 0.1;
+                const newVal = (current + change).toFixed(1);
+                todayVol.textContent = '$' + newVal + 'B';
+                
+                const orders = parseInt(activeOrders.textContent.replace(/,/g, ''));
+                const orderChange = Math.floor((Math.random() - 0.5) * 10);
+                activeOrders.textContent = (orders + orderChange).toLocaleString();
+                
+                const now = new Date();
+                lastUpdate.textContent = now.toLocaleTimeString();
+            }, 3000);
+        }
+
+        // Tooltip functions
+        function showTooltip(x, y, content) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.innerHTML = content;
+            tooltip.style.left = x + 15 + 'px';
+            tooltip.style.top = y - 30 + 'px';
+            tooltip.classList.add('active');
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('active');
+        }
+
+        // Chart update
+        function updateChart(period) {
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === period) btn.classList.add('active');
+            });
+            drawChart(period);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initMiniCharts();
+            drawChart('1M');
+            initHeatmap();
+            initTicker();
+            updateComparison();
+            simulateLiveUpdates();
+            
+            window.addEventListener('resize', () => drawChart('1M'));
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

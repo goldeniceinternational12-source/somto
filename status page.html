@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - System Status</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --ice-blue: #E0F7FA;
+            --deep-navy: #0A1628;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(212, 175, 55, 0.15);
+            --status-operational: #10B981;
+            --status-degraded: #F59E0B;
+            --status-outage: #EF4444;
+            --status-maintenance: #3B82F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0A1628 0%, #0f2130 50%, #0d1b2a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .status-pulse {
+            position: absolute;
+            border-radius: 50%;
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.33); opacity: 1; }
+            80%, 100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px -12px rgba(212, 175, 55, 0.15);
+        }
+
+        .text-gold-gradient {
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-light) 50%, var(--gold-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* Status Indicators */
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .status-operational { background-color: var(--status-operational); box-shadow: 0 0 10px var(--status-operational); }
+        .status-degraded { background-color: var(--status-degraded); box-shadow: 0 0 10px var(--status-degraded); }
+        .status-outage { background-color: var(--status-outage); box-shadow: 0 0 10px var(--status-outage); }
+        .status-maintenance { background-color: var(--status-maintenance); box-shadow: 0 0 10px var(--status-maintenance); }
+
+        .status-pulse-dot::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        /* Uptime Bars */
+        .uptime-bar {
+            height: 40px;
+            display: flex;
+            gap: 2px;
+            align-items: flex-end;
+        }
+
+        .uptime-segment {
+            flex: 1;
+            background: var(--status-operational);
+            border-radius: 2px;
+            min-height: 4px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .uptime-segment:hover {
+            transform: scaleY(1.2);
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        .uptime-segment.degraded { background: var(--status-degraded); }
+        .uptime-segment.outage { background: var(--status-outage); }
+        .uptime-segment.maintenance { background: var(--status-maintenance); }
+
+        /* Incident Timeline */
+        .timeline-line {
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--gold-primary), transparent);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 50px;
+            padding-bottom: 30px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 11px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid var(--deep-navy);
+            z-index: 10;
+        }
+
+        /* Metric Cards */
+        .metric-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+
+        .metric-card:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Refresh Animation */
+        .spin-refresh {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 4px;
+        }
+
+        /* Regional Status */
+        .region-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .region-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-dark));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .region-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* Live Indicator */
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--status-operational);
+        }
+
+        .live-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--status-operational);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(0,0,0,0.9);
+            border: 1px solid var(--gold-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+            white-space: nowrap;
+        }
+
+        .uptime-segment:hover .tooltip {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-grid"></div>
+
+    <!-- Header -->
+    <header class="relative z-10 border-b border-white/10 bg-[#0A1628]/80 backdrop-blur-md sticky top-0">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-lg shadow-yellow-500/20">
+                        <i class="fas fa-server text-[#0A1628] text-xl"></i>
+                    </div>
+                    <div class="status-pulse absolute inset-0 rounded-full border-2 border-yellow-400/50"></div>
+                </div>
+                <div>
+                    <h1 class="font-display text-2xl font-bold text-gold-gradient">GOLDENICE</h1>
+                    <p class="text-xs text-gray-400 tracking-[0.2em] uppercase">System Status</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <div class="live-badge">
+                    LIVE MONITORING
+                </div>
+                <div class="hidden md:block text-right">
+                    <div class="text-xs text-gray-500">Last Updated</div>
+                    <div class="text-sm font-mono text-yellow-400" id="last-updated">Just now</div>
+                </div>
+                <button onclick="refreshStatus()" class="p-2 rounded-lg hover:bg-white/5 transition-colors" id="refresh-btn">
+                    <i class="fas fa-sync-alt text-gray-400 hover:text-yellow-400 transition-colors"></i>
+                </button>
+                <button onclick="subscribeModal()" class="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/20 transition-colors text-sm font-medium">
+                    <i class="fas fa-bell"></i>
+                    Subscribe
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-7xl mx-auto px-6 py-8">
+
+        <!-- Overall Status Banner -->
+        <div class="glass-panel p-8 mb-8 relative overflow-hidden" id="overall-status">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-green-500/10 to-transparent rounded-full blur-3xl -mr-20 -mt-20"></div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-6">
+                    <div class="relative">
+                        <div class="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center border-2 border-green-500/50">
+                            <i class="fas fa-check text-3xl text-green-400"></i>
+                        </div>
+                        <div class="absolute inset-0 rounded-full border-2 border-green-400 status-pulse-dot text-green-400"></div>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-display font-bold text-white mb-2">All Systems Operational</h2>
+                        <p class="text-gray-400">All services are running normally. No incidents reported.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 text-center">
+                    <div class="px-6 py-3 rounded-lg bg-white/5 border border-white/10">
+                        <div class="text-2xl font-bold text-green-400 font-mono">99.99%</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Uptime (30d)</div>
+                    </div>
+                    <div class="px-6 py-3 rounded-lg bg-white/5 border border-white/10">
+                        <div class="text-2xl font-bold text-white font-mono">0</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Active Incidents</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Status Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" id="services-grid">
+            <!-- Services populated by JS -->
+        </div>
+
+        <!-- Regional Status -->
+        <div class="glass-panel p-6 mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-display text-xl font-semibold text-gold-gradient">Regional Infrastructure</h3>
+                <div class="flex gap-2">
+                    <span class="flex items-center gap-2 text-xs text-gray-400">
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span> Operational
+                    </span>
+                    <span class="flex items-center gap-2 text-xs text-gray-400">
+                        <span class="w-2 h-2 rounded-full bg-yellow-500"></span> Degraded
+                    </span>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="regions-grid">
+                <!-- Regions populated by JS -->
+            </div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="glass-panel p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-display text-xl font-semibold text-gold-gradient">Response Time (ms)</h3>
+                    <select class="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm text-gray-300 focus:outline-none focus:border-yellow-500/50">
+                        <option>Last 24 Hours</option>
+                        <option>Last 7 Days</option>
+                        <option>Last 30 Days</option>
+                    </select>
+                </div>
+                <div class="h-64">
+                    <canvas id="latencyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-display text-xl font-semibold text-gold-gradient">System Throughput</h3>
+                    <div class="flex items-center gap-2 text-sm text-green-400">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+12.5%</span>
+                    </div>
+                </div>
+                <div class="h-64">
+                    <canvas id="throughputChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Uptime History -->
+        <div class="glass-panel p-6 mb-8">
+            <h3 class="font-display text-xl font-semibold text-gold-gradient mb-6">90-Day Uptime History</h3>
+            
+            <div class="space-y-6" id="uptime-history">
+                <!-- Uptime bars populated by JS -->
+            </div>
+
+            <div class="mt-6 flex justify-between items-center text-sm text-gray-400 pt-4 border-t border-white/10">
+                <span>Showing last 90 days of data</span>
+                <div class="flex gap-4">
+                    <span class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-green-500"></span> Operational (99.2%)</span>
+                    <span class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-yellow-500"></span> Degraded (0.5%)</span>
+                    <span class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-red-500"></span> Outage (0.3%)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Incident History -->
+        <div class="glass-panel p-6 mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-display text-xl font-semibold text-gold-gradient">Incident History</h3>
+                <div class="flex gap-2">
+                    <button onclick="filterIncidents('all')" class="px-4 py-2 rounded-lg text-sm bg-yellow-500/20 text-yellow-400 border border-yellow-500/30" id="filter-all">All</button>
+                    <button onclick="filterIncidents('resolved')" class="px-4 py-2 rounded-lg text-sm bg-white/5 text-gray-400 hover:bg-white/10 transition-colors" id="filter-resolved">Resolved</button>
+                    <button onclick="filterIncidents('maintenance')" class="px-4 py-2 rounded-lg text-sm bg-white/5 text-gray-400 hover:bg-white/10 transition-colors" id="filter-maintenance">Maintenance</button>
+                </div>
+            </div>
+
+            <div class="relative" id="incidents-container">
+                <div class="timeline-line"></div>
+                <div id="incidents-list">
+                    <!-- Incidents populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Scheduled Maintenance -->
+        <div class="glass-panel p-6 mb-8 border-l-4 border-blue-500 bg-blue-500/5">
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-wrench text-blue-400 text-xl"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-display text-lg font-semibold text-white mb-2">Scheduled Maintenance</h3>
+                    <p class="text-gray-400 mb-4">Planned system upgrades and security patches</p>
+                    
+                    <div class="space-y-3" id="maintenance-list">
+                        <!-- Maintenance items populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Summary -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="metric-card p-4 rounded-xl text-center">
+                <div class="text-3xl font-bold text-gold-gradient mb-1 font-mono" id="metric-uptime">99.99%</div>
+                <div class="text-xs text-gray-500 uppercase tracking-wider">Avg Uptime</div>
+            </div>
+            <div class="metric-card p-4 rounded-xl text-center">
+                <div class="text-3xl font-bold text-white mb-1 font-mono" id="metric-response">24ms</div>
+                <div class="text-xs text-gray-500 uppercase tracking-wider">Avg Response</div>
+            </div>
+            <div class="metric-card p-4 rounded-xl text-center">
+                <div class="text-3xl font-bold text-white mb-1 font-mono" id="metric-requests">2.4M</div>
+                <div class="text-xs text-gray-500 uppercase tracking-wider">Requests/min</div>
+            </div>
+            <div class="metric-card p-4 rounded-xl text-center">
+                <div class="text-3xl font-bold text-green-400 mb-1 font-mono" id="metric-success">99.9%</div>
+                <div class="text-xs text-gray-500 uppercase tracking-wider">Success Rate</div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-[#0A1628]/50 backdrop-blur-md mt-12">
+        <div class="max-w-7xl mx-auto px-6 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+                        <span class="text-[#0A1628] font-bold text-sm">G</span>
+                    </div>
+                    <span class="text-gray-400 text-sm">© 2026 Goldenice International. All rights reserved.</span>
+                </div>
+                <div class="flex gap-6 text-sm text-gray-400">
+                    <a href="#" class="hover:text-yellow-400 transition-colors">Status API</a>
+                    <a href="#" class="hover:text-yellow-400 transition-colors">RSS Feed</a>
+                    <a href="#" class="hover:text-yellow-400 transition-colors">Historical Data</a>
+                    <a href="#" class="hover:text-yellow-400 transition-colors">Contact DPO</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Subscribe Modal -->
+    <div id="subscribe-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-md p-6 transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-display text-xl font-semibold text-gold-gradient">Subscribe to Updates</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form onsubmit="handleSubscribe(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Email Address</label>
+                    <input type="email" required class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-yellow-500/50 transition-colors" placeholder="you@company.com">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="w-4 h-4 rounded border-gray-600 text-yellow-500 focus:ring-yellow-500 bg-gray-700" checked>
+                        <span class="text-sm text-gray-300 group-hover:text-white transition-colors">Critical incidents only</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="w-4 h-4 rounded border-gray-600 text-yellow-500 focus:ring-yellow-500 bg-gray-700" checked>
+                        <span class="text-sm text-gray-300 group-hover:text-white transition-colors">Scheduled maintenance</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="w-4 h-4 rounded border-gray-600 text-yellow-500 focus:ring-yellow-500 bg-gray-700">
+                        <span class="text-sm text-gray-300 group-hover:text-white transition-colors">Weekly summary</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="w-full btn-gold py-3 rounded-lg font-semibold mt-4">
+                <a href="https://wa.me/7040856276">Subscribe</a>    
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 glass-panel p-4 transform translate-y-20 opacity-0 transition-all duration-300 z-50 max-w-sm border-l-4 border-green-500">
+        <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-check text-green-400"></i>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white text-sm mb-1" id="toast-title">Success</h4>
+                <p class="text-xs text-gray-400" id="toast-message">Operation completed successfully</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let services = [
+            { name: 'Trading Platform', status: 'operational', uptime: '99.99%', response: '12ms', description: 'Core trading engine and order execution' },
+            { name: 'Market Data API', status: 'operational', uptime: '99.98%', response: '8ms', description: 'Real-time price feeds and market data' },
+            { name: 'Payment Gateway', status: 'operational', uptime: '99.99%', response: '45ms', description: 'Deposit and withdrawal processing' },
+            { name: 'User Authentication', status: 'operational', uptime: '100%', response: '24ms', description: 'Login, 2FA, and session management' },
+            { name: 'Reporting Engine', status: 'operational', uptime: '99.95%', response: '120ms', description: 'Statements, reports, and analytics' },
+            { name: 'Mobile App API', status: 'operational', uptime: '99.97%', response: '18ms', description: 'iOS and Android backend services' }
+        ];
+
+        let regions = [
+            { name: 'London (EU-West)', status: 'operational', latency: '12ms', load: '42%' },
+            { name: 'Frankfurt (EU-Central)', status: 'operational', latency: '18ms', load: '38%' },
+            { name: 'Singapore (APAC)', status: 'operational', latency: '85ms', load: '55%' },
+            { name: 'New York (US-East)', status: 'operational', latency: '65ms', load: '48%' }
+        ];
+
+        let incidents = [
+            { 
+                id: 'INC-2026-003',
+                date: '2026-03-15', 
+                title: 'Degraded Performance on Market Data API', 
+                status: 'resolved', 
+                duration: '23 minutes',
+                description: 'Elevated latency observed due to upstream provider issues. Failover to secondary feed completed.',
+                impact: 'degraded',
+                resolved: '2026-03-15 14:23 UTC'
+            },
+            { 
+                id: 'INC-2026-002',
+                date: '2026-02-28', 
+                title: 'Scheduled Database Maintenance', 
+                status: 'maintenance', 
+                duration: '2 hours',
+                description: 'Planned maintenance window for database optimization and security patching.',
+                impact: 'maintenance',
+                resolved: '2026-02-28 06:00 UTC'
+            },
+            { 
+                id: 'INC-2026-001',
+                date: '2026-01-10', 
+                title: 'Trading Platform Brief Outage', 
+                status: 'resolved', 
+                duration: '8 minutes',
+                description: 'Unexpected restart of core trading engine. All orders preserved, no data loss.',
+                impact: 'outage',
+                resolved: '2026-01-10 09:18 UTC'
+            }
+        ];
+
+        let maintenance = [
+            { date: '2026-04-02', time: '02:00 - 04:00 UTC', description: 'Database security patches and performance optimization', impact: 'Brief interruptions to reporting features' },
+            { date: '2026-04-15', time: '01:00 - 03:00 UTC', description: 'Network infrastructure upgrade', impact: 'No service impact expected' }
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderServices();
+            renderRegions();
+            renderUptimeHistory();
+            renderIncidents();
+            renderMaintenance();
+            initCharts();
+            startLiveUpdates();
+        });
+
+        // Render Services
+        function renderServices() {
+            const grid = document.getElementById('services-grid');
+            grid.innerHTML = services.map(service => {
+                const statusConfig = {
+                    operational: { icon: 'check-circle', color: 'green', text: 'Operational' },
+                    degraded: { icon: 'exclamation-triangle', color: 'yellow', text: 'Degraded' },
+                    outage: { icon: 'times-circle', color: 'red', text: 'Major Outage' },
+                    maintenance: { icon: 'wrench', color: 'blue', text: 'Maintenance' }
+                };
+                
+                const config = statusConfig[service.status];
+                
+                return `
+                    <div class="glass-panel p-6 relative overflow-hidden group hover:border-${config.color}-500/50 transition-all">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="status-dot status-${service.status} status-pulse-dot"></div>
+                                <h4 class="font-semibold text-white text-lg">${service.name}</h4>
+                            </div>
+                            <i class="fas fa-${config.icon} text-${config.color}-400 text-xl"></i>
+                        </div>
+                        
+                        <p class="text-sm text-gray-400 mb-4">${service.description}</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                            <div>
+                                <div class="text-xs text-gray-500 mb-1">Uptime</div>
+                                <div class="text-lg font-mono font-semibold text-${config.color}-400">${service.uptime}</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 mb-1">Response</div>
+                                <div class="text-lg font-mono font-semibold text-white">${service.response}</div>
+                            </div>
+                        </div>
+                        
+                        ${service.status !== 'operational' ? `
+                            <div class="mt-4 p-3 rounded-lg bg-${config.color}-500/10 border border-${config.color}-500/20">
+                                <div class="text-xs text-${config.color}-400 font-medium">Active Incident</div>
+                                <div class="text-sm text-gray-300 mt-1">Investigating elevated error rates</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render Regions
+        function renderRegions() {
+            const grid = document.getElementById('regions-grid');
+            grid.innerHTML = regions.map(region => `
+                <div class="region-card glass-panel p-4 rounded-lg">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-medium text-white text-sm mb-1">${region.name}</h4>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-${region.status === 'operational' ? 'green' : 'yellow'}-500"></span>
+                                <span class="text-xs text-gray-400 capitalize">${region.status}</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-server text-gray-600"></i>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Latency</span>
+                            <span class="font-mono text-white">${region.latency}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Load</span>
+                            <span class="font-mono text-${parseInt(region.load) > 70 ? 'yellow' : 'green'}-400">${region.load}</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-1.5 mt-2">
+                            <div class="bg-gradient-to-r from-green-500 to-yellow-500 h-1.5 rounded-full transition-all duration-500" style="width: ${region.load}"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Uptime History
+        function renderUptimeHistory() {
+            const container = document.getElementById('uptime-history');
+            
+            const services90Day = [
+                { name: 'Trading Platform', uptime: generateUptimeData(90, 0.02) },
+                { name: 'Market Data API', uptime: generateUptimeData(90, 0.05) },
+                { name: 'Payment Gateway', uptime: generateUptimeData(90, 0.01) },
+                { name: 'User Authentication', uptime: generateUptimeData(90, 0) }
+            ];
+
+            container.innerHTML = services90Day.map(service => {
+                const dayBars = service.uptime.map((day, idx) => {
+                    const date = new Date();
+                    date.setDate(date.getDate() - (90 - idx));
+                    const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    
+                    return `
+                        <div class="uptime-segment ${day.status}" style="height: ${day.health}%" title="${dateStr}: ${day.status}">
+                            <div class="tooltip">${dateStr}<br>${day.status}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-medium text-white">${service.name}</span>
+                            <span class="text-sm font-mono text-gray-400">${calculateUptimePercentage(service.uptime)}%</span>
+                        </div>
+                        <div class="uptime-bar">
+                            ${dayBars}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function generateUptimeData(days, outageProbability) {
+            return Array.from({ length: days }, () => {
+                const rand = Math.random();
+                let status = 'operational';
+                let health = 90 + Math.random() * 10;
+                
+                if (rand < outageProbability) {
+                    status = 'outage';
+                    health = Math.random() * 20;
+                } else if (rand < outageProbability * 3) {
+                    status = 'degraded';
+                    health = 40 + Math.random() * 30;
+                }
+                
+                return { status, health: Math.floor(health) };
+            });
+        }
+
+        function calculateUptimePercentage(data) {
+            const operational = data.filter(d => d.status === 'operational').length;
+            return ((operational / data.length) * 100).toFixed(2);
+        }
+
+        // Render Incidents
+        function renderIncidents(filter = 'all') {
+            const list = document.getElementById('incidents-list');
+            
+            let filtered = incidents;
+            if (filter !== 'all') {
+                filtered = incidents.filter(i => i.status === filter);
+            }
+
+            list.innerHTML = filtered.map(incident => {
+                const statusColors = {
+                    resolved: 'bg-green-500',
+                    maintenance: 'bg-blue-500',
+                    investigating: 'bg-yellow-500'
+                };
+                
+                const impactColors = {
+                    operational: 'green',
+                    degraded: 'yellow',
+                    outage: 'red',
+                    maintenance: 'blue'
+                };
+
+                return `
+                    <div class="timeline-item">
+                        <div class="timeline-dot ${statusColors[incident.status] || 'bg-gray-500'}"></div>
+                        <div class="glass-panel p-5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer" onclick="toggleIncident('${incident.id}')">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2 mb-2">
+                                <div>
+                                    <div class="flex items-center gap-3 mb-1">
+                                        <span class="font-mono text-xs text-yellow-500">${incident.id}</span>
+                                        <span class="px-2 py-0.5 rounded text-xs bg-${impactColors[incident.impact]}-500/10 text-${impactColors[incident.impact]}-400 border border-${impactColors[incident.impact]}-500/20 capitalize">
+                                            ${incident.impact}
+                                        </span>
+                                    </div>
+                                    <h4 class="font-semibold text-white text-lg">${incident.title}</h4>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm text-gray-400">${incident.date}</div>
+                                    <div class="text-xs text-gray-500">${incident.duration}</div>
+                                </div>
+                            </div>
+                            
+                            <p class="text-sm text-gray-400 mb-3">${incident.description}</p>
+                            
+                            <div class="flex items-center gap-4 text-xs text-gray-500">
+                                <span class="flex items-center gap-1">
+                                    <i class="fas fa-check-circle text-green-400"></i>
+                                    Resolved: ${incident.resolved}
+                                </span>
+                                <button class="text-yellow-400 hover:text-yellow-300 flex items-center gap-1">
+                                    View Details <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterIncidents(type) {
+            // Update button styles
+            ['all', 'resolved', 'maintenance'].forEach(t => {
+                const btn = document.getElementById(`filter-${t}`);
+                if (t === type) {
+                    btn.className = 'px-4 py-2 rounded-lg text-sm bg-yellow-500/20 text-yellow-400 border border-yellow-500/30';
+                } else {
+                    btn.className = 'px-4 py-2 rounded-lg text-sm bg-white/5 text-gray-400 hover:bg-white/10 transition-colors';
+                }
+            });
+            
+            renderIncidents(type);
+        }
+
+        // Render Maintenance
+        function renderMaintenance() {
+            const list = document.getElementById('maintenance-list');
+            list.innerHTML = maintenance.map(m => `
+                <div class="flex items-center gap-4 p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div class="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-calendar-alt text-blue-400"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="font-medium text-white">${m.date}</span>
+                            <span class="text-xs text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">Upcoming</span>
+                        </div>
+                        <div class="text-sm text-gray-400 mb-1">${m.time}</div>
+                        <div class="text-xs text-gray-500">${m.description}</div>
+                    </div>
+                    <div class="text-right text-xs text-gray-400">
+                        <div>Impact:</div>
+                        <div class="text-yellow-400">${m.impact}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Charts
+        function initCharts() {
+            // Latency Chart
+            const ctx1 = document.getElementById('latencyChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+                    datasets: [{
+                        label: 'API Latency (ms)',
+                        data: Array.from({length: 24}, () => 15 + Math.random() * 20),
+                        borderColor: '#D4AF37',
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHoverRadius: 4
+                    }, {
+                        label: 'p95 Latency',
+                        data: Array.from({length: 24}, () => 35 + Math.random() * 30),
+                        borderColor: '#3B82F6',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'end',
+                            labels: { color: '#9CA3AF', usePointStyle: true, boxWidth: 8 }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#6B7280', maxTicksLimit: 8 }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#6B7280' },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Throughput Chart
+            const ctx2 = document.getElementById('throughputChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: Array.from({length: 12}, (_, i) => `${i * 2}:00`),
+                    datasets: [{
+                        label: 'Requests (thousands)',
+                        data: Array.from({length: 12}, () => 1.5 + Math.random() * 2),
+                        backgroundColor: 'rgba(212, 175, 55, 0.6)',
+                        borderColor: '#D4AF37',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#6B7280' }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#6B7280' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Live Updates
+        function startLiveUpdates() {
+            setInterval(() => {
+                // Update timestamp
+                const now = new Date();
+                document.getElementById('last-updated').textContent = now.toLocaleTimeString('en-US', { hour12: false }) + ' UTC';
+                
+                // Randomly update metrics slightly
+                if (Math.random() > 0.7) {
+                    updateMetrics();
+                }
+                
+                // Simulate occasional status changes (rarely)
+                if (Math.random() > 0.98) {
+                    simulateStatusFluctuation();
+                }
+            }, 5000);
+        }
+
+        function updateMetrics() {
+            const response = 20 + Math.floor(Math.random() * 10);
+            const requests = (2.0 + Math.random() * 0.8).toFixed(1);
+            const success = (99.5 + Math.random() * 0.4).toFixed(1);
+            
+            document.getElementById('metric-response').textContent = response + 'ms';
+            document.getElementById('metric-requests').textContent = requests + 'M';
+            document.getElementById('metric-success').textContent = success + '%';
+        }
+
+        function simulateStatusFluctuation() {
+            // Randomly degrade then recover a service for demo purposes
+            const serviceIdx = Math.floor(Math.random() * services.length);
+            const originalStatus = services[serviceIdx].status;
+            
+            if (originalStatus === 'operational') {
+                services[serviceIdx].status = 'degraded';
+                services[serviceIdx].response = (parseInt(services[serviceIdx].response) * 3) + 'ms';
+                renderServices();
+                
+                setTimeout(() => {
+                    services[serviceIdx].status = 'operational';
+                    services[serviceIdx].response = (parseInt(services[serviceIdx].response) / 3) + 'ms';
+                    renderServices();
+                    showToast('Service Recovered', `${services[serviceIdx].name} has returned to normal operation`);
+                }, 10000);
+                
+                showToast('Performance Alert', `Degraded performance detected on ${services[serviceIdx].name}`);
+            }
+        }
+
+        // User Actions
+        function refreshStatus() {
+            const btn = document.getElementById('refresh-btn');
+            btn.querySelector('i').classList.add('spin-refresh');
+            
+            setTimeout(() => {
+                btn.querySelector('i').classList.remove('spin-refresh');
+                renderServices();
+                renderRegions();
+                showToast('Refreshed', 'Status data updated successfully');
+            }, 1000);
+        }
+
+        function subscribeModal() {
+            const modal = document.getElementById('subscribe-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('subscribe-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function handleSubscribe(e) {
+            e.preventDefault();
+            closeModal();
+            setTimeout(() => {
+                showToast('Subscribed', 'You will receive status updates at your email');
+            }, 300);
+        }
+
+        function toggleIncident(id) {
+            // Toggle incident details (simplified for demo)
+            showToast('Incident Details', `Loading detailed report for ${id}...`);
+        }
+
+        // Toast Notification
+        function showToast(title, message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-message').textContent = message;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 4000);
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('subscribe-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+    </script>
+</body>
+</html>

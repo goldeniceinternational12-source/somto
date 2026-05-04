@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoldenIce International | GDPR Compliance Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* EU Flag Gradient */
+        .eu-gradient {
+            background: linear-gradient(135deg, #003399 0%, #003399 40%, #ffcc00 60%, #ffcc00 100%);
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .compliance-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .compliance-card:hover {
+            transform: translateX(4px);
+            border-left-color: #3b82f6;
+        }
+
+        .compliance-card.high-risk {
+            border-left-color: #ef4444;
+        }
+
+        .compliance-card.medium-risk {
+            border-left-color: #f59e0b;
+        }
+
+        .compliance-card.low-risk {
+            border-left-color: #10b981;
+        }
+
+        /* Animated pulse for live indicators */
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        }
+
+        .status-active {
+            animation: pulse-green 2s infinite;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        .tab-active {
+            background: rgba(59, 130, 246, 0.2);
+            border-bottom: 2px solid #3b82f6;
+            color: #60a5fa;
+        }
+
+        .data-flow-line {
+            stroke-dasharray: 5,5;
+            animation: dash 20s linear infinite;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -100; }
+        }
+
+        .breach-timer {
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 700;
+        }
+
+        .gdpr-badge {
+            background: linear-gradient(135deg, #003399, #002266);
+            border: 2px solid #ffcc00;
+        }
+
+        /* Print styles for reports */
+        @media print {
+            .no-print { display: none !important; }
+            .glass-panel { background: white !important; color: black !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-900">
+
+    <!-- Top Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 eu-gradient rounded-lg flex items-center justify-center shadow-lg">
+                        <span class="text-white font-bold text-lg">GI</span>
+                    </div>
+                    <div>
+                        <h1 class="font-display text-xl font-bold text-white">GoldenIce International</h1>
+                        <p class="text-xs text-slate-400">GDPR Compliance Management System</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center px-3 py-1 rounded-full bg-slate-800 border border-slate-600">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-2 status-active"></span>
+                        <span class="text-xs text-slate-300">System Compliant</span>
+                    </div>
+                    <button onclick="exportReport()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Export RoPA Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        
+        <!-- Compliance Dashboard Header -->
+        <div class="mb-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h2 class="text-3xl font-display font-bold text-white mb-2">Data Protection Dashboard</h2>
+                    <p class="text-slate-400">Article 30 Records of Processing Activities (RoPA) Management</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex items-center space-x-2 text-sm text-slate-400">
+                    <span>Last Audit:</span>
+                    <span class="text-white font-medium" id="last-audit-date">2026-04-02</span>
+                    <span class="px-2 py-0.5 rounded bg-green-900 text-green-400 text-xs">Valid</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-sm">Processing Activities</span>
+                    <span class="p-1.5 bg-blue-900 rounded-lg">
+                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-white" id="total-activities">12</div>
+                <div class="text-xs text-slate-500 mt-1">Article 30 Records</div>
+            </div>
+
+            <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-sm">Data Subjects</span>
+                    <span class="p-1.5 bg-purple-900 rounded-lg">
+                        <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-white" id="total-subjects">2,847</div>
+                <div class="text-xs text-green-400 mt-1">+12 this week</div>
+            </div>
+
+            <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-sm">Pending Requests</span>
+                    <span class="p-1.5 bg-yellow-900 rounded-lg">
+                        <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-white" id="pending-requests">3</div>
+                <div class="text-xs text-slate-500 mt-1">DSARs awaiting response</div>
+            </div>
+
+            <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-sm">Breach Timer</span>
+                    <span class="p-1.5 bg-red-900 rounded-lg">
+                        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-red-400 breach-timer" id="breach-timer">72:00:00</div>
+                <div class="text-xs text-slate-500 mt-1">Hours remaining to report</div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="flex space-x-1 border-b border-slate-700 mb-6 overflow-x-auto">
+            <button onclick="switchTab('ropa')" id="tab-ropa" class="tab-active px-6 py-3 text-sm font-medium transition-colors whitespace-nowrap">
+                Records of Processing (RoPA)
+            </button>
+            <button onclick="switchTab('dsar')" id="tab-dsar" class="px-6 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors whitespace-nowrap">
+                Data Subject Requests
+            </button>
+            <button onclick="switchTab('consent')" id="tab-consent" class="px-6 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors whitespace-nowrap">
+                Consent Management
+            </button>
+            <button onclick="switchTab('breach')" id="tab-breach" class="px-6 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors whitespace-nowrap">
+                Breach Response
+            </button>
+            <button onclick="switchTab('dpi')" id="tab-dpi" class="px-6 py-3 text-sm font-medium text-slate-400 hover:text-white transition-colors whitespace-nowrap">
+                Data Protection Impact
+            </button>
+        </div>
+
+        <!-- RoPA Section (Article 30) -->
+        <div id="section-ropa" class="space-y-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-white">Article 30: Records of Processing Activities</h3>
+                <button onclick="openModal('new-activity')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors">
+                    + Add Processing Activity
+                </button>
+            </div>
+
+            <div class="glass-panel rounded-xl overflow-hidden border border-slate-700">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-800 text-slate-300">
+                            <tr>
+                                <th class="px-6 py-4 font-medium">Activity Name</th>
+                                <th class="px-6 py-4 font-medium">Purpose</th>
+                                <th class="px-6 py-4 font-medium">Data Categories</th>
+                                <th class="px-6 py-4 font-medium">Legal Basis</th>
+                                <th class="px-6 py-4 font-medium">Retention</th>
+                                <th class="px-6 py-4 font-medium">Risk Level</th>
+                                <th class="px-6 py-4 font-medium">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ropa-table-body" class="divide-y divide-slate-700">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Data Flow Visualization -->
+            <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                <h4 class="text-lg font-semibold text-white mb-4">Data Flow Visualization</h4>
+                <div class="relative h-64 bg-slate-800 rounded-lg overflow-hidden" id="data-flow-container">
+                    <svg class="w-full h-full" viewBox="0 0 800 300">
+                        <!-- Data Sources -->
+                        <rect x="50" y="50" width="120" height="60" rx="8" fill="#1e40af" stroke="#3b82f6" stroke-width="2"/>
+                        <text x="110" y="85" text-anchor="middle" fill="white" font-size="12">Website Forms</text>
+                        
+                        <rect x="50" y="150" width="120" height="60" rx="8" fill="#1e40af" stroke="#3b82f6" stroke-width="2"/>
+                        <text x="110" y="185" text-anchor="middle" fill="white" font-size="12">CRM System</text>
+                        
+                        <!-- Processing -->
+                        <rect x="300" y="100" width="140" height="80" rx="8" fill="#059669" stroke="#10b981" stroke-width="2"/>
+                        <text x="370" y="135" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Processing</text>
+                        <text x="370" y="155" text-anchor="middle" fill="#6ee7b7" font-size="10">GoldenIce Core</text>
+                        
+                        <!-- Recipients -->
+                        <rect x="600" y="50" width="120" height="60" rx="8" fill="#7c3aed" stroke="#8b5cf6" stroke-width="2"/>
+                        <text x="660" y="85" text-anchor="middle" fill="white" font-size="12">Email Service</text>
+                        
+                        <rect x="600" y="150" width="120" height="60" rx="8" fill="#7c3aed" stroke="#8b5cf6" stroke-width="2"/>
+                        <text x="660" y="185" text-anchor="middle" fill="white" font-size="12">Analytics</text>
+                        
+                        <!-- Flow Lines -->
+                        <path d="M 170 80 Q 235 80 300 130" stroke="#3b82f6" stroke-width="2" fill="none" class="data-flow-line" marker-end="url(#arrowhead)"/>
+                        <path d="M 170 180 Q 235 180 300 150" stroke="#3b82f6" stroke-width="2" fill="none" class="data-flow-line"/>
+                        <path d="M 440 120 Q 520 85 600 80" stroke="#10b981" stroke-width="2" fill="none" class="data-flow-line"/>
+                        <path d="M 440 160 Q 520 185 600 180" stroke="#10b981" stroke-width="2" fill="none" class="data-flow-line"/>
+                        
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#3b82f6"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- DSAR Section -->
+        <div id="section-dsar" class="hidden space-y-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-white">Data Subject Access Requests (Article 15-22)</h3>
+                <div class="flex space-x-2">
+                    <select id="dsar-filter" class="bg-slate-800 border border-slate-600 text-white text-sm rounded-lg px-3 py-2">
+                        <option value="all">All Requests</option>
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Request List -->
+                <div class="lg:col-span-2 glass-panel rounded-xl overflow-hidden border border-slate-700">
+                    <div class="p-4 border-b border-slate-700 bg-slate-800">
+                        <h4 class="font-semibold text-white">Recent Requests</h4>
+                    </div>
+                    <div id="dsar-list" class="divide-y divide-slate-700 max-h-96 overflow-y-auto">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Request Form -->
+                <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                    <h4 class="font-semibold text-white mb-4">New DSAR</h4>
+                    <form id="dsar-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Request Type</label>
+                            <select id="dsar-type" class="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2 text-sm">
+                                <option value="access">Access Request (Art. 15)</option>
+                                <option value="rectification">Rectification (Art. 16)</option>
+                                <option value="erasure">Erasure/Deletion (Art. 17)</option>
+                                <option value="portability">Data Portability (Art. 20)</option>
+                                <option value="objection">Objection (Art. 21)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Data Subject Email</label>
+                            <input type="email" id="dsar-email" class="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2 text-sm" placeholder="subject@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Description</label>
+                            <textarea id="dsar-desc" rows="3" class="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2 text-sm" placeholder="Details of the request..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+                            Submit Request
+                        </button>
+                    </form>
+
+                    <!-- Compliance Timer -->
+                    <div class="mt-6 p-4 bg-slate-800 rounded-lg border border-slate-600">
+                        <div class="text-xs text-slate-400 mb-1">Response Deadline (30 Days)</div>
+                        <div class="w-full bg-slate-700 rounded-full h-2 mb-2">
+                            <div class="bg-blue-500 h-2 rounded-full" style="width: 65%"></div>
+                        </div>
+                        <div class="text-xs text-slate-500">18 days remaining</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consent Management Section -->
+        <div id="section-consent" class="hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                    <h4 class="text-sm text-slate-400 mb-2">Total Consents</h4>
+                    <div class="text-3xl font-bold text-white">12,453</div>
+                    <div class="mt-2 text-xs text-green-400">Valid & Recorded</div>
+                </div>
+                <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                    <h4 class="text-sm text-slate-400 mb-2">Withdrawn Consents</h4>
+                    <div class="text-3xl font-bold text-red-400">23</div>
+                    <div class="mt-2 text-xs text-slate-500">This month</div>
+                </div>
+                <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                    <h4 class="text-sm text-slate-400 mb-2">Consent Rate</h4>
+                    <div class="text-3xl font-bold text-blue-400">94.2%</div>
+                    <div class="mt-2 text-xs text-slate-500">Average across purposes</div>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-xl overflow-hidden border border-slate-700">
+                <div class="p-4 border-b border-slate-700 bg-slate-800 flex justify-between items-center">
+                    <h4 class="font-semibold text-white">Consent Records (Article 7)</h4>
+                    <button onclick="openModal('consent-details')" class="text-sm text-blue-400 hover:text-blue-300">View Requirements</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-800 text-slate-300">
+                            <tr>
+                                <th class="px-6 py-3">Purpose</th>
+                                <th class="px-6 py-3">Mechanism</th>
+                                <th class="px-6 py-3">Date Obtained</th>
+                                <th class="px-6 py-3">Withdrawal Method</th>
+                                <th class="px-6 py-3">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700">
+                            <tr class="hover:bg-slate-800">
+                                <td class="px-6 py-4 text-white">Marketing Emails</td>
+                                <td class="px-6 py-4 text-slate-300">Double Opt-in</td>
+                                <td class="px-6 py-4 text-slate-300">2026-03-15</td>
+                                <td class="px-6 py-4 text-slate-300">Unsubscribe Link</td>
+                                <td class="px-6 py-4"><span class="px-2 py-1 bg-green-900 text-green-400 rounded text-xs">Active</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800">
+                                <td class="px-6 py-4 text-white">Analytics Cookies</td>
+                                <td class="px-6 py-4 text-slate-300">Consent Banner</td>
+                                <td class="px-6 py-4 text-slate-300">2026-03-20</td>
+                                <td class="px-6 py-4 text-slate-300">Cookie Settings</td>
+                                <td class="px-6 py-4"><span class="px-2 py-1 bg-green-900 text-green-400 rounded text-xs">Active</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-800">
+                                <td class="px-6 py-4 text-white">Third-party Sharing</td>
+                                <td class="px-6 py-4 text-slate-300">Checkbox (unticked)</td>
+                                <td class="px-6 py-4 text-slate-300">2026-02-10</td>
+                                <td class="px-6 py-4 text-slate-300">Privacy Portal</td>
+                                <td class="px-6 py-4"><span class="px-2 py-1 bg-yellow-900 text-yellow-400 rounded text-xs">Pending Review</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Consent Requirements Info -->
+            <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                <h4 class="font-semibold text-white mb-4">GDPR Consent Requirements Checklist</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-5 h-5 rounded border-2 border-green-500 flex items-center justify-center mt-0.5">
+                            <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-white">Freely Given</div>
+                            <div class="text-xs text-slate-400">No pre-ticked boxes, separate from terms</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="w-5 h-5 rounded border-2 border-green-500 flex items-center justify-center mt-0.5">
+                            <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-white">Specific & Informed</div>
+                            <div class="text-xs text-slate-400">Clear purposes explained before collection</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="w-5 h-5 rounded border-2 border-green-500 flex items-center justify-center mt-0.5">
+                            <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-white">Unambiguous</div>
+                            <div class="text-xs text-slate-400">Clear affirmative action required</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="w-5 h-5 rounded border-2 border-green-500 flex items-center justify-center mt-0.5">
+                            <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-white">Documented</div>
+                            <div class="text-xs text-slate-400">Records of who, when, how, and what</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breach Response Section -->
+        <div id="section-breach" class="hidden space-y-6">
+            <div class="bg-red-900/20 border border-red-500/30 rounded-xl p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-red-400">Breach Response Protocol</h3>
+                            <p class="text-sm text-red-300">Article 33-34: 72-hour notification requirement</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-3xl font-bold text-red-400 breach-timer" id="breach-countdown">71:45:32</div>
+                        <div class="text-xs text-red-300">Hours remaining to notify DPA</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div class="bg-slate-900/50 rounded-lg p-3 border border-red-500/20">
+                        <div class="text-xs text-slate-400 mb-1">Breach Detected</div>
+                        <div class="text-sm text-white font-mono">2026-04-02 14:30 UTC</div>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-3 border border-red-500/20">
+                        <div class="text-xs text-slate-400 mb-1">Affected Records</div>
+                        <div class="text-sm text-white font-mono">1,247 data subjects</div>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-3 border border-red-500/20">
+                        <div class="text-xs text-slate-400 mb-1">Severity</div>
+                        <div class="text-sm text-red-400 font-medium">High Risk</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                    <h4 class="font-semibold text-white mb-4">Breach Notification Workflow</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4 p-3 bg-green-900/20 border border-green-500/30 rounded-lg">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">1</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium text-white">Detection & Assessment</div>
+                                <div class="text-xs text-slate-400">Identify breach scope and severity</div>
+                            </div>
+                            <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4 p-3 bg-yellow-900/20 border border-yellow-500/30 rounded-lg">
+                            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold text-sm">2</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium text-white">Notify Data Protection Authority</div>
+                                <div class="text-xs text-slate-400">Within 72 hours (Article 33)</div>
+                            </div>
+                            <span class="text-xs text-yellow-400">In Progress</span>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4 p-3 bg-slate-800 border border-slate-600 rounded-lg opacity-50">
+                            <div class="w-8 h-8 bg-slate-600 rounded-full flex items-center justify-center text-white font-bold text-sm">3</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium text-slate-300">Notify Data Subjects</div>
+                                <div class="text-xs text-slate-500">If high risk (Article 34)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4 p-3 bg-slate-800 border border-slate-600 rounded-lg opacity-50">
+                            <div class="w-8 h-8 bg-slate-600 rounded-full flex items-center justify-center text-white font-bold text-sm">4</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium text-slate-300">Documentation & Remediation</div>
+                                <div class="text-xs text-slate-500">Record all actions taken</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                    <h4 class="font-semibold text-white mb-4">Breach Assessment Checklist</h4>
+                    <div class="space-y-3">
+                        <label class="flex items-center space-x-3 p-2 hover:bg-slate-800 rounded cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">Nature of personal data involved</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-2 hover:bg-slate-800 rounded cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">Severity of potential consequences</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-2 hover:bg-slate-800 rounded cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">Number of data subjects affected</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-2 hover:bg-slate-800 rounded cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">Special categories of data (Art. 9)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-2 hover:bg-slate-800 rounded cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">Measures implemented post-breach</span>
+                        </label>
+                    </div>
+                    
+                    <button onclick="submitBreachReport()" class="mt-4 w-full py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors">
+                        Submit Breach Report to DPA
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DPIA Section -->
+        <div id="section-dpi" class="hidden space-y-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-white">Data Protection Impact Assessments (Article 35)</h3>
+                <button onclick="openModal('new-dpia')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors">
+                    + New DPIA
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                    <h4 class="font-semibold text-white mb-4">When is a DPIA Required?</h4>
+                    <ul class="space-y-3 text-sm text-slate-300">
+                        <li class="flex items-start space-x-2">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>Systematic profiling with significant effects</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>Large-scale processing of special categories</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>Systematic monitoring of publicly accessible areas</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>Innovative use of new technology</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                    <h4 class="font-semibold text-white mb-4">DPIA Status Overview</h4>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-3 bg-slate-800 rounded-lg">
+                            <span class="text-sm text-slate-300">AI Customer Analytics</span>
+                            <span class="px-2 py-1 bg-yellow-900 text-yellow-400 rounded text-xs">In Review</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-slate-800 rounded-lg">
+                            <span class="text-sm text-slate-300">Biometric Access Control</span>
+                            <span class="px-2 py-1 bg-green-900 text-green-400 rounded text-xs">Approved</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-slate-800 rounded-lg">
+                            <span class="text-sm text-slate-300">Employee Monitoring System</span>
+                            <span class="px-2 py-1 bg-red-900 text-red-400 rounded text-xs">High Risk</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical and Organizational Measures (TOMs) -->
+            <div class="glass-panel rounded-xl p-6 border border-slate-700">
+                <h4 class="font-semibold text-white mb-4">Technical and Organizational Measures (Article 32)</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 bg-slate-800 rounded-lg border border-slate-600">
+                        <div class="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <h5 class="text-sm font-medium text-white mb-1">Pseudonymization</h5>
+                        <p class="text-xs text-slate-400">Replacing identifiers with pseudonyms</p>
+                        <div class="mt-2 flex items-center text-xs text-green-400">
+                            <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                            Implemented
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-slate-800 rounded-lg border border-slate-600">
+                        <div class="w-10 h-10 bg-purple-900 rounded-lg flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <h5 class="text-sm font-medium text-white mb-1">Encryption</h5>
+                        <p class="text-xs text-slate-400">AES-256 for data at rest, TLS 1.3 in transit</p>
+                        <div class="mt-2 flex items-center text-xs text-green-400">
+                            <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                            Active
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-slate-800 rounded-lg border border-slate-600">
+                        <div class="w-10 h-10 bg-orange-900 rounded-lg flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                        </div>
+                        <h5 class="text-sm font-medium text-white mb-1">Access Control</h5>
+                        <p class="text-xs text-slate-400">Role-based access, MFA required</p>
+                        <div class="mt-2 flex items-center text-xs text-green-400">
+                            <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                            Enforced
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal for New Processing Activity -->
+    <div id="modal-new-activity" class="hidden fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-black/70 backdrop-blur-sm" onclick="closeModal('new-activity')"></div>
+            <div class="relative glass-panel rounded-xl max-w-2xl w-full p-6 border border-slate-600 shadow-2xl">
+                <h3 class="text-xl font-bold text-white mb-4">Add New Processing Activity</h3>
+                <form id="new-activity-form" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Activity Name</label>
+                            <input type="text" required class="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Purpose</label>
+                            <select class="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2 text-sm">
+                                <option>Customer Management</option>
+                                <option>Marketing</option>
+                                <option>Analytics</option>
+                                <option>Legal Compliance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Data Categories</label>
+                        <input type="text" placeholder="e.g., Contact details, IP addresses, Purchase history" class="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2 text-sm">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Legal Basis (Article 6)</label>
+                            <select class="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2 text-sm">
+                                <option value="consent">Consent (6.1a)</option>
+                                <option value="contract">Contract (6.1b)</option>
+                                <option value="legal">Legal Obligation (6.1c)</option>
+                                <option value="vital">Vital Interests (6.1d)</option>
+                                <option value="public">Public Task (6.1e)</option>
+                                <option value="legitimate">Legitimate Interests (6.1f)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Retention Period</label>
+                            <input type="text" placeholder="e.g., 3 years post-contract" class="w-full bg-slate-800 border border-slate-600 text-white rounded-lg px-3 py-2 text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Risk Level</label>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="risk" value="low" class="text-green-500 focus:ring-green-500 bg-slate-800 border-slate-600">
+                                <span class="text-sm text-slate-300">Low</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="risk" value="medium" class="text-yellow-500 focus:ring-yellow-500 bg-slate-800 border-slate-600">
+                                <span class="text-sm text-slate-300">Medium</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="risk" value="high" class="text-red-500 focus:ring-red-500 bg-slate-800 border-slate-600">
+                                <span class="text-sm text-slate-300">High</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" onclick="closeModal('new-activity')" class="px-4 py-2 text-slate-400 hover:text-white text-sm">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm">Save Activity</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        const state = {
+            currentTab: 'ropa',
+            ropaRecords: [
+                {
+                    id: 1,
+                    name: "Customer Database Management",
+                    purpose: "Customer relationship management and order processing",
+                    categories: "Name, Email, Phone, Address, Purchase History",
+                    legalBasis: "Contract (6.1b)",
+                    retention: "Duration of contract + 3 years",
+                    risk: "medium",
+                    recipients: "Payment processors, Shipping providers"
+                },
+                {
+                    id: 2,
+                    name: "Marketing Communications",
+                    purpose: "Direct marketing and promotional offers",
+                    categories: "Email, Preferences, Interaction data",
+                    legalBasis: "Consent (6.1a)",
+                    retention: "Until withdrawal of consent",
+                    risk: "low",
+                    recipients: "Email service provider"
+                },
+                {
+                    id: 3,
+                    name: "Website Analytics",
+                    purpose: "User behavior analysis and optimization",
+                    categories: "IP Address, Browser info, Device ID, Cookies",
+                    legalBasis: "Consent (6.1a)",
+                    retention: "26 months",
+                    risk: "medium",
+                    recipients: "Analytics provider"
+                },
+                {
+                    id: 4,
+                    name: "Employee Payroll Processing",
+                    purpose: "Salary calculation and tax compliance",
+                    categories: "Name, Bank details, Tax ID, Salary data",
+                    legalBasis: "Legal Obligation (6.1c)",
+                    retention: "10 years (tax law)",
+                    risk: "high",
+                    recipients: "Tax authorities, Bank"
+                },
+                {
+                    id: 5,
+                    name: "Customer Support Tickets",
+                    purpose: "Support case management and resolution",
+                    categories: "Contact info, Issue descriptions, Attachments",
+                    legalBasis: "Legitimate Interests (6.1f)",
+                    retention: "2 years post-resolution",
+                    risk: "low",
+                    recipients: "Internal support team"
+                }
+            ],
+            dsarRequests: [
+                {
+                    id: "DSAR-2026-001",
+                    type: "access",
+                    email: "john.doe@example.com",
+                    date: "2026-03-28",
+                    status: "completed",
+                    deadline: "2026-04-27",
+                    description: "Requesting all personal data held"
+                },
+                {
+                    id: "DSAR-2026-002",
+                    type: "erasure",
+                    email: "jane.smith@example.com",
+                    date: "2026-04-01",
+                    status: "pending",
+                    deadline: "2026-05-01",
+                    description: "Requesting deletion of account and data"
+                },
+                {
+                    id: "DSAR-2026-003",
+                    type: "portability",
+                    email: "mike.wilson@example.com",
+                    date: "2026-04-02",
+                    status: "pending",
+                    deadline: "2026-05-02",
+                    description: "Requesting data export in machine-readable format"
+                }
+            ]
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderRoPA();
+            renderDSARs();
+            startBreachTimer();
+            
+            // Form submissions
+            document.getElementById('new-activity-form').addEventListener('submit', handleNewActivity);
+            document.getElementById('dsar-form').addEventListener('submit', handleNewDSAR);
+        });
+
+        // Tab Switching
+        function switchTab(tab) {
+            // Hide all sections
+            ['ropa', 'dsar', 'consent', 'breach', 'dpi'].forEach(t => {
+                document.getElementById(`section-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('tab-active');
+                document.getElementById(`tab-${t}`).classList.add('text-slate-400');
+            });
+            
+            // Show selected
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('tab-active');
+            document.getElementById(`tab-${tab}`).classList.remove('text-slate-400');
+            state.currentTab = tab;
+        }
+
+        // RoPA Rendering
+        function renderRoPA() {
+            const tbody = document.getElementById('ropa-table-body');
+            tbody.innerHTML = state.ropaRecords.map(record => `
+                <tr class="hover:bg-slate-800/50 transition-colors compliance-card ${record.risk}-risk">
+                    <td class="px-6 py-4">
+                        <div class="text-sm font-medium text-white">${record.name}</div>
+                        <div class="text-xs text-slate-500">ID: ROPA-${String(record.id).padStart(3, '0')}</div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-slate-300">${record.purpose}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex flex-wrap gap-1">
+                            ${record.categories.split(', ').map(cat => 
+                                `<span class="px-2 py-1 bg-slate-700 text-slate-300 rounded text-xs">${cat}</span>`
+                            ).join('')}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-slate-300">${record.legalBasis}</td>
+                    <td class="px-6 py-4 text-sm text-slate-300">${record.retention}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded text-xs font-medium ${
+                            record.risk === 'high' ? 'bg-red-900/50 text-red-400' :
+                            record.risk === 'medium' ? 'bg-yellow-900/50 text-yellow-400' :
+                            'bg-green-900/50 text-green-400'
+                        } uppercase">${record.risk}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <button onclick="viewActivity(${record.id})" class="text-blue-400 hover:text-blue-300 text-sm mr-3">View</button>
+                        <button onclick="editActivity(${record.id})" class="text-slate-400 hover:text-white text-sm">Edit</button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('total-activities').textContent = state.ropaRecords.length;
+        }
+
+        // DSAR Rendering
+        function renderDSARs() {
+            const container = document.getElementById('dsar-list');
+            const filter = document.getElementById('dsar-filter').value;
+            
+            const filtered = filter === 'all' ? state.dsarRequests : 
+                           state.dsarRequests.filter(r => r.status === filter);
+            
+            container.innerHTML = filtered.map(req => `
+                <div class="p-4 hover:bg-slate-800 transition-colors ${req.status === 'pending' ? 'border-l-4 border-yellow-500' : 'border-l-4 border-green-500'}">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <div class="text-sm font-medium text-white">${req.id}</div>
+                            <div class="text-xs text-slate-400">${req.email}</div>
+                        </div>
+                        <span class="px-2 py-1 rounded text-xs ${
+                            req.status === 'completed' ? 'bg-green-900 text-green-400' : 'bg-yellow-900 text-yellow-400'
+                        }">${req.status}</span>
+                    </div>
+                    <div class="text-sm text-slate-300 mb-2">${getDSARTypeLabel(req.type)}</div>
+                    <div class="text-xs text-slate-500">Deadline: ${req.deadline}</div>
+                    <div class="mt-2 flex space-x-2">
+                        ${req.status === 'pending' ? `
+                            <button onclick="processDSAR('${req.id}')" class="text-xs px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">Process</button>
+                            <button onclick="extendDeadline('${req.id}')" class="text-xs px-3 py-1 bg-slate-700 text-slate-300 rounded hover:bg-slate-600">Extend</button>
+                        ` : `
+                            <button onclick="viewDSAR('${req.id}')" class="text-xs px-3 py-1 bg-slate-700 text-slate-300 rounded hover:bg-slate-600">View Response</button>
+                        `}
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('pending-requests').textContent = 
+                state.dsarRequests.filter(r => r.status === 'pending').length;
+        }
+
+        function getDSARTypeLabel(type) {
+            const labels = {
+                'access': 'Access Request (Art. 15)',
+                'rectification': 'Rectification (Art. 16)',
+                'erasure': 'Erasure (Art. 17)',
+                'portability': 'Portability (Art. 20)',
+                'objection': 'Objection (Art. 21)'
+            };
+            return labels[type] || type;
+        }
+
+        // Breach Timer
+        function startBreachTimer() {
+            // Simulate 72-hour countdown from breach detection
+            let hours = 71;
+            let minutes = 45;
+            let seconds = 32;
+            
+            setInterval(() => {
+                seconds--;
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                    if (minutes < 0) {
+                        minutes = 59;
+                        hours--;
+                        if (hours < 0) hours = 0;
+                    }
+                }
+                
+                const timeStr = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                document.getElementById('breach-countdown').textContent = timeStr;
+                document.getElementById('breach-timer').textContent = timeStr;
+            }, 1000);
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(`modal-${modalId}`).classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(`modal-${modalId}`).classList.add('hidden');
+        }
+
+        // Form Handlers
+        function handleNewActivity(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            const newActivity = {
+                id: state.ropaRecords.length + 1,
+                name: e.target.querySelector('input[type="text"]').value,
+                purpose: e.target.querySelector('select').value,
+                categories: e.target.querySelectorAll('input[type="text"]')[1].value,
+                legalBasis: e.target.querySelectorAll('select')[1].value,
+                retention: e.target.querySelectorAll('input[type="text"]')[2].value,
+                risk: e.target.querySelector('input[name="risk"]:checked').value
+            };
+            
+            state.ropaRecords.push(newActivity);
+            renderRoPA();
+            closeModal('new-activity');
+            e.target.reset();
+            
+            // Show notification
+            showNotification('Processing activity added successfully', 'success');
+        }
+
+        function handleNewDSAR(e) {
+            e.preventDefault();
+            
+            const newRequest = {
+                id: `DSAR-2026-${String(state.dsarRequests.length + 1).padStart(3, '0')}`,
+                type: document.getElementById('dsar-type').value,
+                email: document.getElementById('dsar-email').value,
+                date: new Date().toISOString().split('T')[0],
+                status: 'pending',
+                deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                description: document.getElementById('dsar-desc').value
+            };
+            
+            state.dsarRequests.unshift(newRequest);
+            renderDSARs();
+            e.target.reset();
+            showNotification('DSAR submitted successfully', 'success');
+        }
+
+        // Action Functions
+        function processDSAR(id) {
+            const req = state.dsarRequests.find(r => r.id === id);
+            if (req) {
+                req.status = 'completed';
+                renderDSARs();
+                showNotification(`DSAR ${id} marked as completed`, 'success');
+            }
+        }
+
+        function submitBreachReport() {
+            showNotification('Breach report submitted to Data Protection Authority', 'success');
+            document.getElementById('breach-countdown').classList.remove('text-red-400');
+            document.getElementById('breach-countdown').classList.add('text-green-400');
+        }
+
+        function exportReport() {
+            const report = {
+                company: "GoldenIce International",
+                generated: new Date().toISOString(),
+                article30: state.ropaRecords,
+                summary: {
+                    totalActivities: state.ropaRecords.length,
+                    highRisk: state.ropaRecords.filter(r => r.risk === 'high').length,
+                    mediumRisk: state.ropaRecords.filter(r => r.risk === 'medium').length,
+                    lowRisk: state.ropaRecords.filter(r => r.risk === 'low').length
+                }
+            };
+            
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(report, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", `GoldenIce_RoPA_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            
+            showNotification('Article 30 RoPA report exported', 'success');
+        }
+
+        function showNotification(message, type) {
+            const div = document.createElement('div');
+            div.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white z-50 ${
+                type === 'success' ? 'bg-green-600' : 'bg-blue-600'
+            } shadow-lg transform transition-all duration-300 translate-y-0`;
+            div.textContent = message;
+            document.body.appendChild(div);
+            
+            setTimeout(() => {
+                div.classList.add('translate-y-20', 'opacity-0');
+                setTimeout(() => div.remove(), 300);
+            }, 3000);
+        }
+
+        // Filter listener
+        document.getElementById('dsar-filter')?.addEventListener('change', renderDSARs);
+
+        // Placeholder functions
+        function viewActivity(id) { showNotification(`Viewing activity ${id}`, 'info'); }
+        function editActivity(id) { showNotification(`Editing activity ${id}`, 'info'); }
+        function viewDSAR(id) { showNotification(`Viewing DSAR ${id}`, 'info'); }
+        function extendDeadline(id) { showNotification(`Deadline extended for ${id}`, 'success'); }
+    </script>
+</body>
+</html>

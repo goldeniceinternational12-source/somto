@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KYC Verification | Bearing Goldenice International</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8941F;
+            --dark: #0A0A0A;
+            --darker: #050505;
+            --gray: #1A1A1A;
+            --gray-light: #2A2A2A;
+            --gray-lighter: #3A3A3A;
+            --success: #00D084;
+            --danger: #FF4757;
+            --warning: #FFA502;
+            --info: #3498DB;
+            --text: #E0E0E0;
+            --text-muted: #888888;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--darker);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 40%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 1.5rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.8); }
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-pending {
+            background: rgba(255, 165, 2, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .status-verified {
+            background: rgba(0, 208, 132, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 2rem 2rem;
+        }
+
+        /* Progress Tracker */
+        .progress-section {
+            margin-bottom: 3rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-title {
+            font-size: 1.25rem;
+            color: var(--gold);
+        }
+
+        .progress-percentage {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .progress-bar-container {
+            background: var(--gray);
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gray-light);
+            z-index: 0;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray);
+            border: 2px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .step.active .step-number {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--dark);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .step.completed .step-number {
+            background: var(--success);
+            border-color: var(--success);
+            color: var(--white);
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 120px;
+        }
+
+        .step.active .step-label {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .step.completed .step-label {
+            color: var(--success);
+        }
+
+        /* Main Content Grid */
+        .kyc-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        /* Form Section */
+        .form-container {
+            background: var(--gray);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .form-header {
+            margin-bottom: 2rem;
+        }
+
+        .form-header h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .form-header p {
+            color: var(--text-muted);
+        }
+
+        .form-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .required::after {
+            content: ' *';
+            color: var(--danger);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--darker);
+            border: 1px solid var(--gray-light);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9375rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        input.error, select.error {
+            border-color: var(--danger);
+            background: rgba(255, 71, 87, 0.05);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Document Upload */
+        .upload-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-box {
+            border: 2px dashed var(--gray-light);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-box:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .upload-box.active {
+            border-color: var(--success);
+            background: rgba(0, 208, 132, 0.05);
+        }
+
+        .upload-box.has-file {
+            border-color: var(--success);
+            border-style: solid;
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .upload-box:hover .upload-icon {
+            color: var(--gold);
+        }
+
+        .upload-text {
+            font-size: 0.9375rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-preview {
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: rgba(0, 208, 132, 0.1);
+            border-radius: 8px;
+        }
+
+        .file-preview.show {
+            display: flex;
+        }
+
+        .file-name {
+            font-size: 0.875rem;
+            color: var(--success);
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .remove-file {
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        /* Webcam Capture */
+        .webcam-container {
+            background: var(--darker);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--gray-light);
+        }
+
+        .webcam-video {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: none;
+        }
+
+        .webcam-video.active {
+            display: block;
+        }
+
+        .webcam-placeholder {
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+        .webcam-placeholder.active {
+            display: none;
+        }
+
+        .webcam-controls {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-light);
+        }
+
+        /* Verification Methods */
+        .verification-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .verification-card {
+            background: var(--darker);
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .verification-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .verification-card.selected {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .verification-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .verification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .verification-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9375rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary {
+            background: var(--gray-light);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-lighter);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--gray);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .info-card h3 {
+            color: var(--gold);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .info-value {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .security-tips {
+            list-style: none;
+        }
+
+        .security-tips li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .security-tips li:last-child {
+            border-bottom: none;
+        }
+
+        .tip-icon {
+            color: var(--gold);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Review Section */
+        .review-section {
+            background: var(--darker);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .review-title {
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .edit-btn {
+            color: var(--info);
+            font-size: 0.875rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .review-content {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+
+        .review-item {
+            display: flex;
+            margin-bottom: 0.75rem;
+        }
+
+        .review-label {
+            color: var(--text-muted);
+            width: 150px;
+            flex-shrink: 0;
+        }
+
+        .review-value {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--gold);
+            margin-top: 2px;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .checkbox-group a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        /* Success Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--gray);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--success) 0%, #00b870 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 208, 132, 0.3);
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .modal-content h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .modal-content p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 10001;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .toast {
+            background: var(--gray);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            min-width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .toast.success .toast-icon { background: rgba(0, 208, 132, 0.2); color: var(--success); }
+        .toast.error .toast-icon { background: rgba(255, 71, 87, 0.2); color: var(--danger); }
+        .toast.warning .toast-icon { background: rgba(255, 165, 2, 0.2); color: var(--warning); }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .kyc-grid {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                order: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 100px 1rem 1rem;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .upload-grid, .verification-options {
+                grid-template-columns: 1fr;
+            }
+            .steps-container {
+                overflow-x: auto;
+                padding-bottom: 1rem;
+            }
+            .step {
+                min-width: 100px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-light);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">⚡</div>
+                <span>Goldenice International</span>
+            </a>
+            <div class="header-status">
+                <div class="status-badge status-pending" id="kycStatus">
+                    <span>⏳</span>
+                    <span>Verification Pending</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Progress Tracker -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <h2 class="progress-title">KYC Verification Progress</h2>
+                <span class="progress-percentage" id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step active" data-step="1" onclick="goToStep(1)">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Personal Info</div>
+                </div>
+                <div class="step" data-step="2" onclick="goToStep(2)">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Identity Verification</div>
+                </div>
+                <div class="step" data-step="3" onclick="goToStep(3)">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Address Proof</div>
+                </div>
+                <div class="step" data-step="4" onclick="goToStep(4)">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Financial Info</div>
+                </div>
+                <div class="step" data-step="5" onclick="goToStep(5)">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Review & Submit</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="kyc-grid">
+            <!-- Main Form -->
+            <div class="form-container">
+                <!-- Step 1: Personal Information -->
+                <div class="form-section active" id="step1">
+                    <div class="form-header">
+                        <h2>Personal Information</h2>
+                        <p>Please provide your basic personal details as they appear on your official documents.</p>
+                    </div>
+                    
+                    <form id="personalForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required">First Name</label>
+                                <input type="text" id="firstName" placeholder="John" required>
+                                <div class="error-message">Please enter your first name</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Last Name</label>
+                                <input type="text" id="lastName" placeholder="Doe" required>
+                                <div class="error-message">Please enter your last name</div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required">Date of Birth</label>
+                                <input type="date" id="dob" required>
+                                <div class="error-message">You must be at least 18 years old</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Nationality</label>
+                                <select id="nationality" required>
+                                    <option value="">Select Nationality</option>
+                                    <option value="US">United States</option>
+                                    <option value="UK">United Kingdom</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="FR">France</option>
+                                    <option value="JP">Japan</option>
+                                    <option value="SG">Singapore</option>
+                                    <option value="SG">Nigeria</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <div class="error-message">Please select your nationality</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">Email Address</label>
+                            <input type="email" id="email" placeholder="john.doe@example.com" required>
+                            <div class="error-message">Please enter a valid email address</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">Phone Number</label>
+                            <input type="tel" id="phone" placeholder="+234 (555) 123-4567" required>
+                            <div class="error-message">Please enter a valid phone number</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Occupation</label>
+                            <select id="occupation">
+                                <option value="">Select Occupation</option>
+                                <option value="employed">Employed</option>
+                                <option value="self-employed">Self-Employed</option>
+                                <option value="business">Business Owner</option>
+                                <option value="retired">Retired</option>
+                                <option value="student">Student</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Step 2: Identity Verification -->
+                <div class="form-section" id="step2">
+                    <div class="form-header">
+                        <h2>Identity Verification</h2>
+                        <p>Upload a clear photo of your government-issued ID and take a selfie for facial verification.</p>
+                    </div>
+
+                    <div class="upload-grid">
+                        <div class="upload-box" id="idUploadBox" onclick="document.getElementById('idDoc').click()">
+                            <input type="file" id="idDoc" class="file-input" accept="image/*,.pdf" onchange="handleFileUpload(this, 'id')">
+                            <div class="upload-icon">🆔</div>
+                            <div class="upload-text">Upload ID Document</div>
+                            <div class="upload-hint">Passport, Driver's License, or National ID<br>Max 5MB (JPG, PNG, PDF)</div>
+                            <div class="file-preview" id="idPreview">
+                                <span class="file-name"></span>
+                                <span class="remove-file" onclick="removeFile(event, 'id')">✕</span>
+                            </div>
+                        </div>
+
+                        <div class="upload-box" id="selfieUploadBox" onclick="startWebcam()">
+                            <div class="upload-icon">📷</div>
+                            <div class="upload-text">Take Selfie</div>
+                            <div class="upload-hint">Live photo for facial recognition<br>Click to open camera</div>
+                            <div class="file-preview" id="selfiePreview">
+                                <span class="file-name">selfie_verification.jpg</span>
+                                <span class="remove-file" onclick="removeFile(event, 'selfie')">✕</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="webcam-container" id="webcamContainer" style="display: none;">
+                        <video class="webcam-video" id="webcamVideo" autoplay></video>
+                        <div class="webcam-placeholder" id="webcamPlaceholder">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📹</div>
+                            <p>Camera access required for verification</p>
+                        </div>
+                        <div class="webcam-controls">
+                            <button type="button" class="btn btn-secondary" onclick="stopWebcam()">Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="captureSelfie()">Capture Photo</button>
+                        </div>
+                    </div>
+
+                    <div class="verification-options">
+                        <div class="verification-card selected" onclick="selectVerification(this, 'standard')">
+                            <div class="verification-icon">⚡</div>
+                            <div class="verification-title">Standard</div>
+                            <div class="verification-desc">1-2 business days</div>
+                        </div>
+                        <div class="verification-card" onclick="selectVerification(this, 'express')">
+                            <div class="verification-icon">🚀</div>
+                            <div class="verification-title">Express</div>
+                            <div class="verification-desc">Within 4 hours</div>
+                        </div>
+                        <div class="verification-card" onclick="selectVerification(this, 'video')">
+                            <div class="verification-icon">📹</div>
+                            <div class="verification-title">Video Call</div>
+                            <div class="verification-desc">Instant verification</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Address Verification -->
+                <div class="form-section" id="step3">
+                    <div class="form-header">
+                        <h2>Address Verification</h2>
+                        <p>Provide your residential address and upload a recent utility bill or bank statement.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Street Address</label>
+                        <input type="text" id="street" placeholder="123 Main Street, Apt 4B" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required">City</label>
+                            <input type="text" id="city" placeholder="New York" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Postal Code</label>
+                            <input type="text" id="postal" placeholder="10001" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Country</label>
+                        <select id="country" required>
+                            <option value="">Select Country</option>
+                            <option value="US">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="CA">Canada</option>
+                            <option value="AU">Australia</option>
+                            <option value="DE">Germany</option>
+                            <option value="FR">France</option>
+                            <option value="JP">Japan</option>
+                            <option value="SG">Singapore</option>
+                            <option value="NIG">Nigeria</option>
+                        </select>
+                    </div>
+
+                    <div class="upload-box" id="addressUploadBox" onclick="document.getElementById('addressDoc').click()">
+                        <input type="file" id="addressDoc" class="file-input" accept="image/*,.pdf" onchange="handleFileUpload(this, 'address')">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-text">Upload Proof of Address</div>
+                        <div class="upload-hint">Utility bill, Bank statement, or Government letter<br>Must be dated within last 3 months</div>
+                        <div class="file-preview" id="addressPreview">
+                            <span class="file-name"></span>
+                            <span class="remove-file" onclick="removeFile(event, 'address')">✕</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Financial Information -->
+                <div class="form-section" id="step4">
+                    <div class="form-header">
+                        <h2>Financial Information</h2>
+                        <p>This information helps us understand your trading experience and ensure suitable services.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Annual Income (USD)</label>
+                        <select id="income" required>
+                            <option value="">Select Range</option>
+                            <option value="0-25k">$0 - $25,000</option>
+                            <option value="25k-50k">$25,000 - $50,000</option>
+                            <option value="50k-100k">$50,000 - $100,000</option>
+                            <option value="100k-250k">$100,000 - $250,000</option>
+                            <option value="250k+">$250,000+</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Net Worth (USD)</label>
+                        <select id="netWorth" required>
+                            <option value="">Select Range</option>
+                            <option value="0-50k">$0 - $50,000</option>
+                            <option value="50k-100k">$50,000 - $100,000</option>
+                            <option value="100k-500k">$100,000 - $500,000</option>
+                            <option value="500k-1m">$500,000 - $1,000,000</option>
+                            <option value="1m+">$1,000,000+</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Trading Experience</label>
+                        <select id="experience" required>
+                            <option value="">Select Experience Level</option>
+                            <option value="none">No Experience</option>
+                            <option value="beginner">Beginner (Less than 1 year)</option>
+                            <option value="intermediate">Intermediate (1-3 years)</option>
+                            <option value="advanced">Advanced (3-5 years)</option>
+                            <option value="professional">Professional (5+ years)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Intended Investment Amount (USD)</label>
+                        <select id="investment" required>
+                            <option value="">Select Amount</option>
+                            <option value="1k-5k">$1,000 - $5,000</option>
+                            <option value="5k-10k">$5,000 - $10,000</option>
+                            <option value="10k-25k">$10,000 - $25,000</option>
+                            <option value="25k-50k">$25,000 - $50,000</option>
+                            <option value="50k+">$50,000+</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Source of Funds</label>
+                        <select id="source">
+                            <option value="">Select Source</option>
+                            <option value="salary">Salary/Wages</option>
+                            <option value="savings">Savings</option>
+                            <option value="investment">Investment Returns</option>
+                            <option value="business">Business Income</option>
+                            <option value="inheritance">Inheritance</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 5: Review & Submit -->
+                <div class="form-section" id="step5">
+                    <div class="form-header">
+                        <h2>Review & Submit</h2>
+                        <p>Please review your information before submitting for verification.</p>
+                    </div>
+
+                    <div class="review-section">
+                        <div class="review-header">
+                            <span class="review-title">Personal Information</span>
+                            <button class="edit-btn" onclick="goToStep(1)">Edit</button>
+                        </div>
+                        <div class="review-content" id="reviewPersonal">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="review-section">
+                        <div class="review-header">
+                            <span class="review-title">Identity Documents</span>
+                            <button class="edit-btn" onclick="goToStep(2)">Edit</button>
+                        </div>
+                        <div class="review-content" id="reviewIdentity">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="review-section">
+                        <div class="review-header">
+                            <span class="review-title">Address Information</span>
+                            <button class="edit-btn" onclick="goToStep(3)">Edit</button>
+                        </div>
+                        <div class="review-content" id="reviewAddress">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="review-section">
+                        <div class="review-header">
+                            <span class="review-title">Financial Profile</span>
+                            <button class="edit-btn" onclick="goToStep(4)">Edit</button>
+                        </div>
+                        <div class="review-content" id="reviewFinancial">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="termsCheck">
+                        <label for="termsCheck">I confirm that all information provided is accurate and complete. I agree to the <a href="./tos.html">Terms of Service</a> and <a href="./privacy policy.html">Privacy Policy</a>. I understand that providing false information may result in account suspension.</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="pepCheck">
+                        <label for="pepCheck">I confirm that I am not a Politically Exposed Person (PEP) and do not have any close associates who are PEPs.</label>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="display: none;">
+                        ← Previous
+                    </button>
+                    <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+                        Next Step →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="info-card">
+                    <h3>📋 Verification Checklist</h3>
+                    <div class="info-item">
+                        <span class="info-label">Personal Details</span>
+                        <span class="info-value" id="checkPersonal">⏳ Pending</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ID Document</span>
+                        <span class="info-value" id="checkId">⏳ Pending</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Selfie Verification</span>
+                        <span class="info-value" id="checkSelfie">⏳ Pending</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Address Proof</span>
+                        <span class="info-value" id="checkAddress">⏳ Pending</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Financial Info</span>
+                        <span class="info-value" id="checkFinancial">⏳ Pending</span>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔒 Security Tips</h3>
+                    <ul class="security-tips">
+                        <li>
+                            <span class="tip-icon">✓</span>
+                            <span>Ensure all documents are clear and legible</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">✓</span>
+                            <span>Information must match your official documents exactly</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">✓</span>
+                            <span>Documents must be valid and not expired</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">✓</span>
+                            <span>Your data is encrypted with 256-bit SSL security</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">✓</span>
+                            <span>Verification typically takes 1-2 business days</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>📞 Need Help?</h3>
+                    <div style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;">
+                        <p style="margin-bottom: 1rem;">Our compliance team is available 24/7 to assist with your verification.</p>
+                        <p>Email: <a href="mailto:goldeniceinternational12.com" style="color: var(--gold); text-decoration: none;">goldeniceinternational12.com</a></p>
+                        <p>Phone: <a href="tel:07065151245(Call),07040856276(whatsapp)" style="color: var(--gold); text-decoration: none;">07065151245(Call),07040856276(whatsapp)</a></p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon">✓</div>
+            <h2>Verification Submitted!</h2>
+            <p>Your KYC documents have been successfully submitted. Our compliance team will review your application within 1-2 business days. You will receive an email notification once the review is complete.</p>
+            <button class="btn btn-primary" onclick="closeModal()" style="width: 100%; justify-content: center;">
+            <a href="./dashboard.html">Go to Dashboard</a>                    
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+        let stream = null;
+        let formData = {
+            personal: {},
+            documents: {},
+            address: {},
+            financial: {}
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgress();
+            updateChecklist();
+        });
+
+        // Navigation
+        function goToStep(step) {
+            if (step < 1 || step > totalSteps) return;
+            if (step > currentStep && !validateStep(currentStep)) return;
+            
+            currentStep = step;
+            updateUI();
+        }
+
+        function nextStep() {
+            if (!validateStep(currentStep)) return;
+            
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateUI();
+            } else {
+                submitForm();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            // Update steps
+            document.querySelectorAll('.step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+
+            // Update sections
+            document.querySelectorAll('.form-section').forEach((section, index) => {
+                section.classList.remove('active');
+                if (index + 1 === currentStep) {
+                    section.classList.add('active');
+                }
+            });
+
+            // Update buttons
+            document.getElementById('prevBtn').style.display = currentStep === 1 ? 'none' : 'flex';
+            document.getElementById('nextBtn').innerHTML = currentStep === totalSteps ? 
+                '<span>Submit Verification</span> ✓' : 'Next Step →';
+
+            // Update review section if on step 5
+            if (currentStep === 5) {
+                populateReview();
+            }
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const percent = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = Math.round(percent) + '%';
+        }
+
+        // Validation
+        function validateStep(step) {
+            let isValid = true;
+            
+            if (step === 1) {
+                const fields = ['firstName', 'lastName', 'dob', 'nationality', 'email', 'phone'];
+                fields.forEach(field => {
+                    const element = document.getElementById(field);
+                    const value = element.value.trim();
+                    const errorDiv = element.nextElementSibling;
+                    
+                    if (!value) {
+                        element.classList.add('error');
+                        errorDiv.classList.add('show');
+                        isValid = false;
+                    } else {
+                        element.classList.remove('error');
+                        errorDiv.classList.remove('show');
+                        
+                        // Additional validation
+                        if (field === 'email' && !isValidEmail(value)) {
+                            element.classList.add('error');
+                            errorDiv.textContent = 'Please enter a valid email address';
+                            errorDiv.classList.add('show');
+                            isValid = false;
+                        }
+                        if (field === 'dob') {
+                            const age = calculateAge(value);
+                            if (age < 18) {
+                                element.classList.add('error');
+                                errorDiv.textContent = 'You must be at least 18 years old';
+                                errorDiv.classList.add('show');
+                                isValid = false;
+                            }
+                        }
+                    }
+                });
+
+                if (isValid) {
+                    formData.personal = {
+                        firstName: document.getElementById('firstName').value,
+                        lastName: document.getElementById('lastName').value,
+                        dob: document.getElementById('dob').value,
+                        nationality: document.getElementById('nationality').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        occupation: document.getElementById('occupation').value
+                    };
+                    document.getElementById('checkPersonal').textContent = '✓ Complete';
+                    document.getElementById('checkPersonal').style.color = 'var(--success)';
+                }
+            }
+            
+            if (step === 2) {
+                const hasId = document.getElementById('idPreview').classList.contains('show');
+                const hasSelfie = document.getElementById('selfiePreview').classList.contains('show');
+                
+                if (!hasId) {
+                    showToast('Missing Document', 'Please upload your ID document', 'error');
+                    isValid = false;
+                }
+                if (!hasSelfie) {
+                    showToast('Missing Selfie', 'Please take a selfie for verification', 'error');
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    document.getElementById('checkId').textContent = '✓ Complete';
+                    document.getElementById('checkId').style.color = 'var(--success)';
+                    document.getElementById('checkSelfie').textContent = '✓ Complete';
+                    document.getElementById('checkSelfie').style.color = 'var(--success)';
+                }
+            }
+
+            if (step === 3) {
+                const fields = ['street', 'city', 'postal', 'country'];
+                fields.forEach(field => {
+                    const element = document.getElementById(field);
+                    if (!element.value.trim()) {
+                        element.classList.add('error');
+                        isValid = false;
+                    } else {
+                        element.classList.remove('error');
+                    }
+                });
+
+                const hasAddressDoc = document.getElementById('addressPreview').classList.contains('show');
+                if (!hasAddressDoc) {
+                    showToast('Missing Document', 'Please upload proof of address', 'error');
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    formData.address = {
+                        street: document.getElementById('street').value,
+                        city: document.getElementById('city').value,
+                        postal: document.getElementById('postal').value,
+                        country: document.getElementById('country').value
+                    };
+                    document.getElementById('checkAddress').textContent = '✓ Complete';
+                    document.getElementById('checkAddress').style.color = 'var(--success)';
+                }
+            }
+
+            if (step === 4) {
+                const fields = ['income', 'netWorth', 'experience', 'investment'];
+                fields.forEach(field => {
+                    const element = document.getElementById(field);
+                    if (!element.value) {
+                        element.classList.add('error');
+                        isValid = false;
+                    } else {
+                        element.classList.remove('error');
+                    }
+                });
+
+                if (isValid) {
+                    formData.financial = {
+                        income: document.getElementById('income').value,
+                        netWorth: document.getElementById('netWorth').value,
+                        experience: document.getElementById('experience').value,
+                        investment: document.getElementById('investment').value,
+                        source: document.getElementById('source').value
+                    };
+                    document.getElementById('checkFinancial').textContent = '✓ Complete';
+                    document.getElementById('checkFinancial').style.color = 'var(--success)';
+                }
+            }
+
+            if (step === 5) {
+                if (!document.getElementById('termsCheck').checked) {
+                    showToast('Terms Required', 'Please accept the terms and conditions', 'error');
+                    isValid = false;
+                }
+                if (!document.getElementById('pepCheck').checked) {
+                    showToast('PEP Declaration Required', 'Please confirm your PEP status', 'error');
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        // File Upload
+        function handleFileUpload(input, type) {
+            const file = input.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('File Too Large', 'Maximum file size is 5MB', 'error');
+                return;
+            }
+
+            const preview = document.getElementById(type + 'Preview');
+            const box = document.getElementById(type + 'UploadBox');
+            
+            preview.querySelector('.file-name').textContent = file.name;
+            preview.classList.add('show');
+            box.classList.add('has-file');
+            
+            showToast('File Uploaded', `${file.name} uploaded successfully`, 'success');
+        }
+
+        function removeFile(event, type) {
+            event.stopPropagation();
+            const input = document.getElementById(type === 'id' ? 'idDoc' : type === 'address' ? 'addressDoc' : 'selfieDoc');
+            const preview = document.getElementById(type + 'Preview');
+            const box = document.getElementById(type + 'UploadBox');
+            
+            input.value = '';
+            preview.classList.remove('show');
+            box.classList.remove('has-file');
+        }
+
+        // Webcam
+        async function startWebcam() {
+            const container = document.getElementById('webcamContainer');
+            const video = document.getElementById('webcamVideo');
+            const placeholder = document.getElementById('webcamPlaceholder');
+            
+            container.style.display = 'block';
+            
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                video.classList.add('active');
+                placeholder.classList.add('active');
+            } catch (err) {
+                showToast('Camera Error', 'Unable to access camera. Please check permissions.', 'error');
+                container.style.display = 'none';
+            }
+        }
+
+        function stopWebcam() {
+            const container = document.getElementById('webcamContainer');
+            const video = document.getElementById('webcamVideo');
+            
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            video.classList.remove('active');
+            container.style.display = 'none';
+        }
+
+        function captureSelfie() {
+            const video = document.getElementById('webcamVideo');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            stopWebcam();
+            
+            const preview = document.getElementById('selfiePreview');
+            const box = document.getElementById('selfieUploadBox');
+            
+            preview.classList.add('show');
+            box.classList.add('has-file');
+            
+            showToast('Selfie Captured', 'Photo captured successfully', 'success');
+        }
+
+        // Verification Method Selection
+        function selectVerification(card, method) {
+            document.querySelectorAll('.verification-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+        }
+
+        // Review Population
+        function populateReview() {
+            // Personal
+            const personalHtml = `
+                <div class="review-item">
+                    <span class="review-label">Full Name</span>
+                    <span class="review-value">${formData.personal.firstName} ${formData.personal.lastName}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Date of Birth</span>
+                    <span class="review-value">${formData.personal.dob}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Nationality</span>
+                    <span class="review-value">${formData.personal.nationality}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Email</span>
+                    <span class="review-value">${formData.personal.email}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Phone</span>
+                    <span class="review-value">${formData.personal.phone}</span>
+                </div>
+            `;
+            document.getElementById('reviewPersonal').innerHTML = personalHtml;
+
+            // Identity
+            const hasId = document.getElementById('idPreview').classList.contains('show');
+            const hasSelfie = document.getElementById('selfiePreview').classList.contains('show');
+            document.getElementById('reviewIdentity').innerHTML = `
+                <div class="review-item">
+                    <span class="review-label">ID Document</span>
+                    <span class="review-value" style="color: ${hasId ? 'var(--success)' : 'var(--danger)'}">${hasId ? '✓ Uploaded' : '✗ Missing'}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Selfie Verification</span>
+                    <span class="review-value" style="color: ${hasSelfie ? 'var(--success)' : 'var(--danger)'}">${hasSelfie ? '✓ Completed' : '✗ Missing'}</span>
+                </div>
+            `;
+
+            // Address
+            const addressHtml = `
+                <div class="review-item">
+                    <span class="review-label">Street</span>
+                    <span class="review-value">${formData.address.street}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">City</span>
+                    <span class="review-value">${formData.address.city}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Postal Code</span>
+                    <span class="review-value">${formData.address.postal}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Country</span>
+                    <span class="review-value">${formData.address.country}</span>
+                </div>
+            `;
+            document.getElementById('reviewAddress').innerHTML = addressHtml;
+
+            // Financial
+            const financialHtml = `
+                <div class="review-item">
+                    <span class="review-label">Annual Income</span>
+                    <span class="review-value">${formData.financial.income}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Net Worth</span>
+                    <span class="review-value">${formData.financial.netWorth}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Trading Experience</span>
+                    <span class="review-value">${formData.financial.experience}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Investment Amount</span>
+                    <span class="review-value">${formData.financial.investment}</span>
+                </div>
+            `;
+            document.getElementById('reviewFinancial').innerHTML = financialHtml;
+        }
+
+        // Submit
+        function submitForm() {
+            const btn = document.getElementById('nextBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Submitting...';
+            
+            setTimeout(() => {
+                document.getElementById('successModal').classList.add('show');
+                document.getElementById('kycStatus').className = 'status-badge status-pending';
+                document.getElementById('kycStatus').innerHTML = '<span>⏳</span><span>Under Review</span>';
+            }, 2000);
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('show');
+            // Reset or redirect
+            window.location.href = '#dashboard';
+        }
+
+        // Utilities
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function calculateAge(dob) {
+            const birthDate = new Date(dob);
+            const diff = Date.now() - birthDate.getTime();
+            return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+        }
+
+        function showToast(title, message, type) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : '⚠';
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${icon}</div>
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 0.25rem;">${title}</div>
+                    <div style="font-size: 0.875rem; color: var(--text-muted);">${message}</div>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        function updateChecklist() {
+            // Initial state
+        }
+
+        // Input formatting
+        document.getElementById('phone')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    value = `+${value}`;
+                } else if (value.length <= 6) {
+                    value = `+${value.slice(0, 3)} ${value.slice(3)}`;
+                } else {
+                    value = `+${value.slice(0, 3)} ${value.slice(3, 6)} ${value.slice(6, 10)}`;
+                }
+            }
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>

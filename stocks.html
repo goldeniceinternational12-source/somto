@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Global & African Markets</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Cinzel', 'serif'],
+                    },
+                    colors: {
+                        gold: {
+                            50: '#FFFBEB',
+                            100: '#FEF3C7',
+                            200: '#FDE68A',
+                            300: '#FCD34D',
+                            400: '#FBBF24',
+                            500: '#D4AF37', // Classic Gold
+                            600: '#B45309',
+                            700: '#92400E',
+                            800: '#78350F',
+                            900: '#451A03',
+                        },
+                        dark: {
+                            900: '#030712',
+                            800: '#0B0F19',
+                            700: '#111827',
+                            600: '#1F2937',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #030712;
+            color: #E5E7EB;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0F19; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37; 
+        }
+
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #FCD34D 0%, #D4AF37 50%, #B45309 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glow-gold {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+        }
+
+        .market-positive { color: #10B981; }
+        .market-negative { color: #EF4444; }
+
+        /* Ticker Animation */
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background-color: #0B0F19;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            white-space: nowrap;
+        }
+        .ticker {
+            display: inline-block;
+            padding-left: 100%;
+            animation: ticker 30s linear infinite;
+        }
+        .ticker-item {
+            display: inline-block;
+            padding: 0 2rem;
+            font-size: 0.875rem;
+            color: #9CA3AF;
+        }
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        /* Map Pulse Animation */
+        .pulse-dot {
+            animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Top Ticker -->
+    <div class="ticker-wrap">
+        <div class="ticker" id="globalTicker">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 glass-panel border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-dark-900 font-bold">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <span class="font-serif text-xl font-bold text-white tracking-wider">GOLDENICE <span class="text-gold-500 text-sm font-sans font-normal opacity-80">INT'L</span></span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#dashboard" class="text-gold-400 hover:text-gold-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">Dashboard</a>
+                        <a href="./African Markets.html" class="text-gray-300 hover:text-gold-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">African Markets</a>
+                        <a href="./Global Indices.html" class="text-gray-300 hover:text-gold-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Global Indices</a>
+                        <a href="./Commodities.html" class="text-gray-300 hover:text-gold-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Commodities</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden sm:block">
+                        <div class="text-xs text-gray-400">Market Status</div>
+                        <div class="text-xs text-green-400 font-semibold flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> OPEN
+                        </div>
+                    </div>
+                    <button class="bg-gold-600 hover:bg-gold-500 text-dark-900 px-4 py-2 rounded text-sm font-bold transition-colors">
+                    <a href="./inves.html"> Trade Now</a>   
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <div>
+                <h1 class="font-serif text-3xl md:text-4xl text-white mb-2">Market Intelligence</h1>
+                <p class="text-gray-400 text-sm">Real-time data aggregation from global exchanges and African frontier markets.</p>
+            </div>
+            <div class="flex gap-2 bg-dark-800 p-1 rounded-lg border border-white/5">
+                <button onclick="switchTimeframe('1D')" class="time-btn active px-4 py-1.5 rounded text-xs font-medium bg-dark-600 text-white shadow">1D</button>
+                <button onclick="switchTimeframe('1W')" class="time-btn px-4 py-1.5 rounded text-xs font-medium text-gray-400 hover:text-white hover:bg-dark-700 transition">1W</button>
+                <button onclick="switchTimeframe('1M')" class="time-btn px-4 py-1.5 rounded text-xs font-medium text-gray-400 hover:text-white hover:bg-dark-700 transition">1M</button>
+                <button onclick="switchTimeframe('1Y')" class="time-btn px-4 py-1.5 rounded text-xs font-medium text-gray-400 hover:text-white hover:bg-dark-700 transition">1Y</button>
+            </div>
+        </div>
+
+        <!-- Key Indices Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- S&P 500 -->
+            <div class="glass-panel rounded-xl p-4 hover:border-gold-500/30 transition-all cursor-pointer group">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-gray-400 text-xs font-semibold uppercase tracking-wider">S&P 500</span>
+                    <span class="text-green-400 text-xs bg-green-400/10 px-2 py-0.5 rounded flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-trend-up"></i> +1.2%
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-white mb-1">4,783.45</div>
+                <div class="h-10 w-full opacity-50 group-hover:opacity-100 transition-opacity">
+                    <canvas id="spark1"></canvas>
+                </div>
+            </div>
+
+            <!-- NSE Kenya (Nairobi) -->
+            <div class="glass-panel rounded-xl p-4 hover:border-gold-500/30 transition-all cursor-pointer group border-l-2 border-l-gold-600">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-gold-400 text-xs font-semibold uppercase tracking-wider">NSE 20 (Kenya)</span>
+                    <span class="text-red-400 text-xs bg-red-400/10 px-2 py-0.5 rounded flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-trend-down"></i> -0.4%
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-white mb-1">1,562.30</div>
+                <div class="h-10 w-full opacity-50 group-hover:opacity-100 transition-opacity">
+                    <canvas id="spark2"></canvas>
+                </div>
+            </div>
+
+            <!-- JSE (South Africa) -->
+            <div class="glass-panel rounded-xl p-4 hover:border-gold-500/30 transition-all cursor-pointer group border-l-2 border-l-gold-600">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-gold-400 text-xs font-semibold uppercase tracking-wider">JSE Top 40</span>
+                    <span class="text-green-400 text-xs bg-green-400/10 px-2 py-0.5 rounded flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-trend-up"></i> +0.8%
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-white mb-1">71,245.80</div>
+                <div class="h-10 w-full opacity-50 group-hover:opacity-100 transition-opacity">
+                    <canvas id="spark3"></canvas>
+                </div>
+            </div>
+
+            <!-- NGX (Nigeria) -->
+            <div class="glass-panel rounded-xl p-4 hover:border-gold-500/30 transition-all cursor-pointer group border-l-2 border-l-gold-600">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-gold-400 text-xs font-semibold uppercase tracking-wider">NGX All-Share</span>
+                    <span class="text-green-400 text-xs bg-green-400/10 px-2 py-0.5 rounded flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-trend-up"></i> +1.5%
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-white mb-1">98,400.15</div>
+                <div class="h-10 w-full opacity-50 group-hover:opacity-100 transition-opacity">
+                    <canvas id="spark4"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chart Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Chart Area -->
+            <div class="lg:col-span-2 glass-panel rounded-xl p-6 border border-white/5">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-gold-500"></i> Market Performance
+                    </h3>
+                    <div class="flex gap-2">
+                        <select id="marketSelect" class="bg-dark-800 border border-white/10 text-xs text-white rounded px-2 py-1 focus:outline-none focus:border-gold-500">
+                            <option value="mixed">Global vs Africa (Mixed)</option>
+                            <option value="sp500">S&P 500 (USA)</option>
+                            <option value="ftse">FTSE 100 (UK)</option>
+                            <option value="jse">JSE All Share (SA)</option>
+                            <option value="nse">NSE 20 (Kenya)</option>
+                            <option value="ngx">NGX (Nigeria)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="relative h-[350px] w-full">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Market Movers -->
+            <div class="glass-panel rounded-xl p-0 overflow-hidden border border-white/5 flex flex-col">
+                <div class="p-4 border-b border-white/5 bg-white/5">
+                    <h3 class="text-lg font-semibold text-white">African Market Movers</h3>
+                </div>
+                <div class="overflow-y-auto flex-1 max-h-[350px]">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-dark-800 text-gray-400 text-xs uppercase">
+                            <tr>
+                                <th class="px-4 py-3 font-medium">Symbol</th>
+                                <th class="px-4 py-3 font-medium">Price</th>
+                                <th class="px-4 py-3 font-medium text-right">Chg%</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5" id="moversTable">
+                            <!-- JS Populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- African Focus Section -->
+        <div id="africa" class="space-y-4">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="h-px bg-gold-500/30 flex-1"></div>
+                <h2 class="font-serif text-2xl text-gold-400">African Frontier Markets</h2>
+                <div class="h-px bg-gold-500/30 flex-1"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Egypt -->
+                <div class="glass-panel p-5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-red-900/30 flex items-center justify-center text-xs">EG</div>
+                            <div>
+                                <div class="font-bold text-white">EGX 30</div>
+                                <div class="text-xs text-gray-500">Cairo, Egypt</div>
+                            </div>
+                        </div>
+                        <span class="text-green-400 text-sm font-mono">+0.45%</span>
+                    </div>
+                    <div class="text-2xl font-light text-white mb-2">24,950.20</div>
+                    <div class="w-full bg-dark-800 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-gold-500 h-full rounded-full" style="width: 65%"></div>
+                    </div>
+                    <div class="flex justify-between mt-2 text-xs text-gray-500">
+                        <span>Vol: 45M</span>
+                        <span>High: 25,100</span>
+                    </div>
+                </div>
+
+                <!-- Morocco -->
+                <div class="glass-panel p-5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-green-900/30 flex items-center justify-center text-xs">MA</div>
+                            <div>
+                                <div class="font-bold text-white">MASI</div>
+                                <div class="text-xs text-gray-500">Casablanca, Morocco</div>
+                            </div>
+                        </div>
+                        <span class="text-red-400 text-sm font-mono">-0.12%</span>
+                    </div>
+                    <div class="text-2xl font-light text-white mb-2">13,405.60</div>
+                    <div class="w-full bg-dark-800 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-red-500 h-full rounded-full" style="width: 42%"></div>
+                    </div>
+                    <div class="flex justify-between mt-2 text-xs text-gray-500">
+                        <span>Vol: 12M</span>
+                        <span>High: 13,500</span>
+                    </div>
+                </div>
+
+                <!-- Ghana -->
+                <div class="glass-panel p-5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-yellow-900/30 flex items-center justify-center text-xs">GH</div>
+                            <div>
+                                <div class="font-bold text-white">GSE Composite</div>
+                                <div class="text-xs text-gray-500">Accra, Ghana</div>
+                            </div>
+                        </div>
+                        <span class="text-green-400 text-sm font-mono">+1.20%</span>
+                    </div>
+                    <div class="text-2xl font-light text-white mb-2">2,850.15</div>
+                    <div class="w-full bg-dark-800 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-gold-500 h-full rounded-full" style="width: 78%"></div>
+                    </div>
+                    <div class="flex justify-between mt-2 text-xs text-gray-500">
+                        <span>Vol: 8M</span>
+                        <span>High: 2,900</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commodities & Forex Grid -->
+        <div id="commodities" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Commodities -->
+            <div class="glass-panel rounded-xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 border-b border-white/5 pb-2">Commodities</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 rounded hover:bg-white/5 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center text-yellow-500">
+                                <i class="fa-solid fa-coins"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-white">Gold (XAU)</div>
+                                <div class="text-xs text-gray-500">Spot Price</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-mono text-white">$2,045.60</div>
+                            <div class="text-xs text-green-400">+0.85%</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 rounded hover:bg-white/5 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-gray-500/20 flex items-center justify-center text-gray-400">
+                                <i class="fa-solid fa-oil-well"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-white">Brent Crude</div>
+                                <div class="text-xs text-gray-500">Oil</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-mono text-white">$82.45</div>
+                            <div class="text-xs text-red-400">-1.20%</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 rounded hover:bg-white/5 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-500">
+                                <i class="fa-solid fa-wheat-awn"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-white">Wheat</div>
+                                <div class="text-xs text-gray-500">Agricultural</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-mono text-white">$6.12</div>
+                            <div class="text-xs text-green-400">+0.30%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Major Forex -->
+            <div class="glass-panel rounded-xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 border-b border-white/5 pb-2">Major Forex</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-3 rounded bg-dark-800/50 border border-white/5">
+                        <div class="text-xs text-gray-500 mb-1">EUR/USD</div>
+                        <div class="font-mono text-white text-lg">1.0845</div>
+                        <div class="text-xs text-green-400 mt-1">▲ 0.12%</div>
+                    </div>
+                    <div class="p-3 rounded bg-dark-800/50 border border-white/5">
+                        <div class="text-xs text-gray-500 mb-1">USD/ZAR</div>
+                        <div class="font-mono text-white text-lg">19.1250</div>
+                        <div class="text-xs text-red-400 mt-1">▼ 0.45%</div>
+                    </div>
+                    <div class="p-3 rounded bg-dark-800/50 border border-white/5">
+                        <div class="text-xs text-gray-500 mb-1">USD/NGN</div>
+                        <div class="font-mono text-white text-lg">1,450.00</div>
+                        <div class="text-xs text-gray-400 mt-1">- 0.00%</div>
+                    </div>
+                    <div class="p-3 rounded bg-dark-800/50 border border-white/5">
+                        <div class="text-xs text-gray-500 mb-1">GBP/USD</div>
+                        <div class="font-mono text-white text-lg">1.2630</div>
+                        <div class="text-xs text-green-400 mt-1">▲ 0.08%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-white/5 bg-dark-800 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm">
+                &copy; 2026 Goldenice International. Market data is delayed by 15 minutes. 
+                <span class="text-gold-500">Investing involves risk.</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Data Simulation ---
+        
+        // Ticker Data
+        const tickerData = [
+            { sym: "AAPL", price: "185.92", change: "+1.2%" },
+            { sym: "TSLA", price: "242.50", change: "-0.8%" },
+            { sym: "NVDA", price: "495.22", change: "+2.4%" },
+            { sym: "SAFARICOM (NSE)", price: "14.20", change: "+0.5%" },
+            { sym: "MTN (JSE)", price: "185.40", change: "-1.1%" },
+            { sym: "DANGCEM (NGX)", price: "320.00", change: "+0.2%" },
+            { sym: "BTC/USD", price: "42,300", change: "+3.5%" },
+            { sym: "ETH/USD", price: "2,250", change: "+2.1%" },
+            { sym: "GOLD", price: "2,045", change: "+0.8%" },
+            { sym: "OIL", price: "82.45", change: "-1.2%" }
+        ];
+
+        const africanMovers = [
+            { sym: "EQTY", name: "Equity Group", price: "42.50", change: "+2.5", exchange: "NSE" },
+            { sym: "KCB", name: "KCB Group", price: "28.30", change: "-1.2", exchange: "NSE" },
+            { sym: "NPN", name: "Naspers", price: "3250.00", change: "+0.8", exchange: "JSE" },
+            { sym: "DANGCEM", name: "Dangote Cement", price: "320.00", change: "+1.5", exchange: "NGX" },
+            { sym: "ZENITH", name: "Zenith Bank", price: "38.20", change: "-0.5", exchange: "NGX" },
+            { sym: "CFR", name: "Richemont", price: "2850.50", change: "+1.1", exchange: "JSE" },
+            { sym: "COOP", name: "Co-operative Bank", price: "12.40", change: "+0.3", exchange: "NSE" },
+            { sym: "MTN", name: "MTN Group", price: "185.40", change: "-1.1", exchange: "JSE" }
+        ];
+
+        // --- Initialization ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initTicker();
+            initMovers();
+            initCharts();
+            initSparklines();
+        });
+
+        // --- Ticker Logic ---
+        function initTicker() {
+            const tickerEl = document.getElementById('globalTicker');
+            let html = '';
+            // Duplicate data to ensure smooth infinite scroll
+            const data = [...tickerData, ...tickerData]; 
+            
+            data.forEach(item => {
+                const colorClass = item.change.includes('+') ? 'text-green-400' : 'text-red-400';
+                html += `
+                    <div class="ticker-item">
+                        <span class="font-bold text-white">${item.sym}</span> 
+                        <span class="ml-2">${item.price}</span> 
+                        <span class="ml-2 ${colorClass}">${item.change}</span>
+                    </div>
+                `;
+            });
+            tickerEl.innerHTML = html;
+        }
+
+        // --- Movers Table Logic ---
+        function initMovers() {
+            const tbody = document.getElementById('moversTable');
+            let html = '';
+            
+            africanMovers.forEach(stock => {
+                const colorClass = stock.change > 0 ? 'text-green-400' : 'text-red-400';
+                const icon = stock.change > 0 ? 'fa-caret-up' : 'fa-caret-down';
+                
+                html += `
+                    <tr class="hover:bg-white/5 transition-colors cursor-pointer">
+                        <td class="px-4 py-3">
+                            <div class="font-bold text-white">${stock.sym}</div>
+                            <div class="text-xs text-gray-500">${stock.name}</div>
+                        </td>
+                        <td class="px-4 py-3 font-mono text-gray-300">
+                            ${stock.price}
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            <span class="${colorClass} font-medium text-xs bg-white/5 px-2 py-1 rounded">
+                                <i class="fa-solid ${icon}"></i> ${Math.abs(stock.change)}%
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        // --- Chart.js Configuration ---
+        let mainChartInstance = null;
+
+        function initCharts() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            
+            // Gradient for the line
+            const gradientGold = ctx.createLinearGradient(0, 0, 0, 400);
+            gradientGold.addColorStop(0, 'rgba(212, 175, 55, 0.5)');
+            gradientGold.addColorStop(1, 'rgba(212, 175, 55, 0)');
+
+            const gradientBlue = ctx.createLinearGradient(0, 0, 0, 400);
+            gradientBlue.addColorStop(0, 'rgba(59, 130, 246, 0.5)');
+            gradientBlue.addColorStop(1, 'rgba(59, 130, 246, 0)');
+
+            // Generate dummy data points
+            const labels = Array.from({length: 12}, (_, i) => `${i*2}:00`);
+            const dataGlobal = [65, 59, 80, 81, 56, 55, 40, 70, 85, 90, 89, 95];
+            const dataAfrica = [40, 45, 42, 50, 55, 60, 58, 65, 70, 75, 72, 80];
+
+            Chart.defaults.color = '#6B7280';
+            Chart.defaults.font.family = 'Inter';
+
+            mainChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'S&P 500 (Global)',
+                            data: dataGlobal,
+                            borderColor: '#3B82F6', // Blue
+                            backgroundColor: gradientBlue,
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 0,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: 'JSE Top 40 (Africa)',
+                            data: dataAfrica,
+                            borderColor: '#D4AF37', // Gold
+                            backgroundColor: gradientGold,
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 0,
+                            pointHoverRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: '#E5E7EB', usePointStyle: true, boxWidth: 8 }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                            titleColor: '#D4AF37',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            padding: 10,
+                            displayColors: true
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#9CA3AF' }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#9CA3AF' }
+                        }
+                    }
+                }
+            });
+
+            // Market Select Change Event
+            document.getElementById('marketSelect').addEventListener('change', function(e) {
+                const val = e.target.value;
+                // Simulate data change
+                const newData1 = Array.from({length: 12}, () => Math.floor(Math.random() * 50) + 40);
+                const newData2 = Array.from({length: 12}, () => Math.floor(Math.random() * 40) + 30);
+                
+                mainChartInstance.data.datasets[0].data = newData1;
+                mainChartInstance.data.datasets[1].data = newData2;
+                mainChartInstance.update();
+            });
+        }
+
+        // --- Sparklines (Mini Charts) ---
+        function initSparklines() {
+            const createSpark = (id, data, color) => {
+                const ctx = document.getElementById(id).getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [1,2,3,4,5,6,7,8,9,10],
+                        datasets: [{
+                            data: data,
+                            borderColor: color,
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                        scales: { x: { display: false }, y: { display: false } }
+                    }
+                });
+            };
+
+            createSpark('spark1', [10, 15, 13, 18, 20, 22, 20, 25, 28, 30], '#10B981'); // Green
+            createSpark('spark2', [30, 28, 25, 26, 24, 22, 23, 20, 18, 15], '#EF4444'); // Red
+            createSpark('spark3', [15, 18, 16, 20, 22, 21, 25, 28, 30, 32], '#10B981'); // Green
+            createSpark('spark4', [20, 22, 25, 24, 28, 30, 35, 32, 38, 40], '#10B981'); // Green
+        }
+
+        // --- Timeframe Switcher ---
+        function switchTimeframe(tf) {
+            // Update buttons
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('bg-dark-600', 'text-white', 'shadow');
+                btn.classList.add('text-gray-400');
+            });
+            event.target.classList.remove('text-gray-400');
+            event.target.classList.add('bg-dark-600', 'text-white', 'shadow');
+
+            // Update Chart Data (Simulated)
+            if(mainChartInstance) {
+                mainChartInstance.data.datasets.forEach((dataset) => {
+                    dataset.data = Array.from({length: 12}, () => Math.floor(Math.random() * 100));
+                });
+                mainChartInstance.update();
+            }
+        }
+
+    </script>
+</body>
+</html>

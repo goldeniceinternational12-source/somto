@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investor Protection | Goldenice International</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        gold: {
+                            50: '#FFFBEB',
+                            100: '#FEF3C7',
+                            200: '#FDE68A',
+                            300: '#FCD34D',
+                            400: '#FBBF24',
+                            500: '#D4AF37', // Classic Gold
+                            600: '#B45309',
+                            700: '#92400E',
+                            800: '#78350F',
+                            900: '#451A03',
+                        },
+                        dark: {
+                            900: '#020617',
+                            800: '#0F172A',
+                            700: '#1E293B',
+                            600: '#334155',
+                        },
+                        emerald: {
+                            400: '#34D399',
+                            500: '#10B981',
+                        }
+                    },
+                    animation: {
+                        'shield-pulse': 'shieldPulse 3s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        shieldPulse: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(212, 175, 55, 0.3)' },
+                            '50%': { boxShadow: '0 0 40px rgba(212, 175, 55, 0.6)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #020617;
+            color: #E2E8F0;
+        }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #FCD34D 0%, #D4AF37 50%, #B45309 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .shield-ring {
+            position: relative;
+        }
+        
+        .shield-ring::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, #D4AF37, transparent);
+            animation: rotate 4s linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .protection-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .protection-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 25px 50px -12px rgba(212, 175, 55, 0.15);
+        }
+
+        .check-item {
+            transition: all 0.3s ease;
+        }
+        
+        .check-item:hover {
+            background: rgba(212, 175, 55, 0.05);
+            padding-left: 1.5rem;
+        }
+
+        /* Security Badge Animation */
+        .security-badge {
+            animation: badgeFloat 4s ease-in-out infinite;
+        }
+        
+        @keyframes badgeFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        /* Encrypted Text Effect */
+        .encrypted {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.1em;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0F172A; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37; 
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-dark-900 font-bold shadow-lg shadow-gold-500/20">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <span class="font-serif text-2xl font-bold text-white tracking-wide">Goldenice</span>
+                        <span class="text-gold-500 text-xs ml-1 font-medium">SECURE</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#protection" class="text-gray-300 hover:text-gold-400 transition-colors text-sm font-medium">Protection</a>
+                    <a href="#segregation" class="text-gray-300 hover:text-gold-400 transition-colors text-sm font-medium">Segregation</a>
+                    <a href="#insurance" class="text-gray-300 hover:text-gold-400 transition-colors text-sm font-medium">Insurance</a>
+                    <a href="#compliance" class="text-gray-300 hover:text-gold-400 transition-colors text-sm font-medium">Compliance</a>
+                    <button class="bg-gold-600 hover:bg-gold-500 text-dark-900 px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg shadow-gold-600/20 hover:shadow-gold-600/40">
+                        Secure Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gold-900/20 via-dark-900 to-dark-900"></div>
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/30 mb-8">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-gold-400 text-sm font-semibold tracking-wider uppercase">Bank-Grade Security</span>
+            </div>
+            
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight">
+                Your Capital is<br>
+                <span class="text-gold-gradient">Fortress-Protected</span>
+            </h1>
+            
+            <p class="text-xl text-gray-400 max-w-3xl mx-auto mb-12 leading-relaxed">
+                At Goldenice International, investor protection isn't an afterthought—it's our foundation. 
+                Multi-layered security protocols ensuring your funds remain untouchable, always.
+            </p>
+
+            <!-- Shield Visualization -->
+            <div class="relative w-48 h-48 mx-auto mb-12">
+                <div class="shield-ring absolute inset-0 rounded-full"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-40 h-40 rounded-full bg-gradient-to-br from-gold-500/20 to-gold-600/5 backdrop-blur-xl border border-gold-500/30 flex items-center justify-center animate-shield-pulse">
+                        <i class="fa-solid fa-shield-cat text-6xl text-gold-400"></i>
+                    </div>
+                </div>
+                <!-- Orbiting Elements -->
+                <div class="absolute inset-0 animate-[spin_10s_linear_infinite]">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-3 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/50"></div>
+                </div>
+                <div class="absolute inset-0 animate-[spin_15s_linear_infinite_reverse]">
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-3 w-2 h-2 bg-gold-400 rounded-full shadow-lg shadow-gold-400/50"></div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="document.getElementById('protection').scrollIntoView({behavior: 'smooth'})" class="group px-8 py-4 bg-gold-600 text-dark-900 font-bold rounded-xl hover:bg-gold-500 transition-all shadow-xl shadow-gold-600/20 flex items-center justify-center gap-2">
+                    Explore Safeguards
+                    <i class="fa-solid fa-arrow-down group-hover:translate-y-1 transition-transform"></i>
+                </button>
+                <button onclick="openSecurityModal()" class="px-8 py-4 glass-panel text-white font-semibold rounded-xl hover:bg-white/5 transition-all border border-white/10 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-shield text-gold-400"></i>
+                    View Certificates
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Protection Layers Grid -->
+    <section id="protection" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl md:text-5xl text-white mb-4">Five Pillars of <span class="text-gold-500">Protection</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Comprehensive security architecture designed to safeguard every aspect of your investment journey.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Pillar 1: Segregation -->
+                <div class="protection-card glass-panel rounded-2xl p-8 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gold-500/10 rounded-full blur-2xl -mr-16 -mt-16 transition-all group-hover:bg-gold-500/20"></div>
+                    <div class="w-14 h-14 rounded-xl bg-gold-500/10 flex items-center justify-center text-gold-400 text-2xl mb-6 border border-gold-500/20">
+                        <i class="fa-solid fa-vault"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Fund Segregation</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Client funds are held in Tier-1 international banks, completely separate from company operational accounts. Your capital is never used for our business activities.
+                    </p>
+                    <div class="flex items-center gap-2 text-emerald-400 text-sm font-medium">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span>100% Segregated</span>
+                    </div>
+                </div>
+
+                <!-- Pillar 2: Encryption -->
+                <div class="protection-card glass-panel rounded-2xl p-8 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl -mr-16 -mt-16 transition-all group-hover:bg-blue-500/20"></div>
+                    <div class="w-14 h-14 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 text-2xl mb-6 border border-blue-500/20">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">256-Bit Encryption</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Military-grade AES-256 encryption protects all data transmission. SSL certificates and TLS 1.3 protocols ensure your information remains confidential.
+                    </p>
+                    <div class="flex items-center gap-2 text-emerald-400 text-sm font-medium">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span>Bank-Level SSL</span>
+                    </div>
+                </div>
+
+                <!-- Pillar 3: Insurance -->
+                <div class="protection-card glass-panel rounded-2xl p-8 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl -mr-16 -mt-16 transition-all group-hover:bg-purple-500/20"></div>
+                    <div class="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-2xl mb-6 border border-purple-500/20">
+                        <i class="fa-solid fa-umbrella"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Civil Liability Insurance</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Comprehensive coverage up to €5,000,000 protecting against errors, omissions, negligence, and fraud. Your investments are insured against unforeseen circumstances.
+                    </p>
+                    <div class="flex items-center gap-2 text-emerald-400 text-sm font-medium">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span>€5M Coverage</span>
+                    </div>
+                </div>
+
+                <!-- Pillar 4: Regulation -->
+                <div class="protection-card glass-panel rounded-2xl p-8 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-16 -mt-16 transition-all group-hover:bg-emerald-500/20"></div>
+                    <div class="w-14 h-14 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-2xl mb-6 border border-emerald-500/20">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Multi-Jurisdiction Regulation</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Licensed and regulated by FCA (UK), CySEC (EU), and FSCA (South Africa). Strict compliance with MiFID II and EMIR directives ensures transparency.
+                    </p>
+                    <div class="flex items-center gap-2 text-emerald-400 text-sm font-medium">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span>Triple Licensed</span>
+                    </div>
+                </div>
+
+                <!-- Pillar 5: Negative Balance -->
+                <div class="protection-card glass-panel rounded-2xl p-8 relative overflow-hidden group lg:col-span-2">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-2xl -mr-16 -mt-16 transition-all group-hover:bg-red-500/20"></div>
+                    <div class="flex flex-col md:flex-row md:items-center gap-6">
+                        <div class="w-14 h-14 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 text-2xl border border-red-500/20 shrink-0">
+                            <i class="fa-solid fa-shield-heart"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold text-white mb-2">Negative Balance Protection</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Automatic safeguards prevent your account from going below zero. Even in extreme market volatility, you can never lose more than your deposit. This is not just a promise—it's automated infrastructure.
+                            </p>
+                        </div>
+                        <div class="shrink-0 text-center">
+                            <div class="text-3xl font-bold text-emerald-400">Zero</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wider">Risk Beyond Deposit</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fund Segregation Deep Dive -->
+    <section id="segregation" class="py-24 bg-dark-800/50 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23D4AF37%22%20fill-opacity%3D%220.05%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-20"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <div class="inline-block px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 text-sm font-semibold mb-6">
+                        Fund Security
+                    </div>
+                    <h2 class="font-serif text-4xl md:text-5xl text-white mb-6">Your Money Never Touches Our Hands</h2>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                        We utilize a tri-party account structure with independent custodian banks. This means even in the hypothetical event of Goldenice International's insolvency, your funds remain inaccessible to creditors—protected by law.
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="check-item flex items-start gap-4 p-4 rounded-lg border border-white/5 bg-dark-900/50">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 mt-1">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold mb-1">Independent Custody</h4>
+                                <p class="text-gray-500 text-sm">Assets held by BNY Mellon and Standard Chartered, not Goldenice.</p>
+                            </div>
+                        </div>
+                        <div class="check-item flex items-start gap-4 p-4 rounded-lg border border-white/5 bg-dark-900/50">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 mt-1">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold mb-1">Daily Reconciliation</h4>
+                                <p class="text-gray-500 text-sm">Automated audits ensure client funds match segregated accounts 1:1.</p>
+                            </div>
+                        </div>
+                        <div class="check-item flex items-start gap-4 p-4 rounded-lg border border-white/5 bg-dark-900/50">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 mt-1">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold mb-1">No Re-hypothecation</h4>
+                                <p class="text-gray-500 text-sm">We never use your assets as collateral for our own borrowing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Vault Visual -->
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-gold-500/20 to-emerald-500/20 rounded-3xl blur-2xl opacity-30"></div>
+                    <div class="relative glass-panel rounded-3xl p-8 border border-gold-500/20">
+                        <div class="flex justify-between items-center mb-8">
+                            <span class="text-gold-400 font-mono text-sm encrypted">SECURE_VAULT_001</span>
+                            <div class="flex gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span class="text-emerald-400 text-xs font-bold">ACTIVE</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4 mb-8">
+                            <div class="flex justify-between items-center p-4 bg-dark-900/80 rounded-xl border border-white/5">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-building-columns text-gold-400"></i>
+                                    <span class="text-gray-300">Client Funds</span>
+                                </div>
+                                <span class="text-emerald-400 font-mono">$<span id="fundCounter">0</span>M</span>
+                            </div>
+                            <div class="flex justify-between items-center p-4 bg-dark-900/80 rounded-xl border border-white/5 opacity-50">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-briefcase text-gray-500"></i>
+                                    <span class="text-gray-500">Company Funds</span>
+                                </div>
+                                <span class="text-gray-500 font-mono">Isolated</span>
+                            </div>
+                        </div>
+
+                        <div class="relative h-2 bg-dark-900 rounded-full overflow-hidden mb-2">
+                            <div id="securityBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-gold-500 to-emerald-400 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>Encryption Layer</span>
+                            <span id="securityPercent">0%</span>
+                        </div>
+
+                        <button onclick="activateSecurity()" id="activateBtn" class="w-full mt-6 py-3 bg-gold-600 hover:bg-gold-500 text-dark-900 font-bold rounded-xl transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-fingerprint"></i>
+                            Verify Segregation
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Insurance & Compliance -->
+    <section id="insurance" class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Insurance Card -->
+                <div class="md:col-span-2 glass-panel rounded-2xl p-8 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-32 bg-gold-500/5 rounded-full blur-3xl"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-16 h-16 rounded-2xl bg-gold-500/10 flex items-center justify-center text-gold-400 text-3xl border border-gold-500/20 security-badge">
+                                <i class="fa-solid fa-certificate"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-white">Investor Compensation</h3>
+                                <p class="text-gold-400">Up to €5,000,000 Coverage</p>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-400 mb-6 leading-relaxed">
+                            Goldenice International maintains a comprehensive Civil Liability Insurance policy with Lloyd's of London. This covers claims arising from negligence, fraud, or failure to perform fiduciary duties—providing an additional safety net beyond regulatory requirements.
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 rounded-xl bg-dark-900/50 border border-white/5">
+                                <div class="text-2xl font-bold text-white mb-1">€5M</div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wider">Coverage per Claim</div>
+                            </div>
+                            <div class="p-4 rounded-xl bg-dark-900/50 border border-white/5">
+                                <div class="text-2xl font-bold text-white mb-1">24h</div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wider">Claim Response</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compliance Status -->
+                <div class="glass-panel rounded-2xl p-8 flex flex-col justify-between" id="compliance">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-6">Regulatory Status</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 rounded-lg bg-dark-900/50 border border-white/5">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-2xl">🇬🇧</span>
+                                    <div>
+                                        <div class="text-white text-sm font-semibold">FCA</div>
+                                        <div class="text-xs text-gray-500">United Kingdom</div>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">REGULATED</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg bg-dark-900/50 border border-white/5">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-2xl">🇪🇺</span>
+                                    <div>
+                                        <div class="text-white text-sm font-semibold">CySEC</div>
+                                        <div class="text-xs text-gray-500">European Union</div>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">REGULATED</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg bg-dark-900/50 border border-white/5">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-2xl">🇿🇦</span>
+                                    <div>
+                                        <div class="text-white text-sm font-semibold">FSCA</div>
+                                        <div class="text-xs text-gray-500">South Africa</div>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">REGULATED</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="showLicenseDetails()" class="mt-6 w-full py-3 border border-gold-500/30 text-gold-400 hover:bg-gold-500/10 rounded-xl text-sm font-semibold transition-all">
+                        View License Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Checklist -->
+    <section class="py-24 bg-gradient-to-b from-dark-900 to-dark-800">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-serif text-3xl md:text-4xl text-white mb-12">Your Security Checklist</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                <div class="flex items-center gap-4 p-4 rounded-xl bg-dark-800/50 border border-white/5 hover:border-gold-500/30 transition-colors">
+                    <i class="fa-solid fa-envelope-circle-check text-gold-400 text-xl"></i>
+                    <div>
+                        <h4 class="text-white font-semibold">2FA Authentication</h4>
+                        <p class="text-gray-500 text-sm">Mandatory two-factor authentication on all accounts.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 rounded-xl bg-dark-800/50 border border-white/5 hover:border-gold-500/30 transition-colors">
+                    <i class="fa-solid fa-bell text-gold-400 text-xl"></i>
+                    <div>
+                        <h4 class="text-white font-semibold">Real-time Alerts</h4>
+                        <p class="text-gray-500 text-sm">Instant notifications for login attempts and withdrawals.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 rounded-xl bg-dark-800/50 border border-white/5 hover:border-gold-500/30 transition-colors">
+                    <i class="fa-solid fa-user-shield text-gold-400 text-xl"></i>
+                    <div>
+                        <h4 class="text-white font-semibold">Biometric Access</h4>
+                        <p class="text-gray-500 text-sm">Fingerprint and FaceID support for mobile trading.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 rounded-xl bg-dark-800/50 border border-white/5 hover:border-gold-500/30 transition-colors">
+                    <i class="fa-solid fa-clock-rotate-left text-gold-400 text-xl"></i>
+                    <div>
+                        <h4 class="text-white font-semibold">Withdrawal Cooldown</h4>
+                        <p class="text-gray-500 text-sm">24-hour delay on new beneficiary additions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-dark-900 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-shield-halved text-gold-500 text-xl"></i>
+                        <span class="font-serif text-xl font-bold text-white">Goldenice<span class="text-gold-500">.</span></span>
+                    </div>
+                    <p class="text-gray-500 text-sm max-w-sm">
+                        Committed to the highest standards of investor protection. Your trust is our most valuable asset.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Legal</h4>
+                    <ul class="space-y-2 text-gray-500 text-sm">
+                        <li><a href="./privacy policy.html" class="hover:text-gold-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="./riskwarning.html" class="hover:text-gold-400 transition-colors">Risk Disclosure</a></li>
+                        <li><a href="./tos.html" class="hover:text-gold-400 transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-600 text-xs">
+                    &copy; 2026 Goldenice International. All rights reserved. Trading involves risk.
+                </p>
+                <div class="flex gap-4 text-gray-600">
+                    <i class="fa-brands fa-cc-visa text-2xl"></i>
+                    <i class="fa-brands fa-cc-mastercard text-2xl"></i>
+                    <i class="fa-brands fa-cc-amex text-2xl"></i>
+                    <i class="fa-brands fa-cc-paypal text-2xl"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Security Modal -->
+    <div id="securityModal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeSecurityModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-dark-800 border border-gold-500/30 rounded-2xl max-w-md w-full p-6 shadow-2xl transform scale-95 opacity-0 transition-all duration-300" id="modalContent">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 rounded-full bg-gold-500/10 flex items-center justify-center text-gold-400 text-2xl mx-auto mb-4 border border-gold-500/20">
+                        <i class="fa-solid fa-file-contract"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Security Certificates</h3>
+                    <p class="text-gray-400 text-sm">Verified by independent auditors</p>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="p-3 rounded-lg bg-dark-900 border border-white/5 flex items-center justify-between">
+                        <span class="text-gray-300 text-sm">ISO 27001 Certification</span>
+                        <span class="text-emerald-400 text-sm font-semibold">Valid</span>
+                    </div>
+                    <div class="p-3 rounded-lg bg-dark-900 border border-white/5 flex items-center justify-between">
+                        <span class="text-gray-300 text-sm">PCI DSS Compliance</span>
+                        <span class="text-emerald-400 text-sm font-semibold">Level 1</span>
+                    </div>
+                    <div class="p-3 rounded-lg bg-dark-900 border border-white/5 flex items-center justify-between">
+                        <span class="text-gray-300 text-sm">SOC 2 Type II</span>
+                        <span class="text-emerald-400 text-sm font-semibold">Certified</span>
+                    </div>
+                </div>
+
+                <button onclick="closeSecurityModal()" class="w-full py-3 bg-gold-600 hover:bg-gold-500 text-dark-900 font-bold rounded-xl transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fund Counter Animation
+        let fundAmount = 0;
+        const targetAmount = 850;
+        const fundElement = document.getElementById('fundCounter');
+        
+        function animateFunds() {
+            if (fundAmount < targetAmount) {
+                fundAmount += 5;
+                fundElement.textContent = fundAmount;
+                setTimeout(animateFunds, 20);
+            }
+        }
+
+        // Security Bar Animation
+        function activateSecurity() {
+            const btn = document.getElementById('activateBtn');
+            const bar = document.getElementById('securityBar');
+            const percent = document.getElementById('securityPercent');
+            
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verifying...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                bar.style.width = '100%';
+                let width = 0;
+                const interval = setInterval(() => {
+                    if (width >= 100) {
+                        clearInterval(interval);
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i> Verified Secure';
+                        btn.classList.remove('bg-gold-600', 'hover:bg-gold-500');
+                        btn.classList.add('bg-emerald-600', 'text-white');
+                        animateFunds();
+                    } else {
+                        width++;
+                        percent.textContent = width + '%';
+                    }
+                }, 10);
+            }, 500);
+        }
+
+        // Modal Functions
+        function openSecurityModal() {
+            const modal = document.getElementById('securityModal');
+            const content = document.getElementById('modalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeSecurityModal() {
+            const modal = document.getElementById('securityModal');
+            const content = document.getElementById('modalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function showLicenseDetails() {
+            alert('License Numbers:\n\nFCA: 12345678\nCySEC: 123/45\nFSCA: 12345\n\nAll licenses are active and in good standing.');
+        }
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.protection-card').forEach((el) => observer.observe(el));
+    </script>
+</body>
+</html>

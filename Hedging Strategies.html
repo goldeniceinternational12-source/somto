@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - Forex Hedging Strategies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --ice-blue: #E0F7FA;
+            --deep-navy: #0A1628;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(212, 175, 55, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0A1628 0%, #1a2a4a 50%, #0d1b2a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
+        }
+
+        /* Gold Gradient Text */
+        .text-gold-gradient {
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-light) 50%, var(--gold-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--deep-navy);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 4px;
+        }
+
+        /* Strategy Cards Animation */
+        .strategy-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .strategy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .strategy-card:hover::before {
+            left: 100%;
+        }
+
+        /* Ticker Animation */
+        .ticker-wrap {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .ticker {
+            display: inline-block;
+            animation: ticker 30s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Pulse Animation for Live Indicator */
+        .live-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Input Styling */
+        .golden-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .golden-input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Button Effects */
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+            color: var(--deep-navy);
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-gold:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-gold::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .btn-gold:hover::after {
+            left: 100%;
+        }
+
+        /* Risk Meter */
+        .risk-meter {
+            position: relative;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .risk-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Tab Active State */
+        .tab-active {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Background Effects -->
+    <div class="bg-grid"></div>
+    <div class="floating-particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-card border-b border-yellow-500/20 rounded-none">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+                    <span class="text-navy-900 font-bold text-lg">G</span>
+                </div>
+                <div>
+                    <h1 class="font-display text-xl font-bold text-gold-gradient">GOLDENICE</h1>
+                    <p class="text-xs text-gray-400 tracking-widest">INTERNATIONAL</p>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-6">
+                <div class="flex items-center gap-2 text-sm">
+                    <span class="w-2 h-2 bg-green-400 rounded-full live-pulse"></span>
+                    <span class="text-green-400">Market Open</span>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-gray-400">Server Time</p>
+                    <p class="text-sm font-mono text-yellow-400" id="server-time">00:00:00 UTC</p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Live Ticker -->
+    <div class="fixed top-20 w-full bg-black/40 border-y border-yellow-500/10 z-40 py-2">
+        <div class="ticker-wrap">
+            <div class="ticker text-sm font-mono" id="forex-ticker">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pt-32 pb-20 px-6 max-w-7xl mx-auto">
+        
+        <!-- Header Section -->
+        <div class="mb-10 text-center">
+            <h2 class="font-display text-4xl md:text-5xl font-bold mb-4 text-gold-gradient">
+                Forex Hedging Strategies
+            </h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">
+                Advanced risk management solutions for institutional forex trading. 
+                Protect your positions against currency volatility with Goldenice's proprietary hedging instruments.
+            </p>
+        </div>
+
+        <!-- Strategy Selector -->
+        <div class="glass-card p-2 mb-8 flex flex-wrap gap-2 justify-center">
+            <button onclick="selectStrategy('direct')" class="strategy-tab px-6 py-3 rounded-lg text-sm font-medium transition-all tab-active" data-strategy="direct">
+                Direct Hedge
+            </button>
+            <button onclick="selectStrategy('correlation')" class="strategy-tab px-6 py-3 rounded-lg text-sm font-medium transition-all text-gray-400 hover:text-white" data-strategy="correlation">
+                Correlation Hedge
+            </button>
+            <button onclick="selectStrategy('options')" class="strategy-tab px-6 py-3 rounded-lg text-sm font-medium transition-all text-gray-400 hover:text-white" data-strategy="options">
+                Options Hedge
+            </button>
+            <button onclick="selectStrategy('cross')" class="strategy-tab px-6 py-3 rounded-lg text-sm font-medium transition-all text-gray-400 hover:text-white" data-strategy="cross">
+                Cross-Currency
+            </button>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            
+            <!-- Calculator Panel -->
+            <div class="lg:col-span-2 glass-card p-6 strategy-card">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-display text-xl font-semibold text-gold-gradient">Hedge Calculator</h3>
+                    <span class="text-xs px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20" id="strategy-badge">Direct Hedge</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-2 uppercase tracking-wider">Primary Position</label>
+                        <select id="primary-pair" class="golden-input w-full px-4 py-3 rounded-lg mb-3" onchange="updateCalculation()">
+                            <option value="EURUSD">EUR/USD</option>
+                            <option value="GBPUSD">GBP/USD</option>
+                            <option value="USDJPY">USD/JPY</option>
+                            <option value="USDCHF">USD/CHF</option>
+                            <option value="AUDUSD">AUD/USD</option>
+                        </select>
+                        <div class="flex gap-2">
+                            <button onclick="setDirection('buy')" id="btn-buy" class="flex-1 py-2 rounded bg-green-500/20 border border-green-500/50 text-green-400 text-sm font-medium transition-all hover:bg-green-500/30 active">BUY</button>
+                            <button onclick="setDirection('sell')" id="btn-sell" class="flex-1 py-2 rounded bg-red-500/20 border border-red-500/50 text-red-400 text-sm font-medium transition-all hover:bg-red-500/30">SELL</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-2 uppercase tracking-wider">Position Size (Lots)</label>
+                        <input type="number" id="position-size" value="1.0" step="0.1" class="golden-input w-full px-4 py-3 rounded-lg mb-3" oninput="updateCalculation()">
+                        
+                        <label class="block text-xs text-gray-400 mb-2 uppercase tracking-wider">Entry Price</label>
+                        <input type="number" id="entry-price" value="1.0850" step="0.0001" class="golden-input w-full px-4 py-3 rounded-lg" oninput="updateCalculation()">
+                    </div>
+                </div>
+
+                <div class="border-t border-yellow-500/20 pt-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-gray-400">Recommended Hedge Ratio:</span>
+                        <span class="text-2xl font-bold text-gold-gradient" id="hedge-ratio">100%</span>
+                    </div>
+                    
+                    <div class="bg-black/30 rounded-lg p-4 mb-4">
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-gray-400">Hedge Position:</span>
+                            <span class="text-white font-mono" id="hedge-position">SELL 1.0 EUR/USD</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-gray-400">Estimated Cost:</span>
+                            <span class="text-yellow-400 font-mono" id="hedge-cost">$12.50</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Risk Reduction:</span>
+                            <span class="text-green-400 font-mono" id="risk-reduction">95%</span>
+                        </div>
+                    </div>
+
+                    <button onclick="executeHedge()" class="btn-gold w-full py-4 rounded-lg font-semibold text-lg flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Execute Hedge Strategy
+                    </button>
+                </div>
+            </div>
+
+            <!-- Market Overview -->
+            <div class="glass-card p-6">
+                <h3 class="font-display text-lg font-semibold mb-4 text-gold-gradient">Market Sentiment</h3>
+                <div class="chart-container mb-4">
+                    <canvas id="sentimentChart"></canvas>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                        <span class="text-sm text-gray-400">Volatility Index</span>
+                        <span class="text-sm font-bold text-yellow-400">12.4 ↓</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                        <span class="text-sm text-gray-400">Correlation</span>
+                        <span class="text-sm font-bold text-green-400">-0.85</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                        <span class="text-sm text-gray-400">Swap Rate</span>
+                        <span class="text-sm font-bold text-blue-400">-2.5 pips</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Analysis -->
+        <div class="glass-card p-6 mb-8">
+            <h3 class="font-display text-xl font-semibold mb-6 text-gold-gradient">Risk Analysis Matrix</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-black/20 rounded-lg p-4 border border-red-500/20">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm text-gray-400">Unhedged Exposure</span>
+                        <span class="text-xs px-2 py-1 bg-red-500/20 text-red-400 rounded">High Risk</span>
+                    </div>
+                    <div class="text-2xl font-bold text-red-400 mb-2" id="unhedged-pnl">-$1,250.00</div>
+                    <div class="risk-meter">
+                        <div class="risk-fill bg-red-500" style="width: 85%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Maximum potential loss at 2% adverse move</p>
+                </div>
+
+                <div class="bg-black/20 rounded-lg p-4 border border-yellow-500/20">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm text-gray-400">Partial Hedge (50%)</span>
+                        <span class="text-xs px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded">Medium Risk</span>
+                    </div>
+                    <div class="text-2xl font-bold text-yellow-400 mb-2" id="partial-pnl">-$625.00</div>
+                    <div class="risk-meter">
+                        <div class="risk-fill bg-yellow-500" style="width: 45%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Reduced exposure with cost consideration</p>
+                </div>
+
+                <div class="bg-black/20 rounded-lg p-4 border border-green-500/20">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm text-gray-400">Full Hedge (100%)</span>
+                        <span class="text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded">Protected</span>
+                    </div>
+                    <div class="text-2xl font-bold text-green-400 mb-2" id="full-pnl">-$12.50</div>
+                    <div class="risk-meter">
+                        <div class="risk-fill bg-green-500" style="width: 5%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Minimal loss limited to hedge cost only</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategy Details -->
+        <div class="glass-card p-6 mb-8" id="strategy-details">
+            <h3 class="font-display text-xl font-semibold mb-4 text-gold-gradient">Strategy Details: Direct Hedge</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <p class="text-gray-300 mb-4 leading-relaxed">
+                        A direct hedge involves opening a position in the opposite direction of your primary trade with the same currency pair. This is the most straightforward hedging technique, effectively neutralizing market exposure.
+                    </p>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            100% protection against adverse moves
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Eliminates profit potential in either direction
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Incurs spread costs twice
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-black/30 rounded-lg p-4">
+                    <h4 class="text-sm font-semibold text-yellow-400 mb-3">When to Use</h4>
+                    <div class="space-y-2 text-sm text-gray-400">
+                        <div class="p-2 bg-white/5 rounded">• High volatility events (NFP, CPI releases)</div>
+                        <div class="p-2 bg-white/5 rounded">• Uncertain market direction</div>
+                        <div class="p-2 bg-white/5 rounded">• Protecting existing profitable positions</div>
+                        <div class="p-2 bg-white/5 rounded">• Weekend gap protection</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Hedges Table -->
+        <div class="glass-card p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-display text-xl font-semibold text-gold-gradient">Active Hedge Positions</h3>
+                <button onclick="refreshPositions()" class="text-sm text-yellow-400 hover:text-yellow-300 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Refresh
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-left text-gray-400 border-b border-yellow-500/20">
+                            <th class="pb-3 font-medium">Pair</th>
+                            <th class="pb-3 font-medium">Type</th>
+                            <th class="pb-3 font-medium">Size</th>
+                            <th class="pb-3 font-medium">Entry</th>
+                            <th class="pb-3 font-medium">Current</th>
+                            <th class="pb-3 font-medium">Hedge Ratio</th>
+                            <th class="pb-3 font-medium">Status</th>
+                            <th class="pb-3 font-medium">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="positions-table" class="text-gray-300">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 glass-card p-4 transform translate-y-20 opacity-0 transition-all duration-300 z-50 max-w-sm">
+        <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white text-sm mb-1" id="toast-title">Success</h4>
+                <p class="text-xs text-gray-400" id="toast-message">Hedge position opened successfully</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global State
+        let currentStrategy = 'direct';
+        let currentDirection = 'buy';
+        let activePositions = [];
+        let prices = {
+            EURUSD: 1.0850,
+            GBPUSD: 1.2640,
+            USDJPY: 149.20,
+            USDCHF: 0.8840,
+            AUDUSD: 0.6560
+        };
+
+        // Strategy Definitions
+        const strategies = {
+            direct: {
+                name: 'Direct Hedge',
+                description: 'A direct hedge involves opening a position in the opposite direction of your primary trade with the same currency pair.',
+                ratio: '100%',
+                riskReduction: '95%',
+                whenToUse: ['High volatility events', 'Uncertain market direction', 'Protecting profits', 'Weekend gap protection'],
+                pros: ['100% protection', 'Simple execution', 'Immediate risk neutralization'],
+                cons: ['Eliminates profit potential', 'Double spread costs', 'Swap fees on both sides']
+            },
+            correlation: {
+                name: 'Correlation Hedge',
+                description: 'Uses negatively correlated currency pairs to offset risk. For example, hedging EUR/USD with USD/CHF (historically ~-0.85 correlation).',
+                ratio: '85%',
+                riskReduction: '75%',
+                whenToUse: ['Diversified hedging', 'Lower cost alternative', 'Multi-currency exposure'],
+                pros: ['Lower transaction costs', 'Maintains some directional exposure', 'Portfolio diversification'],
+                cons: ['Correlation breakdown risk', 'Complex monitoring required', 'Not 100% protection']
+            },
+            options: {
+                name: 'Options Hedge',
+                description: 'Purchase put or call options to protect against adverse moves while maintaining unlimited upside potential.',
+                ratio: 'Variable',
+                riskReduction: '90%',
+                whenToUse: ['Asymmetric risk profiles', 'Event-driven protection', 'Premium budget available'],
+                pros: ['Unlimited upside', 'Defined maximum loss', 'No margin requirements'],
+                cons: ['Premium cost upfront', 'Time decay (theta)', 'Complex pricing']
+            },
+            cross: {
+                name: 'Cross-Currency Hedge',
+                description: 'Hedge a position using a synthetic cross rate constructed from two other currency pairs.',
+                ratio: '90%',
+                riskReduction: '85%',
+                whenToUse: ['Exotic pair exposure', 'Limited direct liquidity', 'Arbitrage opportunities'],
+                pros: ['Access to illiquid pairs', 'Potential cost savings', 'Synthetic exposure'],
+                cons: ['Execution complexity', 'Two-legged risk', 'Higher transaction costs']
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            initClock();
+            initTicker();
+            initChart();
+            updateCalculation();
+            loadMockPositions();
+            
+            // Simulate live price updates
+            setInterval(updatePrices, 3000);
+        });
+
+        // Particle Animation
+        function initParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Clock
+        function initClock() {
+            function update() {
+                const now = new Date();
+                document.getElementById('server-time').textContent = now.toISOString().split('T')[1].split('.')[0] + ' UTC';
+            }
+            update();
+            setInterval(update, 1000);
+        }
+
+        // Forex Ticker
+        function initTicker() {
+            const pairs = ['EUR/USD 1.0850 ▲', 'GBP/USD 1.2640 ▼', 'USD/JPY 149.20 ▲', 'USD/CHF 0.8840 ▲', 'AUD/USD 0.6560 ▼', 'EUR/GBP 0.8580 ▲', 'USD/CAD 1.3520 ▼'];
+            const ticker = document.getElementById('forex-ticker');
+            const content = pairs.join('    <span class="text-yellow-500">•</span>    ');
+            ticker.innerHTML = content + '    <span class="text-yellow-500">•</span>    ' + content;
+        }
+
+        // Chart.js Initialization
+        function initChart() {
+            const ctx = document.getElementById('sentimentChart').getContext('2d');
+            window.sentimentChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Bullish', 'Bearish', 'Neutral'],
+                    datasets: [{
+                        data: [45, 35, 20],
+                        backgroundColor: ['rgba(74, 222, 128, 0.8)', 'rgba(248, 113, 113, 0.8)', 'rgba(212, 175, 55, 0.8)'],
+                        borderColor: ['rgba(74, 222, 128, 1)', 'rgba(248, 113, 113, 1)', 'rgba(212, 175, 55, 1)'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#9CA3AF', font: { size: 10 }, boxWidth: 10 }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // Strategy Selection
+        function selectStrategy(strategy) {
+            currentStrategy = strategy;
+            const info = strategies[strategy];
+            
+            // Update tabs
+            document.querySelectorAll('.strategy-tab').forEach(tab => {
+                if (tab.dataset.strategy === strategy) {
+                    tab.classList.add('tab-active');
+                    tab.classList.remove('text-gray-400');
+                } else {
+                    tab.classList.remove('tab-active');
+                    tab.classList.add('text-gray-400');
+                }
+            });
+            
+            // Update badge
+            document.getElementById('strategy-badge').textContent = info.name;
+            
+            // Update details panel
+            document.getElementById('strategy-details').innerHTML = `
+                <h3 class="font-display text-xl font-semibold mb-4 text-gold-gradient">Strategy Details: ${info.name}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-gray-300 mb-4 leading-relaxed">${info.description}</p>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="bg-black/30 p-3 rounded-lg">
+                                <div class="text-xs text-gray-400 mb-1">Hedge Ratio</div>
+                                <div class="text-lg font-bold text-yellow-400">${info.ratio}</div>
+                            </div>
+                            <div class="bg-black/30 p-3 rounded-lg">
+                                <div class="text-xs text-gray-400 mb-1">Risk Reduction</div>
+                                <div class="text-lg font-bold text-green-400">${info.riskReduction}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="bg-black/30 rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-yellow-400 mb-2">When to Use</h4>
+                            ${info.whenToUse.map(use => `<div class="text-sm text-gray-400 mb-1">• ${use}</div>`).join('')}
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-green-500/10 rounded-lg p-3 border border-green-500/20">
+                                <h4 class="text-xs font-semibold text-green-400 mb-2">PROS</h4>
+                                ${info.pros.map(pro => `<div class="text-xs text-gray-400 mb-1">✓ ${pro}</div>`).join('')}
+                            </div>
+                            <div class="bg-red-500/10 rounded-lg p-3 border border-red-500/20">
+                                <h4 class="text-xs font-semibold text-red-400 mb-2">CONS</h4>
+                                ${info.cons.map(con => `<div class="text-xs text-gray-400 mb-1">✗ ${con}</div>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            updateCalculation();
+        }
+
+        // Direction Selection
+        function setDirection(direction) {
+            currentDirection = direction;
+            const buyBtn = document.getElementById('btn-buy');
+            const sellBtn = document.getElementById('btn-sell');
+            
+            if (direction === 'buy') {
+                buyBtn.classList.add('bg-green-500/40', 'border-green-400');
+                buyBtn.classList.remove('bg-green-500/20');
+                sellBtn.classList.remove('bg-red-500/40', 'border-red-400');
+                sellBtn.classList.add('bg-red-500/20');
+            } else {
+                sellBtn.classList.add('bg-red-500/40', 'border-red-400');
+                sellBtn.classList.remove('bg-red-500/20');
+                buyBtn.classList.remove('bg-green-500/40', 'border-green-400');
+                buyBtn.classList.add('bg-green-500/20');
+            }
+            
+            updateCalculation();
+        }
+
+        // Calculate Hedge
+        function updateCalculation() {
+            const pair = document.getElementById('primary-pair').value;
+            const size = parseFloat(document.getElementById('position-size').value) || 1;
+            const entry = parseFloat(document.getElementById('entry-price').value) || 1.0850;
+            const current = prices[pair];
+            
+            let hedgeRatio, hedgeDirection, cost, riskReduction;
+            
+            switch(currentStrategy) {
+                case 'direct':
+                    hedgeRatio = '100%';
+                    hedgeDirection = currentDirection === 'buy' ? 'SELL' : 'BUY';
+                    cost = (size * 12.50).toFixed(2);
+                    riskReduction = '95%';
+                    break;
+                case 'correlation':
+                    hedgeRatio = '85%';
+                    hedgeDirection = currentDirection === 'buy' ? 'SELL' : 'BUY';
+                    cost = (size * 10.50).toFixed(2);
+                    riskReduction = '75%';
+                    break;
+                case 'options':
+                    hedgeRatio = 'Variable';
+                    hedgeDirection = currentDirection === 'buy' ? 'PUT' : 'CALL';
+                    cost = (size * 25.00).toFixed(2);
+                    riskReduction = '90%';
+                    break;
+                case 'cross':
+                    hedgeRatio = '90%';
+                    hedgeDirection = currentDirection === 'buy' ? 'SELL' : 'BUY';
+                    cost = (size * 15.00).toFixed(2);
+                    riskReduction = '85%';
+                    break;
+            }
+            
+            const hedgePair = currentStrategy === 'correlation' ? (pair === 'EURUSD' ? 'USDCHF' : 'EURUSD') : pair;
+            
+            document.getElementById('hedge-ratio').textContent = hedgeRatio;
+            document.getElementById('hedge-position').textContent = `${hedgeDirection} ${size} ${hedgePair}`;
+            document.getElementById('hedge-cost').textContent = '$' + cost;
+            document.getElementById('risk-reduction').textContent = riskReduction;
+            
+            // Update risk analysis
+            const exposure = size * 100000 * 0.02; // 2% move
+            document.getElementById('unhedged-pnl').textContent = `-$${exposure.toFixed(2)}`;
+            document.getElementById('partial-pnl').textContent = `-$${(exposure * 0.5).toFixed(2)}`;
+            document.getElementById('full-pnl').textContent = `-$${cost}`;
+        }
+
+        // Execute Hedge
+        function executeHedge() {
+            const pair = document.getElementById('primary-pair').value;
+            const size = document.getElementById('position-size').value;
+            const entry = document.getElementById('entry-price').value;
+            
+            const position = {
+                id: Date.now(),
+                pair: pair,
+                type: currentStrategy,
+                size: size,
+                entry: entry,
+                current: prices[pair],
+                ratio: strategies[currentStrategy].ratio,
+                status: 'Active',
+                time: new Date().toLocaleTimeString()
+            };
+            
+            activePositions.unshift(position);
+            updatePositionsTable();
+            showToast('Hedge Executed', `${strategies[currentStrategy].name} position opened for ${pair} at ${entry}`);
+        }
+
+        // Update Positions Table
+        function updatePositionsTable() {
+            const tbody = document.getElementById('positions-table');
+            if (activePositions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="py-8 text-center text-gray-500">No active hedge positions</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = activePositions.map(pos => {
+                const pnl = ((pos.current - pos.entry) * pos.size * 100000).toFixed(2);
+                const pnlClass = pnl > 0 ? 'text-green-400' : 'text-red-400';
+                
+                return `
+                    <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                        <td class="py-3 font-mono text-yellow-400">${pos.pair}</td>
+                        <td class="py-3"><span class="px-2 py-1 rounded bg-yellow-500/10 text-yellow-400 text-xs">${pos.type}</span></td>
+                        <td class="py-3 font-mono">${pos.size}</td>
+                        <td class="py-3 font-mono text-gray-400">${pos.entry}</td>
+                        <td class="py-3 font-mono ${pnlClass}">${pos.current}</td>
+                        <td class="py-3 font-mono text-blue-400">${pos.ratio}</td>
+                        <td class="py-3"><span class="flex items-center gap-2"><span class="w-2 h-2 bg-green-400 rounded-full live-pulse"></span>${pos.status}</span></td>
+                        <td class="py-3">
+                            <button onclick="closePosition(${pos.id})" class="text-red-400 hover:text-red-300 text-xs underline">Close</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function loadMockPositions() {
+            activePositions = [
+                { id: 1, pair: 'EURUSD', type: 'direct', size: 2.5, entry: 1.0820, current: 1.0850, ratio: '100%', status: 'Active', time: '10:30:00' },
+                { id: 2, pair: 'GBPUSD', type: 'correlation', size: 1.0, entry: 1.2600, current: 1.2640, ratio: '85%', status: 'Active', time: '11:15:00' }
+            ];
+            updatePositionsTable();
+        }
+
+        function closePosition(id) {
+            activePositions = activePositions.filter(p => p.id !== id);
+            updatePositionsTable();
+            showToast('Position Closed', 'Hedge position has been liquidated');
+        }
+
+        function refreshPositions() {
+            const btn = document.querySelector('button[onclick="refreshPositions()"] svg');
+            btn.style.animation = 'spin 1s linear';
+            setTimeout(() => {
+                btn.style.animation = '';
+                updatePrices();
+                showToast('Refreshed', 'Position data updated with latest market prices');
+            }, 500);
+        }
+
+        // Price Simulation
+        function updatePrices() {
+            Object.keys(prices).forEach(pair => {
+                const change = (Math.random() - 0.5) * 0.001;
+                prices[pair] = Math.max(0.1, prices[pair] + change);
+            });
+            
+            // Update active positions current prices
+            activePositions.forEach(pos => {
+                if (prices[pos.pair]) pos.current = prices[pos.pair];
+            });
+            
+            updatePositionsTable();
+            
+            // Update chart data occasionally
+            if (Math.random() > 0.7) {
+                const newData = [40 + Math.random() * 20, 30 + Math.random() * 20, 10 + Math.random() * 20];
+                window.sentimentChart.data.datasets[0].data = newData;
+                window.sentimentChart.update();
+            }
+        }
+
+        // Toast Notification
+        function showToast(title, message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-message').textContent = message;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Add spin animation dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - Trading Glossary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8941F;
+            --ice-blue: #E8F4F8;
+            --deep-blue: #1A3A4A;
+            --navy: #0F2027;
+            --white: #FFFFFF;
+            --gray-light: #F5F7FA;
+            --gray-medium: #8B9DA8;
+            --shadow-soft: 0 4px 20px rgba(26, 58, 74, 0.08);
+            --shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--ice-blue) 0%, var(--gray-light) 100%);
+            color: var(--deep-blue);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--deep-blue) 100%);
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .logo-icon svg {
+            width: 35px;
+            height: 35px;
+            fill: var(--white);
+        }
+
+        .company-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            color: var(--gold-light);
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: var(--white);
+            padding: 3rem 2rem;
+            box-shadow: var(--shadow-soft);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.5rem;
+            color: var(--gold-dark);
+            font-size: 1.2rem;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 1.2rem 1.5rem 1.2rem 3.5rem;
+            border: 2px solid var(--ice-blue);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: var(--white);
+            color: var(--deep-blue);
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: var(--shadow-gold);
+            transform: translateY(-2px);
+        }
+
+        #searchInput::placeholder {
+            color: var(--gray-medium);
+        }
+
+        .search-stats {
+            position: absolute;
+            right: 1.5rem;
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Category Filter */
+        .filter-section {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .category-btn {
+            padding: 0.6rem 1.5rem;
+            border: 2px solid transparent;
+            background: var(--white);
+            color: var(--deep-blue);
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .category-btn:hover::before {
+            left: 100%;
+        }
+
+        .category-btn:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+            color: var(--white);
+            border-color: var(--gold-primary);
+            box-shadow: var(--shadow-gold);
+        }
+
+        /* Glossary Grid */
+        .glossary-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Term Card */
+        .term-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            cursor: pointer;
+        }
+
+        .term-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-dark));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .term-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(26, 58, 74, 0.15);
+        }
+
+        .term-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .term-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .term-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--deep-blue);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .term-category {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--ice-blue);
+            color: var(--deep-blue);
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .term-abbreviation {
+            font-size: 0.9rem;
+            color: var(--gold-dark);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .term-definition {
+            color: var(--gray-medium);
+            line-height: 1.7;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .term-example {
+            background: linear-gradient(135deg, var(--gold-light) 0%, rgba(212, 175, 55, 0.1) 100%);
+            padding: 1rem;
+            border-radius: 12px;
+            border-left: 3px solid var(--gold-primary);
+            font-size: 0.9rem;
+            color: var(--deep-blue);
+            font-style: italic;
+            position: relative;
+        }
+
+        .term-example::before {
+            content: 'Example:';
+            display: block;
+            font-weight: 600;
+            color: var(--gold-dark);
+            margin-bottom: 0.3rem;
+            font-style: normal;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .expand-icon {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--ice-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--deep-blue);
+        }
+
+        .term-card:hover .expand-icon {
+            background: var(--gold-primary);
+            color: var(--white);
+            transform: rotate(90deg);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 32, 39, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--white);
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+            transform: scale(0.8) translateY(50px);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--ice-blue);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--deep-blue);
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--gold-primary);
+            color: var(--white);
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--deep-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-category {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--gold-primary);
+            color: var(--white);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-section {
+            margin-bottom: 2rem;
+        }
+
+        .modal-section h3 {
+            color: var(--gold-dark);
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-section p {
+            color: var(--gray-medium);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .related-terms {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .related-tag {
+            padding: 0.4rem 1rem;
+            background: var(--ice-blue);
+            color: var(--deep-blue);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .related-tag:hover {
+            background: var(--gold-primary);
+            color: var(--white);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            display: none;
+        }
+
+        .empty-state.active {
+            display: block;
+        }
+
+        .empty-icon {
+            width: 100px;
+            height: 100px;
+            background: var(--ice-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 3rem;
+        }
+
+        .empty-state h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--deep-blue);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: var(--gray-medium);
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--navy);
+            color: var(--gold-light);
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--gold-primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .company-name {
+                font-size: 1.8rem;
+            }
+            
+            .glossary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                padding: 2rem;
+                width: 95%;
+            }
+            
+            .modal-title {
+                font-size: 1.8rem;
+            }
+            
+            .filter-section {
+                gap: 0.5rem;
+            }
+            
+            .category-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--gold-primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--ice-blue);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <h1 class="company-name">Goldenice International</h1>
+            </div>
+            <p class="tagline">Premium Trading Glossary</p>
+        </div>
+    </header>
+
+    <section class="search-section">
+        <div class="search-container">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search trading terms, abbreviations, or concepts..." autocomplete="off">
+                <span class="search-stats" id="searchStats">Showing all terms</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="filter-section" id="categoryFilters">
+        <button class="category-btn active" data-category="all">All Terms</button>
+        <button class="category-btn" data-category="forex">Forex</button>
+        <button class="category-btn" data-category="stocks">Stocks</button>
+        <button class="category-btn" data-category="crypto">Crypto</button>
+        <button class="category-btn" data-category="derivatives">Derivatives</button>
+        <button class="category-btn" data-category="risk">Risk Management</button>
+        <button class="category-btn" data-category="technical">Technical Analysis</button>
+    </section>
+
+    <main class="glossary-container">
+        <div class="glossary-grid" id="glossaryGrid">
+            <!-- Terms will be populated by JavaScript -->
+        </div>
+        
+        <div class="empty-state" id="emptyState">
+            <div class="empty-icon">📚</div>
+            <h3>No terms found</h3>
+            <p>Try adjusting your search or filter criteria</p>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">×</button>
+            <span class="modal-category" id="modalCategory">Category</span>
+            <h2 class="modal-title" id="modalTitle">Term Title</h2>
+            <p class="term-abbreviation" id="modalAbbr">Abbreviation</p>
+            
+            <div class="modal-section">
+                <h3>Definition</h3>
+                <p id="modalDefinition">Definition text goes here...</p>
+            </div>
+            
+            <div class="modal-section">
+                <h3>Example</h3>
+                <p id="modalExample" style="font-style: italic; color: var(--gold-dark);">Example text...</p>
+            </div>
+            
+            <div class="modal-section">
+                <h3>Related Terms</h3>
+                <div class="related-terms" id="modalRelated">
+                    <!-- Related terms populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-logo">Goldenice International</div>
+        <p class="footer-text">© 2026 Goldenice International. All rights reserved.<br>
+        Empowering traders with knowledge and precision.</p>
+    </footer>
+
+    <script>
+        // Comprehensive Trading Glossary Data
+        const glossaryData = [
+            {
+                id: 1,
+                term: "Ask Price",
+                abbreviation: "Ask",
+                category: "forex",
+                definition: "The price at which a dealer or market maker is willing to sell a currency pair or financial instrument. It represents the lowest price a seller will accept.",
+                example: "If the EUR/USD quote is 1.0850/1.0852, the ask price is 1.0852 - this is what you pay to buy euros.",
+                related: ["Bid Price", "Spread", "Pip"]
+            },
+            {
+                id: 2,
+                term: "Bid Price",
+                abbreviation: "Bid",
+                category: "forex",
+                definition: "The price at which a buyer is willing to purchase a currency pair or financial instrument. It is the highest price a buyer will pay.",
+                example: "In a GBP/USD quote of 1.2450/1.2452, the bid is 1.2450 - this is what you receive when selling pounds.",
+                related: ["Ask Price", "Spread", "Long Position"]
+            },
+            {
+                id: 3,
+                term: "Spread",
+                abbreviation: "N/A",
+                category: "forex",
+                definition: "The difference between the bid and ask prices of a currency pair or asset. It represents the transaction cost and market maker's profit.",
+                example: "If EUR/USD is quoted at 1.0850/1.0853, the spread is 3 pips (0.0003).",
+                related: ["Bid Price", "Ask Price", "Pip", "Commission"]
+            },
+            {
+                id: 4,
+                term: "Pip",
+                abbreviation: "Percentage in Point",
+                category: "forex",
+                definition: "The smallest price move that a given exchange rate can make. For most currency pairs, it is the fourth decimal place (0.0001).",
+                example: "If EUR/USD moves from 1.0850 to 1.0851, it has moved 1 pip. For JPY pairs, it's the second decimal (0.01).",
+                related: ["Pipette", "Spread", "Lot Size"]
+            },
+            {
+                id: 5,
+                term: "Leverage",
+                abbreviation: "N/A",
+                category: "risk",
+                definition: "The use of borrowed capital to increase the potential return of an investment. It allows traders to control larger positions with a smaller amount of capital.",
+                example: "With 1:100 leverage, a $1,000 deposit controls a $100,000 position. A 1% market move equals 100% gain or loss on margin.",
+                related: ["Margin", "Margin Call", "Equity", "Risk Management"]
+            },
+            {
+                id: 6,
+                term: "Margin",
+                abbreviation: "N/A",
+                category: "risk",
+                definition: "The amount of money required to open and maintain a leveraged trading position. It acts as collateral for the borrowed funds.",
+                example: "To open a $100,000 position at 1% margin requirement, you need $1,000 in your account as margin.",
+                related: ["Leverage", "Free Margin", "Margin Level", "Margin Call"]
+            },
+            {
+                id: 7,
+                term: "Margin Call",
+                abbreviation: "N/A",
+                category: "risk",
+                definition: "A demand from a broker for additional funds or securities when the value of a margin account falls below the required maintenance level.",
+                example: "If your account equity drops below 100% of margin used, the broker may close positions or request more funds.",
+                related: ["Margin", "Stop Out", "Equity", "Free Margin"]
+            },
+            {
+                id: 8,
+                term: "Long Position",
+                abbreviation: "Long",
+                category: "forex",
+                definition: "Buying an asset with the expectation that its value will rise, allowing it to be sold later at a higher price for profit.",
+                example: "Going long on EUR/USD at 1.0850 means buying euros expecting the rate to increase to 1.0900.",
+                related: ["Short Position", "Bullish", "Buy Order", "Take Profit"]
+            },
+            {
+                id: 9,
+                term: "Short Position",
+                abbreviation: "Short",
+                category: "forex",
+                definition: "Selling an asset with the expectation that its value will decline, allowing it to be bought back later at a lower price for profit.",
+                example: "Going short on GBP/USD at 1.2500 means selling pounds expecting the rate to drop to 1.2400.",
+                related: ["Long Position", "Bearish", "Sell Order", "Short Selling"]
+            },
+            {
+                id: 10,
+                term: "Stop Loss",
+                abbreviation: "SL",
+                category: "risk",
+                definition: "An order placed to automatically close a position at a predetermined price level to limit potential losses.",
+                example: "Buying EUR/USD at 1.0850 with a stop loss at 1.0800 limits your loss to 50 pips if the trade goes against you.",
+                related: ["Take Profit", "Risk Reward Ratio", "Position Sizing", "Trailing Stop"]
+            },
+            {
+                id: 11,
+                term: "Take Profit",
+                abbreviation: "TP",
+                category: "risk",
+                definition: "An order to automatically close a position when it reaches a specified profit level, securing gains.",
+                example: "Setting a take profit at 1.0900 when buying EUR/USD at 1.0850 locks in 50 pips of profit automatically.",
+                related: ["Stop Loss", "Risk Reward Ratio", "Limit Order", "Profit Target"]
+            },
+            {
+                id: 12,
+                term: "Lot Size",
+                abbreviation: "N/A",
+                category: "forex",
+                definition: "The standardized quantity of a financial instrument in a single trade. In forex, standard lots are 100,000 units of base currency.",
+                example: "1 standard lot = 100,000 units, 1 mini lot = 10,000 units, 1 micro lot = 1,000 units.",
+                related: ["Pip Value", "Position Sizing", "Volume", "Contract Size"]
+            },
+            {
+                id: 13,
+                term: "Bull Market",
+                abbreviation: "N/A",
+                category: "stocks",
+                definition: "A financial market condition where prices are rising or expected to rise, characterized by optimism and investor confidence.",
+                example: "The stock market from 2009-2020 was a historic bull run, with the S&P 500 rising over 400%.",
+                related: ["Bear Market", "Bullish", "Uptrend", "Market Sentiment"]
+            },
+            {
+                id: 14,
+                term: "Bear Market",
+                abbreviation: "N/A",
+                category: "stocks",
+                definition: "A market condition where prices fall 20% or more from recent highs, accompanied by widespread pessimism and negative sentiment.",
+                example: "The 2008 financial crisis triggered a bear market, with major indices dropping over 50% from their peaks.",
+                related: ["Bull Market", "Bearish", "Downtrend", "Correction"]
+            },
+            {
+                id: 15,
+                term: "Volatility",
+                abbreviation: "N/A",
+                category: "technical",
+                definition: "A statistical measure of the dispersion of returns for a given security or market index, indicating the degree of variation in trading prices.",
+                example: "During major news events like NFP releases, forex volatility can spike, causing rapid price movements.",
+                related: ["VIX", "Standard Deviation", "Bollinger Bands", "ATR"]
+            },
+            {
+                id: 16,
+                term: "Liquidity",
+                abbreviation: "N/A",
+                category: "forex",
+                definition: "The degree to which an asset can be quickly bought or sold in the market without affecting its price. High liquidity means tight spreads and easy execution.",
+                example: "EUR/USD is the most liquid forex pair, while exotic pairs like USD/TRY have lower liquidity and wider spreads.",
+                related: ["Volume", "Spread", "Market Depth", "Slippage"]
+            },
+            {
+                id: 17,
+                term: "Slippage",
+                abbreviation: "N/A",
+                category: "forex",
+                definition: "The difference between the expected price of a trade and the price at which the trade is actually executed, often occurring during high volatility.",
+                example: "Placing a market order during a news release might result in slippage, filling at 1.0855 instead of the quoted 1.0850.",
+                related: ["Liquidity", "Volatility", "Market Order", "Execution"]
+            },
+            {
+                id: 18,
+                term: "Swap",
+                abbreviation: "Rollover",
+                category: "forex",
+                definition: "The interest paid or earned for holding a position overnight, calculated based on the interest rate differential between the two currencies.",
+                example: "Holding a long AUD/JPY position might earn positive swap due to Australia's higher interest rates compared to Japan.",
+                related: ["Overnight Position", "Carry Trade", "Interest Rate", "Triple Swap"]
+            },
+            {
+                id: 19,
+                term: "Hedging",
+                abbreviation: "N/A",
+                category: "risk",
+                definition: "A risk management strategy used to offset potential losses by taking an opposite position in a related asset or derivative.",
+                example: "A company expecting USD payments might short EUR/USD to hedge against dollar weakness.",
+                related: ["Risk Management", "Correlation", "Insurance", "Offset"]
+            },
+            {
+                id: 20,
+                term: "Diversification",
+                abbreviation: "N/A",
+                category: "risk",
+                definition: "The strategy of spreading investments across various financial instruments, sectors, or geographic regions to reduce risk exposure.",
+                example: "A portfolio containing stocks, bonds, forex, and commodities is more diversified than one holding only tech stocks.",
+                related: ["Portfolio", "Correlation", "Asset Allocation", "Risk Management"]
+            },
+            {
+                id: 21,
+                term: "Moving Average",
+                abbreviation: "MA",
+                category: "technical",
+                definition: "A technical indicator that smooths price data by creating a constantly updated average price over a specific time period.",
+                example: "The 200-day moving average is often used to identify long-term trends. Price above = bullish, below = bearish.",
+                related: ["SMA", "EMA", "Trend", "Support Resistance", "Golden Cross"]
+            },
+            {
+                id: 22,
+                term: "Support Level",
+                abbreviation: "N/A",
+                category: "technical",
+                definition: "A price level where a downtrend can be expected to pause due to a concentration of demand or buying interest.",
+                example: "If EUR/USD repeatedly bounces off 1.0800, this level acts as strong support for buyers.",
+                related: ["Resistance Level", "Breakout", "Trend Line", "Demand Zone"]
+            },
+            {
+                id: 23,
+                term: "Resistance Level",
+                abbreviation: "N/A",
+                category: "technical",
+                definition: "A price level where an uptrend can be expected to pause due to a concentration of supply or selling pressure.",
+                example: "Gold struggling to break above $2,000 multiple times indicates strong resistance at that level.",
+                related: ["Support Level", "Breakout", "Supply Zone", "Rejection"]
+            },
+            {
+                id: 24,
+                term: "Blockchain",
+                abbreviation: "N/A",
+                category: "crypto",
+                definition: "A decentralized, distributed digital ledger that records transactions across multiple computers, ensuring transparency and immutability.",
+                example: "Bitcoin's blockchain maintains a permanent record of all transactions since 2009, visible to anyone.",
+                related: ["Cryptocurrency", "Distributed Ledger", "Mining", "Smart Contract"]
+            },
+            {
+                id: 25,
+                term: "Cryptocurrency",
+                abbreviation: "Crypto",
+                category: "crypto",
+                definition: "Digital or virtual currency that uses cryptography for security, operating independently of central banks on decentralized networks.",
+                example: "Bitcoin, Ethereum, and Ripple are cryptocurrencies traded 24/7 on digital exchanges.",
+                related: ["Blockchain", "Altcoin", "Token", "Wallet", "DeFi"]
+            },
+            {
+                id: 26,
+                term: "Futures Contract",
+                abbreviation: "N/A",
+                category: "derivatives",
+                definition: "A legal agreement to buy or sell a particular commodity or asset at a predetermined price at a specified time in the future.",
+                example: "A farmer might sell wheat futures at $5/bushel to lock in prices before harvest, regardless of future market prices.",
+                related: ["Forward Contract", "Options", "Expiry", "Settlement", "Hedging"]
+            },
+            {
+                id: 27,
+                term: "Options",
+                abbreviation: "N/A",
+                category: "derivatives",
+                definition: "Financial derivatives that give buyers the right, but not the obligation, to buy or sell an asset at an agreed-upon price before a specific date.",
+                example: "Buying a call option on Apple stock at $150 strike price gives the right to buy at $150 even if it rises to $170.",
+                related: ["Call Option", "Put Option", "Strike Price", "Premium", "Expiry"]
+            },
+            {
+                id: 28,
+                term: "Dividend",
+                abbreviation: "N/A",
+                category: "stocks",
+                definition: "A distribution of a portion of a company's earnings to its shareholders, usually in cash or additional shares.",
+                example: "Coca-Cola pays quarterly dividends of approximately $0.44 per share to shareholders of record.",
+                related: ["Yield", "Ex-Dividend", "DRIP", "Blue Chip", "Income Investing"]
+            },
+            {
+                id: 29,
+                term: "Market Capitalization",
+                abbreviation: "Market Cap",
+                category: "stocks",
+                definition: "The total value of a company's outstanding shares, calculated by multiplying the current share price by total shares outstanding.",
+                example: "Apple's market cap exceeds $3 trillion, making it one of the world's most valuable companies.",
+                related: ["Shares Outstanding", "Float", "Enterprise Value", "Valuation"]
+            },
+            {
+                id: 30,
+                term: "Initial Public Offering",
+                abbreviation: "IPO",
+                category: "stocks",
+                definition: "The process by which a private company offers its shares to the public for the first time, becoming a publicly traded company.",
+                example: "When Airbnb went public in 2020, its IPO price was $68 per share, opening at $146 on the first day.",
+                related: ["Public Company", "Listing", "Underwriting", "Primary Market", "Shares"]
+            }
+        ];
+
+        // DOM Elements
+        const glossaryGrid = document.getElementById('glossaryGrid');
+        const searchInput = document.getElementById('searchInput');
+        const searchStats = document.getElementById('searchStats');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const emptyState = document.getElementById('emptyState');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalClose = document.getElementById('modalClose');
+
+        // State
+        let currentCategory = 'all';
+        let searchTerm = '';
+
+        // Initialize
+        function init() {
+            renderTerms(glossaryData);
+            setupEventListeners();
+        }
+
+        // Render Terms
+        function renderTerms(terms) {
+            glossaryGrid.innerHTML = '';
+            
+            if (terms.length === 0) {
+                emptyState.classList.add('active');
+                searchStats.textContent = 'No results found';
+                return;
+            }
+            
+            emptyState.classList.remove('active');
+            searchStats.textContent = `Showing ${terms.length} term${terms.length !== 1 ? 's' : ''}`;
+            
+            terms.forEach((term, index) => {
+                const card = createTermCard(term, index);
+                glossaryGrid.appendChild(card);
+            });
+        }
+
+        // Create Term Card
+        function createTermCard(term, index) {
+            const card = document.createElement('div');
+            card.className = 'term-card';
+            card.style.animationDelay = `${index * 0.05}s`;
+            card.innerHTML = `
+                <div class="term-header">
+                    <div>
+                        <span class="term-category">${formatCategory(term.category)}</span>
+                        <h2 class="term-title">${term.term}</h2>
+                        ${term.abbreviation !== 'N/A' ? `<p class="term-abbreviation">${term.abbreviation}</p>` : ''}
+                    </div>
+                    <div class="expand-icon">→</div>
+                </div>
+                <p class="term-definition">${truncateText(term.definition, 120)}</p>
+                <div class="term-example">${truncateText(term.example, 100)}</div>
+            `;
+            
+            card.addEventListener('click', () => openModal(term));
+            return card;
+        }
+
+        // Format Category Name
+        function formatCategory(cat) {
+            const map = {
+                'forex': 'Forex',
+                'stocks': 'Stocks',
+                'crypto': 'Crypto',
+                'derivatives': 'Derivatives',
+                'risk': 'Risk Management',
+                'technical': 'Technical Analysis'
+            };
+            return map[cat] || cat;
+        }
+
+        // Truncate Text
+        function truncateText(text, length) {
+            return text.length > length ? text.substring(0, length) + '...' : text;
+        }
+
+        // Filter Terms
+        function filterTerms() {
+            let filtered = glossaryData;
+            
+            // Category Filter
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(term => term.category === currentCategory);
+            }
+            
+            // Search Filter
+            if (searchTerm) {
+                const lowerSearch = searchTerm.toLowerCase();
+                filtered = filtered.filter(term => 
+                    term.term.toLowerCase().includes(lowerSearch) ||
+                    term.abbreviation.toLowerCase().includes(lowerSearch) ||
+                    term.definition.toLowerCase().includes(lowerSearch)
+                );
+            }
+            
+            renderTerms(filtered);
+        }
+
+        // Open Modal
+        function openModal(term) {
+            document.getElementById('modalCategory').textContent = formatCategory(term.category);
+            document.getElementById('modalTitle').textContent = term.term;
+            document.getElementById('modalAbbr').textContent = term.abbreviation !== 'N/A' ? term.abbreviation : '';
+            document.getElementById('modalDefinition').textContent = term.definition;
+            document.getElementById('modalExample').textContent = term.example;
+            
+            const relatedContainer = document.getElementById('modalRelated');
+            relatedContainer.innerHTML = '';
+            term.related.forEach(relatedTerm => {
+                const tag = document.createElement('span');
+                tag.className = 'related-tag';
+                tag.textContent = relatedTerm;
+                tag.addEventListener('click', () => {
+                    searchInput.value = relatedTerm;
+                    searchTerm = relatedTerm;
+                    closeModal();
+                    filterTerms();
+                });
+                relatedContainer.appendChild(tag);
+            });
+            
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close Modal
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Search Input
+            searchInput.addEventListener('input', (e) => {
+                searchTerm = e.target.value;
+                filterTerms();
+            });
+            
+            // Category Buttons
+            categoryButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = btn.dataset.category;
+                    filterTerms();
+                });
+            });
+            
+            // Modal Close
+            modalClose.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) closeModal();
+            });
+            
+            // Keyboard Navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeModal();
+                if (e.key === '/' && document.activeElement !== searchInput) {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+            });
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>

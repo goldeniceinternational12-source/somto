@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International - SEC Filings & Regulatory Disclosures</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E8C1;
+            --gold-dark: #AA8C2C;
+            --ice-blue: #E8F4F8;
+            --deep-navy: #0A1628;
+            --navy-light: #1E3A5F;
+            --text-primary: #1A1A1A;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --white: #FFFFFF;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --border: #E5E7EB;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #F8FAFC 0%, #E8F4F8 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header & Navigation */
+        .header {
+            background: var(--deep-navy);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-top {
+            background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold-primary) 50%, var(--gold-dark) 100%);
+            padding: 8px 0;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--deep-navy);
+        }
+
+        .header-main {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--deep-navy);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .logo-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: 0.5px;
+        }
+
+        .logo-text span {
+            font-size: 11px;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--ice-blue);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--gold-primary);
+        }
+
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gold-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px 16px 10px 40px;
+            color: var(--white);
+            font-size: 14px;
+            width: 280px;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--gold-primary);
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold-light);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 140px;
+            padding: 40px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--deep-navy) 0%, var(--navy-light) 100%);
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--gold-primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gold-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+
+        .hero-badge::before {
+            content: '●';
+            color: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero-title span {
+            color: var(--gold-primary);
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--ice-blue);
+            max-width: 600px;
+            margin-bottom: 32px;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gold-primary);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--ice-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--deep-navy);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-title svg {
+            width: 20px;
+            height: 20px;
+            color: var(--gold-primary);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+            color: var(--deep-navy);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--ice-blue);
+            color: var(--navy-light);
+        }
+
+        .btn-secondary:hover {
+            background: #D1E7ED;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-dark);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--white);
+            transition: all 0.3s;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .date-range {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .date-range input {
+            flex: 1;
+        }
+
+        .date-range span {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* Filing Cards */
+        .filings-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .filing-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--gold-primary);
+        }
+
+        .filing-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--gold-primary);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .filing-card:hover::before {
+            opacity: 1;
+        }
+
+        .filing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .filing-type {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filing-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .filing-icon.annual {
+            background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+            color: #1E40AF;
+        }
+
+        .filing-icon.quarterly {
+            background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+            color: #065F46;
+        }
+
+        .filing-icon.current {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            color: #92400E;
+        }
+
+        .filing-icon.insider {
+            background: linear-gradient(135deg, #E0E7FF 0%, #C7D2FE 100%);
+            color: #3730A3;
+        }
+
+        .filing-icon.proxy {
+            background: linear-gradient(135deg, #FCE7F3 0%, #FBCFE8 100%);
+            color: #9D174D;
+        }
+
+        .filing-icon.registration {
+            background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+            color: #6B21A8;
+        }
+
+        .filing-meta h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--deep-navy);
+            margin-bottom: 4px;
+        }
+
+        .filing-meta p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .filing-status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.filed {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-badge.pending {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-badge.amended {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .filing-date {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filing-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 24px;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .filing-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .filing-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: var(--deep-navy);
+        }
+
+        .filing-attachments {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .attachment-tag {
+            background: var(--ice-blue);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--navy-light);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filing-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-secondary);
+        }
+
+        .btn-icon:hover {
+            background: var(--gold-primary);
+            border-color: var(--gold-primary);
+            color: var(--deep-navy);
+        }
+
+        /* Timeline View */
+        .timeline-view {
+            display: none;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .timeline-view.active {
+            display: block;
+        }
+
+        .timeline-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .timeline-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--deep-navy);
+            margin-bottom: 8px;
+        }
+
+        .timeline-track {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline-track::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--gold-primary), var(--gold-light));
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 32px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -33px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--gold-primary);
+            border: 3px solid var(--white);
+            box-shadow: 0 0 0 3px var(--gold-primary);
+        }
+
+        .timeline-dot.important {
+            width: 24px;
+            height: 24px;
+            left: -37px;
+            background: var(--deep-navy);
+            box-shadow: 0 0 0 4px var(--gold-primary);
+        }
+
+        .timeline-content {
+            background: var(--ice-blue);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--gold-primary);
+        }
+
+        .timeline-date {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gold-dark);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .timeline-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--deep-navy);
+            margin-bottom: 8px;
+        }
+
+        .timeline-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Document Preview Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 22, 40, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-container {
+            background: var(--white);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--deep-navy) 0%, var(--navy-light) 100%);
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            color: var(--white);
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 32px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .document-preview {
+            background: #F9FAFB;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .document-header {
+            text-align: center;
+            border-bottom: 2px solid var(--deep-navy);
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+        }
+
+        .document-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--deep-navy);
+            margin-bottom: 8px;
+        }
+
+        .document-section {
+            margin-bottom: 24px;
+        }
+
+        .document-section h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--deep-navy);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .document-section p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        .highlight-box {
+            background: var(--gold-light);
+            border-left: 4px solid var(--gold-primary);
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .modal-footer {
+            padding: 24px 32px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F9FAFB;
+        }
+
+        .document-meta {
+            display: flex;
+            gap: 24px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            background: linear-gradient(90deg, #FEF3C7 0%, #FDE68A 100%);
+            border: 1px solid #F59E0B;
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .alert-icon {
+            width: 40px;
+            height: 40px;
+            background: #F59E0B;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .alert-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #92400E;
+            margin-bottom: 4px;
+        }
+
+        .alert-content p {
+            font-size: 13px;
+            color: #B45309;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 32px;
+        }
+
+        .page-btn {
+            min-width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-btn:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-dark);
+        }
+
+        .page-btn.active {
+            background: var(--gold-primary);
+            border-color: var(--gold-primary);
+            color: var(--deep-navy);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--deep-navy);
+            padding: 60px 40px 30px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-brand h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--white);
+            margin-bottom: 16px;
+        }
+
+        .footer-brand p {
+            color: var(--ice-blue);
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .footer-section h4 {
+            color: var(--gold-primary);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--ice-blue);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold-primary);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .filing-content {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-main {
+                padding: 16px 20px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .search-box input {
+                width: 200px;
+            }
+            
+            .main-content {
+                padding: 20px;
+                margin-top: 120px;
+            }
+            
+            .hero-section {
+                padding: 32px;
+            }
+            
+            .hero-title {
+                font-size: 32px;
+            }
+            
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading State */
+        .skeleton {
+            background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--deep-navy);
+            color: var(--white);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 3000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            Goldenice International Holdings Inc. (Ticker: GICE) - NASDAQ Listed
+        </div>
+        <div class="header-main">
+            <div class="logo">
+                <div class="logo-icon">G</div>
+                <div class="logo-text">
+                    <h1>Goldenice International</h1>
+                    <span>SEC Regulatory Filings</span>
+                </div>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#" class="active">SEC Filings</a></li>
+                    <li><a href="./Annual reports.html">Financial Reports</a></li>
+                    <li><a href="./Governance.html">Governance</a></li>
+                    <li><a href="./Investor Relations.html">Investor Relations</a></li>
+                    <li><a href="./news.html">News & Events</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Search filings, CIK, or keywords..." id="searchInput">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-badge">Live EDGAR Integration</div>
+                <h1 class="hero-title">SEC Filings & <span>Regulatory Disclosures</span></h1>
+                <p class="hero-subtitle">Transparent access to all Securities and Exchange Commission filings, annual reports, and material event disclosures for Goldenice International Holdings Inc.</p>
+                
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <div class="stat-value">247</div>
+                        <div class="stat-label">Total Filings (2024)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Form Types</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">4.2GB</div>
+                        <div class="stat-label">Document Archive</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">On-Time Filing</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alert Banner -->
+        <div class="alert-banner">
+            <div class="alert-icon">📋</div>
+            <div class="alert-content">
+                <h4>Upcoming Filing Deadline</h4>
+                <p>Form 10-Q for Q3 2024 must be filed by November 9, 2024. All material events must be disclosed via Form 8-K within 4 business days.</p>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <section class="filter-section">
+            <div class="filter-header">
+                <div class="filter-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    Filter Filings
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-secondary" onclick="toggleView()">
+                        <span id="viewToggle">Timeline View</span>
+                    </button>
+                    <button class="btn btn-outline" onclick="exportData()">
+                        📥 Export CSV
+                    </button>
+                    <button class="btn btn-primary" onclick="subscribeAlerts()">
+                        🔔 Alert Me
+                    </button>
+                </div>
+            </div>
+            
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label>Form Type</label>
+                    <select id="formTypeFilter" onchange="filterFilings()">
+                        <option value="all">All Form Types</option>
+                        <option value="10-K">10-K (Annual Report)</option>
+                        <option value="10-Q">10-Q (Quarterly Report)</option>
+                        <option value="8-K">8-K (Current Report)</option>
+                        <option value="DEF 14A">DEF 14A (Proxy Statement)</option>
+                        <option value="S-1">S-1 (Registration)</option>
+                        <option value="4">Form 4 (Insider Trading)</option>
+                        <option value="13F-HR">13F-HR (Institutional)</option>
+                        <option value="SD">SD (Conflict Minerals)</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Filing Category</label>
+                    <select id="categoryFilter" onchange="filterFilings()">
+                        <option value="all">All Categories</option>
+                        <option value="periodic">Periodic Reports</option>
+                        <option value="current">Current Events</option>
+                        <option value="ownership">Ownership Reports</option>
+                        <option value="proxy">Proxy Materials</option>
+                        <option value="registration">Registration</option>
+                        <option value="insider">Insider Transactions</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Date Range</label>
+                    <div class="date-range">
+                        <input type="date" id="dateFrom" onchange="filterFilings()">
+                        <span>to</span>
+                        <input type="date" id="dateTo" onchange="filterFilings()">
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select id="statusFilter" onchange="filterFilings()">
+                        <option value="all">All Status</option>
+                        <option value="filed">Filed</option>
+                        <option value="pending">Pending</option>
+                        <option value="amended">Amended</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- List View -->
+        <div id="listView" class="filings-container">
+            <!-- Filing cards will be populated by JavaScript -->
+        </div>
+
+        <!-- Timeline View -->
+        <div id="timelineView" class="timeline-view">
+            <div class="timeline-header">
+                <h2>2024 Filing Timeline</h2>
+                <p>Chronological view of all regulatory submissions</p>
+            </div>
+            <div class="timeline-track" id="timelineContent">
+                <!-- Timeline items populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+            <button class="page-btn" onclick="changePage(-1)">←</button>
+            <button class="page-btn active" onclick="goToPage(1)">1</button>
+            <button class="page-btn" onclick="goToPage(2)">2</button>
+            <button class="page-btn" onclick="goToPage(3)">3</button>
+            <button class="page-btn" onclick="goToPage(4)">4</button>
+            <span style="color: var(--text-muted);">...</span>
+            <button class="page-btn" onclick="goToPage(25)">25</button>
+            <button class="page-btn" onclick="changePage(1)">→</button>
+        </div>
+    </main>
+
+    <!-- Document Preview Modal -->
+    <div class="modal-overlay" id="documentModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Form 10-Q - Quarterly Report</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="document-preview" id="documentContent">
+                    <!-- Document content populated by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="document-meta">
+                    <span>📄 47 pages</span>
+                    <span>📅 Filed: October 15, 2024</span>
+                    <span>⚡ Accession: 0001193125-24-123456</span>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-outline" onclick="downloadPDF()">📥 Download PDF</button>
+                    <button class="btn btn-primary" onclick="viewOnSEC()">🔗 View on SEC.gov</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-icon">✓</div>
+        <span id="toastMessage">Action completed successfully</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>Goldenice International</h3>
+                <p>A leading global investment management firm committed to transparency, regulatory compliance, and shareholder value creation. All filings are submitted in accordance with SEC regulations and GAAP standards.</p>
+            </div>
+            
+            
+            
+           
+            
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <ul class="footer-links">
+                    <li><a href="./Investor Relations.html">Investor Relations</a></li>
+                    <li><a href="./Legal Department.html">Legal Department</a></li>
+                    <li><a href="./contact.html">Compliance Officer</a></li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2026 Goldenice International Holdings Inc. All rights reserved. CIK: 0001234567</p>
+            <p>Disclaimer: These materials are provided for informational purposes only and do not constitute investment advice.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample SEC Filings Data
+        const filingsData = [
+            {
+                id: '1',
+                formType: '10-Q',
+                category: 'periodic',
+                title: 'Quarterly Report for Q3 2024',
+                description: 'Quarterly report pursuant to Section 13 or 15(d) of the Securities Exchange Act. Includes unaudited financial statements, MD&A, and risk factors.',
+                filedDate: '2024-11-09',
+                filingDate: 'November 9, 2024',
+                status: 'filed',
+                accession: '0001193125-24-289156',
+                pages: 47,
+                fileSize: '2.4 MB',
+                attachments: ['EX-31.1', 'EX-31.2', 'EX-32.1'],
+                isAmended: false,
+                importance: 'high'
+            },
+            {
+                id: '2',
+                formType: '8-K',
+                category: 'current',
+                title: 'Entry into Material Definitive Agreement',
+                description: 'Report of unscheduled material events or corporate changes. Announcement of strategic partnership with Nordic Investment Fund for $500M infrastructure project.',
+                filedDate: '2024-10-28',
+                filingDate: 'October 28, 2024',
+                status: 'filed',
+                accession: '0001193125-24-278234',
+                pages: 12,
+                fileSize: '845 KB',
+                attachments: ['EX-99.1'],
+                isAmended: false,
+                importance: 'high'
+            },
+            {
+                id: '3',
+                formType: '4',
+                category: 'insider',
+                title: 'Statement of Changes in Beneficial Ownership',
+                description: 'Report of securities transactions by directors, officers, and beneficial owners of more than 10% of a class of equity securities.',
+                filedDate: '2024-10-25',
+                filingDate: 'October 25, 2024',
+                status: 'filed',
+                accession: '0001193125-24-275891',
+                pages: 3,
+                fileSize: '156 KB',
+                attachments: [],
+                isAmended: false,
+                importance: 'normal',
+                insider: 'James Richardson (CEO)',
+                transaction: 'Purchase of 50,000 shares at $42.50'
+            },
+            {
+                id: '4',
+                formType: '13F-HR',
+                category: 'ownership',
+                title: 'Quarterly Report of Institutional Investment Manager',
+                description: 'Quarterly holdings report for institutional investment managers with discretion over $100M or more in Section 13(f) securities.',
+                filedDate: '2024-10-15',
+                filingDate: 'October 15, 2024',
+                status: 'filed',
+                accession: '0001193125-24-267445',
+                pages: 156,
+                fileSize: '4.2 MB',
+                attachments: ['INFORMATION TABLE'],
+                isAmended: false,
+                importance: 'normal',
+                holdings: '$12.4B AUM reported'
+            },
+            {
+                id: '5',
+                formType: 'SD',
+                category: 'current',
+                title: 'Specialized Disclosure Report - Conflict Minerals',
+                description: 'Report on conflict minerals usage pursuant to Section 1502 of the Dodd-Frank Wall Street Reform and Consumer Protection Act.',
+                filedDate: '2024-10-01',
+                filingDate: 'October 1, 2024',
+                status: 'filed',
+                accession: '0001193125-24-256778',
+                pages: 8,
+                fileSize: '425 KB',
+                attachments: ['EX-1.01'],
+                isAmended: false,
+                importance: 'normal'
+            },
+            {
+                id: '6',
+                formType: '10-Q',
+                category: 'periodic',
+                title: 'Quarterly Report for Q2 2024 (Amended)',
+                description: 'Amended quarterly report to correct calculation error in Segment Reporting note. No material impact on consolidated financial statements.',
+                filedDate: '2024-09-20',
+                filingDate: 'September 20, 2024',
+                status: 'amended',
+                accession: '0001193125-24-245667',
+                pages: 49,
+                fileSize: '2.6 MB',
+                attachments: ['EX-31.1', 'EX-31.2', 'EX-32.1'],
+                isAmended: true,
+                originalFiled: 'August 9, 2024',
+                importance: 'medium'
+            },
+            {
+                id: '7',
+                formType: '8-K',
+                category: 'current',
+                title: 'Results of Operations and Financial Condition',
+                description: 'Press release announcing Q3 2024 financial results. Revenue of $1.2B, up 23% YoY. EPS of $1.45 vs. $1.12 consensus.',
+                filedDate: '2024-11-07',
+                filingDate: 'November 7, 2024',
+                status: 'filed',
+                accession: '0001193125-24-287234',
+                pages: 15,
+                fileSize: '1.1 MB',
+                attachments: ['EX-99.1'],
+                isAmended: false,
+                importance: 'high'
+            },
+            {
+                id: '8',
+                formType: 'DEF 14A',
+                category: 'proxy',
+                title: 'Proxy Statement - Annual Meeting 2024',
+                description: 'Definitive proxy statement for 2024 Annual Meeting of Shareholders to be held December 15, 2024. Includes director nominations and executive compensation.',
+                filedDate: '2024-11-01',
+                filingDate: 'November 1, 2024',
+                status: 'filed',
+                accession: '0001193125-24-282345',
+                pages: 89,
+                fileSize: '5.8 MB',
+                attachments: ['EX-A', 'EX-B'],
+                isAmended: false,
+                importance: 'high',
+                meetingDate: 'December 15, 2024'
+            }
+        ];
+
+        // State Management
+        let currentView = 'list';
+        let currentPage = 1;
+        let filteredData = [...filingsData];
+        let itemsPerPage = 6;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFilings();
+            renderTimeline();
+            setupEventListeners();
+        });
+
+        // Render Filing Cards
+        function renderFilings() {
+            const container = document.getElementById('listView');
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = filteredData.slice(start, end);
+
+            container.innerHTML = pageData.map(filing => `
+                <div class="filing-card" onclick="openDocument('${filing.id}')" data-id="${filing.id}">
+                    <div class="filing-header">
+                        <div class="filing-type">
+                            <div class="filing-icon ${getIconClass(filing.category)}">${filing.formType}</div>
+                            <div class="filing-meta">
+                                <h3>${filing.title}</h3>
+                                <p>${filing.accession}</p>
+                            </div>
+                        </div>
+                        <div class="filing-status">
+                            <span class="status-badge ${filing.status}">${filing.status}</span>
+                            <span class="filing-date">📅 ${filing.filingDate}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="filing-content">
+                        <div class="filing-description">
+                            ${filing.description}
+                            ${filing.isAmended ? `<br><br><strong style="color: var(--warning);">⚠️ Amends filing from ${filing.originalFiled}</strong>` : ''}
+                        </div>
+                        
+                        <div class="filing-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Pages</span>
+                                <span class="metric-value">${filing.pages}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">File Size</span>
+                                <span class="metric-value">${filing.fileSize}</span>
+                            </div>
+                            ${filing.insider ? `
+                            <div class="metric">
+                                <span class="metric-label">Insider</span>
+                                <span class="metric-value">${filing.insider}</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="filing-attachments">
+                            ${filing.attachments.map(att => `
+                                <span class="attachment-tag">📎 ${att}</span>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="filing-actions" onclick="event.stopPropagation()">
+                            <button class="btn-icon" onclick="downloadFiling('${filing.id}')" title="Download">⬇</button>
+                            <button class="btn-icon" onclick="printFiling('${filing.id}')" title="Print">🖨</button>
+                            <button class="btn-icon" onclick="shareFiling('${filing.id}')" title="Share">↗</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Timeline
+        function renderTimeline() {
+            const container = document.getElementById('timelineContent');
+            const sortedData = [...filingsData].sort((a, b) => new Date(b.filedDate) - new Date(a.filedDate));
+            
+            container.innerHTML = sortedData.map(filing => `
+                <div class="timeline-item">
+                    <div class="timeline-dot ${filing.importance === 'high' ? 'important' : ''}"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">${filing.filingDate}</div>
+                        <div class="timeline-title">${filing.formType}: ${filing.title}</div>
+                        <div class="timeline-description">${filing.description.substring(0, 150)}...</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get Icon Color Class
+        function getIconClass(category) {
+            const classes = {
+                'periodic': 'annual',
+                'current': 'current',
+                'ownership': 'registration',
+                'proxy': 'proxy',
+                'registration': 'registration',
+                'insider': 'insider'
+            };
+            return classes[category] || 'current';
+        }
+
+        // Filter Functionality
+        function filterFilings() {
+            const formType = document.getElementById('formTypeFilter').value;
+            const category = document.getElementById('categoryFilter').value;
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            const status = document.getElementById('statusFilter').value;
+
+            filteredData = filingsData.filter(filing => {
+                if (formType !== 'all' && filing.formType !== formType) return false;
+                if (category !== 'all' && filing.category !== category) return false;
+                if (status !== 'all' && filing.status !== status) return false;
+                if (dateFrom && new Date(filing.filedDate) < new Date(dateFrom)) return false;
+                if (dateTo && new Date(filing.filedDate) > new Date(dateTo)) return false;
+                return true;
+            });
+
+            currentPage = 1;
+            renderFilings();
+            updatePagination();
+            showToast(`Found ${filteredData.length} filings`);
+        }
+
+        // Toggle View
+        function toggleView() {
+            const listView = document.getElementById('listView');
+            const timelineView = document.getElementById('timelineView');
+            const btn = document.getElementById('viewToggle');
+            
+            if (currentView === 'list') {
+                listView.style.display = 'none';
+                timelineView.classList.add('active');
+                btn.textContent = 'List View';
+                currentView = 'timeline';
+            } else {
+                listView.style.display = 'flex';
+                timelineView.classList.remove('active');
+                btn.textContent = 'Timeline View';
+                currentView = 'list';
+            }
+        }
+
+        // Pagination
+        function changePage(direction) {
+            const maxPage = Math.ceil(filteredData.length / itemsPerPage);
+            const newPage = currentPage + direction;
+            
+            if (newPage >= 1 && newPage <= maxPage) {
+                currentPage = newPage;
+                renderFilings();
+                updatePagination();
+                window.scrollTo({ top: 400, behavior: 'smooth' });
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderFilings();
+            updatePagination();
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+        }
+
+        function updatePagination() {
+            const maxPage = Math.ceil(filteredData.length / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+            
+            // Simple pagination update - in production, make dynamic
+            const buttons = pagination.querySelectorAll('.page-btn');
+            buttons.forEach((btn, index) => {
+                if (index > 0 && index < buttons.length - 1 && btn.textContent !== '...') {
+                    btn.classList.toggle('active', parseInt(btn.textContent) === currentPage);
+                }
+            });
+        }
+
+        // Modal Functions
+        function openDocument(id) {
+            const filing = filingsData.find(f => f.id === id);
+            if (!filing) return;
+
+            document.getElementById('modalTitle').textContent = `${filing.formType} - ${filing.title}`;
+            
+            // Generate mock document content
+            const content = `
+                <div class="document-header">
+                    <h2>UNITED STATES</h2>
+                    <h2>SECURITIES AND EXCHANGE COMMISSION</h2>
+                    <p>Washington, D.C. 20549</p>
+                    <h2 style="margin-top: 30px;">${filing.formType}</h2>
+                    <p style="font-size: 18px; margin-top: 20px;">${filing.title}</p>
+                    <p style="margin-top: 20px;">GOLDENICE INTERNATIONAL HOLDINGS INC.</p>
+                    <p>(Exact name of registrant as specified in its charter)</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>Accession Number:</strong> ${filing.accession}<br>
+                    <strong>Filed Date:</strong> ${filing.filingDate}<br>
+                    <strong>CIK:</strong> 0001234567
+                </div>
+
+                <div class="document-section">
+                    <h3>Item 1. Financial Statements</h3>
+                    <p>The condensed consolidated financial statements of Goldenice International Holdings Inc. ("the Company") 
+                    included herein have been prepared by the Company, without audit, pursuant to the rules and regulations 
+                    of the Securities and Exchange Commission.</p>
+                    
+                    <p>Certain information and footnote disclosures normally included in financial statements prepared in 
+                    accordance with generally accepted accounting principles have been condensed or omitted pursuant to such 
+                    rules and regulations, although the Company believes that the disclosures are adequate to make the 
+                    information not misleading.</p>
+                </div>
+
+                <div class="document-section">
+                    <h3>Item 2. Management's Discussion and Analysis</h3>
+                    <p>The following discussion and analysis of our financial condition and results of operations should be 
+                    read in conjunction with our condensed consolidated financial statements and related notes included 
+                    elsewhere in this filing.</p>
+                    
+                    <p><strong>Overview:</strong> Goldenice International is a leading global investment management firm 
+                    with $42.5 billion in assets under management as of September 30, 2024. We operate through three 
+                    primary business segments: Institutional Investments, Wealth Management, and Alternative Strategies.</p>
+                </div>
+
+                <div class="document-section">
+                    <h3>Item 3. Quantitative and Qualitative Disclosures About Market Risk</h3>
+                    <p>We are exposed to market risk primarily through changes in interest rates, credit spreads, equity 
+                    prices, and foreign currency exchange rates. We manage these risks through various hedging strategies 
+                    and position limits.</p>
+                </div>
+
+                <div class="document-section">
+                    <h3>Signatures</h3>
+                    <p>Pursuant to the requirements of the Securities Exchange Act of 1934, the registrant has duly caused 
+                    this report to be signed on its behalf by the undersigned thereunto duly authorized.</p>
+                    
+                    <p style="margin-top: 30px;">
+                        <strong>GOLDENICE INTERNATIONAL HOLDINGS INC.</strong><br><br>
+                        By: /s/ James Richardson<br>
+                        James Richardson<br>
+                        Chief Executive Officer<br>
+                        Date: ${filing.filingDate}
+                    </p>
+                </div>
+            `;
+            
+            document.getElementById('documentContent').innerHTML = content;
+            document.getElementById('documentModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('documentModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Action Functions
+        function downloadFiling(id) {
+            showToast('Downloading PDF...');
+            setTimeout(() => {
+                showToast('Download complete: GICE_filing_' + id + '.pdf');
+            }, 1500);
+        }
+
+        function printFiling(id) {
+            window.print();
+        }
+
+        function shareFiling(id) {
+            const filing = filingsData.find(f => f.id === id);
+            if (navigator.share) {
+                navigator.share({
+                    title: filing.title,
+                    text: `Goldenice International ${filing.formType} Filing`,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('Link copied to clipboard');
+            }
+        }
+
+        function downloadPDF() {
+            showToast('Preparing PDF download...');
+        }
+
+        function viewOnSEC() {
+            window.open('https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001234567', '_blank');
+        }
+
+        function exportData() {
+            const csv = convertToCSV(filteredData);
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `GICE_FILINGS_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            showToast('CSV exported successfully');
+        }
+
+        function convertToCSV(data) {
+            const headers = ['Form Type', 'Title', 'Filed Date', 'Accession', 'Status', 'Pages', 'Size'];
+            const rows = data.map(f => [
+                f.formType,
+                `"${f.title}"`,
+                f.filedDate,
+                f.accession,
+                f.status,
+                f.pages,
+                f.fileSize
+            ]);
+            return [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        }
+
+        function subscribeAlerts() {
+            const email = prompt('Enter your email to receive filing alerts:');
+            if (email) {
+                showToast(`Alerts subscribed for ${email}`);
+            }
+        }
+
+        // Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Close modal on overlay click
+            document.getElementById('documentModal').addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal-overlay')) {
+                    closeModal();
+                }
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                if (term.length > 2) {
+                    filteredData = filingsData.filter(f => 
+                        f.title.toLowerCase().includes(term) ||
+                        f.description.toLowerCase().includes(term) ||
+                        f.formType.toLowerCase().includes(term)
+                    );
+                    currentPage = 1;
+                    renderFilings();
+                } else if (term.length === 0) {
+                    filteredData = [...filingsData];
+                    renderFilings();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

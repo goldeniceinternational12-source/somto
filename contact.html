@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Goldenice International</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --deep-navy: #0B1120;
+            --glass-bg: rgba(30, 41, 59, 0.6);
+        }
+        
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--deep-navy);
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Gold Gradient Text */
+        .text-gold-gradient {
+            background: linear-gradient(to right, var(--gold-light), var(--gold-primary), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Form Styling */
+        .form-input {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+            outline: none;
+        }
+        .form-label {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            color: #94a3b8;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            background: transparent;
+            padding: 0 0.25rem;
+        }
+        .form-input:focus ~ .form-label,
+        .form-input:not(:placeholder-shown) ~ .form-label {
+            top: -0.6rem;
+            left: 0.8rem;
+            font-size: 0.75rem;
+            color: var(--gold-primary);
+            background: var(--deep-navy);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold-primary); }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+        }
+        .pulse-ring { animation: pulse-gold 2s infinite; }
+
+        /* Map Container */
+        #map {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            background: #0f172a;
+            border-radius: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .map-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+        .map-marker:hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            background: #fff;
+        }
+        .map-tooltip {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            border: 1px solid var(--gold-primary);
+        }
+        .map-marker:hover .map-tooltip { opacity: 1; }
+
+        /* Success Modal */
+        .modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-yellow-900 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/5 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='#'">
+                    <div class="w-8 h-8 rounded-full border border-yellow-600 flex items-center justify-center bg-yellow-900/20">
+                        <i class="fas fa-gem text-yellow-500 text-xs"></i>
+                    </div>
+                    <span class="text-xl font-bold tracking-wider text-white serif">GOLDENICE <span class="text-yellow-600 font-light">INT'L</span></span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="./market.html" class="text-slate-300 hover:text-yellow-500 transition-colors px-3 py-2 rounded-md text-sm font-medium">Markets</a>
+                        <a href="./trading.html" class="text-slate-300 hover:text-yellow-500 transition-colors px-3 py-2 rounded-md text-sm font-medium">Trading</a>
+                        <a href="./Partners.html" class="text-slate-300 hover:text-yellow-500 transition-colors px-3 py-2 rounded-md text-sm font-medium">Partners</a>
+                        <a href="#" class="text-yellow-500 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button class="hidden md:block text-slate-300 hover:text-white px-3 py-2 text-sm font-medium"><a href="./login.html"> Login</a></button>
+                    <button class="bg-yellow-600 hover:bg-yellow-500 text-white px-5 py-2 rounded text-sm font-bold tracking-wider transition-all shadow-lg shadow-yellow-900/20">
+                <a href="./index.html">OPEN ACCOUNT</a>             
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+            <div class="absolute top-[-10%] right-[-5%] w-96 h-96 bg-yellow-600/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-900/20 border border-yellow-500/20 mb-6 animate-float">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <span class="text-yellow-500 text-xs font-bold tracking-widest uppercase">24/7 Global Support</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                <span class="block text-white mb-2">Get in Touch</span>
+                <span class="text-gold-gradient">We're Here to Help</span>
+            </h1>
+            <p class="text-lg text-slate-400 max-w-2xl mx-auto mb-10">
+                Whether you have a question about trading, need technical support, or want to explore partnership opportunities, our global team is ready to assist you.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section Grid -->
+    <section class="py-12 pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Left Column: Contact Info & Map -->
+                <div class="lg:col-span-5 space-y-8">
+                    
+                    <!-- Quick Contact Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="glass-panel p-6 rounded-xl hover:border-yellow-500/30 transition-colors group cursor-pointer">
+                            <div class="w-12 h-12 rounded-lg bg-yellow-900/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-headset text-yellow-500 text-xl"></i>
+                            </div>
+                            <h3 class="text-white font-bold mb-1">Live Chat</h3>
+                            <p class="text-slate-400 text-sm mb-3">Average response: 2 mins</p>
+                            <span class="text-yellow-500 text-xs font-bold uppercase tracking-wider group-hover:underline"><a href="https://wa.me/07040856276">Start Chat </a><i class="fas fa-arrow-right ml-1"></i></span>
+                        </div>
+
+                        <div class="glass-panel p-6 rounded-xl hover:border-yellow-500/30 transition-colors group cursor-pointer">
+                            <div class="w-12 h-12 rounded-lg bg-blue-900/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-envelope text-blue-400 text-xl"></i>
+                            </div>
+                            <h3 class="text-white font-bold mb-1">Email Us</h3>
+                            <p class="text-slate-400 text-sm mb-3">goldeniceinternational12@gmail.com</p>
+                            <span class="text-blue-400 text-xs font-bold uppercase tracking-wider group-hover:underline"><a href="goldeniceinternational12@gmail.com"> Send Email </a><i class="fas fa-arrow-right ml-1"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Map Visualization -->
+                    <div class="glass-panel p-2 rounded-2xl">
+                        <div id="map" class="relative group">
+                            <!-- Stylized World Map SVG Background -->
+                            <svg class="absolute inset-0 w-full h-full opacity-20 pointer-events-none" viewBox="0 0 1000 500" preserveAspectRatio="none">
+                                <path fill="currentColor" d="M150,150 Q250,100 350,150 T550,150 T750,150" stroke="#D4AF37" stroke-width="2" fill="none" class="animate-pulse"/>
+                                <!-- Abstract Map Shapes -->
+                                <path d="M200,200 Q300,150 400,200 T600,200" stroke="#334155" stroke-width="1" fill="none"/>
+                                <path d="M100,300 Q200,250 300,300 T500,300" stroke="#334155" stroke-width="1" fill="none"/>
+                            </svg>
+                            
+                            <!-- Markers -->
+                            <div class="map-marker pulse-ring" style="top: 30%; left: 50%;">
+                                <div class="map-tooltip">
+                                    <div class="font-bold text-yellow-500">London HQ</div>
+                                    <div class="text-xs text-slate-300">One Canada Square</div>
+                                </div>
+                            </div>
+                            <div class="map-marker" style="top: 40%; left: 75%;">
+                                <div class="map-tooltip">
+                                    <div class="font-bold text-yellow-500">Singapore Office</div>
+                                    <div class="text-xs text-slate-300">Marina Bay Financial Centre</div>
+                                </div>
+                            </div>
+                            <div class="map-marker" style="top: 35%; left: 20%;">
+                                <div class="map-tooltip">
+                                    <div class="font-bold text-yellow-500">New York Office</div>
+                                    <div class="text-xs text-slate-300">Wall Street</div>
+                                </div>
+                            </div>
+
+                            <!-- Map Controls -->
+                            <div class="absolute bottom-4 right-4 flex flex-col gap-2">
+                                <button class="w-8 h-8 bg-slate-800 rounded flex items-center justify-center text-white hover:bg-yellow-600 transition-colors" onclick="zoomMap(1)">+</button>
+                                <button class="w-8 h-8 bg-slate-800 rounded flex items-center justify-center text-white hover:bg-yellow-600 transition-colors" onclick="zoomMap(-1)">-</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                        
+                       
+
+                     
+                        
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Contact Form -->
+                <div class="lg:col-span-7">
+                    <div class="glass-panel p-8 md:p-10 rounded-2xl border-t-4 border-yellow-600 relative overflow-hidden">
+                        <!-- Decorative background icon -->
+                        <i class="fas fa-paper-plane absolute -right-10 -bottom-10 text-9xl text-white/5 transform -rotate-12"></i>
+
+                        <h2 class="text-3xl font-bold text-white mb-2">Send us a Message</h2>
+                        <p class="text-slate-400 mb-8">Fill out the form below and we'll get back to you within 24 hours.</p>
+
+                        <form id="contactForm" class="space-y-6 relative z-10" onsubmit="handleSubmit(event)">
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Name -->
+                                <div class="relative">
+                                    <input type="text" id="name" class="form-input w-full px-4 py-3 rounded-lg placeholder-transparent" placeholder="Name" required>
+                                    <label for="name" class="form-label">Full Name</label>
+                                </div>
+                                <!-- Email -->
+                                <div class="relative">
+                                    <input type="email" id="email" class="form-input w-full px-4 py-3 rounded-lg placeholder-transparent" placeholder="Email" required>
+                                    <label for="email" class="form-label">Email Address</label>
+                                </div>
+                            </div>
+
+                            <!-- Subject -->
+                            <div class="relative">
+                                <select id="subject" class="form-input w-full px-4 py-3 rounded-lg appearance-none cursor-pointer" required>
+                                    <option value="" disabled selected>Select Inquiry Type</option>
+                                    <option value="general">General Inquiry</option>
+                                    <option value="support">Trading Support</option>
+                                    <option value="partners">Partnership / IB</option>
+                                    <option value="complaint">Complaint</option>
+                                </select>
+                                <div class="absolute right-4 top-3.5 pointer-events-none text-slate-400">
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                            </div>
+
+                            <!-- Account Number (Optional) -->
+                            <div class="relative">
+                                <input type="text" id="account" class="form-input w-full px-4 py-3 rounded-lg placeholder-transparent" placeholder="Account ID">
+                                <label for="account" class="form-label">Account ID (Optional)</label>
+                            </div>
+
+                            <!-- Message -->
+                            <div class="relative">
+                                <textarea id="message" rows="5" class="form-input w-full px-4 py-3 rounded-lg placeholder-transparent resize-none" placeholder="Message" required></textarea>
+                                <label for="message" class="form-label">How can we help?</label>
+                            </div>
+
+                            <!-- Checkbox -->
+                            <div class="flex items-start gap-3">
+                                <input type="checkbox" id="privacy" class="mt-1 w-4 h-4 rounded border-slate-600 bg-slate-800 text-yellow-600 focus:ring-yellow-600 focus:ring-offset-slate-900" required>
+                                <label for="privacy" class="text-sm text-slate-400">
+                                    I agree to the <a href="#" class="text-yellow-500 hover:underline">Privacy Policy</a> and processing of my personal data.
+                                </label>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-yellow-700 to-yellow-600 hover:from-yellow-600 hover:to-yellow-500 text-white font-bold py-4 rounded-lg shadow-lg shadow-yellow-900/30 transform transition-all active:scale-[0.98] flex items-center justify-center gap-2 group">
+                                <span><a href="https://wa.me/07040856276">SEND MESSAGE</a></span>
+                                <i class="fas fa-paper-plane group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20 bg-[#080c16] border-t border-white/5">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+                <p class="text-slate-400">Quick answers to common questions. Can't find what you're looking for? Contact us directly.</p>
+            </div>
+
+            <div class="space-y-4" id="faq-container">
+                <!-- FAQ Item 1 -->
+                <div class="glass-panel rounded-lg overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition-colors">
+                        <span class="font-bold text-slate-200">How do I open a trading account?</span>
+                        <i class="fas fa-plus text-yellow-600 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-4 text-slate-400 text-sm leading-relaxed border-t border-white/5 pt-4">
+                        Opening an account is simple. Click the "Open Account" button, fill in your personal details, verify your identity by uploading the required documents (ID and Proof of Address), and fund your account to start trading. The process usually takes less than 10 minutes.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="glass-panel rounded-lg overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition-colors">
+                        <span class="font-bold text-slate-200">What are the deposit and withdrawal methods?</span>
+                        <i class="fas fa-plus text-yellow-600 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-4 text-slate-400 text-sm leading-relaxed border-t border-white/5 pt-4">
+                        We support a wide range of methods including Bank Wire Transfer, Credit/Debit Cards (Visa, Mastercard), and popular e-wallets such as Skrill, Neteller, and WebMoney. All withdrawals are processed back to the original deposit source to ensure security.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="glass-panel rounded-lg overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition-colors">
+                        <span class="font-bold text-slate-200">Is my money safe with Goldenice International?</span>
+                        <i class="fas fa-plus text-yellow-600 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-4 text-slate-400 text-sm leading-relaxed border-t border-white/5 pt-4">
+                        Absolutely. Client funds are held in segregated accounts with top-tier banks, separate from our company funds. We are also a member of the Investor Compensation Fund, providing an additional layer of protection for your capital.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#050911] border-t border-white/5 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fas fa-gem text-yellow-600 text-xl"></i>
+                        <span class="text-2xl font-bold text-white serif">GOLDENICE</span>
+                    </div>
+                    <p class="text-slate-500 text-sm leading-relaxed max-w-md">
+                        Goldenice International is a premier financial services provider specializing in foreign exchange and CFD trading. We are committed to providing a transparent, fair, and secure trading environment.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 uppercase tracking-wider text-sm">Contact</h4>
+                    <ul class="space-y-2 text-slate-500 text-sm">
+                        <li><i class="fas fa-envelope w-5"></i> goldeniceinternational12@gmail.com</li>
+                        <li><i class="fas fa-phone w-5"></i> 07040856276,07065151245</li>
+                        <li><i class="fas fa-map-marker-alt w-5"></i> goldeniceinternational12@gmail.com</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 uppercase tracking-wider text-sm">Legal</h4>
+                    <ul class="space-y-2 text-slate-500 text-sm">
+                        <li><a href="./privacy policy.html" class="hover:text-yellow-500 transition-colors">Privacy Policy</a></li>
+                        <li><a href="./tos.html" class="hover:text-yellow-500 transition-colors">Terms of Service</a></li>
+                        <li><a href="./riskwarning.html" class="hover:text-yellow-500 transition-colors">Risk Disclosure</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-slate-600 text-xs">&copy; 2026 Goldenice International. All rights reserved.</p>
+                
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="glass-panel p-8 rounded-2xl max-w-md w-full relative z-10 transform scale-95 transition-transform duration-300 border border-yellow-500/30 shadow-2xl shadow-yellow-900/20">
+            <div class="text-center">
+                <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-check text-4xl text-green-500"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">Message Sent!</h3>
+                <p class="text-slate-400 mb-6">Thank you for contacting Goldenice International. Our support team has received your inquiry and will respond within 24 hours.</p>
+                <button onclick="closeModal()" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-3 rounded-lg transition-colors">
+                <a href="https://wa.me/07040856276">CLOSE</a>        
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-[#0B1120]/95', 'shadow-lg');
+            } else {
+                nav.classList.remove('bg-[#0B1120]/95', 'shadow-lg');
+            }
+        });
+
+        // Office Accordion Logic
+        function toggleOffice(id) {
+            const content = document.getElementById(`office-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            
+            // Close others
+            document.querySelectorAll('[id^="office-"]').forEach(el => {
+                if (el.id !== `office-${id}`) el.classList.add('hidden');
+            });
+            document.querySelectorAll('[id^="icon-"]').forEach(el => {
+                if (el.id !== `icon-${id}`) el.style.transform = 'rotate(0deg)';
+            });
+
+            // Toggle current
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // FAQ Accordion Logic
+        document.querySelectorAll('.faq-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const content = btn.nextElementSibling;
+                const icon = btn.querySelector('.fa-plus');
+                
+                // Close others
+                document.querySelectorAll('.faq-content').forEach(c => {
+                    if (c !== content) c.classList.add('hidden');
+                });
+                document.querySelectorAll('.faq-btn .fa-plus').forEach(i => {
+                    if (i !== icon) i.style.transform = 'rotate(0deg)';
+                });
+
+                // Toggle
+                content.classList.toggle('hidden');
+                if (!content.classList.contains('hidden')) {
+                    icon.style.transform = 'rotate(45deg)';
+                } else {
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+
+        // Form Handling
+        function handleSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const originalContent = btn.innerHTML;
+            
+            // Loading State
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> SENDING...';
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            // Simulate API call
+            setTimeout(() => {
+                // Reset Button
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                
+                // Show Success
+                document.getElementById('successModal').classList.add('active');
+                document.querySelector('#successModal > div:nth-child(2)').classList.remove('scale-95');
+                document.querySelector('#successModal > div:nth-child(2)').classList.add('scale-100');
+                
+                // Reset Form
+                document.getElementById('contactForm').reset();
+            }, 1500);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('successModal');
+            const content = modal.querySelector('div:nth-child(2)');
+            
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.remove('active');
+            }, 200);
+        }
+
+        // Simple Map Zoom Simulation
+        let scale = 1;
+        function zoomMap(direction) {
+            const map = document.getElementById('map');
+            scale += direction * 0.1;
+            if (scale < 0.8) scale = 0.8;
+            if (scale > 1.5) scale = 1.5;
+            
+            // Apply transform to markers container or background
+            map.style.transform = `scale(${scale})`;
+            map.style.transition = 'transform 0.3s ease';
+        }
+    </script>
+</body>
+</html>

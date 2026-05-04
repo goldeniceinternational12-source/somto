@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Help Centre & Support</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary: #0ea5e9;
+            --accent: #f59e0b;
+            --void: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: #e2e8f0;
+        }
+
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Background Mesh */
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+                #020617;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Search Input Glow */
+        .search-glow:focus-within {
+            box-shadow: 0 0 30px rgba(14, 165, 233, 0.3);
+            border-color: rgba(14, 165, 233, 0.5);
+        }
+
+        /* Accordion Animation */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+            opacity: 0;
+        }
+        
+        .accordion-content.active {
+            opacity: 1;
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .accordion-btn[aria-expanded="true"] .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Ticket Status */
+        .status-dot {
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        /* Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 50;
+        }
+
+        .chat-window {
+            transform: scale(0.95) translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .chat-window.open {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .message-bubble {
+            animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+
+        .category-card {
+            transition: all 0.3s ease;
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(14, 165, 233, 0.5);
+            box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.2);
+        }
+
+        .quick-link {
+            position: relative;
+            overflow: hidden;
+        }
+        .quick-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .quick-link:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <div class="bg-mesh"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-40 top-0 border-b border-white/10 bg-[#020617]/80 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                    <i class="fa-solid fa-headset text-white"></i>
+                </div>
+                <div>
+                    <span class="font-display font-bold text-xl text-white">GOLDEN<span class="text-sky-400">ICE</span></span>
+                    <span class="text-xs text-gray-400 ml-2 border-l border-gray-700 pl-2">Help Centre</span>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-6 text-sm">
+                <a href="#" class="text-gray-300 hover:text-white transition-colors">Support Home</a>
+                <a href="#" class="text-gray-300 hover:text-white transition-colors">Submit Ticket</a>
+                <a href="#" class="text-gray-300 hover:text-white transition-colors">Live Chat</a>
+                <div class="h-4 w-px bg-gray-700"></div>
+                <a href="#" class="text-sky-400 hover:text-sky-300 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Trading
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 pt-24 pb-12 px-6">
+        <div class="max-w-5xl mx-auto">
+            
+            <!-- Hero Search -->
+            <div class="text-center mb-12">
+                <h1 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+                    How can we help you?
+                </h1>
+                <p class="text-gray-400 mb-8">Search our knowledge base or contact our 24/7 support team</p>
+                
+                <div class="relative max-w-2xl mx-auto group search-glow rounded-2xl transition-all duration-300">
+                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-magnifying-glass text-gray-400 text-lg group-focus-within:text-sky-400 transition-colors"></i>
+                    </div>
+                    <input type="text" 
+                           id="searchInput"
+                           class="block w-full pl-14 pr-5 py-5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition-all text-lg"
+                           placeholder="Search for articles, e.g., 'Withdrawal', 'Leverage', 'Verification'...">
+                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center">
+                        <kbd class="hidden md:inline-block px-2 py-1 text-xs font-semibold text-gray-500 bg-white/5 border border-white/10 rounded-lg">CTRL K</kbd>
+                    </div>
+                </div>
+
+                <!-- Quick Tags -->
+                <div class="flex flex-wrap justify-center gap-2 mt-6">
+                    <button onclick="filterCategory('all')" class="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all">All Topics</button>
+                    <button onclick="filterCategory('account')" class="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all">Account</button>
+                    <button onclick="filterCategory('trading')" class="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all">Trading</button>
+                    <button onclick="filterCategory('funds')" class="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all">Deposits & Withdrawals</button>
+                    <button onclick="filterCategory('platform')" class="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all">Platform</button>
+                </div>
+            </div>
+
+            <!-- Categories Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16" id="categoriesGrid">
+                <!-- Cards injected by JS -->
+            </div>
+
+            <!-- Two Column Layout: FAQ & Ticket -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- FAQ Accordion (2 cols) -->
+                <div class="lg:col-span-2">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="font-display text-2xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-regular fa-circle-question text-sky-400"></i> Frequently Asked Questions
+                        </h2>
+                        <span class="text-sm text-gray-400" id="faq-count">Showing all</span>
+                    </div>
+
+                    <div class="space-y-3" id="faqContainer">
+                        <!-- FAQs injected by JS -->
+                    </div>
+                    
+                    <div class="mt-8 p-6 rounded-2xl bg-gradient-to-r from-sky-900/30 to-blue-900/30 border border-sky-500/20 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-bold text-white mb-1">Can't find what you're looking for?</h3>
+                            <p class="text-sm text-gray-400">Our support team is available 24/7 to assist you.</p>
+                        </div>
+                        <button onclick="toggleChat()" class="px-6 py-3 bg-sky-500 hover:bg-sky-400 text-white rounded-xl font-medium transition-all shadow-lg shadow-sky-500/25 flex items-center gap-2">
+                            <i class="fa-solid fa-comments"></i> Start Chat
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sidebar: Ticket Status & Contact (1 col) -->
+                <div class="space-y-6">
+                    
+                    <!-- Ticket Tracker -->
+                    <div class="glass-panel rounded-2xl p-6">
+                        <h3 class="font-bold text-white mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-ticket text-amber-500"></i> Check Ticket Status
+                        </h3>
+                        <div class="space-y-3">
+                            <input type="text" placeholder="Ticket ID (e.g., #GIC-8821)" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors">
+                            <button onclick="checkTicket()" class="w-full py-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-white font-medium transition-all">
+                                Track Ticket
+                            </button>
+                        </div>
+                        
+                        <!-- Result Area (Hidden by default) -->
+                        <div id="ticketResult" class="hidden mt-4 p-4 rounded-xl bg-black/40 border border-white/5">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Contact Cards -->
+                    <div class="glass-panel rounded-2xl p-6">
+                        <h3 class="font-bold text-white mb-4">Contact Methods</h3>
+                        <div class="space-y-4">
+                            <a href="#" class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors group">
+                                <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-400 group-hover:scale-110 transition-transform">
+                                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-medium text-white">WhatsApp</div>
+                                    <div class="text-xs text-gray-500">Instant Response</div>
+                                </div>
+                            </a>
+                            <a href="#" class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors group">
+                                <div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-envelope text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-medium text-white">Email Support</div>
+                                    <div class="text-xs text-gray-500">support@goldenice.com</div>
+                                </div>
+                            </a>
+                            <a href="#" class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors group">
+                                <div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-phone text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-medium text-white">Phone</div>
+                                    <div class="text-xs text-gray-500">+1 (888) 123-4567</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- System Status -->
+                    <div class="glass-panel rounded-2xl p-4 flex items-center justify-between border-l-4 border-green-500">
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-green-500 status-dot"></div>
+                            <span class="text-sm font-medium text-white">All Systems Operational</span>
+                        </div>
+                        <a href="#" class="text-xs text-sky-400 hover:underline">Status Page</a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-[#0f172a] py-8">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-sm text-gray-500">
+                &copy; 2024 Goldenice International. All rights reserved.
+            </div>
+            <div class="flex gap-6 text-sm text-gray-400">
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                <a href="#" class="hover:text-white transition-colors">Risk Disclosure</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <!-- Chat Button -->
+        <button onclick="toggleChat()" id="chatBtn" class="w-14 h-14 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/40 flex items-center justify-center text-2xl hover:scale-110 transition-transform z-50 relative">
+            <i class="fa-solid fa-comment-dots"></i>
+            <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-[#020617]"></span>
+        </button>
+
+        <!-- Chat Window -->
+        <div id="chatWindow" class="chat-window absolute bottom-20 right-0 w-[350px] md:w-[400px] h-[500px] glass-panel rounded-2xl flex flex-col overflow-hidden shadow-2xl border border-white/20">
+            <!-- Header -->
+            <div class="p-4 bg-gradient-to-r from-sky-600 to-blue-700 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                        <i class="fa-solid fa-robot text-white"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-white">Goldenice Support</div>
+                        <div class="text-xs text-sky-200 flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-green-400"></span> Online
+                        </div>
+                    </div>
+                </div>
+                <button onclick="toggleChat()" class="text-white/70 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Messages -->
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-black/20">
+                <div class="flex gap-3">
+                    <div class="w-8 h-8 rounded-full bg-sky-500/20 flex-shrink-0 flex items-center justify-center mt-1">
+                        <i class="fa-solid fa-robot text-sky-400 text-xs"></i>
+                    </div>
+                    <div class="bg-white/10 rounded-2xl rounded-tl-none p-3 text-sm text-gray-200 max-w-[80%]">
+                        Hello! I'm your virtual assistant. How can I help you with your trading today?
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input -->
+            <div class="p-4 bg-white/5 border-t border-white/10">
+                <form onsubmit="sendMessage(event)" class="flex gap-2">
+                    <input type="text" id="chatInput" placeholder="Type a message..." class="flex-1 bg-black/30 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                    <button type="submit" class="w-10 h-10 rounded-xl bg-sky-500 hover:bg-sky-400 text-white flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Data ---
+        const categories = [
+            { id: 'account', title: 'Account & Verification', icon: 'fa-user-shield', desc: 'KYC, documents, profile settings', articles: 12, color: 'text-purple-400', bg: 'bg-purple-500/10' },
+            { id: 'trading', title: 'Trading Basics', icon: 'fa-chart-line', desc: 'Orders, spreads, margin calls', articles: 24, color: 'text-sky-400', bg: 'bg-sky-500/10' },
+            { id: 'funds', title: 'Deposits & Withdrawals', icon: 'fa-money-bill-transfer', desc: 'Bank wires, crypto, processing times', articles: 18, color: 'text-green-400', bg: 'bg-green-500/10' },
+            { id: 'platform', title: 'Platform Guide', icon: 'fa-laptop-code', desc: 'MT5, WebTrader, Mobile App', articles: 31, color: 'text-amber-400', bg: 'bg-amber-500/10' },
+            { id: 'tools', title: 'Tools & Analysis', icon: 'fa-screwdriver-wrench', desc: 'Indicators, EAs, VPS hosting', articles: 15, color: 'text-pink-400', bg: 'bg-pink-500/10' },
+            { id: 'partners', title: 'Partners & IBs', icon: 'fa-handshake', desc: 'Affiliate program, commissions', articles: 9, color: 'text-indigo-400', bg: 'bg-indigo-500/10' }
+        ];
+
+        const faqs = [
+            { 
+                id: 1, 
+                category: 'account',
+                question: 'How do I verify my trading account?', 
+                answer: 'To verify your account, please upload a clear copy of your government-issued ID (Passport or Driver\'s License) and a recent utility bill (not older than 3 months) showing your address. Navigate to Profile > Verification in your dashboard. Verification usually takes 1-2 business hours.' 
+            },
+            { 
+                id: 2, 
+                category: 'funds',
+                question: 'What is the minimum deposit amount?', 
+                answer: 'The minimum deposit for a Standard Account is $100. For our Pro Accounts, the minimum is $1,000. We accept deposits via Bank Transfer, Credit/Debit Card, and various Cryptocurrencies (BTC, ETH, USDT).' 
+            },
+            { 
+                id: 3, 
+                category: 'trading',
+                question: 'What leverage do you offer?', 
+                answer: 'Goldenice offers flexible leverage up to 1:500 for Forex pairs. Leverage for commodities and indices may vary. You can adjust your leverage in your Client Portal, subject to regulatory limits based on your jurisdiction.' 
+            },
+            { 
+                id: 4, 
+                category: 'platform',
+                question: 'How do I reset my MT5 password?', 
+                answer: 'If you forgot your MT5 password, log in to your Goldenice Client Portal. Go to "Platforms" > "Manage Accounts". Click on the account number and select "Reset Password". A new password will be emailed to you instantly.' 
+            },
+            { 
+                id: 5, 
+                category: 'funds',
+                question: 'How long do withdrawals take to process?', 
+                answer: 'Withdrawal requests are processed within 24 hours on business days. Bank transfers may take 3-5 business days to reflect in your account. Crypto withdrawals are typically completed within 1 hour after approval.' 
+            },
+            { 
+                id: 6, 
+                category: 'trading',
+                question: 'What is a Margin Call?', 
+                answer: 'A Margin Call occurs when your account equity falls below the required margin to maintain your open positions. At Goldenice, the Margin Call level is set at 100%. If it drops to 50% (Stop Out level), your positions will begin closing automatically.' 
+            },
+            { 
+                id: 7, 
+                category: 'account',
+                question: 'Can I have multiple trading accounts?', 
+                answer: 'Yes, you can open up to 10 trading accounts under a single client profile. This allows you to use different strategies or base currencies. You can open new accounts from the Client Portal.' 
+            },
+            { 
+                id: 8, 
+                category: 'platform',
+                question: 'Is there a mobile app available?', 
+                answer: 'Yes, we support the official MetaTrader 5 mobile application available on iOS and Android. Simply download the app and search for "Goldenice-Real" in the broker list to log in.' 
+            }
+        ];
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderFAQs(faqs);
+            setupSearch();
+            
+            // Keyboard shortcut for search
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+            });
+        });
+
+        // --- Rendering ---
+        function renderCategories() {
+            const grid = document.getElementById('categoriesGrid');
+            grid.innerHTML = categories.map(cat => `
+                <div class="category-card glass-panel rounded-2xl p-6 cursor-pointer border border-white/5" onclick="filterCategory('${cat.id}')">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl ${cat.bg} ${cat.color} flex items-center justify-center text-2xl">
+                            <i class="fa-solid ${cat.icon}"></i>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500 bg-white/5 px-2 py-1 rounded-lg">${cat.articles} Articles</span>
+                    </div>
+                    <h3 class="font-bold text-white text-lg mb-2">${cat.title}</h3>
+                    <p class="text-sm text-gray-400">${cat.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderFAQs(data) {
+            const container = document.getElementById('faqContainer');
+            document.getElementById('faq-count').innerText = `Showing ${data.length} results`;
+            
+            if(data.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4 text-gray-500 text-2xl">
+                            <i class="fa-solid fa-search"></i>
+                        </div>
+                        <h3 class="text-white font-medium mb-1">No results found</h3>
+                        <p class="text-sm text-gray-400">Try adjusting your search terms or browse categories.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = data.map((faq, index) => `
+                <div class="glass-panel rounded-xl border border-white/5 overflow-hidden">
+                    <button 
+                        class="accordion-btn w-full px-6 py-4 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
+                        onclick="toggleAccordion(${faq.id})"
+                        aria-expanded="false"
+                        id="btn-${faq.id}"
+                    >
+                        <span class="font-medium text-white pr-4">${faq.question}</span>
+                        <i class="fa-solid fa-chevron-down text-gray-500 accordion-icon flex-shrink-0"></i>
+                    </button>
+                    <div id="content-${faq.id}" class="accordion-content bg-black/20">
+                        <div class="px-6 py-4 text-gray-400 text-sm leading-relaxed border-t border-white/5">
+                            ${faq.answer}
+                            <div class="mt-4 flex gap-3">
+                                <button class="text-xs text-gray-500 hover:text-white flex items-center gap-1 transition-colors">
+                                    <i class="fa-regular fa-thumbs-up"></i> Helpful
+                                </button>
+                                <button class="text-xs text-gray-500 hover:text-white flex items-center gap-1 transition-colors">
+                                    <i class="fa-regular fa-thumbs-down"></i> Not Helpful
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- Interactions ---
+        function toggleAccordion(id) {
+            const content = document.getElementById(`content-${id}`);
+            const btn = document.getElementById(`btn-${id}`);
+            const isOpen = btn.getAttribute('aria-expanded') === 'true';
+            
+            // Close all others (optional, keeping multiple open is often better for help centers)
+            // document.querySelectorAll('.accordion-content').forEach(el => {
+            //     el.style.maxHeight = null;
+            //     el.classList.remove('active');
+            // });
+            // document.querySelectorAll('.accordion-btn').forEach(el => el.setAttribute('aria-expanded', 'false'));
+
+            if (isOpen) {
+                content.style.maxHeight = null;
+                content.classList.remove('active');
+                btn.setAttribute('aria-expanded', 'false');
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                content.classList.add('active');
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        function filterCategory(catId) {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = ''; // Clear search
+            
+            if (catId === 'all') {
+                renderFAQs(faqs);
+            } else {
+                const filtered = faqs.filter(f => f.category === catId);
+                renderFAQs(filtered);
+            }
+            
+            // Visual feedback on buttons could be added here
+        }
+
+        function setupSearch() {
+            const input = document.getElementById('searchInput');
+            input.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                if (!term) {
+                    renderFAQs(faqs);
+                    return;
+                }
+                
+                const filtered = faqs.filter(f => 
+                    f.question.toLowerCase().includes(term) || 
+                    f.answer.toLowerCase().includes(term)
+                );
+                renderFAQs(filtered);
+            });
+        }
+
+        function checkTicket() {
+            const resultDiv = document.getElementById('ticketResult');
+            const id = document.querySelector('input[placeholder="Ticket ID (e.g., #GIC-8821)"]').value;
+            
+            if(!id) return;
+            
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = `
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-500">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-white">Ticket ${id}</div>
+                        <div class="text-xs text-amber-400">Awaiting Agent Response</div>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-700 h-1.5 rounded-full overflow-hidden mb-2">
+                    <div class="h-full bg-amber-500 w-[60%]"></div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-500">
+                    <span>Submitted: 2 hours ago</span>
+                    <span>Est. Response: 1 hour</span>
+                </div>
+            `;
+        }
+
+        // --- Chat Widget Logic ---
+        let chatOpen = false;
+        function toggleChat() {
+            const window = document.getElementById('chatWindow');
+            const btn = document.getElementById('chatBtn');
+            chatOpen = !chatOpen;
+            
+            if(chatOpen) {
+                window.classList.add('open');
+                btn.classList.add('scale-0', 'opacity-0');
+            } else {
+                window.classList.remove('open');
+                btn.classList.remove('scale-0', 'opacity-0');
+            }
+        }
+
+        function sendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if(!msg) return;
+
+            const container = document.getElementById('chatMessages');
+            
+            // User Message
+            const userDiv = document.createElement('div');
+            userDiv.className = 'flex gap-3 justify-end message-bubble';
+            userDiv.innerHTML = `
+                <div class="bg-sky-500 rounded-2xl rounded-tr-none p-3 text-sm text-white max-w-[80%]">
+                    ${msg}
+                </div>
+            `;
+            container.appendChild(userDiv);
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+
+            // Bot Typing Indicator
+            setTimeout(() => {
+                const botDiv = document.createElement('div');
+                botDiv.className = 'flex gap-3 message-bubble';
+                botDiv.id = 'typing-indicator';
+                botDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-sky-500/20 flex-shrink-0 flex items-center justify-center mt-1">
+                        <i class="fa-solid fa-robot text-sky-400 text-xs"></i>
+                    </div>
+                    <div class="bg-white/10 rounded-2xl rounded-tl-none p-3 text-sm text-gray-400 max-w-[80%] flex items-center gap-1">
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                    </div>
+                `;
+                container.appendChild(botDiv);
+                container.scrollTop = container.scrollHeight;
+
+                // Bot Response
+                setTimeout(() => {
+                    document.getElementById('typing-indicator').remove();
+                    
+                    const responses = [
+                        "I understand. Let me connect you with a specialist regarding account verification.",
+                        "You can find that information in our 'Trading Basics' section. Would you like me to send you the link?",
+                        "Our withdrawal processing time is typically 24 hours. Is your request pending longer than that?",
+                        "For leverage changes, please log into your client portal and navigate to 'Account Settings'."
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+
+                    const responseDiv = document.createElement('div');
+                    responseDiv.className = 'flex gap-3 message-bubble';
+                    responseDiv.innerHTML = `
+                        <div class="w-8 h-8 rounded-full bg-sky-500/20 flex-shrink-0 flex items-center justify-center mt-1">
+                            <i class="fa-solid fa-robot text-sky-400 text-xs"></i>
+                        </div>
+                        <div class="bg-white/10 rounded-2xl rounded-tl-none p-3 text-sm text-gray-200 max-w-[80%]">
+                            ${randomResponse}
+                        </div>
+                    `;
+                    container.appendChild(responseDiv);
+                    container.scrollTop = container.scrollHeight;
+                }, 1500);
+            }, 500);
+        }
+    </script>
+</body>
+</html>

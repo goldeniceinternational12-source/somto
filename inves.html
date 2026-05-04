@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Procedures | Bearing Goldenice International</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8941F;
+            --dark: #0A0A0A;
+            --darker: #050505;
+            --gray: #1A1A1A;
+            --gray-light: #2A2A2A;
+            --gray-lighter: #3A3A3A;
+            --success: #00D084;
+            --danger: #FF4757;
+            --warning: #FFA502;
+            --info: #3498DB;
+            --btc: #F7931A;
+            --eth: #627EEA;
+            --usdt: #26A17B;
+            --text: #E0E0E0;
+            --text-muted: #888888;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--darker);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 40%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.8); }
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            color: var(--gold);
+        }
+
+        .support-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .support-btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 2rem 2rem;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--text) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
+            background-size: 200% auto;
+        }
+
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.125rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Progress Tracker */
+        .progress-section {
+            margin-bottom: 3rem;
+            background: var(--gray);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-title {
+            font-size: 1.25rem;
+            color: var(--gold);
+        }
+
+        .progress-percentage {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .progress-bar-container {
+            background: var(--darker);
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gray-light);
+            z-index: 0;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--darker);
+            border: 2px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .step.active .step-number {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--dark);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .step.completed .step-number {
+            background: var(--success);
+            border-color: var(--success);
+            color: var(--white);
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 120px;
+        }
+
+        .step.active .step-label {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .step.completed .step-label {
+            color: var(--success);
+        }
+
+        /* Main Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+        }
+
+        /* Procedure Steps */
+        .procedure-container {
+            background: var(--gray);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .procedure-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .procedure-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .step-header h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .step-number-badge {
+            background: var(--gold);
+            color: var(--dark);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        .step-header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: var(--darker);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--gray-light);
+        }
+
+        .content-card h3 {
+            color: var(--gold);
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .content-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .content-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .content-card li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            color: var(--text);
+        }
+
+        .content-card li:last-child {
+            border-bottom: none;
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Wallet Selection */
+        .wallet-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .wallet-option {
+            background: var(--darker);
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .wallet-option:hover, .wallet-option.active {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .wallet-option.active {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .wallet-icon-lg {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .wallet-name-lg {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .wallet-network {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Company Address Display */
+        .company-wallet-section {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .company-wallet-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .company-address-box {
+            background: var(--darker);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--gray-light);
+        }
+
+        .address-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .address-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text);
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .copy-btn {
+            background: var(--gray-light);
+            border: none;
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .copy-btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .qr-section {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            background: var(--white);
+            border-radius: 12px;
+            padding: 0.75rem;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+        }
+
+        .qr-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Important Notes */
+        .important-box {
+            background: rgba(255, 165, 2, 0.1);
+            border: 1px solid rgba(255, 165, 2, 0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .important-title {
+            color: var(--warning);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .important-list {
+            list-style: none;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .important-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .important-list li::before {
+            content: '•';
+            color: var(--warning);
+            position: absolute;
+            left: 0.5rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--darker);
+            border: 1px solid var(--gray-light);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9375rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-suffix {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Buttons */
+        .step-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9375rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary {
+            background: var(--gray-light);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-lighter);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--gray);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .info-card h3 {
+            color: var(--gold);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .company-info {
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .company-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .company-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .company-type {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .wallet-list {
+            margin-top: 1rem;
+        }
+
+        .wallet-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .wallet-item:last-child {
+            border-bottom: none;
+        }
+
+        .wallet-info-sm {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .wallet-icon-sm {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .btc-icon { background: rgba(247, 147, 26, 0.2); color: var(--btc); }
+        .eth-icon { background: rgba(98, 126, 234, 0.2); color: var(--eth); }
+        .usdt-icon { background: rgba(38, 161, 123, 0.2); color: var(--usdt); }
+
+        .wallet-name-sm {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .wallet-address-sm {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .security-badges {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            background: var(--darker);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .badge-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gray-light);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--gray-light);
+            border-radius: 50%;
+            transform: translateX(-5px);
+        }
+
+        .timeline-item.active::before {
+            background: var(--gold);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+        }
+
+        .timeline-item.completed::before {
+            background: var(--success);
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-desc {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Confirmation Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--gray);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 90%;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--success) 0%, #00b870 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 30px rgba(0, 208, 132, 0.3);
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .modal-header h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: var(--text-muted);
+        }
+
+        .confirmation-details {
+            background: var(--darker);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .detail-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--white);
+            text-align: right;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 10001;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .toast {
+            background: var(--gray);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            min-width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .toast.success .toast-icon { background: rgba(0, 208, 132, 0.2); color: var(--success); }
+        .toast.error .toast-icon { background: rgba(255, 71, 87, 0.2); color: var(--danger); }
+
+        /* Investment Tiers */
+        .tier-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tier-card {
+            background: var(--darker);
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tier-card:hover, .tier-card.active {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .tier-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .tier-amount {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .tier-benefit {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .wallet-grid, .tier-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 80px 1rem 1rem;
+            }
+            .steps-container {
+                overflow-x: auto;
+                padding-bottom: 1rem;
+            }
+            .step {
+                min-width: 100px;
+            }
+            .nav-menu {
+                display: none;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-light);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">⚡</div>
+                <span>Goldenice International</span>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="./home.html">Home</a></li>
+                    <li><a href="#" class="active">Invest</a></li>
+                    <li><a href="./about.html">About</a></li>
+                    <li><a href="./contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <button class="07065151245">📞 Support</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Investment Procedures</h1>
+            <p>Follow these simple steps to invest in forex trading with Bearing Goldenice International using cryptocurrency</p>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-title">Investment Progress</span>
+                <span class="progress-percentage" id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="steps-container">
+                <div class="step active" data-step="1" onclick="goToStep(1)">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Account Setup</div>
+                </div>
+                <div class="step" data-step="2" onclick="goToStep(2)">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Choose Investment</div>
+                </div>
+                <div class="step" data-step="3" onclick="goToStep(3)">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Select Wallet</div>
+                </div>
+                <div class="step" data-step="4" onclick="goToStep(4)">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Deposit Funds</div>
+                </div>
+                <div class="step" data-step="5" onclick="goToStep(5)">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <!-- Main Procedure Content -->
+            <div class="procedure-container">
+                <!-- Step 1: Account Setup -->
+                <div class="procedure-step active" id="step1">
+                    <div class="step-header">
+                        <h2><span class="step-number-badge">1</span> Account Setup</h2>
+                        <p>Create your investor account to begin your forex trading journey</p>
+                    </div>
+
+                    <div class="content-card">
+                        <h3>📋 Required Information</h3>
+                        <ul>
+                            <li><span class="check-icon">✓</span> Valid email address for account verification</li>
+                            <li><span class="check-icon">✓</span> Phone number for security alerts</li>
+                            <li><span class="check-icon">✓</span> Government-issued ID for KYC verification</li>
+                            <li><span class="check-icon">✓</span> Proof of address (utility bill or bank statement)</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card">
+                        <h3>🔐 Security Setup</h3>
+                        <p>Protect your investment account with industry-standard security measures.</p>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="emailInput" placeholder="your@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Create Password</label>
+                            <input type="password" id="passwordInput" placeholder="Min 8 characters">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" id="confirmPassword" placeholder="Repeat password">
+                        </div>
+                    </div>
+
+                    <div class="important-box">
+                        <div class="important-title">⚠️ Important Notice</div>
+                        <ul class="important-list">
+                            <li>You must be 18 years or older to invest</li>
+                            <li>All information must match your ID documents</li>
+                            <li>Account verification takes 1-2 business days</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 2: Choose Investment -->
+                <div class="procedure-step" id="step2">
+                    <div class="step-header">
+                        <h2><span class="step-number-badge">2</span> Choose Investment Plan</h2>
+                        <p>Select the investment tier that matches your financial goals</p>
+                    </div>
+
+                    <div class="content-card">
+                        <h3>💰 Investment Tiers</h3>
+                        <div class="tier-grid">
+                            <div class="tier-card active" onclick="selectTier(this, 'starter')">
+                                <div class="tier-name">Starter</div>
+                                <div class="tier-amount">$500 - $5,000</div>
+                                <div class="tier-benefit">8% Monthly Return</div>
+                            </div>
+                            <div class="tier-card" onclick="selectTier(this, 'professional')">
+                                <div class="tier-name">Professional</div>
+                                <div class="tier-amount">$5,000 - $25,000</div>
+                                <div class="tier-benefit">12% Monthly Return</div>
+                            </div>
+                            <div class="tier-card" onclick="selectTier(this, 'enterprise')">
+                                <div class="tier-name">Enterprise</div>
+                                <div class="tier-amount">$25,000+</div>
+                                <div class="tier-benefit">15% Monthly Return</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <h3>📊 Investment Details</h3>
+                        <div class="form-group">
+                            <label>Investment Amount (USD)</label>
+                            <div class="input-group">
+                                <input type="number" id="investAmount" placeholder="Enter amount" min="500">
+                                <span class="input-suffix">USD</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Investment Duration</label>
+                            <select id="duration">
+                                <option value="3">3 Months</option>
+                                <option value="6">6 Months</option>
+                                <option value="12" selected>12 Months</option>
+                                <option value="24">24 Months</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Expected Return (Estimated)</label>
+                            <input type="text" id="expectedReturn" readonly value="$0.00" style="color: var(--gold); font-weight: 600;">
+                        </div>
+                    </div>
+
+                    <div class="important-box">
+                        <div class="important-title">📈 Return Calculation</div>
+                        <ul class="important-list">
+                            <li>Returns are calculated monthly and compounded</li>
+                            <li>Minimum lock-in period: 3 months</li>
+                            <li>Early withdrawal subject to 5% penalty</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 3: Select Wallet -->
+                <div class="procedure-step" id="step3">
+                    <div class="step-header">
+                        <h2><span class="step-number-badge">3</span> Select Cryptocurrency</h2>
+                        <p>Choose your preferred cryptocurrency for the deposit</p>
+                    </div>
+
+                    <div class="content-card">
+                        <h3>🪙 Available Cryptocurrencies</h3>
+                        <div class="wallet-grid">
+                            <div class="wallet-option active" onclick="selectCrypto(this, 'BTC')">
+                                <div class="wallet-icon-lg">₿</div>
+                                <div class="wallet-name-lg">Bitcoin</div>
+                                <div class="37V2nGVLSwvm7xCTFuWNhPjdjt2UtqhYLA">37V2nGVLSwvm7xCTFuWNhPjdjt2UtqhYLA</div>
+                            </div>
+                            <div class="wallet-option" onclick="selectCrypto(this, 'ETH')">
+                                <div class="wallet-icon-lg">Ξ</div>
+                                <div class="wallet-name-lg">Ethereum</div>
+                                <div class="0x75f3dd9c350c3d2f2cfc4102618a079cf48f7c2b">0x75f3dd9c350c3d2f2cfc4102618a079cf48f7c2b</div>
+                            </div>
+                            <div class="wallet-option" onclick="selectCrypto(this, 'USDT')">
+                                <div class="wallet-icon-lg">₮</div>
+                                <div class="wallet-name-lg">Tether</div>
+                                <div class="0x75f3dd9c350c3d2f2cfc4102618a079cf48f7c2b/TFfoeHXNpLfBopwQ34eybcYbVeVSqBWD5c">0x75f3dd9c350c3d2f2cfc4102618a079cf48f7c2b/ TFfoeHXNpLfBopwQ34eybcYbVeVSqBWD5c</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <h3>💱 Conversion Rate</h3>
+                        <p>Current exchange rates for your investment amount:</p>
+                        <div id="conversionRates" style="margin-top: 1rem;">
+                            <div class="detail-row">
+                                <span class="detail-label">USD Amount</span>
+                                <span class="detail-value" id="usdAmount">$0.00</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">BTC Equivalent</span>
+                                <span class="detail-value" id="btcAmount">0.00000000 BTC</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Exchange Rate</span>
+                                <span class="detail-value">1 BTC = $59,500.00</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Network Fee (Est.)</span>
+                                <span class="detail-value" style="color: var(--warning);">0.0001 BTC</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="important-box">
+                        <div class="important-title">⏱️ Rate Lock</div>
+                        <ul class="important-list">
+                            <li>Exchange rates are locked for 30 minutes</li>
+                            <li>Complete your deposit before the timer expires</li>
+                            <li>Network fees vary based on blockchain congestion</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 4: Deposit Funds -->
+                <div class="procedure-step" id="step4">
+                    <div class="step-header">
+                        <h2><span class="step-number-badge">4</span> Deposit to Company Wallet</h2>
+                        <p>Send your investment to the official Bearing Goldenice International wallet</p>
+                    </div>
+
+                    <div class="company-wallet-section">
+                        <div class="company-wallet-header">
+                            <span>🏢</span>
+                            <span>Official Company Wallet Address</span>
+                        </div>
+                        <div class="company-address-box">
+                            <div class="address-label"> Goldenice International Deposit Address</div>
+                            <div class="address-value">
+                                <span id="37V2nGVLSwvm7xCTFuWNhPjdjt2UtqhYLA">37V2nGVLSwvm7xCTFuWNhPjdjt2UtqhYLA</span>
+                                <button class="copy-btn" onclick="copyCompanyAddress()">
+                                    📋 Copy
+                                </button>
+                            </div>
+                        </div>
+                        <div class="qr-section">
+                            <div class="qr-code" id="qrCode">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=bc1qgoldenice2024securedepositaddressbtc" alt="QR Code">
+                            </div>
+                            <div class="qr-label">Scan to copy address</div>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <h3>📝 Transaction Details</h3>
+                        <div class="form-group">
+                            <label>Your Wallet Address (Source)</label>
+                            <input type="text" id="sourceWallet" placeholder="Enter your wallet address">
+                        </div>
+                        <div class="form-group">
+                            <label>Transaction Hash (TXID)</label>
+                            <input type="text" id="txHash" placeholder="Will be available after transaction">
+                        </div>
+                        <div class="form-group">
+                            <label>Upload Transaction Screenshot</label>
+                            <input type="file" id="txScreenshot" accept="image/*" style="padding: 0.5rem;">
+                        </div>
+                    </div>
+
+                    <div class="important-box">
+                        <div class="important-title">⚠️ Critical Instructions</div>
+                        <ul class="important-list">
+                            <li>Send only <strong id="networkWarning">BTC</strong> to this address</li>
+                            <li>Minimum deposit: <strong id="minDeposit">0.001 BTC</strong></li>
+                            <li>Double-check the address before sending</li>
+                            <li>Save your transaction hash for tracking</li>
+                            <li>Deposits require 3 confirmations to credit</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 5: Confirmation -->
+                <div class="procedure-step" id="step5">
+                    <div class="step-header">
+                        <h2><span class="step-number-badge">5</span> Confirmation & Tracking</h2>
+                        <p>Review your investment details and track your deposit</p>
+                    </div>
+
+                    <div class="content-card">
+                        <h3>📋 Investment Summary</h3>
+                        <div id="finalSummary">
+                            <div class="detail-row">
+                                <span class="detail-label">Investment Plan</span>
+                                <span class="detail-value" id="summaryPlan">Starter</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Amount (USD)</span>
+                                <span class="detail-value" id="summaryUSD">$0.00</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Amount (Crypto)</span>
+                                <span class="detail-value" id="summaryCrypto">0.00000000 BTC</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Duration</span>
+                                <span class="detail-value" id="summaryDuration">12 Months</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Expected Return</span>
+                                <span class="detail-value" style="color: var(--success);" id="summaryReturn">$0.00</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Company Wallet</span>
+                                <span class="detail-value" style="font-size: 0.75rem;">bc1q...deposit</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <h3>⏳ What Happens Next?</h3>
+                        <div class="timeline">
+                            <div class="timeline-item completed">
+                                <div class="timeline-title">Deposit Submitted</div>
+                                <div class="timeline-desc">Your transaction is recorded</div>
+                            </div>
+                            <div class="timeline-item active">
+                                <div class="timeline-title">Blockchain Confirmation</div>
+                                <div class="timeline-desc">Waiting for network confirmations (3/3)</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-title">Account Credited</div>
+                                <div class="timeline-desc">Funds added to your trading account</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-title">Trading Begins</div>
+                                <div class="timeline-desc">Professional traders start managing your funds</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label>Transaction Reference Number</label>
+                        <input type="text" id="refNumber" readonly value="BGI-2024-XXXXXX" style="font-family: 'JetBrains Mono', monospace; text-align: center; font-size: 1.125rem;">
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="step-actions">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="display: none;">
+                        ← Previous
+                    </button>
+                    <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+                        Continue →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Company Info -->
+                <div class="info-card">
+                    <div class="company-info">
+                        <div class="company-logo">⚡</div>
+                        <div class="company-name"> Goldenice International</div>
+                        <div class="company-type">Licensed Forex Trading</div>
+                    </div>
+                </div>
+
+                <!-- Company Wallets -->
+                <div class="info-card">
+                    <h3>🏢 Company Wallets</h3>
+                    <div class="wallet-list">
+                        <div class="wallet-item">
+                            <div class="wallet-info-sm">
+                                <div class="wallet-icon-sm btc-icon">₿</div>
+                                <div>
+                                    <div class="wallet-name-sm">Bitcoin</div>
+                                    <div class="wallet-address-sm">bc1q...deposit</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wallet-item">
+                            <div class="wallet-info-sm">
+                                <div class="wallet-icon-sm eth-icon">Ξ</div>
+                                <div>
+                                    <div class="wallet-name-sm">Ethereum</div>
+                                    <div class="wallet-address-sm">0x71C...Goldenice</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wallet-item">
+                            <div class="wallet-info-sm">
+                                <div class="wallet-icon-sm usdt-icon">₮</div>
+                                <div>
+                                    <div class="wallet-name-sm">Tether USDT</div>
+                                    <div class="wallet-address-sm">0x71C...Goldenice</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security -->
+                <div class="info-card">
+                    <h3>🔒 Security & Compliance</h3>
+                    <div class="security-badges">
+                        <div class="badge">
+                            <div class="badge-icon">🔐</div>
+                            <div class="badge-label">SSL Encrypted</div>
+                        </div>
+                        <div class="badge">
+                            <div class="badge-icon">✓</div>
+                            <div class="badge-label">KYC Verified</div>
+                        </div>
+                        <div class="badge">
+                            <div class="badge-icon">🏛️</div>
+                            <div class="badge-label">Regulated</div>
+                        </div>
+                        <div class="badge">
+                            <div class="badge-icon">💼</div>
+                            <div class="badge-label">Insured</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div class="info-card">
+                    <h3>📞 Need Help?</h3>
+                    <div style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;">
+                        <p style="margin-bottom: 1rem;">Our investment team is available 24/7 to assist you.</p>
+                        <p><strong>Email:</strong><br><a href="goldeniceinternational12@gmail.com" style="color: var(--gold); text-decoration: none;">goldeniceinternational12@gmail.com</a></p>
+                        <p style="margin-top: 0.5rem;"><strong>Phone:</strong><br><a href="07040856276" style="color: var(--gold); text-decoration: none;">07065151245( call), 07040856276(whatsapp)</a></p>
+                        <p style="margin-top: 0.5rem;"><strong>Telegram:</strong><br>07040856276</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="success-icon">✓</div>
+                <h2>Investment Submitted!</h2>
+                <p>Your deposit request has been received and is being processed</p>
+            </div>
+            <div class="confirmation-details">
+                <div class="detail-row">
+                    <span class="detail-label">Reference Number</span>
+                    <span class="detail-value" id="modalRef">BGI-2024-001234</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Amount</span>
+                    <span class="detail-value" id="modalAmount">$5,000.00</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Cryptocurrency</span>
+                    <span class="detail-value" id="modalCrypto">0.1176 BTC</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value" style="color: var(--warning);">Pending Confirmation</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Expected Credit</span>
+                    <span class="detail-value">15-30 minutes</span>
+                </div>
+            </div>
+            <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem; text-align: center;">
+                A confirmation email has been sent to your registered email address with complete transaction details.
+            </p>
+            <button class="btn btn-primary" style="width: 100%;" onclick="closeModal()">
+            <a href="./dashboard.html">Go to Dashboard</a>                 
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+        let selectedTier = 'starter';
+        let selectedCrypto = 'BTC';
+        let investmentAmount = 0;
+
+        // Company Wallet Addresses
+        const companyWallets = {
+            BTC: {
+                address: 'bc1qgoldenice2024securedepositaddressbtc',
+                minDeposit: 0.001,
+                rate: 42500
+            },
+            ETH: {
+                address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
+                minDeposit: 0.01,
+                rate: 2332
+            },
+            USDT: {
+                address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
+                minDeposit: 10,
+                rate: 1
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgress();
+            
+            // Investment amount input listener
+            document.getElementById('investAmount')?.addEventListener('input', calculateReturns);
+            document.getElementById('duration')?.addEventListener('change', calculateReturns);
+        });
+
+        // Navigation
+        function goToStep(step) {
+            if (step < 1 || step > totalSteps) return;
+            if (step > currentStep && !validateStep(currentStep)) return;
+            
+            currentStep = step;
+            updateUI();
+        }
+
+        function nextStep() {
+            if (!validateStep(currentStep)) return;
+            
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateUI();
+            } else {
+                submitInvestment();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            // Update steps
+            document.querySelectorAll('.step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+
+            // Update sections
+            document.querySelectorAll('.procedure-step').forEach((section, index) => {
+                section.classList.remove('active');
+                if (index + 1 === currentStep) {
+                    section.classList.add('active');
+                }
+            });
+
+            // Update buttons
+            document.getElementById('prevBtn').style.display = currentStep === 1 ? 'none' : 'flex';
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentStep === totalSteps) {
+                nextBtn.innerHTML = '<span>Complete Investment</span> ✓';
+                nextBtn.classList.remove('btn-primary');
+                nextBtn.classList.add('btn-success');
+            } else {
+                nextBtn.innerHTML = 'Continue →';
+                nextBtn.classList.remove('btn-success');
+                nextBtn.classList.add('btn-primary');
+            }
+
+            updateProgress();
+            
+            // Update step-specific content
+            if (currentStep === 3) updateConversion();
+            if (currentStep === 4) updateDepositStep();
+            if (currentStep === 5) updateSummary();
+        }
+
+        function updateProgress() {
+            const percent = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = Math.round(percent) + '%';
+        }
+
+        // Validation
+        function validateStep(step) {
+            switch(step) {
+                case 1:
+                    const email = document.getElementById('emailInput')?.value;
+                    const password = document.getElementById('passwordInput')?.value;
+                    const confirm = document.getElementById('confirmPassword')?.value;
+                    
+                    if (!email || !password || !confirm) {
+                        showToast('Missing Information', 'Please fill in all required fields', 'error');
+                        return false;
+                    }
+                    if (password !== confirm) {
+                        showToast('Password Mismatch', 'Passwords do not match', 'error');
+                        return false;
+                    }
+                    return true;
+                    
+                case 2:
+                    const amount = parseFloat(document.getElementById('investAmount')?.value);
+                    if (!amount || amount < 500) {
+                        showToast('Invalid Amount', 'Minimum investment is $500', 'error');
+                        return false;
+                    }
+                    investmentAmount = amount;
+                    return true;
+                    
+                case 4:
+                    const sourceWallet = document.getElementById('sourceWallet')?.value;
+                    if (!sourceWallet) {
+                        showToast('Wallet Required', 'Please enter your source wallet address', 'error');
+                        return false;
+                    }
+                    return true;
+                    
+                default:
+                    return true;
+            }
+        }
+
+        // Tier Selection
+        function selectTier(element, tier) {
+            document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+            selectedTier = tier;
+            
+            // Update min amount
+            const minAmounts = { starter: 500, professional: 5000, enterprise: 25000 };
+            const input = document.getElementById('investAmount');
+            input.min = minAmounts[tier];
+            input.placeholder = `Min $${minAmounts[tier]}`;
+        }
+
+        // Crypto Selection
+        function selectCrypto(element, crypto) {
+            document.querySelectorAll('.wallet-option').forEach(o => o.classList.remove('active'));
+            element.classList.add('active');
+            selectedCrypto = crypto;
+            updateConversion();
+        }
+
+        // Calculate Returns
+        function calculateReturns() {
+            const amount = parseFloat(document.getElementById('investAmount')?.value) || 0;
+            const duration = parseInt(document.getElementById('duration')?.value) || 12;
+            
+            const rates = { starter: 0.08, professional: 0.12, enterprise: 0.15 };
+            const monthlyRate = rates[selectedTier];
+            const totalReturn = amount * Math.pow(1 + monthlyRate, duration) - amount;
+            
+            document.getElementById('expectedReturn').value = '$' + totalReturn.toFixed(2);
+            
+            if (currentStep === 3) updateConversion();
+        }
+
+        // Update Conversion Display
+        function updateConversion() {
+            const amount = parseFloat(document.getElementById('investAmount')?.value) || investmentAmount || 0;
+            const wallet = companyWallets[selectedCrypto];
+            const cryptoAmount = amount / wallet.rate;
+            
+            document.getElementById('usdAmount').textContent = '$' + amount.toFixed(2);
+            document.getElementById('btcAmount').textContent = cryptoAmount.toFixed(8) + ' ' + selectedCrypto;
+        }
+
+        // Update Deposit Step
+        function updateDepositStep() {
+            const wallet = companyWallets[selectedCrypto];
+            document.getElementById('companyWalletAddress').textContent = wallet.address;
+            document.getElementById('networkWarning').textContent = selectedCrypto;
+            document.getElementById('minDeposit').textContent = wallet.minDeposit + ' ' + selectedCrypto;
+            
+            // Update QR code
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${wallet.address}`;
+            document.getElementById('qrCode').innerHTML = `<img src="${qrUrl}" alt="QR Code">`;
+        }
+
+        // Update Final Summary
+        function updateSummary() {
+            const amount = parseFloat(document.getElementById('investAmount')?.value) || investmentAmount;
+            const duration = document.getElementById('duration')?.value || 12;
+            const wallet = companyWallets[selectedCrypto];
+            const cryptoAmount = amount / wallet.rate;
+            
+            const tierNames = { starter: 'Starter', professional: 'Professional', enterprise: 'Enterprise' };
+            document.getElementById('summaryPlan').textContent = tierNames[selectedTier];
+            document.getElementById('summaryUSD').textContent = '$' + amount.toFixed(2);
+            document.getElementById('summaryCrypto').textContent = cryptoAmount.toFixed(8) + ' ' + selectedCrypto;
+            document.getElementById('summaryDuration').textContent = duration + ' Months';
+            
+            const rates = { starter: 0.08, professional: 0.12, enterprise: 0.15 };
+            const totalReturn = amount * Math.pow(1 + rates[selectedTier], parseInt(duration)) - amount;
+            document.getElementById('summaryReturn').textContent = '$' + totalReturn.toFixed(2);
+            
+            // Generate reference number
+            const ref = 'BGI-2024-' + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('refNumber').value = ref;
+        }
+
+        // Copy Address
+        function copyCompanyAddress() {
+            const address = companyWallets[selectedCrypto].address;
+            navigator.clipboard.writeText(address).then(() => {
+                showToast('Address Copied', 'Company wallet address copied to clipboard', 'success');
+            });
+        }
+
+        // Submit Investment
+        function submitInvestment() {
+            const btn = document.getElementById('nextBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span>Processing...</span>';
+            
+            setTimeout(() => {
+                const amount = parseFloat(document.getElementById('investAmount')?.value) || investmentAmount;
+                const wallet = companyWallets[selectedCrypto];
+                const cryptoAmount = amount / wallet.rate;
+                
+                document.getElementById('modalAmount').textContent = '$' + amount.toFixed(2);
+                document.getElementById('modalCrypto').textContent = cryptoAmount.toFixed(8) + ' ' + selectedCrypto;
+                document.getElementById('modalRef').textContent = document.getElementById('refNumber').value;
+                
+                document.getElementById('successModal').classList.add('show');
+                btn.disabled = false;
+            }, 2000);
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('show');
+            // Reset or redirect
+            window.location.href = '#dashboard';
+        }
+
+        // Toast Notification
+        function showToast(title, message, type) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? '✓' : '✕';
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${icon}</div>
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 0.25rem;">${title}</div>
+                    <div style="font-size: 0.875rem; color: var(--text-muted);">${message}</div>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('successModal')?.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+    </script>
+</body>
+</html>

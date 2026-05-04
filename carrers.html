@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers | Goldenice International</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        gold: {
+                            100: '#F9F1D8',
+                            200: '#F0DEAA',
+                            300: '#E6CB7D',
+                            400: '#DDB850',
+                            500: '#D4AF37', // Classic Gold
+                            600: '#AA8C2C',
+                            700: '#806921',
+                            800: '#554616',
+                            900: '#2B230B',
+                        },
+                        dark: {
+                            900: '#0B0B0F',
+                            800: '#15151E',
+                            700: '#1F1F2E',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0B0F; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37; 
+        }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-card {
+            background: linear-gradient(145deg, rgba(31, 31, 46, 0.6) 0%, rgba(11, 11, 15, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        /* Text Gradient */
+        .text-gold-gradient {
+            background: linear-gradient(to right, #F0DEAA, #D4AF37, #AA8C2C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Canvas Background */
+        #marketCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        /* Loader */
+        .loader {
+            border-top-color: #D4AF37;
+            -webkit-animation: spinner 1.5s linear infinite;
+            animation: spinner 1.5s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-dark-900 text-gray-300 font-sans antialiased overflow-x-hidden selection:bg-gold-500 selection:text-dark-900">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gold-300 to-gold-700 flex items-center justify-center text-dark-900 font-bold text-xl shadow-lg shadow-gold-500/20">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                    <span class="font-serif text-2xl font-bold text-white tracking-wide">Goldenice<span class="text-gold-500">.</span></span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#roles" class="hover:text-gold-400 transition-colors px-3 py-2 rounded-md text-sm font-medium">Open Roles</a>
+                        <a href="#culture" class="hover:text-gold-400 transition-colors px-3 py-2 rounded-md text-sm font-medium">Culture</a>
+                        <a href="#benefits" class="hover:text-gold-400 transition-colors px-3 py-2 rounded-md text-sm font-medium">Benefits</a>
+                        <button onclick="scrollToJobs()" class="bg-gold-600 hover:bg-gold-500 text-white px-5 py-2 rounded-full text-sm font-medium transition-all shadow-lg shadow-gold-600/20 hover:shadow-gold-600/40 transform hover:scale-105">
+                            View Careers
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen flex items-center justify-center overflow-hidden">
+        <canvas id="marketCanvas"></canvas>
+        
+        <!-- Overlay Gradient -->
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-dark-900/80 to-dark-900 pointer-events-none"></div>
+
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto mt-16">
+            <div class="inline-block mb-4 px-4 py-1 rounded-full border border-gold-500/30 bg-gold-500/10 backdrop-blur-sm">
+                <span class="text-gold-300 text-sm font-semibold tracking-wider uppercase">Now Hiring Globally</span>
+            </div>
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight">
+                Trade Your Future <br>
+                <span class="text-gold-gradient">With Us.</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+                Join Goldenice International, where financial precision meets technological innovation. We are redefining the standards of Forex trading.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="scrollToJobs()" class="group relative px-8 py-4 bg-gold-600 text-white font-semibold rounded-lg overflow-hidden shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all hover:shadow-[0_0_30px_rgba(212,175,55,0.5)]">
+                    <span class="relative z-10 flex items-center gap-2">
+                        Explore Opportunities <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-gold-600 to-gold-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
+                <button onclick="document.getElementById('culture').scrollIntoView({behavior: 'smooth'})" class="px-8 py-4 glass text-white font-semibold rounded-lg hover:bg-white/5 transition-all border border-white/10">
+                    Our Culture
+                </button>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-gold-500/50">
+            <i class="fa-solid fa-chevron-down text-2xl"></i>
+        </div>
+    </header>
+
+    <!-- Stats Section -->
+    <section class="py-10 border-y border-white/5 bg-dark-800/50 backdrop-blur-sm relative z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="p-4">
+                    <div class="text-3xl md:text-4xl font-bold text-white mb-1 counter" data-target="50">0</div>
+                    <div class="text-sm text-gold-400 uppercase tracking-wider">Global Offices</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-3xl md:text-4xl font-bold text-white mb-1 counter" data-target="12">0</div>
+                    <div class="text-sm text-gold-400 uppercase tracking-wider">Billion Volume Daily</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-3xl md:text-4xl font-bold text-white mb-1 counter" data-target="500">0</div>
+                    <div class="text-sm text-gold-400 uppercase tracking-wider">Team Members</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-3xl md:text-4xl font-bold text-white mb-1 counter" data-target="24">0</div>
+                    <div class="text-sm text-gold-400 uppercase tracking-wider">Hour Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Culture Section -->
+    <section id="culture" class="py-24 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gold-900/10 to-transparent pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl md:text-5xl text-white mb-4">Why <span class="text-gold-500">Goldenice</span>?</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">We don't just trade currencies; we trade on the future of technology and human potential.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="glass-card p-8 rounded-2xl group">
+                    <div class="w-14 h-14 rounded-xl bg-gold-500/10 flex items-center justify-center text-gold-400 text-2xl mb-6 group-hover:bg-gold-500 group-hover:text-dark-900 transition-colors duration-300">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">High-Frequency Tech</h3>
+                    <p class="text-gray-400 leading-relaxed">Work with sub-millisecond latency systems. Our tech stack is built for speed, stability, and scale.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-card p-8 rounded-2xl group">
+                    <div class="w-14 h-14 rounded-xl bg-gold-500/10 flex items-center justify-center text-gold-400 text-2xl mb-6 group-hover:bg-gold-500 group-hover:text-dark-900 transition-colors duration-300">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Global Mobility</h3>
+                    <p class="text-gray-400 leading-relaxed">From London to Singapore, Dubai to New York. Experience diverse markets and cultures with our relocation support.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-card p-8 rounded-2xl group">
+                    <div class="w-14 h-14 rounded-xl bg-gold-500/10 flex items-center justify-center text-gold-400 text-2xl mb-6 group-hover:bg-gold-500 group-hover:text-dark-900 transition-colors duration-300">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Performance Driven</h3>
+                    <p class="text-gray-400 leading-relaxed">Uncapped bonuses and profit sharing. We believe in rewarding the talent that drives our success.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Board Section -->
+    <section id="roles" class="py-24 bg-dark-800 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                <div>
+                    <h2 class="font-serif text-4xl text-white mb-2">Open Positions</h2>
+                    <p class="text-gray-400">Find your edge in the financial markets.</p>
+                </div>
+                
+                <!-- Filters -->
+                <div class="flex flex-wrap gap-3" id="jobFilters">
+                    <button class="filter-btn active px-4 py-2 rounded-full text-sm border border-gold-500 bg-gold-500 text-dark-900 font-semibold transition-all" data-filter="all">All Teams</button>
+                    <button class="filter-btn px-4 py-2 rounded-full text-sm border border-white/10 hover:border-gold-500 hover:text-gold-400 transition-all" data-filter="Engineering"><a href="./Engineering.html">Engineering</a></button>
+                    <button class="filter-btn px-4 py-2 rounded-full text-sm border border-white/10 hover:border-gold-500 hover:text-gold-400 transition-all" data-filter="Trading"><a href="/trading.html">Trading</a></button>
+                    <button class="filter-btn px-4 py-2 rounded-full text-sm border border-white/10 hover:border-gold-500 hover:text-gold-400 transition-all" data-filter="Quant"><a href="./Quantitative.html">Quantitative</a></button>
+                    <button class="filter-btn px-4 py-2 rounded-full text-sm border border-white/10 hover:border-gold-500 hover:text-gold-400 transition-all" data-filter="Operation"><a href="./Operation.html">Operations</a></button>
+                </div>
+            </div>
+
+            <!-- Job List Container -->
+            <div id="jobList" class="space-y-4 min-h-[400px]">
+                <!-- Jobs will be injected here via JS -->
+            </div>
+            
+            <!-- Empty State (Hidden by default) -->
+            <div id="noJobs" class="hidden text-center py-20">
+                <div class="text-6xl text-gray-700 mb-4"><i class="fa-solid fa-folder-open"></i></div>
+                <h3 class="text-xl text-white font-semibold">No positions found</h3>
+                <p class="text-gray-500">Try adjusting your filters or check back later.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="font-serif text-4xl md:text-5xl text-white mb-6">Perks that <br><span class="text-gold-gradient">Matter.</span></h2>
+                    <p class="text-gray-400 mb-8 text-lg">We take care of our team so they can focus on the markets. Comprehensive benefits designed for high-performers.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-dark-700 flex items-center justify-center text-gold-400 shrink-0">
+                                <i class="fa-solid fa-heart-pulse"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold text-lg">Premium Health Coverage</h4>
+                                <p class="text-gray-500 text-sm">Full medical, dental, and vision for you and your dependents.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-dark-700 flex items-center justify-center text-gold-400 shrink-0">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold text-lg">Competitive Compensation</h4>
+                                <p class="text-gray-500 text-sm">Base salary + performance bonuses + 401k matching.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-dark-700 flex items-center justify-center text-gold-400 shrink-0">
+                                <i class="fa-solid fa-laptop-code"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold text-lg">Remote Flexibility</h4>
+                                <p class="text-gray-500 text-sm">Hybrid work model. Top-tier equipment provided for home office.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-gold-500 to-purple-600 rounded-2xl opacity-20 blur-2xl"></div>
+                    <div class="relative glass-card rounded-2xl p-2">
+                        <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Office Environment" class="rounded-xl w-full h-auto object-cover opacity-80 hover:opacity-100 transition-opacity duration-500">
+                        <div class="absolute bottom-6 left-6 right-6 p-4 glass rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-white font-bold">Join the Team</p>
+                                    <p class="text-gold-400 text-sm">Next cohort starts soon</p>
+                                </div>
+                                <button onclick="scrollToJobs()" class="w-10 h-10 rounded-full bg-gold-500 text-dark-900 flex items-center justify-center hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark-900 border-t border-white/5 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-coins text-gold-500 text-xl"></i>
+                        <span class="font-serif text-2xl font-bold text-white">Goldenice<span class="text-gold-500">.</span></span>
+                    </div>
+                    <p class="text-gray-500 max-w-sm mb-6">
+                        Empowering traders and technologists to build the future of global finance. Integrity, Innovation, and Impact.
+                    </p>
+                    
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Company</h4>
+                    <ul class="space-y-2 text-gray-500">
+                        <li><a href="./about.html" class="hover:text-gold-400 transition-colors">About Us</a></li>
+                        <li><a href="./carrers.html" class="hover:text-gold-400 transition-colors">Careers</a></li>
+                        <li><a href="./press.html" class="hover:text-gold-400 transition-colors">Press</a></li>
+                        <li><a href="./contact.html" class="hover:text-gold-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-gray-500">
+                        <li><a href="./privacy policy.html" class="hover:text-gold-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="./tos.html" class="hover:text-gold-400 transition-colors">Terms of Service</a></li>
+                        <li><a href="./Cookie Policy.html" class="hover:text-gold-400 transition-colors">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-600 text-sm">&copy; 2026 Goldenice International. All rights reserved.</p>
+                <p class="text-gray-600 text-sm">Markets are volatile. Trade responsibly.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Job Detail Modal -->
+    <div id="jobModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity opacity-0" id="modalBackdrop"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <!-- Modal Panel -->
+                <div class="relative transform overflow-hidden rounded-2xl bg-dark-800 border border-white/10 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" id="modalPanel">
+                    
+                    <!-- Header -->
+                    <div class="bg-dark-900 px-4 py-5 sm:px-6 border-b border-white/5 flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-serif font-bold leading-6 text-white" id="modalTitle">Job Title</h3>
+                            <div class="mt-1 flex flex-wrap gap-2 text-sm text-gray-400">
+                                <span id="modalDept" class="text-gold-400">Department</span>
+                                <span>&bull;</span>
+                                <span id="modalLoc">Location</span>
+                                <span>&bull;</span>
+                                <span id="modalType">Type</span>
+                            </div>
+                        </div>
+                        <button type="button" onclick="closeModal()" class="rounded-md bg-transparent text-gray-400 hover:text-white focus:outline-none">
+                            <span class="sr-only">Close</span>
+                            <i class="fa-solid fa-xmark text-2xl"></i>
+                        </button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="px-4 py-5 sm:p-6 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                        <div class="prose prose-invert prose-sm max-w-none">
+                            <p id="modalDesc" class="text-gray-300 mb-6">Description goes here...</p>
+                            
+                            <h4 class="text-white font-bold text-lg mb-3">Responsibilities</h4>
+                            <ul id="modalResp" class="list-disc pl-5 space-y-2 text-gray-400 mb-6">
+                                <!-- List items -->
+                            </ul>
+
+                            <h4 class="text-white font-bold text-lg mb-3">Requirements</h4>
+                            <ul id="modalReq" class="list-disc pl-5 space-y-2 text-gray-400">
+                                <!-- List items -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Success Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-500 z-50">
+        <div class="bg-dark-800 border border-gold-500/50 text-white px-6 py-4 rounded-lg shadow-2xl flex items-center gap-4">
+            <div class="text-gold-500 text-xl"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+                <h4 class="font-bold text-sm">Application Started!</h4>
+                <p class="text-xs text-gray-400">Redirecting to portal...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Data ---
+        const jobs = [
+            {
+                id: 1,
+                title: "Senior FX Trader",
+                department: "Trading",
+                location: "London, UK",
+                type: "Full-time",
+                description: "Execute high-volume trades across major currency pairs while managing risk exposure for institutional clients.",
+                responsibilities: [
+                    "Analyze macroeconomic data and geopolitical events to inform trading strategies.",
+                    "Manage a portfolio of $50M+ with strict risk management protocols.",
+                    "Collaborate with quantitative researchers to refine algorithmic models.",
+                    "Mentor junior traders and provide market insights to the sales team."
+                ],
+                requirements: [
+                    "5+ years of experience in a professional trading environment.",
+                    "Proven track record of profitability in FX markets.",
+                    "Deep understanding of G10 and emerging market currencies.",
+                    "Bachelor's degree in Finance, Economics, or related field."
+                ]
+            },
+            {
+                id: 2,
+                title: "C++ Low Latency Engineer",
+                department: "Engineering",
+                location: "New York, USA",
+                type: "Full-time",
+                description: "Build and optimize our core trading infrastructure to achieve microsecond-level execution speeds.",
+                responsibilities: [
+                    "Design and develop high-performance market data feed handlers.",
+                    "Optimize network stack and kernel bypass technologies (DPDK, RDMA).",
+                    "Profile and tune system performance to reduce latency.",
+                    "Work closely with traders to implement new strategies in production."
+                ],
+                requirements: [
+                    "Expert level C++ (C++17/20) programming skills.",
+                    "Experience with low-latency systems and lock-free programming.",
+                    "Knowledge of Linux kernel internals and network protocols.",
+                    "BS/MS in Computer Science or equivalent experience."
+                ]
+            },
+            {
+                id: 3,
+                title: "Quantitative Researcher",
+                department: "Quant",
+                location: "Singapore",
+                type: "Full-time",
+                description: "Develop predictive models and trading signals using machine learning and statistical analysis.",
+                responsibilities: [
+                    "Research and implement alpha generation strategies.",
+                    "Clean and analyze large-scale financial datasets.",
+                    "Backtest strategies and validate model robustness.",
+                    "Publish internal research papers on novel methodologies."
+                ],
+                requirements: [
+                    "PhD or Master's in Mathematics, Physics, Statistics, or Computer Science.",
+                    "Proficiency in Python, R, or C++.",
+                    "Experience with time series analysis and machine learning libraries.",
+                    "Strong problem-solving and mathematical intuition."
+                ]
+            },
+            {
+                id: 4,
+                title: "Compliance Officer",
+                department: "Operations",
+                location: "Dubai, UAE",
+                type: "Full-time",
+                description: "Ensure all trading activities adhere to global regulatory standards and internal policies.",
+                responsibilities: [
+                    "Monitor trading activity for suspicious behavior or market abuse.",
+                    "Draft and update compliance policies in line with new regulations.",
+                    "Conduct internal audits and risk assessments.",
+                    "Liaise with regulatory bodies and external auditors."
+                ],
+                requirements: [
+                    "3+ years in a compliance role within financial services.",
+                    "Knowledge of MiFID II, EMIR, and Dodd-Frank regulations.",
+                    "Strong attention to detail and ethical judgment.",
+                    "Relevant compliance certifications (e.g., CISI) preferred."
+                ]
+            },
+            {
+                id: 5,
+                title: "Frontend Developer (React)",
+                department: "Engineering",
+                location: "Remote",
+                type: "Full-time",
+                description: "Create intuitive and high-performance trading interfaces for our retail and institutional platforms.",
+                responsibilities: [
+                    "Develop responsive web applications using React and TypeScript.",
+                    "Integrate real-time WebSocket data streams for live market updates.",
+                    "Optimize rendering performance for complex data visualizations.",
+                    "Collaborate with UX designers to implement accessible UI components."
+                ],
+                requirements: [
+                    "3+ years of experience with React and modern JavaScript.",
+                    "Experience with state management (Redux/Zustand) and data fetching.",
+                    "Familiarity with WebGL or Canvas API for charts is a plus.",
+                    "Portfolio demonstrating complex UI implementations."
+                ]
+            },
+            {
+                id: 6,
+                title: "Market Risk Analyst",
+                department: "Quant",
+                location: "London, UK",
+                type: "Full-time",
+                description: "Measure and monitor market risk exposures across the firm's global trading books.",
+                responsibilities: [
+                    "Calculate VaR, Expected Shortfall, and stress testing metrics.",
+                    "Develop risk models for derivatives and exotic instruments.",
+                    "Produce daily risk reports for senior management.",
+                    "Investigate risk limit breaches and provide recommendations."
+                ],
+                requirements: [
+                    "Degree in Quantitative Finance, Math, or Engineering.",
+                    "Proficiency in SQL and Python.",
+                    "Understanding of options pricing and greeks.",
+                    "Excellent communication skills to explain complex risks."
+                ]
+            }
+        ];
+
+        // --- Logic ---
+
+        // 1. Job Rendering
+        const jobListEl = document.getElementById('jobList');
+        const noJobsEl = document.getElementById('noJobs');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        function renderJobs(filter = 'all') {
+            jobListEl.innerHTML = '';
+            let count = 0;
+
+            jobs.forEach(job => {
+                if (filter === 'all' || job.department === filter) {
+                    count++;
+                    const card = document.createElement('div');
+                    card.className = 'glass-card rounded-xl p-6 flex flex-col md:flex-row justify-between items-center gap-4 cursor-pointer group animate-fade-in';
+                    card.onclick = () => openModal(job.id);
+                    
+                    card.innerHTML = `
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-1">
+                                <h3 class="text-xl font-bold text-white group-hover:text-gold-400 transition-colors">${job.title}</h3>
+                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-gold-500/10 text-gold-400 border border-gold-500/20">${job.department}</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm text-gray-400">
+                                <span><i class="fa-solid fa-location-dot mr-1"></i> ${job.location}</span>
+                                <span><i class="fa-solid fa-clock mr-1"></i> ${job.type}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-gold-500 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-[-10px] group-hover:translate-x-0">View Details</span>
+                            <div class="w-10 h-10 rounded-full bg-dark-700 flex items-center justify-center text-gray-400 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    `;
+                    jobListEl.appendChild(card);
+                }
+            });
+
+            if (count === 0) {
+                noJobsEl.classList.remove('hidden');
+            } else {
+                noJobsEl.classList.add('hidden');
+            }
+        }
+
+        // 2. Filtering
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update UI
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-gold-500', 'text-dark-900', 'border-gold-500');
+                    b.classList.add('border-white/10');
+                });
+                btn.classList.remove('border-white/10');
+                btn.classList.add('bg-gold-500', 'text-dark-900', 'border-gold-500');
+                
+                // Filter Logic
+                renderJobs(btn.dataset.filter);
+            });
+        });
+
+        // 3. Modal Logic
+        const modal = document.getElementById('jobModal');
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        const modalPanel = document.getElementById('modalPanel');
+
+        function openModal(id) {
+            const job = jobs.find(j => j.id === id);
+            if (!job) return;
+
+            // Populate Data
+            document.getElementById('modalTitle').innerText = job.title;
+            document.getElementById('modalDept').innerText = job.department;
+            document.getElementById('modalLoc').innerText = job.location;
+            document.getElementById('modalType').innerText = job.type;
+            document.getElementById('modalDesc').innerText = job.description;
+            
+            const respList = document.getElementById('modalResp');
+            respList.innerHTML = job.responsibilities.map(r => `<li>${r}</li>`).join('');
+            
+            const reqList = document.getElementById('modalReq');
+            reqList.innerHTML = job.requirements.map(r => `<li>${r}</li>`).join('');
+
+            // Show Modal
+            modal.classList.remove('hidden');
+            // Small timeout to allow display:block to apply before opacity transition
+            setTimeout(() => {
+                modalBackdrop.classList.remove('opacity-0');
+                modalPanel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+                modalPanel.classList.add('opacity-100', 'translate-y-0', 'sm:scale-100');
+            }, 10);
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeModal() {
+            modalBackdrop.classList.add('opacity-0');
+            modalPanel.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
+            modalPanel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        function applyForJob() {
+            closeModal();
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Close modal on backdrop click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modalBackdrop || e.target.closest('#modalBackdrop')) {
+                closeModal();
+            }
+        });
+
+        // 4. Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-dark-900/90', 'backdrop-blur-md', 'shadow-lg');
+            } else {
+                nav.classList.remove('bg-dark-900/90', 'backdrop-blur-md', 'shadow-lg');
+            }
+        });
+
+        function scrollToJobs() {
+            document.getElementById('roles').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 5. Canvas Animation (Market Chart Background)
+        const canvas = document.getElementById('marketCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let lines = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Line {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = 0;
+                this.y = height / 2 + (Math.random() - 0.5) * height * 0.5;
+                this.speed = 1 + Math.random() * 2;
+                this.amplitude = 20 + Math.random() * 50;
+                this.frequency = 0.005 + Math.random() * 0.01;
+                this.offset = Math.random() * 100;
+                this.color = Math.random() > 0.8 ? '#D4AF37' : '#333'; // Gold or Dark Grey
+                this.history = [];
+            }
+
+            update() {
+                this.x += this.speed;
+                const y = this.y + Math.sin(this.x * this.frequency + this.offset) * this.amplitude;
+                
+                this.history.push({x: this.x, y: y});
+                if (this.history.length > 50) this.history.shift();
+
+                if (this.x > width) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                if (this.history.length < 2) return;
+                
+                ctx.beginPath();
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = this.color === '#D4AF37' ? 2 : 1;
+                ctx.globalAlpha = this.color === '#D4AF37' ? 0.6 : 0.2;
+
+                ctx.moveTo(this.history[0].x, this.history[0].y);
+                for (let i = 1; i < this.history.length; i++) {
+                    ctx.lineTo(this.history[i].x, this.history[i].y);
+                }
+                ctx.stroke();
+                
+                // Draw glowing head for gold lines
+                if (this.color === '#D4AF37') {
+                    const last = this.history[this.history.length - 1];
+                    ctx.beginPath();
+                    ctx.fillStyle = '#D4AF37';
+                    ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.globalAlpha = 1.0;
+                }
+            }
+        }
+
+        function initLines() {
+            lines = [];
+            for (let i = 0; i < 15; i++) {
+                lines.push(new Line());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            lines.forEach(line => {
+                line.update();
+                line.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            resize();
+            initLines();
+        });
+
+        // 6. Number Counter Animation
+        const observerOptions = { threshold: 0.5 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                        const target = +counter.getAttribute('data-target');
+                        const duration = 2000; // ms
+                        const increment = target / (duration / 16);
+                        
+                        let current = 0;
+                        const updateCounter = () => {
+                            current += increment;
+                            if (current < target) {
+                                counter.innerText = Math.ceil(current) + (target > 100 ? '+' : '');
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                counter.innerText = target + (target > 100 ? '+' : '');
+                            }
+                        };
+                        updateCounter();
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderJobs();
+            resize();
+            initLines();
+            animate();
+            
+            const statsSection = document.querySelector('.counter').closest('section');
+            if(statsSection) observer.observe(statsSection);
+        });
+
+    </script>
+</body>
+</html>

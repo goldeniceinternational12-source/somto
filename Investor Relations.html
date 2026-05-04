@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investor Relations | Goldenice International</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Gold Gradient Text */
+        .text-gold {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .bg-gold {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        }
+        
+        /* Animated Background */
+        .bg-animated {
+            background: linear-gradient(-45deg, #0a0a0a, #1a1a2e, #0f0f1e, #0a0a0a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 215, 0, 0.5);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+        
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+        
+        .glass-hover:hover {
+            background: rgba(255, 215, 0, 0.05);
+            border-color: rgba(255, 215, 0, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.1);
+        }
+        
+        /* Chart glow */
+        .chart-glow {
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+        }
+        
+        /* Tab transitions */
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #FFD700, #FFA500);
+            border-radius: 4px;
+        }
+        
+        /* Ticker animation */
+        .ticker-wrap {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .ticker {
+            display: inline-block;
+            animation: ticker 30s linear infinite;
+        }
+        
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Pulse animation for live indicator */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Grid pattern */
+        .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(255, 215, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+    </style>
+</head>
+<body class="bg-animated grid-pattern min-h-screen">
+    <!-- Floating Particles -->
+    <div id="particles"></div>
+    
+    <!-- Live Ticker -->
+    <div class="fixed top-0 w-full bg-black/80 border-b border-yellow-500/20 z-50 backdrop-blur-md">
+        <div class="ticker-wrap py-2">
+            <div class="ticker text-sm font-mono">
+                <span class="mx-4 text-gold font-bold">GOLDENICE INTERNATIONAL</span>
+                <span class="mx-4 text-gray-400">EUR/USD <span class="text-green-400">1.0845 ▲</span></span>
+                <span class="mx-4 text-gray-400">GBP/USD <span class="text-red-400">1.2632 ▼</span></span>
+                <span class="mx-4 text-gray-400">USD/JPY <span class="text-green-400">151.42 ▲</span></span>
+                <span class="mx-4 text-gray-400">XAU/USD <span class="text-green-400">2,234.50 ▲</span></span>
+                <span class="mx-4 text-gray-400">BTC/USD <span class="text-green-400">67,432.00 ▲</span></span>
+                <span class="mx-4 text-gold font-bold">GOLDENICE INTERNATIONAL</span>
+                <span class="mx-4 text-gray-400">EUR/USD <span class="text-green-400">1.0845 ▲</span></span>
+                <span class="mx-4 text-gray-400">GBP/USD <span class="text-red-400">1.2632 ▼</span></span>
+                <span class="mx-4 text-gray-400">USD/JPY <span class="text-green-400">151.42 ▲</span></span>
+                <span class="mx-4 text-gray-400">XAU/USD <span class="text-green-400">2,234.50 ▲</span></span>
+                <span class="mx-4 text-gray-400">BTC/USD <span class="text-green-400">67,432.00 ▲</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-8 w-full z-40 px-6 py-4">
+        <div class="max-w-7xl mx-auto glass rounded-full px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gold rounded-full flex items-center justify-center">
+                    <span class="text-black font-bold text-xl">G</span>
+                </div>
+                <div>
+                    <h1 class="font-display text-xl font-bold text-gold">Goldenice</h1>
+                    <p class="text-xs text-gray-400 tracking-widest">INTERNATIONAL</p>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex gap-8">
+                <button onclick="scrollToSection('overview')" class="text-sm hover:text-yellow-400 transition-colors">Overview</button>
+                <button onclick="scrollToSection('financials')" class="text-sm hover:text-yellow-400 transition-colors">Financials</button>
+                <button onclick="scrollToSection('reports')" class="text-sm hover:text-yellow-400 transition-colors">Reports</button>
+                <button onclick="scrollToSection('governance')" class="text-sm hover:text-yellow-400 transition-colors">Governance</button>
+                <button onclick="scrollToSection('contact')" class="text-sm hover:text-yellow-400 transition-colors">Contact</button>
+            </div>
+            
+            <button onclick="openModal()" class="bg-gold text-black px-6 py-2 rounded-full font-semibold text-sm hover:shadow-lg hover:shadow-yellow-500/30 transition-all transform hover:scale-105">
+                Investor Login
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-6 min-h-screen flex items-center">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-yellow-500/30 bg-yellow-500/10">
+                    <span class="w-2 h-2 bg-green-400 rounded-full pulse"></span>
+                    <span class="text-xs text-yellow-200 tracking-wider">MARKETS OPEN</span>
+                </div>
+                
+                <h1 class="font-display text-5xl md:text-7xl font-bold leading-tight">
+                    Investor <span class="text-gold">Relations</span>
+                    <span class="block text-2xl md:text-3xl font-normal text-gray-400 mt-4">Transparency. Performance. Growth.</span>
+                </h1>
+                
+                <p class="text-gray-400 text-lg leading-relaxed max-w-xl">
+                    Goldenice International is a premier forex trading institution committed to delivering exceptional returns through innovative trading strategies and rigorous risk management.
+                </p>
+                
+                <div class="flex gap-4 flex-wrap">
+                    <button onclick="scrollToSection('financials')" class="bg-gold text-black px-8 py-4 rounded-full font-semibold hover:shadow-xl hover:shadow-yellow-500/30 transition-all transform hover:scale-105 flex items-center gap-2">
+                        View Financial Data
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </button>
+                    <button onclick="downloadReport()" class="border border-yellow-500/50 text-yellow-400 px-8 py-4 rounded-full font-semibold hover:bg-yellow-500/10 transition-all flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        Annual Report 2024
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-6 pt-8 border-t border-gray-800">
+                    <div>
+                        <p class="text-3xl font-bold text-gold">$2.4B</p>
+                        <p class="text-sm text-gray-500">Assets Under Management</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-bold text-gold">24.8%</p>
+                        <p class="text-sm text-gray-500">YoY Return</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-bold text-gold">150+</p>
+                        <p class="text-sm text-gray-500">Global Markets</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-3xl blur-3xl"></div>
+                <div class="relative glass rounded-3xl p-8 chart-glow">
+                    <canvas id="heroChart" width="400" height="300"></canvas>
+                    <div class="mt-6 flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-gray-400">Portfolio Performance</p>
+                            <p class="text-2xl font-bold text-green-400">+18.4% <span class="text-sm text-gray-500">YTD</span></p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-400">Sharpe Ratio</p>
+                            <p class="text-2xl font-bold text-gold">2.34</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats Bar -->
+    <section class="py-12 border-y border-gray-800 bg-black/50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <p class="text-4xl font-bold text-gold mb-2" id="counter1">0</p>
+                    <p class="text-sm text-gray-400">Active Investors</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-4xl font-bold text-gold mb-2" id="counter2">0</p>
+                    <p class="text-sm text-gray-400">Daily Volume (M)</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-4xl font-bold text-gold mb-2" id="counter3">0</p>
+                    <p class="text-sm text-gray-400">Countries Served</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-4xl font-bold text-gold mb-2" id="counter4">0</p>
+                    <p class="text-sm text-gray-400">Years Experience</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Financial Overview -->
+    <section id="financials" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-4">Financial <span class="text-gold">Performance</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Comprehensive financial data and analytics demonstrating our consistent growth and market leadership.</p>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="flex justify-center mb-12">
+                <div class="glass rounded-full p-1 flex gap-1">
+                    <button onclick="switchTab('revenue')" class="tab-btn active px-6 py-3 rounded-full text-sm font-medium transition-all bg-yellow-500/20 text-yellow-400" data-tab="revenue">Revenue</button>
+                    <button onclick="switchTab('profit')" class="tab-btn px-6 py-3 rounded-full text-sm font-medium transition-all text-gray-400 hover:text-white" data-tab="profit">Net Profit</button>
+                    <button onclick="switchTab('aum')" class="tab-btn px-6 py-3 rounded-full text-sm font-medium transition-all text-gray-400 hover:text-white" data-tab="aum">AUM Growth</button>
+                    <button onclick="switchTab('returns')" class="tab-btn px-6 py-3 rounded-full text-sm font-medium transition-all text-gray-400 hover:text-white" data-tab="returns">Returns</button>
+                </div>
+            </div>
+            
+            <!-- Chart Container -->
+            <div class="glass rounded-3xl p-8 mb-12">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-1" id="chartTitle">Revenue Growth</h3>
+                        <p class="text-sm text-gray-400">In millions USD (2020-2024)</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="changeTimeframe('1Y')" class="px-4 py-2 rounded-lg text-xs border border-gray-700 hover:border-yellow-500 transition-colors">1Y</button>
+                        <button onclick="changeTimeframe('3Y')" class="px-4 py-2 rounded-lg text-xs border border-gray-700 hover:border-yellow-500 transition-colors">3Y</button>
+                        <button onclick="changeTimeframe('5Y')" class="px-4 py-2 rounded-lg text-xs bg-yellow-500/20 border border-yellow-500 text-yellow-400">5Y</button>
+                    </div>
+                </div>
+                <canvas id="mainChart" height="100"></canvas>
+            </div>
+            
+            <!-- Key Metrics Grid -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glass rounded-2xl p-6 glass-hover transition-all cursor-pointer" onclick="showMetricDetail('liquidity')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <span class="text-green-400 text-sm font-medium">+12.5%</span>
+                    </div>
+                    <h4 class="text-lg font-semibold mb-1">Liquidity Ratio</h4>
+                    <p class="text-3xl font-bold text-gold mb-2">1.85</p>
+                    <p class="text-sm text-gray-500">Strong liquid asset position ensuring operational flexibility</p>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 glass-hover transition-all cursor-pointer" onclick="showMetricDetail('leverage')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        </div>
+                        <span class="text-green-400 text-sm font-medium">Optimal</span>
+                    </div>
+                    <h4 class="text-lg font-semibold mb-1">Leverage Ratio</h4>
+                    <p class="text-3xl font-bold text-gold mb-2">4.2:1</p>
+                    <p class="text-sm text-gray-500">Conservative leverage maintaining risk-adjusted returns</p>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 glass-hover transition-all cursor-pointer" onclick="showMetricDetail('capital')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        </div>
+                        <span class="text-green-400 text-sm font-medium">+8.3%</span>
+                    </div>
+                    <h4 class="text-lg font-semibold mb-1">Tier 1 Capital</h4>
+                    <p class="text-3xl font-bold text-gold mb-2">$420M</p>
+                    <p class="text-sm text-gray-500">Exceeding regulatory requirements by 40%</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reports Section -->
+    <section id="reports" class="py-20 px-6 bg-black/30">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+                <div>
+                    <h2 class="font-display text-4xl font-bold mb-2">Reports & <span class="text-gold">Filings</span></h2>
+                    <p class="text-gray-400">Regulatory filings, annual reports, and investor presentations</p>
+                </div>
+                <div class="flex gap-3">
+                    <select id="yearFilter" onchange="filterReports()" class="bg-transparent border border-gray-700 rounded-lg px-4 py-2 text-sm focus:border-yellow-500 outline-none">
+                        <option value="all">All Years</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                    </select>
+                    <select id="typeFilter" onchange="filterReports()" class="bg-transparent border border-gray-700 rounded-lg px-4 py-2 text-sm focus:border-yellow-500 outline-none">
+                        <option value="all">All Types</option>
+                        <option value="annual">Annual Reports</option>
+                        <option value="quarterly">Quarterly Results</option>
+                        <option value="esg">ESG Reports</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="grid gap-4" id="reportsList">
+                <!-- Report items will be populated by JS -->
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button onclick="loadMoreReports()" class="text-yellow-400 hover:text-yellow-300 text-sm font-medium flex items-center gap-2 mx-auto transition-colors">
+                    View Archive
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Corporate Governance -->
+    <section id="governance" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-4">Corporate <span class="text-gold">Governance</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Upholding the highest standards of integrity, transparency, and accountability</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                <div class="glass rounded-2xl p-6 text-center group hover:bg-yellow-500/5 transition-all cursor-pointer" onclick="showBio('alexandra')">
+                    <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 p-1">
+                        <div class="w-full h-full rounded-full bg-gray-900 flex items-center justify-center text-2xl font-bold text-gold">AC</div>
+                    </div>
+                    <h4 class="font-semibold text-lg mb-1">Alexandra Chen</h4>
+                    <p class="text-yellow-400 text-sm mb-3">Chief Executive Officer</p>
+                    <p class="text-xs text-gray-500">Former Goldman Sachs MD, 20+ years FX markets</p>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 text-center group hover:bg-yellow-500/5 transition-all cursor-pointer" onclick="showBio('marcus')">
+                    <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 p-1">
+                        <div class="w-full h-full rounded-full bg-gray-900 flex items-center justify-center text-2xl font-bold text-gold">MW</div>
+                    </div>
+                    <h4 class="font-semibold text-lg mb-1">Marcus Williams</h4>
+                    <p class="text-yellow-400 text-sm mb-3">Chief Financial Officer</p>
+                    <p class="text-xs text-gray-500">Ex-Deutsche Bank, CFA Charterholder</p>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 text-center group hover:bg-yellow-500/5 transition-all cursor-pointer" onclick="showBio('sarah')">
+                    <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 p-1">
+                        <div class="w-full h-full rounded-full bg-gray-900 flex items-center justify-center text-2xl font-bold text-gold">SK</div>
+                    </div>
+                    <h4 class="font-semibold text-lg mb-1">Sarah Kimura</h4>
+                    <p class="text-yellow-400 text-sm mb-3">Chief Risk Officer</p>
+                    <p class="text-xs text-gray-500">Former BoE regulator, Risk Management PhD</p>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 text-center group hover:bg-yellow-500/5 transition-all cursor-pointer" onclick="showBio('james')">
+                    <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 p-1">
+                        <div class="w-full h-full rounded-full bg-gray-900 flex items-center justify-center text-2xl font-bold text-gold">JR</div>
+                    </div>
+                    <h4 class="font-semibold text-lg mb-1">James Rodriguez</h4>
+                    <p class="text-yellow-400 text-sm mb-3">Head of Trading</p>
+                    <p class="text-xs text-gray-500">15 years algorithmic trading expertise</p>
+                </div>
+            </div>
+            
+            <div class="glass rounded-3xl p-8 md:p-12">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="font-display text-3xl font-bold mb-6">Regulatory <span class="text-gold">Compliance</span></h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div>
+                                    <p class="font-medium">FCA Authorized</p>
+                                    <p class="text-sm text-gray-400">Full authorization under Financial Conduct Authority</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div>
+                                    <p class="font-medium">MiFID II Compliant</p>
+                                    <p class="text-sm text-gray-400">Full adherence to EU Markets in Financial Instruments Directive</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div>
+                                    <p class="font-medium">Segregated Accounts</p>
+                                    <p class="text-sm text-gray-400">Client funds held in tier-1 banks, fully segregated</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div>
+                                    <p class="font-medium">ISO 27001 Certified</p>
+                                    <p class="text-sm text-gray-400">Information security management certified</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-2xl blur-2xl"></div>
+                        <div class="relative glass rounded-2xl p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <span class="text-sm text-gray-400">Compliance Score</span>
+                                <span class="text-2xl font-bold text-green-400">98/100</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-3 mb-6">
+                                <div class="bg-gradient-to-r from-green-400 to-green-500 h-3 rounded-full" style="width: 98%"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 text-center">
+                                <div class="p-4 rounded-xl bg-yellow-500/10">
+                                    <p class="text-2xl font-bold text-gold">A+</p>
+                                    <p class="text-xs text-gray-400">Credit Rating</p>
+                                </div>
+                                <div class="p-4 rounded-xl bg-yellow-500/10">
+                                    <p class="text-2xl font-bold text-gold">0</p>
+                    <p class="text-xs text-gray-400">Violations</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-6 bg-black/30">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="font-display text-4xl font-bold mb-4">Investor <span class="text-gold">Contact</span></h2>
+                <p class="text-gray-400">Our investor relations team is available to assist institutional and retail investors</p>
+            </div>
+            
+            <div class="glass rounded-3xl p-8 md:p-12">
+                <form id="contactForm" onsubmit="handleSubmit(event)" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-gray-300">Full Name</label>
+                            <input type="text" required class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 focus:border-yellow-500 outline-none transition-colors" placeholder="John Smith">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-gray-300">Email Address</label>
+                            <input type="email" required class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 focus:border-yellow-500 outline-none transition-colors" placeholder="john@institution.com">
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-gray-300">Institution</label>
+                            <input type="text" class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 focus:border-yellow-500 outline-none transition-colors" placeholder="Company Name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-gray-300">Investor Type</label>
+                            <select class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 focus:border-yellow-500 outline-none transition-colors">
+                                <option>Institutional Investor</option>
+                                <option>Retail Investor</option>
+                                <option>Financial Analyst</option>
+                                <option>Media</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-gray-300">Message</label>
+                        <textarea rows="4" required class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 focus:border-yellow-500 outline-none transition-colors resize-none" placeholder="How can we assist you?"></textarea>
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" id="newsletter" class="w-5 h-5 rounded border-gray-700 bg-black/50 text-yellow-500 focus:ring-yellow-500">
+                        <label for="newsletter" class="text-sm text-gray-400">Subscribe to investor updates and newsletters</label>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-gold text-black font-bold py-4 rounded-xl hover:shadow-xl hover:shadow-yellow-500/30 transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2">
+                        Send Message
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </form>
+                
+                <div class="mt-8 pt-8 border-t border-gray-800 grid md:grid-cols-3 gap-6 text-center">
+                    <div>
+                        <p class="text-sm text-gray-400 mb-1">IR Email</p>
+                        <p class="text-gold font-medium">ir@goldenice.com</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400 mb-1">Phone</p>
+                        <p class="text-gold font-medium">+1 (212) 555-0147</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400 mb-1">Address</p>
+                        <p class="text-gold font-medium">London • New York • Singapore</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 py-12 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center">
+                            <span class="text-black font-bold">G</span>
+                        </div>
+                        <span class="font-display font-bold text-gold">Goldenice</span>
+                    </div>
+                    <p class="text-sm text-gray-500">Premier forex trading and investment management since 2008.</p>
+                </div>
+                <div>
+                    <h5 class="font-semibold mb-4">Quick Links</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Press Center</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Sustainability</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-semibold mb-4">Legal</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="hover:text-yellow-400 transition-colors">Risk Disclosure</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-semibold mb-4">Follow Us</h5>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-yellow-500/20 transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-yellow-500/20 transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-sm text-gray-500">© 2024 Goldenice International. All rights reserved.</p>
+                <p class="text-xs text-gray-600">Trading forex involves significant risk of loss. Past performance is not indicative of future results.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal items-center justify-center p-6">
+        <div class="glass rounded-3xl p-8 max-w-md w-full relative transform scale-95 opacity-0 transition-all duration-300" id="modalContent">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-gold rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-black font-bold text-2xl">G</span>
+                </div>
+                <h3 class="font-display text-2xl font-bold">Investor Portal</h3>
+                <p class="text-sm text-gray-400 mt-2">Secure access to detailed analytics</p>
+            </div>
+            
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2 text-gray-300">Investor ID</label>
+                    <input type="text" required class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 focus:border-yellow-500 outline-none transition-colors" placeholder="GIC-XXXX-XXXX">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2 text-gray-300">Password</label>
+                    <input type="password" required class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 focus:border-yellow-500 outline-none transition-colors" placeholder="••••••••">
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                    <label class="flex items-center gap-2 text-gray-400">
+                        <input type="checkbox" class="rounded border-gray-700 bg-black/50 text-yellow-500">
+                        Remember me
+                    </label>
+                    <a href="#" class="text-yellow-400 hover:text-yellow-300">Forgot password?</a>
+                </div>
+                <button type="submit" class="w-full bg-gold text-black font-bold py-3 rounded-xl hover:shadow-lg hover:shadow-yellow-500/30 transition-all">
+                    Access Portal
+                </button>
+            </form>
+            
+            <p class="text-center text-sm text-gray-500 mt-6">
+                Don't have access? <a href="#" class="text-yellow-400 hover:text-yellow-300">Request credentials</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <div class="glass rounded-xl px-6 py-4 flex items-center gap-3 border-l-4 border-green-400">
+            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <div>
+                <p class="font-medium" id="toastTitle">Success</p>
+                <p class="text-sm text-gray-400" id="toastMessage">Operation completed successfully</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Counter Animation
+        function animateCounter(id, target, suffix = '') {
+            const element = document.getElementById(id);
+            const duration = 2000;
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current).toLocaleString() + suffix;
+            }, 16);
+        }
+
+        // Intersection Observer for counters
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter('counter1', 12500, '+');
+                    animateCounter('counter2', 850, 'M');
+                    animateCounter('counter3', 45);
+                    animateCounter('counter4', 16, '+');
+                    observer.disconnect();
+                }
+            });
+        });
+        observer.observe(document.getElementById('counter1'));
+
+        // Chart.js Configuration
+        const chartCtx = document.getElementById('mainChart').getContext('2d');
+        const heroCtx = document.getElementById('heroChart').getContext('2d');
+        
+        // Gradient for charts
+        const gradient = chartCtx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(255, 215, 0, 0.3)');
+        gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+        
+        const chartData = {
+            revenue: {
+                labels: ['2020', '2021', '2022', '2023', '2024'],
+                data: [180, 245, 320, 410, 485],
+                label: 'Revenue ($M)',
+                color: '#FFD700'
+            },
+            profit: {
+                labels: ['2020', '2021', '2022', '2023', '2024'],
+                data: [45, 68, 92, 125, 158],
+                label: 'Net Profit ($M)',
+                color: '#FFA500'
+            },
+            aum: {
+                labels: ['2020', '2021', '2022', '2023', '2024'],
+                data: [1.2, 1.5, 1.8, 2.1, 2.4],
+                label: 'AUM ($B)',
+                color: '#FF6347'
+            },
+            returns: {
+                labels: ['2020', '2021', '2022', '2023', '2024'],
+                data: [18.5, 22.3, 15.8, 21.4, 24.8],
+                label: 'Annual Return (%)',
+                color: '#32CD32'
+            }
+        };
+        
+        let currentChart = new Chart(chartCtx, {
+            type: 'line',
+            data: {
+                labels: chartData.revenue.labels,
+                datasets: [{
+                    label: chartData.revenue.label,
+                    data: chartData.revenue.data,
+                    borderColor: chartData.revenue.color,
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#FFD700',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleColor: '#FFD700',
+                        bodyColor: '#fff',
+                        borderColor: '#FFD700',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: false
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#888' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#888' }
+                    }
+                }
+            }
+        });
+        
+        // Hero Chart
+        new Chart(heroCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    data: [12, 19, 15, 25, 22, 30],
+                    borderColor: '#FFD700',
+                    backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                },
+                elements: { point: { radius: 0 } }
+            }
+        });
+        
+        // Tab Switching
+        function switchTab(tabName) {
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-yellow-500/20', 'text-yellow-400');
+                btn.classList.add('text-gray-400');
+                if (btn.dataset.tab === tabName) {
+                    btn.classList.add('active', 'bg-yellow-500/20', 'text-yellow-400');
+                    btn.classList.remove('text-gray-400');
+                }
+            });
+            
+            // Update chart
+            const data = chartData[tabName];
+            currentChart.data.labels = data.labels;
+            currentChart.data.datasets[0].data = data.data;
+            currentChart.data.datasets[0].label = data.label;
+            currentChart.data.datasets[0].borderColor = data.color;
+            currentChart.update('active');
+            
+            // Update title
+            const titles = {
+                revenue: 'Revenue Growth',
+                profit: 'Net Profit',
+                aum: 'Assets Under Management',
+                returns: 'Investment Returns'
+            };
+            document.getElementById('chartTitle').textContent = titles[tabName];
+        }
+        
+        // Reports Data
+        const reports = [
+            { year: '2024', type: 'annual', title: 'Annual Report 2024', date: 'Mar 15, 2024', size: '4.2 MB' },
+            { year: '2024', type: 'quarterly', title: 'Q1 2024 Earnings Release', date: 'Apr 30, 2024', size: '1.8 MB' },
+            { year: '2024', type: 'esg', title: 'ESG Report 2024', date: 'Feb 28, 2024', size: '3.5 MB' },
+            { year: '2023', type: 'annual', title: 'Annual Report 2023', date: 'Mar 20, 2023', size: '3.9 MB' },
+            { year: '2023', type: 'quarterly', title: 'Q4 2023 Earnings Release', date: 'Jan 30, 2024', size: '1.5 MB' },
+            { year: '2023', type: 'quarterly', title: 'Q3 2023 Earnings Release', date: 'Oct 30, 2023', size: '1.6 MB' }
+        ];
+        
+        function renderReports() {
+            const yearFilter = document.getElementById('yearFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const container = document.getElementById('reportsList');
+            
+            const filtered = reports.filter(r => {
+                const yearMatch = yearFilter === 'all' || r.year === yearFilter;
+                const typeMatch = typeFilter === 'all' || r.type === typeFilter;
+                return yearMatch && typeMatch;
+            });
+            
+            container.innerHTML = filtered.map(report => `
+                <div class="glass rounded-xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 glass-hover transition-all cursor-pointer group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-yellow-500/20 transition-colors">
+                            <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg mb-1 group-hover:text-yellow-400 transition-colors">${report.title}</h4>
+                            <div class="flex gap-4 text-sm text-gray-400">
+                                <span>${report.date}</span>
+                                <span>•</span>
+                                <span>${report.size}</span>
+                                <span>•</span>
+                                <span class="text-yellow-500/70 uppercase text-xs tracking-wider">${report.type}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="downloadReport('${report.title}')" class="px-4 py-2 rounded-lg border border-yellow-500/30 text-yellow-400 text-sm hover:bg-yellow-500/10 transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        Download
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        renderReports();
+        
+        function filterReports() {
+            renderReports();
+        }
+        
+        // Modal Functions
+        function openModal() {
+            const modal = document.getElementById('loginModal');
+            const content = document.getElementById('modalContent');
+            modal.classList.add('active');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('loginModal');
+            const content = document.getElementById('modalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.remove('active');
+            }, 300);
+        }
+        
+        // Form Handlers
+        function handleSubmit(e) {
+            e.preventDefault();
+            showToast('Message Sent', 'Our IR team will respond within 24 hours.');
+            e.target.reset();
+        }
+        
+        function handleLogin(e) {
+            e.preventDefault();
+            closeModal();
+            setTimeout(() => {
+                showToast('Welcome Back', 'Successfully accessed investor portal.');
+            }, 300);
+        }
+        
+        function downloadReport(title = 'Annual Report 2024') {
+            showToast('Download Started', `${title} is being downloaded...`);
+        }
+        
+        function showToast(title, message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+        
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function showMetricDetail(metric) {
+            const details = {
+                liquidity: 'Our liquidity ratio of 1.85 indicates strong short-term financial health, well above the industry benchmark of 1.5.',
+                leverage: 'Operating at 4.2:1 leverage allows optimal capital efficiency while maintaining prudent risk parameters.',
+                capital: 'Tier 1 capital ratio of 18.5% significantly exceeds Basel III minimum requirements of 4.5%.'
+            };
+            showToast('Metric Details', details[metric]);
+        }
+        
+        function showBio(person) {
+            const bios = {
+                alexandra: 'Alexandra Chen leads Goldenice with 20+ years in FX markets. Previously Managing Director at Goldman Sachs.',
+                marcus: 'Marcus Williams oversees financial strategy. Former VP at Deutsche Bank with CFA charter.',
+                sarah: 'Dr. Sarah Kimura manages enterprise risk. Former Bank of England regulator with PhD in Risk Management.',
+                james: 'James Rodriguez heads algorithmic trading operations with 15 years of quantitative trading experience.'
+            };
+            showToast('Executive Profile', bios[person]);
+        }
+        
+        function changeTimeframe(tf) {
+            showToast('Timeframe Updated', `Switched to ${tf} view`);
+        }
+        
+        function loadMoreReports() {
+            showToast('Archive Accessed', 'Loading historical reports...');
+        }
+        
+        // Close modal on outside click
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        
+        // Smooth scroll behavior for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

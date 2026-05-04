@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldenice International | Crypto Updates & Trading</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8941F;
+            --crypto-blue: #00D4FF;
+            --crypto-purple: #8B5CF6;
+            --crypto-green: #10B981;
+            --crypto-red: #EF4444;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--darker);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Animated Crypto Background */
+        .crypto-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -20px); }
+        }
+
+        /* Blockchain Grid Animation */
+        .blockchain-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(90deg, var(--crypto-blue) 1px, transparent 1px),
+                linear-gradient(var(--crypto-blue) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 10s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--crypto-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--crypto-blue);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--crypto-blue);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 5% 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--crypto-blue);
+            border-radius: 50px;
+            color: var(--crypto-blue);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.4); }
+            50% { box-shadow: 0 0 20px 10px rgba(0, 212, 255, 0.1); }
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--crypto-blue);
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, var(--crypto-blue) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .hero-stat {
+            background: var(--glass);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .hero-stat:hover {
+            border-color: var(--crypto-blue);
+            transform: translateY(-5px);
+        }
+
+        .hero-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--crypto-blue);
+            font-family: 'Courier New', monospace;
+        }
+
+        .hero-stat-label {
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+        }
+
+        /* Live Price Ticker */
+        .ticker-section {
+            padding: 2rem 0;
+            background: var(--dark);
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .ticker-wrapper {
+            display: flex;
+            animation: tickerScroll 30s linear infinite;
+        }
+
+        @keyframes tickerScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            flex-shrink: 0;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ticker-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .ticker-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ticker-symbol {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .ticker-price {
+            font-family: 'Courier New', monospace;
+            color: var(--crypto-blue);
+        }
+
+        .ticker-change {
+            font-size: 0.85rem;
+        }
+
+        /* Market Overview */
+        .market-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--crypto-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 3rem;
+        }
+
+        .market-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 968px) {
+            .market-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Crypto Cards */
+        .crypto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .crypto-card {
+            background: var(--glass);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .crypto-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--crypto-blue), var(--crypto-purple));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .crypto-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .crypto-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--crypto-blue);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
+        }
+
+        .crypto-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .crypto-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .crypto-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.2));
+            border: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .crypto-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .crypto-symbol {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .crypto-rank {
+            padding: 0.3rem 0.8rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--crypto-blue);
+            border-radius: 20px;
+            color: var(--crypto-blue);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .crypto-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .crypto-change {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .crypto-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .crypto-stat {
+            text-align: center;
+        }
+
+        .crypto-stat-label {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .crypto-stat-value {
+            font-size: 0.9rem;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+
+        .sparkline {
+            margin-top: 1rem;
+            height: 40px;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .spark-bar {
+            flex: 1;
+            background: var(--crypto-blue);
+            border-radius: 1px;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .spark-bar:hover {
+            opacity: 1;
+        }
+
+        /* Market Movers */
+        .movers-panel {
+            background: var(--glass);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+        }
+
+        .movers-title {
+            font-size: 1.2rem;
+            color: var(--crypto-blue);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .movers-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .mover-tab {
+            flex: 1;
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: #aaa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .mover-tab.active, .mover-tab:hover {
+            background: var(--crypto-blue);
+            color: var(--dark);
+            border-color: var(--crypto-blue);
+        }
+
+        .movers-list {
+            list-style: none;
+        }
+
+        .mover-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mover-item:last-child {
+            border-bottom: none;
+        }
+
+        .mover-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .mover-icon {
+            font-size: 1.5rem;
+        }
+
+        .mover-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .mover-symbol {
+            color: #888;
+            font-size: 0.75rem;
+        }
+
+        .mover-change {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Trading Chart Section */
+        .chart-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .chart-container {
+            background: var(--glass);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .chart-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .chart-pair {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .chart-price {
+            font-size: 2rem;
+            font-family: 'Courier New', monospace;
+            color: var(--crypto-blue);
+        }
+
+        .chart-change {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .timeframes {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .tf-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: #aaa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tf-btn.active, .tf-btn:hover {
+            background: var(--crypto-blue);
+            color: var(--dark);
+        }
+
+        .main-chart {
+            height: 400px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #tradingChart {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Trading Panel */
+        .trading-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .trading-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .order-book, .recent-trades {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+
+        .panel-title {
+            color: var(--crypto-blue);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .book-list {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .book-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            margin-bottom: 0.3rem;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        .book-item.bid::before {
+            background: var(--crypto-green);
+            width: var(--size);
+        }
+
+        .book-item.ask::before {
+            background: var(--crypto-red);
+            width: var(--size);
+        }
+
+        .book-price {
+            position: relative;
+            z-index: 1;
+            font-weight: 600;
+        }
+
+        .book-item.bid .book-price {
+            color: var(--crypto-green);
+        }
+
+        .book-item.ask .book-price {
+            color: var(--crypto-red);
+        }
+
+        .book-amount {
+            position: relative;
+            z-index: 1;
+            color: #aaa;
+        }
+
+        /* News Section */
+        .news-section {
+            padding: 4rem 5%;
+            background: var(--dark);
+        }
+
+        .news-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 968px) {
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .news-main {
+            background: var(--glass);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .news-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .news-item:hover {
+            background: rgba(0, 212, 255, 0.05);
+            margin: 0 -2rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-image {
+            width: 120px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .news-content {
+            flex: 1;
+        }
+
+        .news-tag {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--crypto-blue);
+            border-radius: 20px;
+            color: var(--crypto-blue);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .news-headline {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .news-meta {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-widget {
+            background: var(--glass);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+        }
+
+        .widget-title {
+            color: var(--crypto-blue);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .trending-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .trending-item:last-child {
+            border-bottom: none;
+        }
+
+        .trending-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .trending-rank {
+            color: var(--crypto-blue);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .sentiment-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .sentiment-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--crypto-red), var(--crypto-blue), var(--crypto-green));
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .sentiment-marker {
+            position: absolute;
+            top: -2px;
+            width: 4px;
+            height: 12px;
+            background: #fff;
+            border-radius: 2px;
+            transform: translateX(-50%);
+        }
+
+        /* Portfolio Tracker */
+        .portfolio-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .portfolio-container {
+            background: var(--glass);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .portfolio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .portfolio-value {
+            text-align: center;
+        }
+
+        .portfolio-label {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .portfolio-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--crypto-blue);
+            font-family: 'Courier New', monospace;
+        }
+
+        .portfolio-change {
+            color: var(--crypto-green);
+            font-size: 1rem;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 968px) {
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .holdings-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .holdings-table th {
+            text-align: left;
+            padding: 1rem;
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .holdings-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .holdings-table tr:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .holding-asset {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .holding-icon {
+            font-size: 1.5rem;
+        }
+
+        .holding-name {
+            font-weight: 600;
+        }
+
+        .holding-symbol {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .holding-value {
+            font-family: 'Courier New', monospace;
+        }
+
+        .holding-change {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .allocation-chart {
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .donut-chart {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--crypto-blue) 0deg 144deg,
+                var(--crypto-purple) 144deg 216deg,
+                var(--crypto-green) 216deg 288deg,
+                var(--gold) 288deg 360deg
+            );
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .donut-hole {
+            width: 120px;
+            height: 120px;
+            background: var(--dark);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .donut-label {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .donut-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .allocation-legend {
+            margin-top: 1.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            background: var(--darker);
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+            text-align: center;
+        }
+
+        .risk-warning {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            color: #fca5a5;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .disclaimer {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="crypto-bg"></div>
+    <div class="blockchain-grid"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">◆ GOLDENICE CRYPTO</div>
+        <ul class="nav-links">
+            <li><a href="./market.html">Markets</a></li>
+            <li><a href="./trading.html">Trading</a></li>
+            <li><a href="./news.html">News</a></li>
+            <li><a href="./dashboard.html">Portfolio</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <div class="pulse-dot"></div>
+                <span>MARKETS OPEN 24/7</span>
+            </div>
+            <h1>Crypto Trading Revolution</h1>
+            <p>Trade 100+ cryptocurrencies with institutional-grade security, deep liquidity, and advanced trading tools. Access Bitcoin, Ethereum, and emerging altcoins with competitive spreads.</p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">100+</div>
+                    <div class="hero-stat-label">Crypto Assets</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">0.08%</div>
+                    <div class="hero-stat-label">Trading Fee</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">1:100</div>
+                    <div class="hero-stat-label">Leverage</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">$2.4B</div>
+                    <div class="hero-stat-label">24H Volume</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Ticker -->
+    <section class="ticker-section">
+        <div class="ticker-wrapper" id="tickerWrapper">
+            <!-- Populated by JS -->
+        </div>
+    </section>
+
+    <!-- Market Overview -->
+    <section class="market-section" id="market">
+        <h2 class="section-title">Live Market Data</h2>
+        <p class="section-subtitle">Real-time cryptocurrency prices and market capitalization</p>
+        
+        <div class="market-grid">
+            <div class="crypto-grid" id="cryptoGrid">
+                <!-- Populated by JS -->
+            </div>
+
+            <div class="movers-panel">
+                <h3 class="movers-title">🔥 Market Movers</h3>
+                <div class="movers-tabs">
+                    <button class="mover-tab active" onclick="switchMovers('gainers')">Top Gainers</button>
+                    <button class="mover-tab" onclick="switchMovers('losers')">Top Losers</button>
+                    <button class="mover-tab" onclick="switchMovers('volume')">Volume</button>
+                </div>
+                <ul class="movers-list" id="moversList">
+                    <!-- Populated by JS -->
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trading Chart -->
+    <section class="chart-section" id="chart">
+        <div class="chart-container">
+            <div class="chart-header">
+                <div class="chart-info">
+                    <div>
+                        <div class="chart-pair">BTC/USD</div>
+                        <div style="color: #888; font-size: 0.9rem;">Bitcoin vs US Dollar</div>
+                    </div>
+                    <div class="chart-price" id="chartPrice">$67,245.80</div>
+                    <div class="chart-change positive" id="chartChange">+2.45%</div>
+                </div>
+                <div class="timeframes">
+                    <button class="tf-btn" onclick="switchTimeframe('1m')">1m</button>
+                    <button class="tf-btn" onclick="switchTimeframe('5m')">5m</button>
+                    <button class="tf-btn active" onclick="switchTimeframe('1h')">1h</button>
+                    <button class="tf-btn" onclick="switchTimeframe('4h')">4h</button>
+                    <button class="tf-btn" onclick="switchTimeframe('1d')">1D</button>
+                </div>
+            </div>
+            <div class="main-chart">
+                <canvas id="tradingChart"></canvas>
+            </div>
+            
+            <div class="trading-panel">
+                <div class="order-book">
+                    <h4 class="panel-title">📘 Order Book</h4>
+                    <ul class="book-list" id="orderBook">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                <div class="recent-trades">
+                    <h4 class="panel-title">📊 Recent Trades</h4>
+                    <ul class="book-list" id="recentTrades">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section class="news-section" id="news">
+        <div class="news-container">
+            <h2 class="section-title">Crypto News & Updates</h2>
+            <p class="section-subtitle">Latest developments in the cryptocurrency space</p>
+            
+            <div class="news-grid">
+                <div class="news-main">
+                    <div class="news-item">
+                        <div class="news-image">🏛️</div>
+                        <div class="news-content">
+                            <span class="news-tag">Regulation</span>
+                            <h4 class="news-headline">SEC Approves Spot Bitcoin ETFs for Major Asset Managers</h4>
+                            <p style="color: #888; font-size: 0.9rem; margin-top: 0.5rem;">Landmark decision opens floodgates for institutional investment in cryptocurrency markets...</p>
+                            <div class="news-meta">2 hours ago • 12.5K reads</div>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-image">⛓️</div>
+                        <div class="news-content">
+                            <span class="news-tag">Technology</span>
+                            <h4 class="news-headline">Ethereum Layer 2 Solutions See 300% Growth in TVL</h4>
+                            <p style="color: #888; font-size: 0.9rem; margin-top: 0.5rem;">Arbitrum and Optimism lead scaling revolution as transaction costs plummet...</p>
+                            <div class="news-meta">4 hours ago • 8.2K reads</div>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-image">💰</div>
+                        <div class="news-content">
+                            <span class="news-tag">Markets</span>
+                            <h4 class="news-headline">Bitcoin Halving Countdown: Miners Prepare for Supply Shock</h4>
+                            <p style="color: #888; font-size: 0.9rem; margin-top: 0.5rem;">Next halving event expected in April 2024, historical patterns suggest bullish momentum...</p>
+                            <div class="news-meta">6 hours ago • 15.7K reads</div>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-image">🌐</div>
+                        <div class="news-content">
+                            <span class="news-tag">Adoption</span>
+                            <h4 class="news-headline">Major Bank Launches Crypto Custody Services for Institutions</h4>
+                            <p style="color: #888; font-size: 0.9rem; margin-top: 0.5rem;">Traditional finance giants embrace digital assets as client demand surges...</p>
+                            <div class="news-meta">8 hours ago • 6.3K reads</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="sidebar-widget">
+                        <h4 class="widget-title">🔍 Trending Searches</h4>
+                        <div class="trending-item">
+                            <div class="trending-name">
+                                <span class="trending-rank">1</span>
+                                <span>Solana</span>
+                            </div>
+                            <span style="color: var(--crypto-green);">+12.5%</span>
+                        </div>
+                        <div class="trending-item">
+                            <div class="trending-name">
+                                <span class="trending-rank">2</span>
+                                <span>Chainlink</span>
+                            </div>
+                            <span style="color: var(--crypto-green);">+8.3%</span>
+                        </div>
+                        <div class="trending-item">
+                            <div class="trending-name">
+                                <span class="trending-rank">3</span>
+                                <span>Avalanche</span>
+                            </div>
+                            <span style="color: var(--crypto-red);">-2.1%</span>
+                        </div>
+                        <div class="trending-item">
+                            <div class="trending-name">
+                                <span class="trending-rank">4</span>
+                                <span>Polygon</span>
+                            </div>
+                            <span style="color: var(--crypto-green);">+5.7%</span>
+                        </div>
+                        <div class="trending-item">
+                            <div class="trending-name">
+                                <span class="trending-rank">5</span>
+                                <span>Cosmos</span>
+                            </div>
+                            <span style="color: var(--crypto-green);">+3.9%</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-widget">
+                        <h4 class="widget-title">📈 Market Sentiment</h4>
+                        <div style="text-align: center; margin-bottom: 1rem;">
+                            <span style="font-size: 2rem;">😊</span>
+                            <div style="color: var(--crypto-green); font-weight: 700; margin-top: 0.5rem;">Greed 72</div>
+                        </div>
+                        <div class="sentiment-bar">
+                            <div class="sentiment-fill" style="width: 100%;">
+                                <div class="sentiment-marker" style="left: 72%;"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.75rem; color: #888;">
+                            <span>Fear</span>
+                            <span>Neutral</span>
+                            <span>Greed</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-widget">
+                        <h4 class="widget-title">📅 Upcoming Events</h4>
+                        <div style="padding: 0.8rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <div style="color: var(--crypto-blue); font-size: 0.85rem; font-weight: 600;">Dec 15</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.3rem;">Fed Interest Rate Decision</div>
+                        </div>
+                        <div style="padding: 0.8rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <div style="color: var(--crypto-blue); font-size: 0.85rem; font-weight: 600;">Dec 20</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.3rem;">Ethereum Dencun Upgrade</div>
+                        </div>
+                        <div style="padding: 0.8rem 0;">
+                            <div style="color: var(--crypto-blue); font-size: 0.85rem; font-weight: 600;">Jan 10</div>
+                            <div style="font-size: 0.9rem; margin-top: 0.3rem;">Bitcoin ETF Options Launch</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Tracker -->
+    <section class="portfolio-section" id="portfolio">
+        <div class="portfolio-container">
+            <div class="portfolio-header">
+                <h2 class="section-title" style="margin: 0; text-align: left;">Portfolio Overview</h2>
+                <div class="portfolio-value">
+                    <div class="portfolio-label">Total Balance</div>
+                    <div class="portfolio-amount">$124,567.89</div>
+                    <div class="portfolio-change">+5.67% ($6,678.90)</div>
+                </div>
+            </div>
+
+            <div class="portfolio-grid">
+                <table class="holdings-table">
+                    <thead>
+                        <tr>
+                            <th>Asset</th>
+                            <th>Balance</th>
+                            <th>Price</th>
+                            <th>Value</th>
+                            <th>24H Change</th>
+                            <th>Allocation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="holding-asset">
+                                    <span class="holding-icon">₿</span>
+                                    <div>
+                                        <div class="holding-name">Bitcoin</div>
+                                        <div class="holding-symbol">BTC</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="holding-value">1.250000</td>
+                            <td class="holding-value">$67,245.80</td>
+                            <td class="holding-value">$84,057.25</td>
+                            <td><span class="holding-change positive">+2.45%</span></td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px;">
+                                        <div style="width: 67%; height: 100%; background: var(--crypto-blue); border-radius: 3px;"></div>
+                                    </div>
+                                    <span style="font-size: 0.85rem;">67%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="holding-asset">
+                                    <span class="holding-icon">Ξ</span>
+                                    <div>
+                                        <div class="holding-name">Ethereum</div>
+                                        <div class="holding-symbol">ETH</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="holding-value">15.500000</td>
+                            <td class="holding-value">$3,456.20</td>
+                            <td class="holding-value">$53,571.10</td>
+                            <td><span class="holding-change positive">+1.89%</span></td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px;">
+                                        <div style="width: 20%; height: 100%; background: var(--crypto-purple); border-radius: 3px;"></div>
+                                    </div>
+                                    <span style="font-size: 0.85rem;">20%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="holding-asset">
+                                    <span class="holding-icon">◎</span>
+                                    <div>
+                                        <div class="holding-name">Solana</div>
+                                        <div class="holding-symbol">SOL</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="holding-value">250.000000</td>
+                            <td class="holding-value">$98.45</td>
+                            <td class="holding-value">$24,612.50</td>
+                            <td><span class="holding-change positive">+12.50%</span></td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px;">
+                                        <div style="width: 8%; height: 100%; background: var(--crypto-green); border-radius: 3px;"></div>
+                                    </div>
+                                    <span style="font-size: 0.85rem;">8%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="holding-asset">
+                                    <span class="holding-icon">🔗</span>
+                                    <div>
+                                        <div class="holding-name">Chainlink</div>
+                                        <div class="holding-symbol">LINK</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="holding-value">500.000000</td>
+                            <td class="holding-value">$14.25</td>
+                            <td class="holding-value">$7,125.00</td>
+                            <td><span class="holding-change positive">+8.30%</span></td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px;">
+                                        <div style="width: 5%; height: 100%; background: var(--gold); border-radius: 3px;"></div>
+                                    </div>
+                                    <span style="font-size: 0.85rem;">5%</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div>
+                    <div class="allocation-chart">
+                        <div class="donut-chart">
+                            <div class="donut-hole">
+                                <div class="donut-label">Assets</div>
+                                <div class="donut-value">4</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="allocation-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: var(--crypto-blue);"></div>
+                            <span>Bitcoin (67%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: var(--crypto-purple);"></div>
+                            <span>Ethereum (20%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: var(--crypto-green);"></div>
+                            <span>Solana (8%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: var(--gold);"></div>
+                            <span>Chainlink (5%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="risk-warning">
+            <strong>⚠️ Risk Warning:</strong> Cryptocurrency trading involves substantial risk of loss and is not suitable for all investors. Crypto markets are highly volatile and can result in significant losses. You should only trade with money you can afford to lose. Past performance is not indicative of future results. Please ensure you fully understand the risks involved before trading.
+        </div>
+        <div class="footer-content">
+            <div class="logo" style="margin-bottom: 1rem;">◆ GOLDENICE CRYPTO</div>
+            <p style="color: #aaa;">Secure Cryptocurrency Trading Since 2025</p>
+            <div class="disclaimer">
+                <p>Goldenice International provides cryptocurrency CFD trading services. Cryptocurrencies are not regulated by central banks or financial authorities. Trading involves significant risk. Please read our Risk Disclosure Statement carefully before trading.</p>
+                <p style="margin-top: 1rem;">© 2026 Goldenice International. All rights reserved. | Secure & Regulated</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Crypto Data
+        const cryptos = [
+            { symbol: 'BTC', name: 'Bitcoin', price: 67245.80, change: 2.45, volume: 28456789012, cap: 1324567890123, icon: '₿' },
+            { symbol: 'ETH', name: 'Ethereum', price: 3456.20, change: 1.89, volume: 15234567890, cap: 415678901234, icon: 'Ξ' },
+            { symbol: 'SOL', name: 'Solana', price: 98.45, change: 12.50, volume: 3456789012, cap: 44567890123, icon: '◎' },
+            { symbol: 'BNB', name: 'Binance Coin', price: 245.80, change: -0.45, volume: 1234567890, cap: 37890123456, icon: '🔶' },
+            { symbol: 'XRP', name: 'Ripple', price: 0.65, change: 3.20, volume: 2345678901, cap: 35678901234, icon: '✕' },
+            { symbol: 'ADA', name: 'Cardano', price: 0.58, change: -1.20, volume: 987654321, cap: 20456789012, icon: '₳' },
+            { symbol: 'AVAX', name: 'Avalanche', price: 42.30, change: -2.10, volume: 876543210, cap: 15678901234, icon: '🔺' },
+            { symbol: 'LINK', name: 'Chainlink', price: 14.25, change: 8.30, volume: 765432109, cap: 8901234567, icon: '🔗' },
+            { symbol: 'DOT', name: 'Polkadot', price: 7.80, change: 0.90, volume: 654321098, cap: 9876543210, icon: '●' },
+            { symbol: 'MATIC', name: 'Polygon', price: 0.95, change: 5.70, volume: 543210987, cap: 8901234567, icon: '⬡' }
+        ];
+
+        // Initialize Ticker
+        function initTicker() {
+            const wrapper = document.getElementById('tickerWrapper');
+            const items = cryptos.map(c => `
+                <div class="ticker-item">
+                    <div class="ticker-icon" style="background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(139,92,246,0.2)); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">${c.icon}</div>
+                    <div class="ticker-info">
+                        <span class="ticker-symbol">${c.symbol}/USD</span>
+                        <span class="ticker-price">$${c.price.toLocaleString()}</span>
+                    </div>
+                    <span class="ticker-change" style="color: ${c.change >= 0 ? 'var(--crypto-green)' : 'var(--crypto-red)'};">
+                        ${c.change >= 0 ? '▲' : '▼'} ${Math.abs(c.change)}%
+                    </span>
+                </div>
+            `).join('');
+            wrapper.innerHTML = items + items;
+        }
+
+        // Initialize Crypto Grid
+        function initCryptoGrid() {
+            const grid = document.getElementById('cryptoGrid');
+            grid.innerHTML = cryptos.slice(0, 6).map((c, i) => `
+                <div class="crypto-card" onclick="selectCrypto('${c.symbol}')">
+                    <div class="crypto-header">
+                        <div class="crypto-info">
+                            <div class="crypto-icon">${c.icon}</div>
+                            <div>
+                                <div class="crypto-name">${c.name}</div>
+                                <div class="crypto-symbol">${c.symbol}/USD</div>
+                            </div>
+                        </div>
+                        <span class="crypto-rank">#${i + 1}</span>
+                    </div>
+                    <div class="crypto-price" style="color: ${c.change >= 0 ? 'var(--crypto-green)' : 'var(--crypto-red)'};">
+                        $${c.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </div>
+                    <div class="crypto-change">
+                        <span style="color: ${c.change >= 0 ? 'var(--crypto-green)' : 'var(--crypto-red)'}; font-weight: 700;">
+                            ${c.change >= 0 ? '+' : ''}${c.change}%
+                        </span>
+                        <span style="color: #888;">24h</span>
+                    </div>
+                    <div class="sparkline">
+                        ${Array.from({length: 20}, () => `
+                            <div class="spark-bar" style="height: ${Math.random() * 60 + 20}%; background: ${c.change >= 0 ? 'var(--crypto-green)' : 'var(--crypto-red)'};"></div>
+                        `).join('')}
+                    </div>
+                    <div class="crypto-stats">
+                        <div class="crypto-stat">
+                            <div class="crypto-stat-label">Volume (24h)</div>
+                            <div class="crypto-stat-value">$${(c.volume / 1000000000).toFixed(2)}B</div>
+                        </div>
+                        <div class="crypto-stat">
+                            <div class="crypto-stat-label">Market Cap</div>
+                            <div class="crypto-stat-value">$${(c.cap / 1000000000).toFixed(1)}B</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize Movers
+        function initMovers(type = 'gainers') {
+            const list = document.getElementById('moversList');
+            let sorted = [...cryptos];
+            
+            if (type === 'gainers') sorted.sort((a, b) => b.change - a.change);
+            else if (type === 'losers') sorted.sort((a, b) => a.change - b.change);
+            else sorted.sort((a, b) => b.volume - a.volume);
+            
+            list.innerHTML = sorted.slice(0, 5).map(c => `
+                <li class="mover-item">
+                    <div class="mover-info">
+                        <span class="mover-icon">${c.icon}</span>
+                        <div>
+                            <div class="mover-name">${c.symbol}</div>
+                            <div class="mover-symbol">$${c.price.toLocaleString()}</div>
+                        </div>
+                    </div>
+                    <span class="mover-change" style="background: ${c.change >= 0 ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}; color: ${c.change >= 0 ? 'var(--crypto-green)' : 'var(--crypto-red)'};">
+                        ${c.change >= 0 ? '+' : ''}${c.change}%
+                    </span>
+                </li>
+            `).join('');
+        }
+
+        function switchMovers(type) {
+            document.querySelectorAll('.mover-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            initMovers(type);
+        }
+
+        // Draw Trading Chart
+        function drawChart() {
+            const canvas = document.getElementById('tradingChart');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = 40;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Generate candle data
+            const candles = 50;
+            const candleWidth = (width - padding * 2) / candles;
+            let price = 67245;
+            const data = [];
+            
+            for (let i = 0; i < candles; i++) {
+                const open = price;
+                const change = (Math.random() - 0.5) * 200;
+                const close = open + change;
+                const high = Math.max(open, close) + Math.random() * 100;
+                const low = Math.min(open, close) - Math.random() * 100;
+                data.push({ open, high, low, close });
+                price = close;
+            }
+            
+            const minPrice = Math.min(...data.map(d => d.low));
+            const maxPrice = Math.max(...data.map(d => d.high));
+            const range = maxPrice - minPrice;
+            
+            // Grid
+            ctx.strokeStyle = 'rgba(0, 212, 255, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding + (height - padding * 2) * i / 5;
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(width - padding, y);
+                ctx.stroke();
+            }
+            
+            // Candles
+            data.forEach((candle, i) => {
+                const x = padding + i * candleWidth + candleWidth / 2;
+                const yOpen = padding + (maxPrice - candle.open) / range * (height - padding * 2);
+                const yClose = padding + (maxPrice - candle.close) / range * (height - padding * 2);
+                const yHigh = padding + (maxPrice - candle.high) / range * (height - padding * 2);
+                const yLow = padding + (maxPrice - candle.low) / range * (height - padding * 2);
+                
+                const isGreen = candle.close >= candle.open;
+                
+                // Wick
+                ctx.beginPath();
+                ctx.moveTo(x, yHigh);
+                ctx.lineTo(x, yLow);
+                ctx.strokeStyle = isGreen ? '#10B981' : '#EF4444';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                
+                // Body
+                ctx.fillStyle = isGreen ? '#10B981' : '#EF4444';
+                ctx.fillRect(x - candleWidth * 0.6, Math.min(yOpen, yClose), candleWidth * 1.2, Math.max(Math.abs(yClose - yOpen), 1));
+            });
+            
+            // Current price line
+            const lastPrice = data[data.length - 1].close;
+            const y = padding + (maxPrice - lastPrice) / range * (height - padding * 2);
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(width - padding, y);
+            ctx.strokeStyle = '#00D4FF';
+            ctx.setLineDash([5, 5]);
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // Initialize Order Book
+        function initOrderBook() {
+            const book = document.getElementById('orderBook');
+            const basePrice = 67245.80;
+            
+            // Asks (sell orders)
+            for (let i = 5; i >= 1; i--) {
+                const price = basePrice + i * 10;
+                const size = Math.floor(Math.random() * 5) + 0.5;
+                const width = (size / 5) * 100;
+                
+                const row = document.createElement('li');
+                row.className = 'book-item ask';
+                row.style.setProperty('--size', width + '%');
+                row.innerHTML = `
+                    <span class="book-price">${price.toFixed(2)}</span>
+                    <span class="book-amount">${size.toFixed(4)} BTC</span>
+                `;
+                book.appendChild(row);
+            }
+            
+            // Spread indicator
+            const spread = document.createElement('li');
+            spread.style.cssText = 'text-align: center; padding: 0.5rem; color: #888; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1);';
+            spread.innerHTML = 'Spread: 0.01 (0.00%)';
+            book.appendChild(spread);
+            
+            // Bids (buy orders)
+            for (let i = 1; i <= 5; i++) {
+                const price = basePrice - i * 10;
+                const size = Math.floor(Math.random() * 5) + 0.5;
+                const width = (size / 5) * 100;
+                
+                const row = document.createElement('li');
+                row.className = 'book-item bid';
+                row.style.setProperty('--size', width + '%');
+                row.innerHTML = `
+                    <span class="book-price">${price.toFixed(2)}</span>
+                    <span class="book-amount">${size.toFixed(4)} BTC</span>
+                `;
+                book.appendChild(row);
+            }
+        }
+
+        // Initialize Recent Trades
+        function initRecentTrades() {
+            const list = document.getElementById('recentTrades');
+            const types = ['buy', 'sell'];
+            
+            for (let i = 0; i < 10; i++) {
+                const type = types[Math.floor(Math.random() * types.length)];
+                const price = (67245 + (Math.random() - 0.5) * 100).toFixed(2);
+                const size = (Math.random() * 2 + 0.1).toFixed(4);
+                const time = new Date(Date.now() - i * 30000).toLocaleTimeString();
+                
+                const row = document.createElement('li');
+                row.className = 'book-item';
+                row.style.cssText = 'border-bottom: 1px solid rgba(255,255,255,0.05);';
+                row.innerHTML = `
+                    <span class="book-price" style="color: ${type === 'buy' ? 'var(--crypto-green)' : 'var(--crypto-red)'};">${price}</span>
+                    <span class="book-amount">${size} BTC</span>
+                    <span style="color: #666; font-size: 0.75rem;">${time}</span>
+                `;
+                list.appendChild(row);
+            }
+        }
+
+        // Simulate Live Updates
+        function simulateLiveUpdates() {
+            setInterval(() => {
+                // Update chart price
+                const priceChange = (Math.random() - 0.5) * 50;
+                const currentPrice = parseFloat(document.getElementById('chartPrice').textContent.replace(/[$,]/g, ''));
+                const newPrice = currentPrice + priceChange;
+                document.getElementById('chartPrice').textContent = '$' + newPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                const changePercent = ((priceChange / currentPrice) * 100).toFixed(2);
+                const changeEl = document.getElementById('chartChange');
+                changeEl.textContent = (changePercent >= 0 ? '+' : '') + changePercent + '%';
+                changeEl.className = 'chart-change ' + (changePercent >= 0 ? 'positive' : 'negative');
+                changeEl.style.background = changePercent >= 0 ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)';
+                changeEl.style.color = changePercent >= 0 ? 'var(--crypto-green)' : 'var(--crypto-red)';
+            }, 2000);
+        }
+
+        function selectCrypto(symbol) {
+            const crypto = cryptos.find(c => c.symbol === symbol);
+            if (crypto) {
+                document.querySelector('.chart-pair').textContent = symbol + '/USD';
+                document.getElementById('chartPrice').textContent = '$' + crypto.price.toLocaleString();
+                document.getElementById('chartChange').textContent = (crypto.change >= 0 ? '+' : '') + crypto.change + '%';
+                drawChart();
+            }
+        }
+
+        function switchTimeframe(tf) {
+            document.querySelectorAll('.tf-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            drawChart();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initTicker();
+            initCryptoGrid();
+            initMovers();
+            drawChart();
+            initOrderBook();
+            initRecentTrades();
+            simulateLiveUpdates();
+            
+            window.addEventListener('resize', drawChart);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
